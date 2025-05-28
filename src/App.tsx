@@ -16,6 +16,7 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import StartFreeTrial from "./pages/StartFreeTrial";
 import WatchDemo from "./pages/WatchDemo";
+import Pricing from "./pages/Pricing";
 
 // Platform pages
 import Automation from "./pages/platform/Automation";
@@ -51,6 +52,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/features" element={<Features />} />
+              <Route path="/pricing" element={<Pricing />} />
               <Route path="/company" element={<Company />} />
               <Route path="/login" element={<Login />} />
               <Route path="/get-started" element={<GetStarted />} />
