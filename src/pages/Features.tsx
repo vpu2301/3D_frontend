@@ -1,4 +1,3 @@
-
 import { ArrowRight, Zap, Brain, Shield, BarChart3, Users, Clock, Workflow, Database, Lock, Globe, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,7 +15,8 @@ const Features = () => {
         'Machine learning algorithms that improve over time',
         'Context-aware decision making capabilities',
         'Multi-modal AI supporting text, images, and data'
-      ]
+      ],
+      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80'
     },
     {
       icon: Workflow,
@@ -27,7 +27,8 @@ const Features = () => {
         'Pre-built templates for common business processes',
         'Real-time workflow testing and debugging',
         'Version control and rollback capabilities'
-      ]
+      ],
+      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80'
     },
     {
       icon: Database,
@@ -38,7 +39,8 @@ const Features = () => {
         'Pre-built connectors for popular business tools',
         'Custom integration development support',
         'Real-time data synchronization across platforms'
-      ]
+      ],
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80'
     },
     {
       icon: BarChart3,
@@ -49,7 +51,8 @@ const Features = () => {
         'Comprehensive ROI tracking and reporting',
         'Predictive analytics for process optimization',
         'Custom dashboards and business intelligence'
-      ]
+      ],
+      image: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=800&q=80'
     }
   ];
 
@@ -91,25 +94,29 @@ const Features = () => {
       title: 'Document Processing',
       description: 'Extract, analyze, and process documents automatically',
       timesSaved: '85%',
-      processes: ['Invoice processing', 'Contract analysis', 'Data extraction', 'Compliance checking']
+      processes: ['Invoice processing', 'Contract analysis', 'Data extraction', 'Compliance checking'],
+      image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=800&q=80'
     },
     {
       title: 'Customer Service',
       description: 'Automate ticket routing, responses, and escalations',
       timesSaved: '70%',
-      processes: ['Ticket classification', 'Auto-responses', 'Escalation rules', 'Knowledge base updates']
+      processes: ['Ticket classification', 'Auto-responses', 'Escalation rules', 'Knowledge base updates'],
+      image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80'
     },
     {
       title: 'Data Entry & Migration',
       description: 'Eliminate manual data entry with intelligent automation',
       timesSaved: '95%',
-      processes: ['CRM updates', 'Database migration', 'Form processing', 'Data validation']
+      processes: ['CRM updates', 'Database migration', 'Form processing', 'Data validation'],
+      image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=800&q=80'
     },
     {
       title: 'Report Generation',
       description: 'Create and distribute reports automatically',
       timesSaved: '80%',
-      processes: ['Data collection', 'Report formatting', 'Distribution', 'Performance tracking']
+      processes: ['Data collection', 'Report formatting', 'Distribution', 'Performance tracking'],
+      image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80'
     }
   ];
 
@@ -153,7 +160,7 @@ const Features = () => {
         </div>
       </section>
 
-      {/* Main Features */}
+      {/* Main Features with Images */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -165,29 +172,39 @@ const Features = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="space-y-20">
             {mainFeatures.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
-                <CardContent className="p-8">
+              <div key={index} className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
+                <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
                   <div className="flex items-center mb-6">
                     <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 mr-6">
                       <feature.icon className="h-8 w-8 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-medium text-gray-900 mb-2">{feature.title}</h3>
-                      <p className="text-gray-600">{feature.description}</p>
+                      <h3 className="text-3xl font-medium text-gray-900 mb-2">{feature.title}</h3>
+                      <p className="text-gray-600 text-lg">{feature.description}</p>
                     </div>
                   </div>
-                  <ul className="space-y-3">
+                  <ul className="space-y-4">
                     {feature.details.map((detail, idx) => (
                       <li key={idx} className="flex items-start">
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                        <span className="text-gray-700">{detail}</span>
+                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-4 mt-3 flex-shrink-0"></div>
+                        <span className="text-gray-700 text-lg">{detail}</span>
                       </li>
                     ))}
                   </ul>
-                </CardContent>
-              </Card>
+                </div>
+                <div className={index % 2 === 1 ? 'lg:col-start-1 lg:row-start-1' : ''}>
+                  <div className="relative">
+                    <img 
+                      src={feature.image} 
+                      alt={feature.title}
+                      className="w-full h-80 object-cover rounded-3xl shadow-2xl"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl"></div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -221,7 +238,7 @@ const Features = () => {
         </div>
       </section>
 
-      {/* Use Cases */}
+      {/* Use Cases with Images */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -235,14 +252,21 @@ const Features = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {useCases.map((useCase, index) => (
-              <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-                <CardContent className="p-8">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-medium text-gray-900">{useCase.title}</h3>
+              <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm overflow-hidden">
+                <div className="relative h-48">
+                  <img 
+                    src={useCase.image} 
+                    alt={useCase.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-4 right-4">
                     <Badge className="bg-green-100 text-green-800 border-green-200">
                       {useCase.timesSaved} time saved
                     </Badge>
                   </div>
+                </div>
+                <CardContent className="p-8">
+                  <h3 className="text-xl font-medium text-gray-900 mb-4">{useCase.title}</h3>
                   <p className="text-gray-600 mb-6">{useCase.description}</p>
                   <div>
                     <p className="text-sm font-medium text-gray-900 mb-3">Common Processes:</p>
