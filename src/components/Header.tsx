@@ -19,21 +19,22 @@ const Header = () => {
     { name: 'AI Automation', href: '/platform/automation', description: 'Intelligent task automation' },
     { name: 'Workflow Builder', href: '/platform/workflow', description: 'Visual workflow creation' },
     { name: 'Analytics Dashboard', href: '/platform/analytics', description: 'Real-time insights' },
-    { name: 'Integration Hub', href: '/platform/integrations', description: 'Connect your tools' }
+    { name: 'Integration Hub', href: '/platform/integrations', description: 'Connect your tools' },
+    { name: 'Document Processing', href: '/platform/documents', description: 'AI-powered document analysis' },
+    { name: 'Task Management', href: '/platform/tasks', description: 'Smart task orchestration' },
+    { name: 'API Gateway', href: '/platform/api', description: 'Unified API access' },
+    { name: 'Security Center', href: '/platform/security', description: 'Enterprise-grade protection' }
   ];
 
   const solutionsItems = [
     { name: 'For Sales Teams', href: '/solutions/sales', description: 'Boost sales productivity' },
     { name: 'For Marketing', href: '/solutions/marketing', description: 'Automate campaigns' },
     { name: 'For Operations', href: '/solutions/operations', description: 'Streamline processes' },
-    { name: 'For HR Teams', href: '/solutions/hr', description: 'People operations' }
-  ];
-
-  const companyItems = [
-    { name: 'About', href: '/about' },
-    { name: 'Careers', href: '/careers' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Blog', href: '/blog' }
+    { name: 'For HR Teams', href: '/solutions/hr', description: 'People operations' },
+    { name: 'For Finance', href: '/solutions/finance', description: 'Financial automation' },
+    { name: 'For Customer Support', href: '/solutions/support', description: 'Enhanced customer service' },
+    { name: 'For IT Teams', href: '/solutions/it', description: 'IT process automation' },
+    { name: 'For Legal', href: '/solutions/legal', description: 'Legal document management' }
   ];
 
   const isActive = (path: string) => {
@@ -63,7 +64,7 @@ const Header = () => {
                   Platform
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="w-[500px] p-6 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl">
+                  <div className="w-[600px] p-6 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl">
                     <div className="grid grid-cols-2 gap-4">
                       {platformItems.map((item) => (
                         <Link
@@ -90,7 +91,7 @@ const Header = () => {
                   Solutions
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="w-[500px] p-6 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl">
+                  <div className="w-[600px] p-6 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl">
                     <div className="grid grid-cols-2 gap-4">
                       {solutionsItems.map((item) => (
                         <Link
@@ -125,28 +126,18 @@ const Header = () => {
                 </Link>
               </NavigationMenuItem>
 
-              {/* Company Dropdown */}
+              {/* Company Link */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-lg font-light text-gray-600 hover:text-gray-900 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
+                <Link 
+                  to="/company" 
+                  className={`text-lg font-light px-4 py-2 rounded-md transition-colors ${
+                    isActive('/company') 
+                      ? 'text-blue-600 bg-blue-50' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
                   Company
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="w-[300px] p-6 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl">
-                    <div className="space-y-2">
-                      {companyItems.map((item) => (
-                        <Link
-                          key={item.name}
-                          to={item.href}
-                          className="block p-3 rounded-xl hover:bg-gray-50 transition-colors"
-                        >
-                          <div className="font-medium text-gray-900 hover:text-blue-600">
-                            {item.name}
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </NavigationMenuContent>
+                </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
@@ -156,13 +147,15 @@ const Header = () => {
             <Button 
               variant="ghost" 
               className="text-lg font-light text-gray-600 hover:text-gray-900 px-6 py-2 rounded-full"
+              asChild
             >
-              Sign In
+              <Link to="/login">Sign In</Link>
             </Button>
             <Button 
               className="bg-black hover:bg-gray-800 text-white text-lg px-8 py-3 rounded-full transition-all duration-300 hover:scale-105"
+              asChild
             >
-              Get Started
+              <Link to="/get-started">Get Started</Link>
             </Button>
           </div>
 
@@ -228,27 +221,21 @@ const Header = () => {
 
               {/* Mobile Company */}
               <div className="px-6 py-4">
-                <div className="text-lg font-medium text-gray-900 mb-3">Company</div>
-                <div className="space-y-2 ml-4">
-                  {companyItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      className="block py-2 text-gray-600 hover:text-gray-900"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
+                <Link
+                  to="/company"
+                  className="block text-lg font-medium text-gray-900 hover:text-blue-600"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Company
+                </Link>
               </div>
 
               <div className="px-6 pt-4 space-y-3">
-                <Button variant="ghost" className="w-full text-lg font-light rounded-full py-3">
-                  Sign In
+                <Button variant="ghost" className="w-full text-lg font-light rounded-full py-3" asChild>
+                  <Link to="/login" onClick={() => setIsMenuOpen(false)}>Sign In</Link>
                 </Button>
-                <Button className="w-full bg-black hover:bg-gray-800 text-white text-lg rounded-full py-3">
-                  Get Started
+                <Button className="w-full bg-black hover:bg-gray-800 text-white text-lg rounded-full py-3" asChild>
+                  <Link to="/get-started" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
                 </Button>
               </div>
             </div>
