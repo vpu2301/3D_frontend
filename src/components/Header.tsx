@@ -1,17 +1,39 @@
 
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
-  const navigation = [
-    { name: 'Features', href: '/features' },
+  const platformItems = [
+    { name: 'AI Automation', href: '/platform/automation', description: 'Intelligent task automation' },
+    { name: 'Workflow Builder', href: '/platform/workflow', description: 'Visual workflow creation' },
+    { name: 'Analytics Dashboard', href: '/platform/analytics', description: 'Real-time insights' },
+    { name: 'Integration Hub', href: '/platform/integrations', description: 'Connect your tools' }
+  ];
+
+  const solutionsItems = [
+    { name: 'For Sales Teams', href: '/solutions/sales', description: 'Boost sales productivity' },
+    { name: 'For Marketing', href: '/solutions/marketing', description: 'Automate campaigns' },
+    { name: 'For Operations', href: '/solutions/operations', description: 'Streamline processes' },
+    { name: 'For HR Teams', href: '/solutions/hr', description: 'People operations' }
+  ];
+
+  const companyItems = [
     { name: 'About', href: '/about' },
+    { name: 'Careers', href: '/careers' },
     { name: 'Contact', href: '/contact' },
+    { name: 'Blog', href: '/blog' }
   ];
 
   const isActive = (path: string) => {
@@ -33,21 +55,87 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-12">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`text-lg font-light transition-colors duration-300 hover:text-gray-900 ${
-                  isActive(item.href)
-                    ? 'text-gray-900'
-                    : 'text-gray-600'
-                }`}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList className="space-x-8">
+              {/* Platform Dropdown */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-lg font-light text-gray-600 hover:text-gray-900 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
+                  Platform
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="w-[500px] p-6 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl">
+                    <div className="grid grid-cols-2 gap-4">
+                      {platformItems.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          className="block p-4 rounded-xl hover:bg-gray-50 transition-colors group"
+                        >
+                          <div className="font-medium text-gray-900 mb-1 group-hover:text-blue-600">
+                            {item.name}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {item.description}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              {/* Solutions Dropdown */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-lg font-light text-gray-600 hover:text-gray-900 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
+                  Solutions
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="w-[500px] p-6 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl">
+                    <div className="grid grid-cols-2 gap-4">
+                      {solutionsItems.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          className="block p-4 rounded-xl hover:bg-gray-50 transition-colors group"
+                        >
+                          <div className="font-medium text-gray-900 mb-1 group-hover:text-blue-600">
+                            {item.name}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {item.description}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              {/* Company Dropdown */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-lg font-light text-gray-600 hover:text-gray-900 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
+                  Company
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="w-[300px] p-6 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl">
+                    <div className="space-y-2">
+                      {companyItems.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          className="block p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="font-medium text-gray-900 hover:text-blue-600">
+                            {item.name}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
@@ -79,20 +167,57 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-6 space-y-1 bg-white/95 backdrop-blur-xl border-t border-gray-100 rounded-b-2xl">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`block px-6 py-4 text-lg font-light rounded-xl transition-colors duration-300 ${
-                    isActive(item.href)
-                      ? 'text-gray-900 bg-gray-50'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {/* Mobile Platform */}
+              <div className="px-6 py-4">
+                <div className="text-lg font-medium text-gray-900 mb-3">Platform</div>
+                <div className="space-y-2 ml-4">
+                  {platformItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className="block py-2 text-gray-600 hover:text-gray-900"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mobile Solutions */}
+              <div className="px-6 py-4">
+                <div className="text-lg font-medium text-gray-900 mb-3">Solutions</div>
+                <div className="space-y-2 ml-4">
+                  {solutionsItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className="block py-2 text-gray-600 hover:text-gray-900"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mobile Company */}
+              <div className="px-6 py-4">
+                <div className="text-lg font-medium text-gray-900 mb-3">Company</div>
+                <div className="space-y-2 ml-4">
+                  {companyItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className="block py-2 text-gray-600 hover:text-gray-900"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
               <div className="px-6 pt-4 space-y-3">
                 <Button variant="ghost" className="w-full text-lg font-light rounded-full py-3">
                   Sign In

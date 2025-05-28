@@ -1,7 +1,7 @@
-
 import { ArrowRight, Play, CheckCircle, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import ROICalculator from '@/components/ROICalculator';
 
 const Home = () => {
   const features = [
@@ -102,6 +102,22 @@ const Home = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ROI Calculator Section */}
+      <section className="py-32 px-4 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+              Calculate Your ROI
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
+              See exactly how much time and money you can save with our AI automation platform.
+            </p>
+          </div>
+          
+          <ROICalculator />
         </div>
       </section>
 
