@@ -111,6 +111,20 @@ const Header = () => {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
+              {/* Features Link */}
+              <NavigationMenuItem>
+                <Link 
+                  to="/features" 
+                  className={`text-lg font-light px-4 py-2 rounded-md transition-colors ${
+                    isActive('/features') 
+                      ? 'text-blue-600 bg-blue-50' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Features
+                </Link>
+              </NavigationMenuItem>
+
               {/* Company Dropdown */}
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-lg font-light text-gray-600 hover:text-gray-900 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
@@ -199,6 +213,17 @@ const Header = () => {
                     </Link>
                   ))}
                 </div>
+              </div>
+
+              {/* Mobile Features */}
+              <div className="px-6 py-4">
+                <Link
+                  to="/features"
+                  className="block text-lg font-medium text-gray-900 hover:text-blue-600"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Features
+                </Link>
               </div>
 
               {/* Mobile Company */}
