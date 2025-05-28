@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Zap } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
@@ -9,7 +9,6 @@ const Header = () => {
   const location = useLocation();
 
   const navigation = [
-    { name: 'Home', href: '/' },
     { name: 'Features', href: '/features' },
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
@@ -20,29 +19,29 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 w-full bg-white/95 backdrop-blur-md border-b border-gray-200 z-50">
+    <header className="fixed top-0 w-full bg-white/80 backdrop-blur-xl border-b border-gray-100 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-              <Zap className="h-6 w-6 text-white" />
+          <Link to="/" className="flex items-center">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-3">
+              <div className="w-4 h-4 bg-white rounded-sm"></div>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-light text-gray-900 tracking-tight">
               3days.ai
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-12">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-sm font-medium transition-colors hover:text-blue-600 ${
+                className={`text-lg font-light transition-colors duration-300 hover:text-gray-900 ${
                   isActive(item.href)
-                    ? 'text-blue-600'
-                    : 'text-gray-700'
+                    ? 'text-gray-900'
+                    : 'text-gray-600'
                 }`}
               >
                 {item.name}
@@ -52,10 +51,15 @@ const Header = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" className="text-sm">
+            <Button 
+              variant="ghost" 
+              className="text-lg font-light text-gray-600 hover:text-gray-900 px-6 py-2 rounded-full"
+            >
               Sign In
             </Button>
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm">
+            <Button 
+              className="bg-black hover:bg-gray-800 text-white text-lg px-8 py-3 rounded-full transition-all duration-300 hover:scale-105"
+            >
               Get Started
             </Button>
           </div>
@@ -64,7 +68,7 @@ const Header = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-blue-600"
+              className="text-gray-600 hover:text-gray-900 transition-colors duration-300"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -74,26 +78,26 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
+            <div className="px-2 pt-2 pb-6 space-y-1 bg-white/95 backdrop-blur-xl border-t border-gray-100 rounded-b-2xl">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`block px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                  className={`block px-6 py-4 text-lg font-light rounded-xl transition-colors duration-300 ${
                     isActive(item.href)
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                      ? 'text-gray-900 bg-gray-50'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="px-3 py-2 space-y-2">
-                <Button variant="outline" className="w-full">
+              <div className="px-6 pt-4 space-y-3">
+                <Button variant="ghost" className="w-full text-lg font-light rounded-full py-3">
                   Sign In
                 </Button>
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                <Button className="w-full bg-black hover:bg-gray-800 text-white text-lg rounded-full py-3">
                   Get Started
                 </Button>
               </div>
