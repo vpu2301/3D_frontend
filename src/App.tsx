@@ -17,6 +17,8 @@ import NotFound from "./pages/NotFound";
 import StartFreeTrial from "./pages/StartFreeTrial";
 import WatchDemo from "./pages/WatchDemo";
 import Pricing from "./pages/Pricing";
+import ScheduleDemo from "./pages/ScheduleDemo";
+import Careers from "./pages/Careers";
 
 // Platform pages
 import Automation from "./pages/platform/Automation";
@@ -60,6 +62,8 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/start-free-trial" element={<StartFreeTrial />} />
               <Route path="/watch-demo" element={<WatchDemo />} />
+              <Route path="/schedule-demo" element={<ScheduleDemo />} />
+              <Route path="/careers" element={<Careers />} />
               
               {/* Platform routes */}
               <Route path="/platform/automation" element={<Automation />} />

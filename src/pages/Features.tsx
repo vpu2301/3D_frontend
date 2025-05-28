@@ -1,171 +1,191 @@
 
-import { ArrowRight, Zap, Shield, Workflow, BarChart3, Bot, Clock, Users, CheckCircle } from 'lucide-react';
+import { ArrowRight, Zap, Brain, Shield, BarChart3, Users, Clock, Workflow, Database, Lock, Globe, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
 
 const Features = () => {
   const mainFeatures = [
     {
-      icon: Bot,
-      title: 'Intelligent Digital Workers',
-      description: 'AI agents that understand context, learn from your patterns, and execute tasks with human-like precision.',
-      details: ['Natural language processing', 'Contextual understanding', 'Continuous learning', 'Multi-domain expertise'],
-      gradient: 'from-blue-500 to-cyan-500'
+      icon: Brain,
+      title: 'AI-Powered Digital Workers',
+      description: 'Intelligent automation that learns and adapts to your business processes',
+      details: [
+        'Natural language processing for document understanding',
+        'Machine learning algorithms that improve over time',
+        'Context-aware decision making capabilities',
+        'Multi-modal AI supporting text, images, and data'
+      ]
     },
     {
       icon: Workflow,
-      title: 'Seamless Integration',
-      description: 'Connects effortlessly with your existing ecosystem. No disruption, just enhancement.',
-      details: ['500+ pre-built integrations', 'API-first architecture', 'Custom connectors', 'Zero-downtime deployment'],
-      gradient: 'from-purple-500 to-pink-500'
+      title: 'Visual Workflow Builder',
+      description: 'Drag-and-drop interface to create complex automation workflows',
+      details: [
+        'No-code workflow design with intuitive interface',
+        'Pre-built templates for common business processes',
+        'Real-time workflow testing and debugging',
+        'Version control and rollback capabilities'
+      ]
+    },
+    {
+      icon: Database,
+      title: 'Universal Integrations',
+      description: 'Connect with 200+ applications and systems seamlessly',
+      details: [
+        'API-first architecture for maximum flexibility',
+        'Pre-built connectors for popular business tools',
+        'Custom integration development support',
+        'Real-time data synchronization across platforms'
+      ]
     },
     {
       icon: BarChart3,
       title: 'Advanced Analytics',
-      description: 'Real-time insights into productivity gains, performance metrics, and optimization opportunities.',
-      details: ['Live dashboards', 'Predictive analytics', 'ROI tracking', 'Performance insights'],
-      gradient: 'from-green-500 to-emerald-500'
+      description: 'Deep insights into automation performance and ROI',
+      details: [
+        'Real-time performance monitoring and alerts',
+        'Comprehensive ROI tracking and reporting',
+        'Predictive analytics for process optimization',
+        'Custom dashboards and business intelligence'
+      ]
     }
   ];
 
   const capabilities = [
-    'Document Processing & Analysis',
-    'Email Management & Auto-responses',
-    'Data Entry & Validation',
-    'Report Generation & Formatting',
-    'Customer Support Automation',
-    'Meeting Scheduling & Coordination',
-    'Invoice Processing & Tracking',
-    'Social Media Content Management',
-    'Quality Assurance Testing',
-    'Inventory Management',
-    'Lead Qualification & Scoring',
-    'Content Creation & Editing'
+    {
+      icon: Clock,
+      title: 'Time Tracking',
+      description: 'Monitor time saved across all automated processes'
+    },
+    {
+      icon: Users,
+      title: 'Team Collaboration',
+      description: 'Built-in tools for team coordination and task management'
+    },
+    {
+      icon: Shield,
+      title: 'Enterprise Security',
+      description: 'Bank-grade security with compliance certifications'
+    },
+    {
+      icon: Globe,
+      title: 'Global Deployment',
+      description: 'Multi-region deployment with local data residency'
+    },
+    {
+      icon: Smartphone,
+      title: 'Mobile Access',
+      description: 'Full-featured mobile apps for iOS and Android'
+    },
+    {
+      icon: Lock,
+      title: 'Access Control',
+      description: 'Granular permissions and role-based access management'
+    }
   ];
 
-  const benefits = [
+  const useCases = [
     {
-      stat: '24h',
-      label: 'Setup Time',
-      description: 'From signup to full deployment'
+      title: 'Document Processing',
+      description: 'Extract, analyze, and process documents automatically',
+      timesSaved: '85%',
+      processes: ['Invoice processing', 'Contract analysis', 'Data extraction', 'Compliance checking']
     },
     {
-      stat: '∞',
-      label: 'Scalability',
-      description: 'Grow without limits'
+      title: 'Customer Service',
+      description: 'Automate ticket routing, responses, and escalations',
+      timesSaved: '70%',
+      processes: ['Ticket classification', 'Auto-responses', 'Escalation rules', 'Knowledge base updates']
     },
     {
-      stat: '70%',
-      label: 'Cost Reduction',
-      description: 'In operational expenses'
+      title: 'Data Entry & Migration',
+      description: 'Eliminate manual data entry with intelligent automation',
+      timesSaved: '95%',
+      processes: ['CRM updates', 'Database migration', 'Form processing', 'Data validation']
     },
     {
-      stat: '99.9%',
-      label: 'Reliability',
-      description: 'Enterprise-grade uptime'
+      title: 'Report Generation',
+      description: 'Create and distribute reports automatically',
+      timesSaved: '80%',
+      processes: ['Data collection', 'Report formatting', 'Distribution', 'Performance tracking']
     }
   ];
 
   return (
     <div className="min-h-screen pt-16 bg-gradient-to-b from-slate-50 to-white">
       {/* Hero Section */}
-      <section className="py-32 px-4">
+      <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-7xl font-light text-gray-900 mb-8 tracking-tight leading-none">
-              Features that
+          <div className="text-center max-w-4xl mx-auto mb-16">
+            <h1 className="text-6xl md:text-7xl font-light text-gray-900 mb-8 tracking-tight leading-none">
+              Powerful Features for
               <span className="block font-medium bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                redefine possible
+                Intelligent Automation
               </span>
             </h1>
-            <p className="text-2xl text-gray-600 mb-12 font-light leading-relaxed">
-              Discover the comprehensive suite of AI-powered tools designed to amplify human potential.
+            <p className="text-xl text-gray-600 mb-12 font-light leading-relaxed">
+              Everything you need to automate complex business processes with AI-powered 
+              digital workers that think, learn, and adapt to your organization.
             </p>
-            <Button 
-              size="lg" 
-              className="bg-black hover:bg-gray-800 text-white text-lg px-12 py-4 rounded-full transition-all duration-300 hover:scale-105"
-            >
-              Explore Features
-              <ArrowRight className="ml-3 h-5 w-5" />
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-black hover:bg-gray-800 text-white rounded-full py-3"
+                asChild
+              >
+                <Link to="/start-free-trial">
+                  Start Free Trial
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full py-3"
+                asChild
+              >
+                <Link to="/schedule-demo">Schedule Demo</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Main Features */}
-      <section className="py-32 px-4">
+      <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="space-y-32">
-            {mainFeatures.map((feature, index) => (
-              <div key={index} className={`grid grid-cols-1 lg:grid-cols-2 gap-16 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
-                <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
-                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.gradient} mb-8`}>
-                    <feature.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <h3 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">{feature.title}</h3>
-                  <p className="text-xl text-gray-600 mb-8 leading-relaxed font-light">{feature.description}</p>
-                  <ul className="space-y-4">
-                    {feature.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-center text-gray-700">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-lg">{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className={`${index % 2 === 1 ? 'lg:col-start-1' : ''}`}>
-                  <div className={`h-96 rounded-3xl bg-gradient-to-br ${feature.gradient} opacity-10`}></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Capabilities Grid */}
-      <section className="py-32 bg-gradient-to-b from-gray-50 to-white px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
+          <div className="text-center mb-16">
             <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              What your digital workers can do
+              Core Platform Features
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
-              A comprehensive list of tasks your AI workforce handles with precision and reliability.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+              Built from the ground up for enterprise-scale automation.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {capabilities.map((capability, index) => (
-              <div 
-                key={index} 
-                className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
-              >
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-4 group-hover:scale-150 transition-transform duration-300"></div>
-                  <span className="text-gray-800 font-medium">{capability}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="py-32 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              Measurable impact from day one
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {benefits.map((benefit, index) => (
-              <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm text-center hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {mainFeatures.map((feature, index) => (
+              <Card key={index} className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
                 <CardContent className="p-8">
-                  <div className="text-6xl font-light text-gray-900 mb-4">{benefit.stat}</div>
-                  <div className="text-lg font-medium text-gray-900 mb-2">{benefit.label}</div>
-                  <div className="text-gray-600 font-light">{benefit.description}</div>
+                  <div className="flex items-center mb-6">
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 mr-6">
+                      <feature.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-medium text-gray-900 mb-2">{feature.title}</h3>
+                      <p className="text-gray-600">{feature.description}</p>
+                    </div>
+                  </div>
+                  <ul className="space-y-3">
+                    {feature.details.map((detail, idx) => (
+                      <li key={idx} className="flex items-start">
+                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                        <span className="text-gray-700">{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             ))}
@@ -173,47 +193,133 @@ const Features = () => {
         </div>
       </section>
 
-      {/* Security */}
-      <section className="py-32 bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white px-4">
+      {/* Additional Capabilities */}
+      <section className="py-20 bg-gray-50 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="flex items-center mb-8">
-                <Shield className="h-12 w-12 text-blue-400 mr-4" />
-                <h2 className="text-4xl font-light">Enterprise-grade security</h2>
-              </div>
-              <p className="text-xl text-gray-300 mb-8 leading-relaxed font-light">
-                Your data security is paramount. We maintain the highest standards of protection and compliance.
-              </p>
-              <div className="grid grid-cols-2 gap-6">
-                {[
-                  'SOC 2 Type II Certified',
-                  'GDPR & CCPA Compliant',
-                  'End-to-end Encryption',
-                  'Regular Security Audits',
-                  'Role-based Access Control',
-                  '24/7 Security Monitoring'
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-400 mr-3 flex-shrink-0" />
-                    <span className="text-gray-300">{item}</span>
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
+              Built for Enterprise
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+              Enterprise-grade capabilities that scale with your business.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {capabilities.map((capability, index) => (
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/80 backdrop-blur-sm">
+                <CardContent className="p-6 text-center">
+                  <div className="p-3 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-4">
+                    <capability.icon className="h-6 w-6 text-white" />
                   </div>
-                ))}
-              </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">{capability.title}</h3>
+                  <p className="text-gray-600 text-sm">{capability.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Use Cases */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
+              Real-World Use Cases
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+              See how organizations are using 3days.ai to transform their operations.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {useCases.map((useCase, index) => (
+              <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <CardContent className="p-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-medium text-gray-900">{useCase.title}</h3>
+                    <Badge className="bg-green-100 text-green-800 border-green-200">
+                      {useCase.timesSaved} time saved
+                    </Badge>
+                  </div>
+                  <p className="text-gray-600 mb-6">{useCase.description}</p>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 mb-3">Common Processes:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {useCase.processes.map((process, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-xs">
+                          {process}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Technical Specs */}
+      <section className="py-20 bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-light mb-6 tracking-tight">
+              Technical Specifications
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto font-light">
+              Enterprise-grade infrastructure built for scale and reliability.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-light mb-2">99.9%</div>
+              <div className="text-gray-400">Uptime SLA</div>
             </div>
-            <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-12 rounded-3xl border border-gray-700">
-              <h3 className="text-2xl font-light mb-6">Ready to get started?</h3>
-              <p className="text-gray-300 mb-8 leading-relaxed">
-                Experience the future of productivity. Start your journey today.
-              </p>
-              <Button 
-                size="lg" 
-                className="w-full bg-white text-black hover:bg-gray-100 rounded-full py-4 transition-all duration-300 hover:scale-105"
-              >
+            <div className="text-center">
+              <div className="text-4xl font-light mb-2">200+</div>
+              <div className="text-gray-400">Integrations</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-light mb-2">SOC 2</div>
+              <div className="text-gray-400">Compliant</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-light mb-2">24/7</div>
+              <div className="text-gray-400">Support</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Get Started?</h2>
+          <p className="text-xl mb-12 opacity-90 font-light">
+            Experience the power of AI automation with a free 30-day trial.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3"
+              asChild
+            >
+              <Link to="/start-free-trial">
                 Start Free Trial
-                <ArrowRight className="ml-3 h-5 w-5" />
-              </Button>
-            </div>
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-white/30 text-white hover:bg-white/10 rounded-full py-3"
+              asChild
+            >
+              <Link to="/contact">Contact Sales</Link>
+            </Button>
           </div>
         </div>
       </section>
