@@ -40,48 +40,120 @@ const Careers = () => {
       department: 'Engineering',
       location: 'Remote / San Francisco',
       type: 'Full-time',
-      description: 'Build and optimize large-scale AI models for workflow automation. Lead architecture decisions for our core AI platform.',
-      requirements: ['5+ years in AI/ML', 'Python, TensorFlow/PyTorch', 'Experience with LLMs', 'Distributed systems']
+      description: 'Lead the development of our core AI automation platform. You\'ll architect and build large-scale ML systems that process millions of workflows daily, working with transformer models, multi-agent systems, and distributed computing frameworks.',
+      requirements: [
+        '7+ years in AI/ML engineering',
+        'Deep expertise in Python, TensorFlow/PyTorch',
+        'Experience with LLMs and transformer architectures',
+        'Distributed systems and cloud infrastructure (AWS/GCP)',
+        'Track record of shipping ML products at scale'
+      ],
+      responsibilities: [
+        'Design and implement core AI algorithms for workflow automation',
+        'Optimize model performance and inference speed',
+        'Collaborate with product teams on AI feature development',
+        'Mentor junior engineers and establish ML best practices'
+      ]
     },
     {
       title: 'Product Manager - AI Platform',
       department: 'Product',
       location: 'Remote / New York',
       type: 'Full-time',
-      description: 'Define product strategy for our AI automation platform. Work closely with customers to understand pain points.',
-      requirements: ['3+ years PM experience', 'B2B SaaS background', 'Technical depth', 'Customer-focused mindset']
+      description: 'Drive product strategy for our AI automation platform. You\'ll work directly with enterprise customers to understand complex workflow needs and translate them into product requirements that our engineering team can execute.',
+      requirements: [
+        '5+ years product management experience',
+        'B2B SaaS background with enterprise customers',
+        'Technical depth to work with AI/ML teams',
+        'Experience with workflow automation tools',
+        'Strong analytical and customer research skills'
+      ],
+      responsibilities: [
+        'Define product roadmap for AI automation features',
+        'Conduct customer interviews and market research',
+        'Work with engineering on technical specifications',
+        'Analyze product metrics and user behavior'
+      ]
     },
     {
       title: 'Enterprise Sales Director',
       department: 'Sales',
       location: 'Remote / Multiple',
       type: 'Full-time',
-      description: 'Drive revenue growth by selling to Fortune 500 companies. Build relationships with C-level executives.',
-      requirements: ['7+ years enterprise sales', 'SaaS/automation experience', 'Proven track record', '$5M+ annual quota']
+      description: 'Lead our enterprise sales efforts targeting Fortune 500 companies. You\'ll build relationships with C-level executives, understand complex organizational needs, and position our AI platform as a strategic transformation tool.',
+      requirements: [
+        '8+ years enterprise B2B sales experience',
+        'Proven track record with $5M+ annual quotas',
+        'Experience selling SaaS/automation solutions',
+        'Existing network of enterprise decision makers',
+        'Consultative selling approach'
+      ],
+      responsibilities: [
+        'Manage full sales cycle for enterprise accounts',
+        'Build relationships with key stakeholders',
+        'Collaborate with technical teams on complex deals',
+        'Develop territory strategy and account plans'
+      ]
     },
     {
       title: 'DevOps Engineer',
       department: 'Engineering',
       location: 'Remote',
       type: 'Full-time',
-      description: 'Scale our infrastructure to support millions of automation workflows. Ensure 99.9% uptime.',
-      requirements: ['AWS/GCP expertise', 'Kubernetes/Docker', 'CI/CD pipelines', 'Monitoring & alerting']
+      description: 'Scale our infrastructure to support millions of automation workflows with 99.9% uptime. You\'ll work with Kubernetes, microservices, and cloud-native technologies to build resilient, auto-scaling systems.',
+      requirements: [
+        '5+ years DevOps/Infrastructure experience',
+        'Expert-level Kubernetes and Docker skills',
+        'Experience with AWS/GCP cloud platforms',
+        'Infrastructure as Code (Terraform, CloudFormation)',
+        'Monitoring and observability tools'
+      ],
+      responsibilities: [
+        'Design and maintain cloud infrastructure',
+        'Implement CI/CD pipelines and deployment automation',
+        'Monitor system performance and reliability',
+        'Optimize costs and resource utilization'
+      ]
     },
     {
-      title: 'UX Designer',
+      title: 'Senior UX Designer',
       department: 'Design',
       location: 'Remote / San Francisco',
       type: 'Full-time',
-      description: 'Design intuitive interfaces for complex automation workflows. Make AI accessible to business users.',
-      requirements: ['5+ years UX design', 'B2B product experience', 'Figma/Sketch proficiency', 'User research skills']
+      description: 'Design intuitive interfaces that make complex AI automation accessible to business users. You\'ll create design systems, conduct user research, and work closely with engineering to bring beautiful, functional experiences to life.',
+      requirements: [
+        '6+ years UX design experience',
+        'B2B product design background',
+        'Proficiency in Figma, design systems',
+        'User research and usability testing experience',
+        'Understanding of technical constraints'
+      ],
+      responsibilities: [
+        'Design user experiences for automation workflows',
+        'Conduct user research and usability testing',
+        'Create and maintain design system',
+        'Collaborate with product and engineering teams'
+      ]
     },
     {
       title: 'Customer Success Manager',
       department: 'Customer Success',
       location: 'Remote',
       type: 'Full-time',
-      description: 'Ensure customer success and drive expansion revenue. Help customers achieve maximum ROI.',
-      requirements: ['3+ years CS experience', 'SaaS background', 'Technical aptitude', 'Consultative approach']
+      description: 'Ensure our enterprise customers achieve maximum value from our platform. You\'ll work as a trusted advisor, helping customers implement complex automation strategies and driving expansion revenue through consultative engagement.',
+      requirements: [
+        '4+ years customer success experience',
+        'B2B SaaS background with enterprise accounts',
+        'Technical aptitude for automation platforms',
+        'Consultative approach to customer relationships',
+        'Experience with customer health metrics'
+      ],
+      responsibilities: [
+        'Manage relationships with enterprise customers',
+        'Drive product adoption and expansion revenue',
+        'Provide strategic consulting on automation',
+        'Analyze customer health and success metrics'
+      ]
     }
   ];
 
@@ -198,7 +270,7 @@ const Careers = () => {
             {openings.map((job, index) => (
               <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-8">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-4">
                         <h3 className="text-2xl font-medium text-gray-900">{job.title}</h3>
@@ -218,16 +290,31 @@ const Careers = () => {
                         </div>
                       </div>
 
-                      <p className="text-gray-700 mb-4 leading-relaxed">{job.description}</p>
+                      <p className="text-gray-700 mb-6 leading-relaxed">{job.description}</p>
 
-                      <div>
-                        <p className="text-sm font-medium text-gray-900 mb-2">Requirements:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {job.requirements.map((req, idx) => (
-                            <Badge key={idx} variant="secondary" className="text-xs">
-                              {req}
-                            </Badge>
-                          ))}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 mb-3">Requirements:</p>
+                          <ul className="space-y-2">
+                            {job.requirements.map((req, idx) => (
+                              <li key={idx} className="text-sm text-gray-600 flex items-start">
+                                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2 mt-2 flex-shrink-0"></div>
+                                {req}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 mb-3">Key Responsibilities:</p>
+                          <ul className="space-y-2">
+                            {job.responsibilities.map((resp, idx) => (
+                              <li key={idx} className="text-sm text-gray-600 flex items-start">
+                                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2 mt-2 flex-shrink-0"></div>
+                                {resp}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
                     </div>
