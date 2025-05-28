@@ -2,6 +2,7 @@ import { ArrowRight, Play, CheckCircle, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import ROICalculator from '@/components/ROICalculator';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const features = [
@@ -73,17 +74,23 @@ const Home = () => {
                 <Button 
                   size="lg" 
                   className="bg-black hover:bg-gray-800 text-white text-lg px-12 py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                  asChild
                 >
-                  Start Free Trial
-                  <ArrowRight className="ml-3 h-5 w-5" />
+                  <Link to="/start-free-trial">
+                    Start Free Trial
+                    <ArrowRight className="ml-3 h-5 w-5" />
+                  </Link>
                 </Button>
                 <Button 
                   size="lg" 
                   variant="ghost" 
                   className="text-lg px-8 py-4 rounded-full border border-gray-200 hover:bg-gray-50 transition-all duration-300 hover:scale-105"
+                  asChild
                 >
-                  <Play className="mr-3 h-5 w-5" />
-                  Watch Demo
+                  <Link to="/watch-demo">
+                    <Play className="mr-3 h-5 w-5" />
+                    Watch Demo
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -204,16 +211,20 @@ const Home = () => {
             <Button 
               size="lg" 
               className="bg-white text-black hover:bg-gray-100 text-lg px-12 py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-lg"
+              asChild
             >
-              Start Free Trial
-              <ArrowRight className="ml-3 h-5 w-5" />
+              <Link to="/start-free-trial">
+                Start Free Trial
+                <ArrowRight className="ml-3 h-5 w-5" />
+              </Link>
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
               className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4 rounded-full transition-all duration-300"
+              asChild
             >
-              Schedule Demo
+              <Link to="/watch-demo">Schedule Demo</Link>
             </Button>
           </div>
         </div>

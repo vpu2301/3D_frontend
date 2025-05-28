@@ -155,7 +155,7 @@ const Header = () => {
               className="bg-black hover:bg-gray-800 text-white text-lg px-8 py-3 rounded-full transition-all duration-300 hover:scale-105"
               asChild
             >
-              <Link to="/get-started">Get Started</Link>
+              <Link to="/start-free-trial">Get Started</Link>
             </Button>
           </div>
 
@@ -235,7 +235,7 @@ const Header = () => {
                   <Link to="/login" onClick={() => setIsMenuOpen(false)}>Sign In</Link>
                 </Button>
                 <Button className="w-full bg-black hover:bg-gray-800 text-white text-lg rounded-full py-3" asChild>
-                  <Link to="/get-started" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
+                  <Link to="/start-free-trial" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
                 </Button>
               </div>
             </div>
