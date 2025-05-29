@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones } from 'lucide-react';
+import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
@@ -25,36 +26,36 @@ const Header = () => {
     {
       category: 'BUSINESS SOLUTIONS',
       items: [
-        { name: 'Sales Automation', href: '/solutions/sales' },
-        { name: 'Marketing Operations', href: '/solutions/marketing' },
-        { name: 'Business Operations', href: '/solutions/operations' },
-        { name: 'Human Resources', href: '/solutions/hr' },
-        { name: 'Finance & Accounting', href: '/solutions/finance' },
-        { name: 'Customer Support', href: '/solutions/support' },
-        { name: 'IT Operations', href: '/solutions/it' },
-        { name: 'Legal Workflows', href: '/solutions/legal' }
+        { name: 'Sales Automation', href: '/solutions/sales', icon: Target },
+        { name: 'Marketing Operations', href: '/solutions/marketing', icon: BarChart },
+        { name: 'Business Operations', href: '/solutions/operations', icon: Cog },
+        { name: 'Human Resources', href: '/solutions/hr', icon: Users },
+        { name: 'Finance & Accounting', href: '/solutions/finance', icon: DollarSign },
+        { name: 'Customer Support', href: '/solutions/support', icon: MessageCircle },
+        { name: 'IT Operations', href: '/solutions/it', icon: Database },
+        { name: 'Legal Workflows', href: '/solutions/legal', icon: Scale }
       ]
     },
     {
       category: 'USE CASES',
       items: [
-        { name: 'Document Processing', href: '/use-cases/document-processing' },
-        { name: 'Data Entry Automation', href: '/use-cases/data-entry' },
-        { name: 'Customer Onboarding', href: '/use-cases/customer-onboarding' },
-        { name: 'Compliance Monitoring', href: '/use-cases/compliance' },
-        { name: 'Report Generation', href: '/use-cases/reports' },
-        { name: 'Email Management', href: '/use-cases/email-management' }
+        { name: 'Document Processing', href: '/use-cases/document-processing', icon: FileText },
+        { name: 'Data Entry Automation', href: '/use-cases/data-entry', icon: Database },
+        { name: 'Customer Onboarding', href: '/use-cases/customer-onboarding', icon: UserCheck },
+        { name: 'Compliance Monitoring', href: '/use-cases/compliance', icon: Shield },
+        { name: 'Report Generation', href: '/use-cases/reports', icon: BarChart },
+        { name: 'Email Management', href: '/use-cases/email-management', icon: Mail }
       ]
     },
     {
       category: 'ROLES',
       items: [
-        { name: 'For CEOs', href: '/roles/ceo' },
-        { name: 'For Operations Managers', href: '/roles/operations-manager' },
-        { name: 'For IT Directors', href: '/roles/it-director' },
-        { name: 'For Finance Teams', href: '/roles/finance-teams' },
-        { name: 'For HR Professionals', href: '/roles/hr-professionals' },
-        { name: 'For Sales Leaders', href: '/roles/sales-leaders' }
+        { name: 'For CEOs', href: '/roles/ceo', icon: Briefcase },
+        { name: 'For Operations Managers', href: '/roles/operations-manager', icon: Cog },
+        { name: 'For IT Directors', href: '/roles/it-director', icon: Database },
+        { name: 'For Finance Teams', href: '/roles/finance-teams', icon: DollarSign },
+        { name: 'For HR Professionals', href: '/roles/hr-professionals', icon: Users },
+        { name: 'For Sales Leaders', href: '/roles/sales-leaders', icon: Target }
       ]
     }
   ];
@@ -64,19 +65,19 @@ const Header = () => {
       category: 'Product',
       icon: Building2,
       items: [
-        { name: 'AI Assistants', href: '/product/ai-assistants' },
-        { name: 'Agents', href: '/product/agents' },
-        { name: 'Workflow Builder', href: '/product/workflow-builder' },
-        { name: 'Analytics Dashboard', href: '/product/analytics' },
-        { name: 'Integrations Hub', href: '/product/integrations' },
-        { name: 'API Gateway', href: '/product/api' }
+        { name: 'AI Assistants', href: '/product/ai-assistants', icon: Zap },
+        { name: 'Agents', href: '/product/agents', icon: Users },
+        { name: 'Workflow Builder', href: '/product/workflow-builder', icon: Cog },
+        { name: 'Analytics Dashboard', href: '/product/analytics', icon: BarChart },
+        { name: 'Integrations Hub', href: '/product/integrations', icon: Database },
+        { name: 'API Gateway', href: '/product/api', icon: Cog }
       ]
     },
     {
       category: 'Resources',
       icon: BookOpen,
       items: [
-        { name: 'Blog', href: '/resources/blog' },
+        { name: 'Blog', href: '/resources/blog', icon: BookOpen },
         { name: 'Watch Demo', href: '/watch-demo', icon: Play },
         { name: 'Schedule Demo', href: '/schedule-demo', icon: Calendar },
         { name: 'Contact Support', href: '/contact', icon: MessageCircle }
@@ -89,10 +90,10 @@ const Header = () => {
       category: 'Company',
       icon: Building2,
       items: [
-        { name: 'About Us', href: '/about' },
-        { name: 'Our Story', href: '/company' },
-        { name: 'Careers', href: '/careers' },
-        { name: 'Contact', href: '/contact' }
+        { name: 'About Us', href: '/about', icon: Building2 },
+        { name: 'Our Story', href: '/company', icon: BookOpen },
+        { name: 'Careers', href: '/careers', icon: Briefcase },
+        { name: 'Contact', href: '/contact', icon: MessageCircle }
       ]
     }
   ];
@@ -102,30 +103,30 @@ const Header = () => {
       category: 'Customer Stories',
       icon: Heart,
       items: [
-        { name: 'Success Stories', href: '/customers/success-stories' },
-        { name: 'Case Studies', href: '/customers/case-studies' },
-        { name: 'Testimonials', href: '/customers/testimonials' },
-        { name: 'ROI Calculator', href: '/customers/roi-calculator' }
+        { name: 'Success Stories', href: '/customers/success-stories', icon: Trophy },
+        { name: 'Case Studies', href: '/customers/case-studies', icon: BookMarked },
+        { name: 'Testimonials', href: '/customers/testimonials', icon: MessageSquare },
+        { name: 'ROI Calculator', href: '/customers/roi-calculator', icon: BarChart }
       ]
     },
     {
       category: 'Customer Success',
       icon: Trophy,
       items: [
-        { name: 'Implementation Guide', href: '/customers/implementation' },
-        { name: 'Best Practices', href: '/customers/best-practices' },
-        { name: 'Training Resources', href: '/customers/training' },
-        { name: 'Community Forum', href: '/customers/community' }
+        { name: 'Implementation Guide', href: '/customers/implementation', icon: CheckCircle },
+        { name: 'Best Practices', href: '/customers/best-practices', icon: Target },
+        { name: 'Training Resources', href: '/customers/training', icon: BookOpen },
+        { name: 'Community Forum', href: '/customers/community', icon: Users }
       ]
     },
     {
       category: 'Support',
       icon: Headphones,
       items: [
-        { name: 'Help Center', href: '/support/help-center' },
-        { name: 'Documentation', href: '/support/documentation' },
-        { name: 'Contact Support', href: '/contact' },
-        { name: 'System Status', href: '/support/status' }
+        { name: 'Help Center', href: '/support/help-center', icon: HelpCircle },
+        { name: 'Documentation', href: '/support/documentation', icon: BookOpen },
+        { name: 'Contact Support', href: '/contact', icon: MessageCircle },
+        { name: 'System Status', href: '/support/status', icon: Activity }
       ]
     }
   ];
@@ -143,27 +144,27 @@ const Header = () => {
     if (!isOpen) return null;
 
     return (
-      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-screen max-w-6xl bg-white border border-gray-200 shadow-2xl z-50 mt-2">
-        <div className="px-6 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="absolute top-full left-0 transform translate-x-0 w-screen max-w-5xl bg-white border border-gray-200 shadow-2xl z-50 mt-1 rounded-lg">
+        <div className="px-8 py-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((category, categoryIndex) => (
-              <div key={categoryIndex} className="space-y-4">
-                <div className="flex items-center space-x-2 border-b border-gray-200 pb-3">
-                  {category.icon && <category.icon className="h-5 w-5 text-blue-600" />}
-                  <h3 className="font-semibold text-gray-900 text-sm uppercase tracking-wide">
+              <div key={categoryIndex} className="space-y-3">
+                <div className="flex items-center space-x-2 border-b border-gray-200 pb-2">
+                  {category.icon && <category.icon className="h-4 w-4 text-blue-600" />}
+                  <h3 className="font-semibold text-gray-900 text-xs uppercase tracking-wide">
                     {category.category}
                   </h3>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {category.items.map((item: any, itemIndex: number) => (
                     <Link
                       key={itemIndex}
                       to={item.href}
-                      className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors text-sm py-2 px-3 rounded-lg hover:bg-blue-50 group"
+                      className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors text-sm py-2 px-3 rounded-lg hover:bg-blue-50 group"
                       onClick={() => setActiveDropdown(null)}
                     >
-                      {item.icon && <item.icon className="h-4 w-4 text-gray-400 group-hover:text-blue-600" />}
-                      <span>{item.name}</span>
+                      {item.icon && <item.icon className="h-4 w-4 text-gray-400 group-hover:text-blue-600 flex-shrink-0" />}
+                      <span className="font-medium">{item.name}</span>
                     </Link>
                   ))}
                 </div>
