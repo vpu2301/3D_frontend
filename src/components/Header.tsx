@@ -144,8 +144,8 @@ const Header = () => {
     if (!isOpen) return null;
 
     return (
-      <div className="absolute top-full left-0 right-0 w-full bg-white border border-gray-200 shadow-2xl z-50 rounded-xl mt-2 overflow-hidden mx-4 max-w-5xl lg:left-1/2 lg:right-auto lg:transform lg:-translate-x-1/2">
-        <div className="py-8 px-8">
+      <div className="absolute top-full left-0 w-screen bg-white border border-gray-200 shadow-2xl z-50 mt-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {items.map((category, categoryIndex) => (
               <div key={categoryIndex} className="space-y-4">
