@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,26 +18,8 @@ import WatchDemo from "./pages/WatchDemo";
 import Pricing from "./pages/Pricing";
 import ScheduleDemo from "./pages/ScheduleDemo";
 import Careers from "./pages/Careers";
-
-// Platform pages
-import Automation from "./pages/platform/Automation";
-import Workflow from "./pages/platform/Workflow";
-import Analytics from "./pages/platform/Analytics";
-import Integrations from "./pages/platform/Integrations";
-import Documents from "./pages/platform/Documents";
-import Tasks from "./pages/platform/Tasks";
-import Api from "./pages/platform/Api";
-import Security from "./pages/platform/Security";
-
-// Solutions pages
-import Sales from "./pages/solutions/Sales";
-import Marketing from "./pages/solutions/Marketing";
-import Operations from "./pages/solutions/Operations";
-import Hr from "./pages/solutions/Hr";
-import Finance from "./pages/solutions/Finance";
-import Support from "./pages/solutions/Support";
-import It from "./pages/solutions/It";
-import Legal from "./pages/solutions/Legal";
+import JobDetail from "./pages/JobDetail";
+import Blog from "./pages/resources/Blog";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +45,10 @@ const App = () => (
               <Route path="/watch-demo" element={<WatchDemo />} />
               <Route path="/schedule-demo" element={<ScheduleDemo />} />
               <Route path="/careers" element={<Careers />} />
+              <Route path="/careers/job/:id" element={<JobDetail />} />
+              
+              {/* Resources routes */}
+              <Route path="/resources/blog" element={<Blog />} />
               
               {/* Platform routes */}
               <Route path="/platform/automation" element={<Automation />} />

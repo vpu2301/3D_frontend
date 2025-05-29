@@ -1,11 +1,19 @@
 
-import { ArrowRight, MapPin, Clock, Users, Heart, Zap, Globe } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowRight, MapPin, Clock, Users, Heart, Zap, Globe, Filter, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Link } from 'react-router-dom';
 
 const Careers = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('all');
+  const [selectedLocation, setSelectedLocation] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
+
   const benefits = [
     {
       icon: Heart,
@@ -36,10 +44,12 @@ const Careers = () => {
 
   const openings = [
     {
+      id: '1',
       title: 'Senior AI Engineer',
       department: 'Engineering',
       location: 'Remote / San Francisco',
       type: 'Full-time',
+      experience: 'Senior',
       description: 'Lead the development of our core AI automation platform. You\'ll architect and build large-scale ML systems that process millions of workflows daily, working with transformer models, multi-agent systems, and distributed computing frameworks.',
       requirements: [
         '7+ years in AI/ML engineering',
@@ -56,10 +66,12 @@ const Careers = () => {
       ]
     },
     {
+      id: '2',
       title: 'Product Manager - AI Platform',
       department: 'Product',
       location: 'Remote / New York',
       type: 'Full-time',
+      experience: 'Mid-Senior',
       description: 'Drive product strategy for our AI automation platform. You\'ll work directly with enterprise customers to understand complex workflow needs and translate them into product requirements that our engineering team can execute.',
       requirements: [
         '5+ years product management experience',
@@ -76,10 +88,12 @@ const Careers = () => {
       ]
     },
     {
+      id: '3',
       title: 'Enterprise Sales Director',
       department: 'Sales',
       location: 'Remote / Multiple',
       type: 'Full-time',
+      experience: 'Senior',
       description: 'Lead our enterprise sales efforts targeting Fortune 500 companies. You\'ll build relationships with C-level executives, understand complex organizational needs, and position our AI platform as a strategic transformation tool.',
       requirements: [
         '8+ years enterprise B2B sales experience',
@@ -96,10 +110,12 @@ const Careers = () => {
       ]
     },
     {
+      id: '4',
       title: 'DevOps Engineer',
       department: 'Engineering',
       location: 'Remote',
       type: 'Full-time',
+      experience: 'Mid-Senior',
       description: 'Scale our infrastructure to support millions of automation workflows with 99.9% uptime. You\'ll work with Kubernetes, microservices, and cloud-native technologies to build resilient, auto-scaling systems.',
       requirements: [
         '5+ years DevOps/Infrastructure experience',
@@ -116,10 +132,12 @@ const Careers = () => {
       ]
     },
     {
+      id: '5',
       title: 'Senior UX Designer',
       department: 'Design',
       location: 'Remote / San Francisco',
       type: 'Full-time',
+      experience: 'Senior',
       description: 'Design intuitive interfaces that make complex AI automation accessible to business users. You\'ll create design systems, conduct user research, and work closely with engineering to bring beautiful, functional experiences to life.',
       requirements: [
         '6+ years UX design experience',
@@ -136,10 +154,12 @@ const Careers = () => {
       ]
     },
     {
+      id: '6',
       title: 'Customer Success Manager',
       department: 'Customer Success',
       location: 'Remote',
       type: 'Full-time',
+      experience: 'Mid-Level',
       description: 'Ensure our enterprise customers achieve maximum value from our platform. You\'ll work as a trusted advisor, helping customers implement complex automation strategies and driving expansion revenue through consultative engagement.',
       requirements: [
         '4+ years customer success experience',
@@ -154,6 +174,51 @@ const Careers = () => {
         'Provide strategic consulting on automation',
         'Analyze customer health and success metrics'
       ]
+    },
+    // Internships
+    {
+      id: '7',
+      title: 'AI Research Intern',
+      department: 'Engineering',
+      location: 'Remote / San Francisco',
+      type: 'Internship',
+      experience: 'Entry-Level',
+      description: 'Join our AI research team to explore cutting-edge machine learning techniques. Work on real projects that impact millions of users while learning from world-class AI engineers and researchers.',
+      requirements: [
+        'Pursuing CS, AI, or related degree',
+        'Strong programming skills in Python',
+        'Knowledge of ML fundamentals',
+        'Experience with TensorFlow or PyTorch',
+        'Research experience preferred'
+      ],
+      responsibilities: [
+        'Conduct research on novel AI techniques',
+        'Implement and test ML algorithms',
+        'Collaborate with senior engineers on projects',
+        'Present findings to the research team'
+      ]
+    },
+    {
+      id: '8',
+      title: 'Product Management Intern',
+      department: 'Product',
+      location: 'Remote / New York',
+      type: 'Internship',
+      experience: 'Entry-Level',
+      description: 'Get hands-on experience in B2B product management. Work with our product team to understand customer needs, analyze data, and contribute to product strategy for our AI automation platform.',
+      requirements: [
+        'Pursuing business, engineering, or related degree',
+        'Strong analytical and communication skills',
+        'Interest in technology and AI',
+        'Experience with data analysis tools',
+        'Customer-focused mindset'
+      ],
+      responsibilities: [
+        'Assist with customer research and interviews',
+        'Analyze product usage data and metrics',
+        'Support product roadmap planning',
+        'Create specifications for new features'
+      ]
     }
   ];
 
@@ -165,6 +230,21 @@ const Careers = () => {
     'Build for scale from day one',
     'Prioritize team growth and development'
   ];
+
+  // Filter jobs based on search and filters
+  const filteredOpenings = openings.filter(job => {
+    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         job.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesDepartment = selectedDepartment === 'all' || job.department === selectedDepartment;
+    const matchesLocation = selectedLocation === 'all' || job.location.includes(selectedLocation);
+    const matchesType = selectedType === 'all' || job.type === selectedType;
+
+    return matchesSearch && matchesDepartment && matchesLocation && matchesType;
+  });
+
+  const departments = [...new Set(openings.map(job => job.department))];
+  const locations = [...new Set(openings.flatMap(job => job.location.split(' / ')))];
+  const types = [...new Set(openings.map(job => job.type))];
 
   return (
     <div className="min-h-screen pt-16 bg-gradient-to-b from-slate-50 to-white">
@@ -266,70 +346,171 @@ const Careers = () => {
             </p>
           </div>
 
+          {/* Filters */}
+          <div className="mb-8">
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <Filter className="h-5 w-5 text-gray-600" />
+                  <h3 className="text-lg font-medium text-gray-900">Filter Positions</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      placeholder="Search positions..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  
+                  <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Departments</SelectItem>
+                      {departments.map(dept => (
+                        <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Location" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Locations</SelectItem>
+                      {locations.map(loc => (
+                        <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={selectedType} onValueChange={setSelectedType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Job Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      {types.map(type => (
+                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Job Listings */}
           <div className="space-y-6">
-            {openings.map((job, index) => (
-              <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-8">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-4">
-                        <h3 className="text-2xl font-medium text-gray-900">{job.title}</h3>
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                          {job.department}
-                        </Badge>
-                      </div>
-                      
-                      <div className="flex items-center gap-6 text-gray-600 mb-4">
-                        <div className="flex items-center">
-                          <MapPin className="h-4 w-4 mr-1" />
-                          {job.location}
-                        </div>
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-1" />
-                          {job.type}
-                        </div>
-                      </div>
-
-                      <p className="text-gray-700 mb-6 leading-relaxed">{job.description}</p>
-
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div>
-                          <p className="text-sm font-medium text-gray-900 mb-3">Requirements:</p>
-                          <ul className="space-y-2">
-                            {job.requirements.map((req, idx) => (
-                              <li key={idx} className="text-sm text-gray-600 flex items-start">
-                                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2 mt-2 flex-shrink-0"></div>
-                                {req}
-                              </li>
-                            ))}
-                          </ul>
+            {filteredOpenings.map((job) => (
+              <Link key={job.id} to={`/careers/job/${job.id}`}>
+                <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+                  <CardContent className="p-8">
+                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-4">
+                          <h3 className="text-2xl font-medium text-gray-900 hover:text-blue-600 transition-colors">{job.title}</h3>
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                            {job.department}
+                          </Badge>
+                          {job.type === 'Internship' && (
+                            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                              Internship
+                            </Badge>
+                          )}
                         </div>
                         
-                        <div>
-                          <p className="text-sm font-medium text-gray-900 mb-3">Key Responsibilities:</p>
-                          <ul className="space-y-2">
-                            {job.responsibilities.map((resp, idx) => (
-                              <li key={idx} className="text-sm text-gray-600 flex items-start">
-                                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2 mt-2 flex-shrink-0"></div>
-                                {resp}
-                              </li>
-                            ))}
-                          </ul>
+                        <div className="flex items-center gap-6 text-gray-600 mb-4">
+                          <div className="flex items-center">
+                            <MapPin className="h-4 w-4 mr-1" />
+                            {job.location}
+                          </div>
+                          <div className="flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            {job.type}
+                          </div>
+                          <div className="flex items-center">
+                            <Users className="h-4 w-4 mr-1" />
+                            {job.experience} Level
+                          </div>
+                        </div>
+
+                        <p className="text-gray-700 mb-6 leading-relaxed line-clamp-3">{job.description}</p>
+
+                        <div className="grid md:grid-cols-2 gap-6">
+                          <div>
+                            <p className="text-sm font-medium text-gray-900 mb-3">Key Requirements:</p>
+                            <ul className="space-y-2">
+                              {job.requirements.slice(0, 3).map((req, idx) => (
+                                <li key={idx} className="text-sm text-gray-600 flex items-start">
+                                  <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2 mt-2 flex-shrink-0"></div>
+                                  {req}
+                                </li>
+                              ))}
+                              {job.requirements.length > 3 && (
+                                <li className="text-sm text-blue-600 font-medium">
+                                  +{job.requirements.length - 3} more requirements
+                                </li>
+                              )}
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <p className="text-sm font-medium text-gray-900 mb-3">You'll be:</p>
+                            <ul className="space-y-2">
+                              {job.responsibilities.slice(0, 3).map((resp, idx) => (
+                                <li key={idx} className="text-sm text-gray-600 flex items-start">
+                                  <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2 mt-2 flex-shrink-0"></div>
+                                  {resp}
+                                </li>
+                              ))}
+                              {job.responsibilities.length > 3 && (
+                                <li className="text-sm text-blue-600 font-medium">
+                                  +{job.responsibilities.length - 3} more responsibilities
+                                </li>
+                              )}
+                            </ul>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="lg:ml-8 mt-6 lg:mt-0">
-                      <Button className="bg-black hover:bg-gray-800 text-white rounded-full px-8 py-3">
-                        Apply Now
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
+                      <div className="lg:ml-8 mt-6 lg:mt-0 flex flex-col items-end">
+                        <Button className="bg-black hover:bg-gray-800 text-white rounded-full px-8 py-3 mb-3">
+                          View Details
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                        <span className="text-sm text-gray-500">Click to learn more</span>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
+
+          {filteredOpenings.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg">No positions match your current filters.</p>
+              <Button 
+                variant="outline" 
+                className="mt-4"
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedDepartment('all');
+                  setSelectedLocation('all');
+                  setSelectedType('all');
+                }}
+              >
+                Clear Filters
+              </Button>
+            </div>
+          )}
 
           <div className="text-center mt-12">
             <p className="text-gray-600 mb-4">Don't see the perfect role?</p>

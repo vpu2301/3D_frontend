@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,28 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const location = useLocation();
+
+  // Close dropdown when clicking outside or removing cursor
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setActiveDropdown(null);
+    };
+
+    const handleMouseLeave = (e: MouseEvent) => {
+      const target = e.target as Element;
+      if (!target.closest('.dropdown-container')) {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
 
   const solutionsItems = [
     {
@@ -86,15 +108,29 @@ const Header = () => {
     return location.pathname === path;
   };
 
-  const handleDropdownToggle = (dropdown: string) => {
+  const handleDropdownToggle = (dropdown: string, e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
+  };
+
+  const handleDropdownHover = (dropdown: string) => {
+    setActiveDropdown(dropdown);
+  };
+
+  const handleDropdownLeave = () => {
+    // Small delay to allow moving to dropdown content
+    setTimeout(() => {
+      if (!document.querySelector('.dropdown-container:hover')) {
+        setActiveDropdown(null);
+      }
+    }, 150);
   };
 
   const renderMegaMenu = (items: any[], isOpen: boolean) => {
     if (!isOpen) return null;
 
     return (
-      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-screen max-w-5xl bg-white/95 backdrop-blur-xl border border-gray-100 shadow-2xl z-50 rounded-lg mt-2">
+      <div className="dropdown-container absolute top-full left-1/2 transform -translate-x-1/2 w-screen max-w-5xl bg-white/98 backdrop-blur-xl border border-gray-100 shadow-2xl z-50 rounded-lg mt-2">
         <div className="py-8 px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {items.map((category, categoryIndex) => (
@@ -139,9 +175,14 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {/* Solutions Dropdown */}
-            <div className="relative">
+            <div 
+              className="dropdown-container relative"
+              onMouseEnter={() => handleDropdownHover('solutions')}
+              onMouseLeave={handleDropdownLeave}
+            >
               <button
-                onClick={() => handleDropdownToggle('solutions')}
+                onClick={(e) => handleDropdownToggle('solutions', e)}
+                onTouchStart={(e) => handleDropdownToggle('solutions', e)}
                 className={`flex items-center text-gray-600 hover:text-gray-900 transition-all duration-200 py-2 px-3 rounded-md hover:bg-gray-50 ${
                   activeDropdown === 'solutions' ? 'text-blue-600 bg-blue-50' : ''
                 }`}
@@ -155,9 +196,14 @@ const Header = () => {
             </div>
 
             {/* Resources Dropdown */}
-            <div className="relative">
+            <div 
+              className="dropdown-container relative"
+              onMouseEnter={() => handleDropdownHover('resources')}
+              onMouseLeave={handleDropdownLeave}
+            >
               <button
-                onClick={() => handleDropdownToggle('resources')}
+                onClick={(e) => handleDropdownToggle('resources', e)}
+                onTouchStart={(e) => handleDropdownToggle('resources', e)}
                 className={`flex items-center text-gray-600 hover:text-gray-900 transition-all duration-200 py-2 px-3 rounded-md hover:bg-gray-50 ${
                   activeDropdown === 'resources' ? 'text-blue-600 bg-blue-50' : ''
                 }`}
@@ -171,9 +217,14 @@ const Header = () => {
             </div>
 
             {/* About Dropdown */}
-            <div className="relative">
+            <div 
+              className="dropdown-container relative"
+              onMouseEnter={() => handleDropdownHover('about')}
+              onMouseLeave={handleDropdownLeave}
+            >
               <button
-                onClick={() => handleDropdownToggle('about')}
+                onClick={(e) => handleDropdownToggle('about', e)}
+                onTouchStart={(e) => handleDropdownToggle('about', e)}
                 className={`flex items-center text-gray-600 hover:text-gray-900 transition-all duration-200 py-2 px-3 rounded-md hover:bg-gray-50 ${
                   activeDropdown === 'about' ? 'text-blue-600 bg-blue-50' : ''
                 }`}
