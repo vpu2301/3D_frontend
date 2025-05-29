@@ -48,9 +48,16 @@ import DataEntry from "./pages/use-cases/DataEntry";
 
 // Roles pages
 import CEO from "./pages/roles/CEO";
+import OperationsManager from "./pages/roles/OperationsManager";
+import ITDirector from "./pages/roles/ITDirector";
+import FinanceTeams from "./pages/roles/FinanceTeams";
+import HRProfessionals from "./pages/roles/HRProfessionals";
+import SalesLeaders from "./pages/roles/SalesLeaders";
 
 // Product pages
 import AIAssistants from "./pages/product/AIAssistants";
+import Agents from "./pages/product/Agents";
+import WorkflowBuilder from "./pages/product/WorkflowBuilder";
 
 // Customer pages
 import SuccessStories from "./pages/customers/SuccessStories";
@@ -110,9 +117,16 @@ const App = () => (
               
               {/* Roles routes */}
               <Route path="/roles/ceo" element={<CEO />} />
+              <Route path="/roles/operations-manager" element={<OperationsManager />} />
+              <Route path="/roles/it-director" element={<ITDirector />} />
+              <Route path="/roles/finance-teams" element={<FinanceTeams />} />
+              <Route path="/roles/hr-professionals" element={<HRProfessionals />} />
+              <Route path="/roles/sales-leaders" element={<SalesLeaders />} />
               
               {/* Product routes */}
               <Route path="/product/ai-assistants" element={<AIAssistants />} />
+              <Route path="/product/agents" element={<Agents />} />
+              <Route path="/product/workflow-builder" element={<WorkflowBuilder />} />
               
               {/* Customer routes */}
               <Route path="/customers/success-stories" element={<SuccessStories />} />
