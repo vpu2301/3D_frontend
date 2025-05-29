@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity } from 'lucide-react';
@@ -68,9 +67,9 @@ const Header = () => {
         { name: 'AI Assistants', href: '/product/ai-assistants', icon: Zap },
         { name: 'Agents', href: '/product/agents', icon: Users },
         { name: 'Workflow Builder', href: '/product/workflow-builder', icon: Cog },
-        { name: 'Analytics Dashboard', href: '/product/analytics', icon: BarChart },
-        { name: 'Integrations Hub', href: '/product/integrations', icon: Database },
-        { name: 'API Gateway', href: '/product/api', icon: Cog }
+        { name: 'Analytics Dashboard', href: '/platform/analytics', icon: BarChart },
+        { name: 'Integration Hub', href: '/platform/integrations', icon: Database },
+        { name: 'API Gateway', href: '/platform/api', icon: Cog }
       ]
     },
     {
