@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, Bot, Users, Zap, Brain, Shield, Target, CheckCircle, Settings, BarChart3 } from 'lucide-react';
+import { ArrowRight, Bot, Users, Zap, Brain, Shield, Target, CheckCircle, Settings, BarChart3, FileText, MessageSquare, Calendar, ShoppingCart, Phone, Mail, Search, Database, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Agents = () => {
@@ -42,17 +42,56 @@ const Agents = () => {
     {
       name: 'Customer Service Agent',
       description: '24/7 intelligent customer support with human-like interactions',
+      icon: MessageSquare,
       capabilities: ['Multi-language support', 'Sentiment analysis', 'Escalation handling', 'Knowledge base integration']
     },
     {
       name: 'Sales Assistant Agent',
       description: 'AI-powered lead qualification and sales process automation',
+      icon: ShoppingCart,
       capabilities: ['Lead scoring', 'CRM integration', 'Follow-up sequences', 'Performance analytics']
     },
     {
       name: 'Document Processor Agent',
       description: 'Intelligent document analysis and data extraction workflows',
+      icon: FileText,
       capabilities: ['OCR processing', 'Data validation', 'Workflow routing', 'Compliance checking']
+    },
+    {
+      name: 'Email Management Agent',
+      description: 'Automated email processing, categorization, and response generation',
+      icon: Mail,
+      capabilities: ['Email classification', 'Auto-responses', 'Priority handling', 'Calendar integration']
+    },
+    {
+      name: 'Data Analysis Agent',
+      description: 'Advanced data processing and insight generation from multiple sources',
+      icon: Database,
+      capabilities: ['Pattern recognition', 'Report generation', 'Trend analysis', 'Data visualization']
+    },
+    {
+      name: 'Scheduling Agent',
+      description: 'Smart calendar management and appointment scheduling automation',
+      icon: Calendar,
+      capabilities: ['Availability checking', 'Meeting coordination', 'Reminder management', 'Conflict resolution']
+    },
+    {
+      name: 'Research Agent',
+      description: 'Comprehensive research and information gathering across web sources',
+      icon: Search,
+      capabilities: ['Web scraping', 'Source validation', 'Summary generation', 'Fact checking']
+    },
+    {
+      name: 'Call Center Agent',
+      description: 'Voice-enabled AI for handling customer calls and inquiries',
+      icon: Phone,
+      capabilities: ['Speech recognition', 'Natural dialogue', 'Call routing', 'Issue resolution']
+    },
+    {
+      name: 'Workflow Automation Agent',
+      description: 'Process optimization and task automation across business systems',
+      icon: Settings,
+      capabilities: ['Process mapping', 'Task scheduling', 'System integration', 'Performance monitoring']
     }
   ];
 
@@ -71,7 +110,7 @@ const Agents = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full" asChild>
-                <Link to="/start-free-trial">Deploy AI Agents</Link>
+                <Link to="/get-started">Deploy AI Agents</Link>
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
                 <Link to="/watch-demo">Watch Demo</Link>
@@ -113,14 +152,19 @@ const Agents = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-light text-gray-900 mb-6">Specialized Agent Types</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Pre-configured AI agents for common business functions
+              Pre-configured AI agents for every business function and use case
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {agentTypes.map((agent, index) => (
               <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
-                <h3 className="text-2xl font-medium text-gray-900 mb-4">{agent.name}</h3>
+                <div className="flex items-center mb-4">
+                  <div className="p-3 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 mr-4">
+                    <agent.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-medium text-gray-900">{agent.name}</h3>
+                </div>
                 <p className="text-gray-600 mb-6">{agent.description}</p>
                 <div className="space-y-3 mb-6">
                   {agent.capabilities.map((capability, idx) => (
@@ -199,7 +243,7 @@ const Agents = () => {
             Start with intelligent AI agents that transform your business operations.
           </p>
           <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3" asChild>
-            <Link to="/start-free-trial">
+            <Link to="/get-started">
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

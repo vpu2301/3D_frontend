@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -67,6 +68,12 @@ import RoiCalculator from "./pages/customers/RoiCalculator";
 // Resources pages
 import ImplementationGuide from "./pages/resources/ImplementationGuide";
 import BestPractices from "./pages/resources/BestPractices";
+
+// Support pages
+import HelpCenter from "./pages/support/HelpCenter";
+import Documentation from "./pages/support/Documentation";
+import ContactCenter from "./pages/support/ContactCenter";
+import SystemStatus from "./pages/support/SystemStatus";
 
 const queryClient = new QueryClient();
 
@@ -141,6 +148,12 @@ const App = () => (
               <Route path="/customers/case-studies" element={<CaseStudies />} />
               <Route path="/customers/testimonials" element={<Testimonials />} />
               <Route path="/customers/roi-calculator" element={<RoiCalculator />} />
+              
+              {/* Support routes */}
+              <Route path="/support/help-center" element={<HelpCenter />} />
+              <Route path="/support/documentation" element={<Documentation />} />
+              <Route path="/support/contact" element={<ContactCenter />} />
+              <Route path="/support/status" element={<SystemStatus />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
