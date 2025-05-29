@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -61,6 +60,9 @@ import WorkflowBuilder from "./pages/product/WorkflowBuilder";
 
 // Customer pages
 import SuccessStories from "./pages/customers/SuccessStories";
+import CaseStudies from "./pages/customers/CaseStudies";
+import Testimonials from "./pages/customers/Testimonials";
+import RoiCalculator from "./pages/customers/RoiCalculator";
 
 const queryClient = new QueryClient();
 
@@ -130,6 +132,9 @@ const App = () => (
               
               {/* Customer routes */}
               <Route path="/customers/success-stories" element={<SuccessStories />} />
+              <Route path="/customers/case-studies" element={<CaseStudies />} />
+              <Route path="/customers/testimonials" element={<Testimonials />} />
+              <Route path="/customers/roi-calculator" element={<RoiCalculator />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
