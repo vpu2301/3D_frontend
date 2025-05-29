@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -71,6 +72,8 @@ import RoiCalculator from "./pages/customers/RoiCalculator";
 // Resources pages
 import ImplementationGuide from "./pages/resources/ImplementationGuide";
 import BestPractices from "./pages/resources/BestPractices";
+import Training from "./pages/resources/Training";
+import Community from "./pages/resources/Community";
 
 // Support pages
 import HelpCenter from "./pages/support/HelpCenter";
@@ -108,6 +111,8 @@ const App = () => (
               <Route path="/resources/blog" element={<Blog />} />
               <Route path="/resources/implementation-guide" element={<ImplementationGuide />} />
               <Route path="/resources/best-practices" element={<BestPractices />} />
+              <Route path="/resources/training" element={<Training />} />
+              <Route path="/resources/community" element={<Community />} />
               
               {/* Platform routes */}
               <Route path="/platform/automation" element={<Automation />} />

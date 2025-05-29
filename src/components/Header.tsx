@@ -112,10 +112,10 @@ const Header = () => {
       category: 'Customer Success',
       icon: Trophy,
       items: [
-        { name: 'Implementation Guide', href: '/customers/implementation', icon: CheckCircle },
-        { name: 'Best Practices', href: '/customers/best-practices', icon: Target },
-        { name: 'Training Resources', href: '/customers/training', icon: BookOpen },
-        { name: 'Community Forum', href: '/customers/community', icon: Users }
+        { name: 'Implementation Guide', href: '/resources/implementation-guide', icon: CheckCircle },
+        { name: 'Best Practices', href: '/resources/best-practices', icon: Target },
+        { name: 'Training Resources', href: '/resources/training', icon: BookOpen },
+        { name: 'Community Forum', href: '/resources/community', icon: Users }
       ]
     },
     {
