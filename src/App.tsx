@@ -42,6 +42,19 @@ import Support from "./pages/solutions/Support";
 import It from "./pages/solutions/It";
 import Legal from "./pages/solutions/Legal";
 
+// Use Cases pages
+import DocumentProcessing from "./pages/use-cases/DocumentProcessing";
+import DataEntry from "./pages/use-cases/DataEntry";
+
+// Roles pages
+import CEO from "./pages/roles/CEO";
+
+// Product pages
+import AIAssistants from "./pages/product/AIAssistants";
+
+// Customer pages
+import SuccessStories from "./pages/customers/SuccessStories";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -90,6 +103,19 @@ const App = () => (
               <Route path="/solutions/support" element={<Support />} />
               <Route path="/solutions/it" element={<It />} />
               <Route path="/solutions/legal" element={<Legal />} />
+              
+              {/* Use Cases routes */}
+              <Route path="/use-cases/document-processing" element={<DocumentProcessing />} />
+              <Route path="/use-cases/data-entry" element={<DataEntry />} />
+              
+              {/* Roles routes */}
+              <Route path="/roles/ceo" element={<CEO />} />
+              
+              {/* Product routes */}
+              <Route path="/product/ai-assistants" element={<AIAssistants />} />
+              
+              {/* Customer routes */}
+              <Route path="/customers/success-stories" element={<SuccessStories />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
