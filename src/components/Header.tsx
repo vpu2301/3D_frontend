@@ -40,10 +40,10 @@ const Header = () => {
       items: [
         { name: 'Document Processing', href: '/use-cases/document-processing', icon: FileText },
         { name: 'Data Entry Automation', href: '/use-cases/data-entry', icon: Database },
-        { name: 'Customer Onboarding', href: '/solutions/support', icon: UserCheck },
-        { name: 'Compliance Monitoring', href: '/solutions/legal', icon: Shield },
-        { name: 'Report Generation', href: '/platform/analytics', icon: BarChart },
-        { name: 'Email Management', href: '/solutions/support', icon: Mail }
+        { name: 'Customer Onboarding', href: '/use-cases/customer-onboarding', icon: UserCheck },
+        { name: 'Compliance Monitoring', href: '/use-cases/compliance-monitoring', icon: Shield },
+        { name: 'Report Generation', href: '/use-cases/report-generation', icon: BarChart },
+        { name: 'Email Management', href: '/use-cases/email-management', icon: Mail }
       ]
     },
     {

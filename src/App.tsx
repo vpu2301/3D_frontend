@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -45,6 +44,10 @@ import Legal from "./pages/solutions/Legal";
 // Use Cases pages
 import DocumentProcessing from "./pages/use-cases/DocumentProcessing";
 import DataEntry from "./pages/use-cases/DataEntry";
+import CustomerOnboarding from "./pages/use-cases/CustomerOnboarding";
+import ComplianceMonitoring from "./pages/use-cases/ComplianceMonitoring";
+import ReportGeneration from "./pages/use-cases/ReportGeneration";
+import EmailManagement from "./pages/use-cases/EmailManagement";
 
 // Roles pages
 import CEO from "./pages/roles/CEO";
@@ -129,6 +132,10 @@ const App = () => (
               {/* Use Cases routes */}
               <Route path="/use-cases/document-processing" element={<DocumentProcessing />} />
               <Route path="/use-cases/data-entry" element={<DataEntry />} />
+              <Route path="/use-cases/customer-onboarding" element={<CustomerOnboarding />} />
+              <Route path="/use-cases/compliance-monitoring" element={<ComplianceMonitoring />} />
+              <Route path="/use-cases/report-generation" element={<ReportGeneration />} />
+              <Route path="/use-cases/email-management" element={<EmailManagement />} />
               
               {/* Roles routes */}
               <Route path="/roles/ceo" element={<CEO />} />
