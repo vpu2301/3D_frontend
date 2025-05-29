@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -64,6 +65,10 @@ import CaseStudies from "./pages/customers/CaseStudies";
 import Testimonials from "./pages/customers/Testimonials";
 import RoiCalculator from "./pages/customers/RoiCalculator";
 
+// Resources pages
+import ImplementationGuide from "./pages/resources/ImplementationGuide";
+import BestPractices from "./pages/resources/BestPractices";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -92,6 +97,8 @@ const App = () => (
               
               {/* Resources routes */}
               <Route path="/resources/blog" element={<Blog />} />
+              <Route path="/resources/implementation-guide" element={<ImplementationGuide />} />
+              <Route path="/resources/best-practices" element={<BestPractices />} />
               
               {/* Platform routes */}
               <Route path="/platform/automation" element={<Automation />} />

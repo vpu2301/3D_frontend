@@ -112,10 +112,10 @@ const Agents = () => {
               Revolutionary digital workers with independent reasoning and adaptive capabilities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 text-lg shadow-xl" asChild>
+              <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-md" asChild>
                 <Link to="/get-started">Deploy AI Agents <Zap className="ml-2 h-5 w-5" /></Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 px-8 py-4 text-lg" asChild>
+              <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
                 <Link to="/watch-demo">Watch Demo</Link>
               </Button>
             </div>
@@ -172,8 +172,8 @@ const Agents = () => {
                   </div>
                   
                   <div className="mt-6 pt-4 border-t border-gray-100">
-                    <Button variant="outline" className={`w-full border-2 hover:bg-gradient-to-r ${worker.gradient} hover:text-white hover:border-transparent transition-all duration-300`}>
-                      Learn More
+                    <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 rounded-md" asChild>
+                      <Link to="/get-started">Learn More</Link>
                     </Button>
                   </div>
                 </CardContent>
@@ -253,10 +253,10 @@ const Agents = () => {
             Start with one specialized agent and scale to a full AI workforce that transforms your business operations and drives unprecedented growth.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-gradient-to-r from-pink-500 to-yellow-500 hover:from-pink-600 hover:to-yellow-600 text-white px-8 py-4 text-lg shadow-xl" asChild>
+            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3 rounded-md" asChild>
               <Link to="/get-started">Deploy Now <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 text-lg" asChild>
+            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-3 rounded-md" asChild>
               <Link to="/schedule-demo">Schedule Demo</Link>
             </Button>
           </div>
