@@ -9,86 +9,62 @@ const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const location = useLocation();
 
-  const platformItems = [
-    { 
-      category: 'Products',
-      items: [
-        { name: 'AI Automation', href: '/platform/automation', description: 'AI-powered task automation and workflow management' },
-        { name: 'Workflow Builder', href: '/platform/workflow', description: 'Visual workflow creation and process design' },
-        { name: 'Analytics Dashboard', href: '/platform/analytics', description: 'Real-time insights and performance tracking' },
-        { name: 'Integration Hub', href: '/platform/integrations', description: 'Connect your existing tools and platforms' },
-        { name: 'Document Processing', href: '/platform/documents', description: 'AI-powered document analysis and extraction' },
-        { name: 'Task Management', href: '/platform/tasks', description: 'Smart task orchestration and scheduling' },
-        { name: 'API Gateway', href: '/platform/api', description: 'Unified API access and management' },
-        { name: 'Security Center', href: '/platform/security', description: 'Enterprise-grade protection and compliance' }
-      ]
-    }
-  ];
-
   const solutionsItems = [
     {
-      category: 'Solutions',
+      category: 'SOLUTIONS',
       items: [
-        { name: 'Open Platform', href: '/solutions/platform', description: 'Comprehensive automation platform' },
-        { name: 'Safety & Risk', href: '/solutions/safety', description: 'Risk management and safety protocols' },
-        { name: 'Compliance', href: '/solutions/compliance', description: 'Regulatory compliance automation' },
-        { name: 'Fuel & Energy', href: '/solutions/energy', description: 'Energy management and optimization' },
-        { name: 'Security', href: '/solutions/security', description: 'Security monitoring and response' },
-        { name: 'Efficiency', href: '/solutions/efficiency', description: 'Operational efficiency improvements' },
-        { name: 'Sustainability', href: '/solutions/sustainability', description: 'Environmental sustainability tracking' }
-      ]
-    },
-    {
-      category: 'Industry',
-      items: [
-        { name: 'Public Sector', href: '/solutions/public-sector', description: 'Government and public services' },
-        { name: 'Construction', href: '/solutions/construction', description: 'Construction project management' },
-        { name: 'Transportation & Logistics', href: '/solutions/transportation', description: 'Supply chain and logistics' },
-        { name: 'Field Services', href: '/solutions/field-services', description: 'Field operations management' },
-        { name: 'Food & Beverage', href: '/solutions/food-beverage', description: 'Food industry compliance' },
-        { name: 'Utilities', href: '/solutions/utilities', description: 'Utility operations and maintenance' },
-        { name: 'Passenger Transit', href: '/solutions/transit', description: 'Public transportation systems' }
-      ]
-    },
-    {
-      category: 'Integrations',
-      items: [
-        { name: 'App Marketplace', href: '/integrations/marketplace', description: 'Pre-built application integrations' },
-        { name: 'OEM Integrations', href: '/integrations/oem', description: 'Original equipment manufacturer solutions' },
-        { name: 'Developer API', href: '/integrations/api', description: 'Developer tools and API access' },
-        { name: 'Experts Marketplace', href: '/integrations/experts', description: 'Professional services and consulting' },
-        { name: 'Developer Portal', href: '/integrations/portal', description: 'Developer resources and documentation' }
+        { name: 'Open Platform', href: '/solutions/platform' },
+        { name: 'Safety & Risk', href: '/solutions/safety' },
+        { name: 'Compliance', href: '/solutions/compliance' },
+        { name: 'Fuel & Energy', href: '/solutions/energy' },
+        { name: 'Security', href: '/solutions/security' },
+        { name: 'Efficiency', href: '/solutions/efficiency' },
+        { name: 'Sustainability', href: '/solutions/sustainability' },
+        { name: 'Logistics', href: '/solutions/logistics' },
+        { name: 'Utilities', href: '/solutions/utilities' }
       ]
     }
   ];
 
   const resourcesItems = [
     {
-      category: 'Support',
+      category: 'Platform',
       items: [
-        { name: 'Customer Services', href: '/support/customer-services', description: 'Get help from our support team' },
-        { name: 'Education & Training', href: '/support/training', description: 'Learn how to use our platform' },
-        { name: 'Developer API', href: '/support/api', description: 'API documentation and guides' }
+        { name: 'AI Automation', href: '/platform/automation' },
+        { name: 'Workflow Builder', href: '/platform/workflow' },
+        { name: 'Analytics', href: '/platform/analytics' },
+        { name: 'Integrations', href: '/platform/integrations' },
+        { name: 'API Gateway', href: '/platform/api' }
+      ]
+    },
+    {
+      category: 'Solutions',
+      items: [
+        { name: 'For Sales Teams', href: '/solutions/sales' },
+        { name: 'For Marketing', href: '/solutions/marketing' },
+        { name: 'For Operations', href: '/solutions/operations' },
+        { name: 'For HR Teams', href: '/solutions/hr' },
+        { name: 'For Finance', href: '/solutions/finance' }
       ]
     },
     {
       category: 'Resources',
       items: [
-        { name: 'Knowledge Base', href: '/resources/knowledge-base', description: 'Comprehensive guides and tutorials' },
-        { name: 'Developer Portal', href: '/resources/developer-portal', description: 'Developer tools and resources' },
-        { name: 'Contact Us', href: '/contact', description: 'Get in touch with our team' },
-        { name: 'Customer Stories', href: '/resources/stories', description: 'Success stories from our customers' },
-        { name: 'Blog', href: '/resources/blog', description: 'Latest news and insights' },
-        { name: 'Guides', href: '/resources/guides', description: 'Step-by-step implementation guides' },
-        { name: 'Product Tours', href: '/resources/tours', description: 'Interactive product demonstrations' },
-        { name: 'Video Library', href: '/resources/videos', description: 'Educational videos and webinars' }
+        { name: 'Blog', href: '/resources/blog' },
+        { name: 'Guides', href: '/resources/guides' },
+        { name: 'Demo', href: '/watch-demo' },
+        { name: 'Video Library', href: '/resources/videos' },
+        { name: 'Support', href: '/support' }
       ]
     },
     {
-      category: 'Events',
+      category: 'Company',
       items: [
-        { name: 'Events', href: '/events', description: 'Upcoming conferences and meetups' },
-        { name: 'Webinars', href: '/events/webinars', description: 'Live and recorded webinars' }
+        { name: 'About Us', href: '/company' },
+        { name: 'Careers', href: '/careers' },
+        { name: 'Contact', href: '/contact' },
+        { name: 'Pricing', href: '/pricing' },
+        { name: 'Partners', href: '/company/partners' }
       ]
     }
   ];
@@ -97,17 +73,11 @@ const Header = () => {
     {
       category: 'Company',
       items: [
-        { name: 'About Us', href: '/company', description: 'Learn about our mission and values' },
-        { name: '3days.ai Ventures', href: '/company/ventures', description: 'Our investment and partnership initiatives' },
-        { name: 'Partner Programs', href: '/company/partners', description: 'Join our partner ecosystem' }
-      ]
-    },
-    {
-      category: 'Careers',
-      items: [
-        { name: 'Investor Relations', href: '/careers/investors', description: 'Information for investors' },
-        { name: 'Contact Us', href: '/contact', description: 'Get in touch with our team' },
-        { name: '3days.ai Jobs', href: '/careers', description: 'Join our growing team' }
+        { name: 'About Us', href: '/company' },
+        { name: 'Careers', href: '/careers' },
+        { name: 'Contact', href: '/contact' },
+        { name: 'Pricing', href: '/pricing' },
+        { name: 'Partners', href: '/company/partners' }
       ]
     }
   ];
@@ -124,12 +94,12 @@ const Header = () => {
     if (!isOpen) return null;
 
     return (
-      <div className="absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-xl z-50">
-        <div className="max-w-7xl mx-auto p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="absolute top-full left-0 w-screen bg-white border-t border-gray-100 shadow-xl z-50">
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {items.map((category, categoryIndex) => (
               <div key={categoryIndex} className="space-y-4">
-                <h3 className="font-medium text-gray-900 text-sm uppercase tracking-wide border-b border-gray-200 pb-2">
+                <h3 className="font-medium text-gray-900 text-sm uppercase tracking-wide">
                   {category.category}
                 </h3>
                 <div className="space-y-3">
@@ -137,15 +107,10 @@ const Header = () => {
                     <Link
                       key={itemIndex}
                       to={item.href}
-                      className="block group"
+                      className="block text-gray-600 hover:text-gray-900 transition-colors text-sm"
                       onClick={() => setActiveDropdown(null)}
                     >
-                      <div className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
-                        {item.name}
-                      </div>
-                      <div className="text-sm text-gray-600 mt-1">
-                        {item.description}
-                      </div>
+                      {item.name}
                     </Link>
                   ))}
                 </div>
