@@ -1,39 +1,38 @@
-
 import React from 'react';
 
 const Partnerships = () => {
   const partners = [
     {
       name: 'Microsoft',
-      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png'
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg'
     },
     {
       name: 'Oracle',
-      logo: 'https://logos-world.net/wp-content/uploads/2020/09/Oracle-Logo.png'
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Oracle_logo.svg'
     },
     {
       name: 'Salesforce',
-      logo: 'https://logoeps.com/wp-content/uploads/2013/03/salesforce-vector-logo.png'
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg'
     },
     {
       name: 'SAP',
-      logo: 'https://logos-world.net/wp-content/uploads/2020/09/SAP-Logo.png'
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg'
     },
     {
       name: 'Slack',
-      logo: 'https://a.slack-edge.com/80588/marketing/img/icons/icon_slack_hash_colored.png'
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg'
     },
     {
       name: 'Adobe',
-      logo: 'https://www.adobe.com/content/dam/cc/icons/Adobe_Corporate_Horizontal_Red_HEX.svg'
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Adobe_Systems_logo_and_wordmark.svg'
     },
     {
       name: 'IBM',
-      logo: 'https://logos-world.net/wp-content/uploads/2020/09/IBM-Logo.png'
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg'
     },
     {
       name: 'Google',
-      logo: 'https://logos-world.net/wp-content/uploads/2020/09/Google-Logo.png'
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg'
     }
   ];
 
@@ -59,12 +58,12 @@ const Partnerships = () => {
               <img
                 src={partner.logo}
                 alt={`${partner.name} logo`}
-                className="h-8 w-auto max-w-[120px] object-contain filter grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
+                className="h-12 w-auto max-w-[160px] object-contain filter grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
                   const fallback = document.createElement('div');
-                  fallback.className = 'h-8 w-24 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500 font-medium';
+                  fallback.className = 'h-12 w-32 bg-gray-200 rounded flex items-center justify-center text-sm text-gray-500 font-medium';
                   fallback.textContent = partner.name;
                   target.parentNode?.appendChild(fallback);
                 }}
