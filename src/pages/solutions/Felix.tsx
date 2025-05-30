@@ -44,24 +44,43 @@ const Felix = () => {
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
-              Meet Felix: Your
-              <span className="block font-medium bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">
-                AI Finance Analyst
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto font-light leading-relaxed">
-              Felix automates invoice processing, expense approvals, and other routine financial tasks 
-              with near-perfect accuracy, freeing your finance team for strategic analysis.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-md" asChild>
-                <Link to="/start-free-trial">Try Felix Free</Link>
-              </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
-                <Link to="/schedule-demo">Request a Demo</Link>
-              </Button>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="text-center lg:text-left">
+              <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+                Meet Felix: Your
+                <span className="block font-medium bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">
+                  AI Finance Analyst
+                </span>
+              </h1>
+              <p className="text-xl text-gray-600 max-w-4xl mx-auto lg:mx-0 font-light leading-relaxed">
+                Felix automates invoice processing, expense approvals, and other routine financial tasks 
+                with near-perfect accuracy, freeing your finance team for strategic analysis.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8">
+                <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-md" asChild>
+                  <Link to="/start-free-trial">Try Felix Free</Link>
+                </Button>
+                <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
+                  <Link to="/schedule-demo">Request a Demo</Link>
+                </Button>
+              </div>
+            </div>
+            
+            <div className="relative animate-fade-in">
+              <div className="relative rounded-2xl overflow-hidden">
+                <img 
+                  src="/lovable-uploads/d25c8b0d-526c-429b-8628-32fd29d10bd9.png" 
+                  alt="Felix - AI Finance Analyst"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-green-500/20 to-transparent"></div>
+              </div>
+              <div className="absolute -bottom-6 -right-6 bg-white rounded-xl p-4 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-gray-900">Felix Active</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -71,7 +90,7 @@ const Felix = () => {
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Proven Results</h2>
+            <h2 className="text-4xl font-light text-gray-900 mb-6">Financial Impact</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Real impact on financial operations and cost savings
             </p>
