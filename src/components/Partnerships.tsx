@@ -1,4 +1,11 @@
 import React from 'react';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Partnerships = () => {
   const partners = [
@@ -33,8 +40,59 @@ const Partnerships = () => {
     {
       name: 'Google',
       logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg'
+    },
+    {
+      name: 'Amazon',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg'
+    },
+    {
+      name: 'Meta',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg'
+    },
+    {
+      name: 'Netflix',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg'
+    },
+    {
+      name: 'Tesla',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg'
+    },
+    {
+      name: 'Spotify',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg'
+    },
+    {
+      name: 'Airbnb',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg'
+    },
+    {
+      name: 'Uber',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png'
+    },
+    {
+      name: 'LinkedIn',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png'
     }
   ];
+
+  const getLogoClassName = (partnerName: string) => {
+    const baseClasses = "object-contain filter grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100";
+    
+    switch(partnerName) {
+      case 'Microsoft':
+        return `h-8 w-auto max-w-[140px] ${baseClasses}`;
+      case 'Oracle':
+        return `h-10 w-auto max-w-[120px] ${baseClasses}`;
+      case 'Tesla':
+      case 'Spotify':
+      case 'Airbnb':
+        return `h-10 w-10 ${baseClasses}`;
+      case 'LinkedIn':
+        return `h-10 w-10 ${baseClasses}`;
+      default:
+        return `h-12 w-auto max-w-[160px] ${baseClasses}`;
+    }
+  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-white to-gray-50 px-4 section-with-shapes">
@@ -48,28 +106,38 @@ const Partnerships = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-8 items-center">
-          {partners.map((partner, index) => (
-            <div 
-              key={index} 
-              className="flex items-center justify-center p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover-lift animate-fade-in floating-shape"
-              style={{animationDelay: `${index * 0.1}s`}}
-            >
-              <img
-                src={partner.logo}
-                alt={`${partner.name} logo`}
-                className="h-12 w-auto max-w-[160px] object-contain filter grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  const fallback = document.createElement('div');
-                  fallback.className = 'h-12 w-32 bg-gray-200 rounded flex items-center justify-center text-sm text-gray-500 font-medium';
-                  fallback.textContent = partner.name;
-                  target.parentNode?.appendChild(fallback);
-                }}
-              />
-            </div>
-          ))}
+        <div className="relative">
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {partners.map((partner, index) => (
+                <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/3 md:basis-1/4 lg:basis-1/6">
+                  <div className="flex items-center justify-center p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover-lift animate-fade-in floating-shape h-24">
+                    <img
+                      src={partner.logo}
+                      alt={`${partner.name} logo`}
+                      className={getLogoClassName(partner.name)}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const fallback = document.createElement('div');
+                        fallback.className = 'h-12 w-32 bg-gray-200 rounded flex items-center justify-center text-sm text-gray-500 font-medium';
+                        fallback.textContent = partner.name;
+                        target.parentNode?.appendChild(fallback);
+                      }}
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
         </div>
 
         <div className="text-center mt-16">
