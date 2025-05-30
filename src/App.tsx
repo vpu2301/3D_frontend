@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -69,6 +70,7 @@ import SalesLeaders from "./pages/roles/SalesLeaders";
 import AIAssistants from "./pages/product/AIAssistants";
 import Agents from "./pages/product/Agents";
 import WorkflowBuilder from "./pages/product/WorkflowBuilder";
+import FineTuning from "./pages/product/FineTuning";
 
 // Customer pages
 import SuccessStories from "./pages/customers/SuccessStories";
@@ -171,6 +173,7 @@ const App = () => (
               <Route path="/product/ai-assistants" element={<AIAssistants />} />
               <Route path="/product/agents" element={<Agents />} />
               <Route path="/product/workflow-builder" element={<WorkflowBuilder />} />
+              <Route path="/product/fine-tuning" element={<FineTuning />} />
               
               {/* Customer routes */}
               <Route path="/customers/success-stories" element={<SuccessStories />} />
