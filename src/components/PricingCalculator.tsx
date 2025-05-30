@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Calculator, Users, Zap, Building2, ArrowRight, Info, Bot } from 'lucide-react';
+import { Calculator, Users, Zap, Building2, ArrowRight, Info, Bot, User, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ const PricingCalculator = () => {
   const [integrations, setIntegrations] = useState([5]);
   const [tier, setTier] = useState('standard');
   const [deployment, setDeployment] = useState('cloud');
+  const [assignmentType, setAssignmentType] = useState('personal');
   const [customFeatures, setCustomFeatures] = useState(false);
 
   const tiers = {
@@ -77,6 +78,37 @@ const PricingCalculator = () => {
     }
   };
 
+  const assignmentTypes = {
+    personal: {
+      label: 'Personal Assistant',
+      icon: User,
+      description: 'Dedicated AI workers assigned to individual users',
+      baseMultiplier: 1,
+      supportDescription: 'Individual AI Employee support with personal account management',
+      features: [
+        'Personal AI Employee account manager',
+        'Individual user training and onboarding',
+        'Personalized AI worker configuration',
+        'Direct access to AI Employee specialists',
+        'Custom workflow optimization for individual needs'
+      ]
+    },
+    team: {
+      label: 'Team/Department',
+      icon: Users,
+      description: 'AI workers shared across teams or departments',
+      baseMultiplier: 0.85, // 15% discount for shared usage
+      supportDescription: 'Team-based AI Employee support with department coordination',
+      features: [
+        'Department-level AI Employee coordination',
+        'Team training sessions with AI Employees',
+        'Shared AI worker management dashboard',
+        'Department-specific integration support',
+        'Collaborative workflow optimization'
+      ]
+    }
+  };
+
   const featureMatrix = [
     {
       category: 'AI Employee Support Response Time',
@@ -93,11 +125,25 @@ const PricingCalculator = () => {
       enterprise: '24/7 Phone + Chat + Email'
     },
     {
-      category: 'Dedicated AI Employee Manager',
-      basic: 'None',
-      standard: 'AI Employee team',
-      premium: 'AI Employee success manager',
-      enterprise: 'AI Employee account team'
+      category: 'AI Employee Management Style',
+      basic: 'Self-service portal',
+      standard: assignmentType === 'personal' ? 'Personal AI Employee team' : 'Department AI Employee team',
+      premium: assignmentType === 'personal' ? 'Personal AI Employee manager' : 'Department AI Employee coordinator',
+      enterprise: assignmentType === 'personal' ? 'Dedicated personal AI account team' : 'Dedicated department AI account team'
+    },
+    {
+      category: 'AI Worker Assignment Model',
+      basic: 'Standard assignment',
+      standard: assignmentType === 'personal' ? 'Personal AI worker assignment' : 'Team/department AI worker pools',
+      premium: assignmentType === 'personal' ? 'Optimized personal AI assignment' : 'Advanced team AI coordination',
+      enterprise: assignmentType === 'personal' ? 'Custom personal AI development' : 'Custom department AI solutions'
+    },
+    {
+      category: 'Training & Onboarding',
+      basic: 'Self-service documentation',
+      standard: assignmentType === 'personal' ? 'Personal AI Employee tutorials' : 'Team AI Employee sessions',
+      premium: assignmentType === 'personal' ? 'One-on-one AI Employee training' : 'Department-wide AI Employee training',
+      enterprise: assignmentType === 'personal' ? 'Personal AI Employee specialist' : 'On-site department AI training'
     },
     {
       category: 'AI Worker Integrations',
@@ -107,25 +153,18 @@ const PricingCalculator = () => {
       enterprise: 'Custom development by AI team'
     },
     {
-      category: 'AI Worker Analytics & Insights',
+      category: 'Analytics & Insights',
       basic: 'Basic dashboard',
-      standard: 'Advanced analytics',
-      premium: 'AI-powered insights + recommendations',
-      enterprise: 'Custom AI analytics + Reporting'
+      standard: assignmentType === 'personal' ? 'Personal AI analytics' : 'Team AI analytics dashboard',
+      premium: assignmentType === 'personal' ? 'Personal AI insights + recommendations' : 'Department AI insights + coordination',
+      enterprise: assignmentType === 'personal' ? 'Custom personal AI analytics' : 'Enterprise department AI reporting'
     },
     {
-      category: 'AI Employee Training & Onboarding',
-      basic: 'Self-service documentation',
-      standard: 'AI Employee-led tutorials',
-      premium: 'Personalized AI Employee training',
-      enterprise: 'On-site AI Employee specialists'
-    },
-    {
-      category: 'AI Worker Optimization',
+      category: 'Workflow Optimization',
       basic: 'Basic performance metrics',
-      standard: 'Performance recommendations',
-      premium: 'AI Employee optimization guidance',
-      enterprise: 'Dedicated AI optimization team'
+      standard: assignmentType === 'personal' ? 'Personal workflow recommendations' : 'Team workflow optimization',
+      premium: assignmentType === 'personal' ? 'Personal AI Employee optimization' : 'Department AI Employee coordination',
+      enterprise: assignmentType === 'personal' ? 'Dedicated personal optimization team' : 'Dedicated department optimization team'
     },
     {
       category: 'Compliance & SLAs',
@@ -135,18 +174,11 @@ const PricingCalculator = () => {
       enterprise: 'Custom SLAs with AI guarantees'
     },
     {
-      category: 'AI Worker Development',
-      basic: 'Standard AI workers only',
-      standard: 'Custom configuration support',
-      premium: 'AI Employee development assistance',
-      enterprise: 'Custom AI worker development'
-    },
-    {
-      category: 'Strategic AI Consultation',
+      category: 'Strategic Consultation',
       basic: 'Community resources',
-      standard: 'Basic AI strategy guidance',
-      premium: 'AI Employee strategic sessions',
-      enterprise: 'Dedicated AI strategy consultation'
+      standard: assignmentType === 'personal' ? 'Personal AI strategy guidance' : 'Department AI strategy sessions',
+      premium: assignmentType === 'personal' ? 'Personal AI Employee strategic sessions' : 'Department AI Employee strategy coordination',
+      enterprise: assignmentType === 'personal' ? 'Personal AI strategy consultation' : 'Enterprise department AI strategy'
     }
   ];
 
@@ -166,16 +198,28 @@ const PricingCalculator = () => {
     // Cap the base price at around $800 before other factors
     basePrice = Math.min(basePrice, 800);
 
-    // Volume discounts for multiple workers
+    // Assignment type multiplier
+    const assignmentMultiplier = assignmentTypes[assignmentType].baseMultiplier;
+
+    // Volume discounts for multiple workers (enhanced for team assignments)
     let volumeMultiplier = 1;
-    if (workerCount >= 100) volumeMultiplier = 0.7; // 30% discount
-    else if (workerCount >= 50) volumeMultiplier = 0.8; // 20% discount
-    else if (workerCount >= 20) volumeMultiplier = 0.9; // 10% discount
+    if (assignmentType === 'team') {
+      // Better volume discounts for team assignments
+      if (workerCount >= 100) volumeMultiplier = 0.6; // 40% discount
+      else if (workerCount >= 50) volumeMultiplier = 0.7; // 30% discount
+      else if (workerCount >= 20) volumeMultiplier = 0.8; // 20% discount
+      else if (workerCount >= 10) volumeMultiplier = 0.9; // 10% discount
+    } else {
+      // Standard volume discounts for personal assignments
+      if (workerCount >= 100) volumeMultiplier = 0.7; // 30% discount
+      else if (workerCount >= 50) volumeMultiplier = 0.8; // 20% discount
+      else if (workerCount >= 20) volumeMultiplier = 0.9; // 10% discount
+    }
 
     // Usage-based pricing for excess hours
     const baseHours = 160;
     const excessHours = Math.max(0, monthlyHours - baseHours);
-    const excessCost = excessHours * 12; // $12 per excess hour
+    const excessCost = excessHours * (assignmentType === 'team' ? 10 : 12); // Slightly cheaper for team usage
 
     // Integration add-ons
     const baseIntegrations = 5;
@@ -197,7 +241,7 @@ const PricingCalculator = () => {
     const customFeaturesMultiplier = customFeatures ? 1.3 : 1;
 
     // Calculate per worker cost
-    const perWorkerBaseCost = basePrice * tierMultiplier[tier] * deploymentMultiplier * customFeaturesMultiplier * volumeMultiplier;
+    const perWorkerBaseCost = basePrice * assignmentMultiplier * tierMultiplier[tier] * deploymentMultiplier * customFeaturesMultiplier * volumeMultiplier;
     const perWorkerTotalCost = Math.min(perWorkerBaseCost + (excessCost / workerCount) + (integrationCost / workerCount), 1000);
     
     const totalMonthlyCost = perWorkerTotalCost * workerCount;
@@ -209,11 +253,13 @@ const PricingCalculator = () => {
       perWorkerCost: Math.round(perWorkerTotalCost),
       excessHoursCost: Math.round(excessCost),
       integrationsCost: Math.round(integrationCost),
-      annualSavings: Math.round(totalMonthlyCost * 12 - annualCost)
+      annualSavings: Math.round(totalMonthlyCost * 12 - annualCost),
+      assignmentDiscount: Math.round((1 - assignmentMultiplier) * 100)
     };
   };
 
   const pricing = calculatePricing();
+  const selectedAssignment = assignmentTypes[assignmentType];
 
   const getTierName = () => {
     const cost = pricing.perWorkerCost;
@@ -243,6 +289,48 @@ const PricingCalculator = () => {
             <h3 className="text-2xl font-medium text-gray-900 mb-6">Configure Your AI Workers</h3>
             
             <div className="space-y-6">
+              <div>
+                <Label className="block text-lg font-medium text-gray-700 mb-3">
+                  <UserCheck className="inline-block w-5 h-5 mr-2" />
+                  AI Worker Assignment Type
+                </Label>
+                <div className="grid grid-cols-1 gap-3">
+                  {Object.entries(assignmentTypes).map(([value, assignment]) => {
+                    const IconComponent = assignment.icon;
+                    return (
+                      <button
+                        key={value}
+                        onClick={() => setAssignmentType(value)}
+                        className={`p-4 rounded-lg border text-left transition-all duration-200 ${
+                          assignmentType === value
+                            ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
+                            : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center">
+                            <IconComponent className="w-5 h-5 mr-2" />
+                            <div className="font-medium">{assignment.label}</div>
+                          </div>
+                          {assignment.baseMultiplier < 1 && (
+                            <div className="text-sm text-green-600 font-medium">
+                              {pricing.assignmentDiscount}% off
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-sm text-gray-600 mb-2">{assignment.description}</div>
+                        <div className="text-xs text-gray-500">
+                          <div className="font-medium mb-1 text-blue-600">
+                            <Bot className="inline-block w-3 h-3 mr-1" />
+                            {assignment.supportDescription}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div>
                 <Label className="block text-lg font-medium text-gray-700 mb-3">
                   Number of AI Workers
@@ -394,12 +482,17 @@ const PricingCalculator = () => {
             <h3 className="text-2xl font-medium text-gray-900 mb-6">Your AI Worker Quote</h3>
             
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl mb-6">
-              <div className="text-sm text-gray-600 mb-1">Recommended Tier</div>
-              <div className="text-2xl font-medium text-gray-900 mb-2">{getTierName()}</div>
+              <div className="text-sm text-gray-600 mb-1">Configuration Summary</div>
+              <div className="text-2xl font-medium text-gray-900 mb-2">{selectedAssignment.label}</div>
               <div className="text-sm text-gray-600">
                 <Bot className="inline-block w-4 h-4 mr-1" />
-                Includes AI Employee support
+                {selectedAssignment.supportDescription}
               </div>
+              {pricing.assignmentDiscount > 0 && (
+                <div className="text-sm text-green-600 font-medium mt-2">
+                  {pricing.assignmentDiscount}% team assignment discount applied
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
@@ -439,6 +532,9 @@ const PricingCalculator = () => {
           <h3 className="text-2xl font-medium text-gray-900 mb-6 text-center">
             <Bot className="inline-block w-6 h-6 mr-2" />
             Complete AI Employee Support Comparison
+            <span className="block text-lg font-normal text-gray-600 mt-2">
+              {selectedAssignment.label} Configuration
+            </span>
           </h3>
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
             <Table>
