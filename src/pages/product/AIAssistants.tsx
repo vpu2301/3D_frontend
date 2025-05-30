@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, MessageSquare, Brain, Clock, Globe, Mic, FileText, Users, Zap, Shield } from 'lucide-react';
+import { ArrowRight, MessageSquare, Brain, Clock, Globe, Mic, FileText, Users, Zap, Shield, Calendar, Mail, MessageCircle, Calculator, TrendingUp, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AIAssistants = () => {
@@ -35,6 +35,49 @@ const AIAssistants = () => {
       icon: FileText,
       title: 'Document Understanding',
       description: 'Analyze, summarize, and extract insights from documents and files instantly.'
+    }
+  ];
+
+  const aiWorkers = [
+    {
+      name: 'Aria',
+      title: 'Executive Assistant',
+      description: 'Your 24/7 AI executive assistant that manages emails, schedules meetings, handles reminders, and more—freeing up hours of administrative tasks.',
+      icon: Calendar,
+      color: 'from-blue-500 to-purple-500',
+      link: '/solutions/aria'
+    },
+    {
+      name: 'Atlas',
+      title: 'Customer Support',
+      description: 'Handles routine support inquiries, escalates complex tickets, and maintains comprehensive knowledge base for instant customer assistance.',
+      icon: MessageCircle,
+      color: 'from-green-500 to-blue-500',
+      link: '/solutions/atlas'
+    },
+    {
+      name: 'Felix',
+      title: 'Finance Analyst',
+      description: 'Automates invoice processing, expense approvals, and financial data analysis with near-perfect accuracy for your finance team.',
+      icon: Calculator,
+      color: 'from-green-500 to-emerald-500',
+      link: '/solutions/felix'
+    },
+    {
+      name: 'Maya',
+      title: 'Marketing Specialist',
+      description: 'Transforms marketing efforts with intelligent campaign optimization, content personalization, and performance analytics.',
+      icon: TrendingUp,
+      color: 'from-pink-500 to-purple-500',
+      link: '/solutions/maya'
+    },
+    {
+      name: 'Sage',
+      title: 'Research Analyst',
+      description: 'Delivers comprehensive research and analysis with unmatched speed and accuracy, transforming business intelligence gathering.',
+      icon: Search,
+      color: 'from-indigo-500 to-teal-500',
+      link: '/solutions/sage'
     }
   ];
 
@@ -81,8 +124,45 @@ const AIAssistants = () => {
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* AI Workers Section */}
       <section className="py-20 px-4 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-gray-900 mb-6">Meet Our AI Workers</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Specialized AI assistants designed for specific roles and functions in your organization
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {aiWorkers.map((worker, index) => (
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <CardContent className="p-8 text-center">
+                  <div className={`p-4 rounded-2xl bg-gradient-to-r ${worker.color} w-fit mx-auto mb-6`}>
+                    <worker.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-medium text-gray-900 mb-2">{worker.name}</h3>
+                  <h4 className="text-lg text-gray-600 mb-4">{worker.title}</h4>
+                  <p className="text-gray-600 leading-relaxed mb-6">{worker.description}</p>
+                  <Button 
+                    variant="outline" 
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full w-full" 
+                    asChild
+                  >
+                    <Link to={worker.link}>
+                      Learn More
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-light text-gray-900 mb-6">Assistant Capabilities</h2>
@@ -108,7 +188,7 @@ const AIAssistants = () => {
       </section>
 
       {/* Use Cases */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-light text-gray-900 mb-6">Popular Use Cases</h2>
@@ -119,7 +199,7 @@ const AIAssistants = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {useCases.map((useCase, index) => (
-              <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
+              <div key={index} className="bg-gray-50 p-8 rounded-3xl shadow-lg">
                 <h3 className="text-2xl font-medium text-gray-900 mb-4">{useCase.title}</h3>
                 <p className="text-gray-600 mb-6">{useCase.description}</p>
                 <div className="space-y-3">
@@ -137,7 +217,7 @@ const AIAssistants = () => {
       </section>
 
       {/* Performance Stats */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-light text-gray-900 mb-6">Assistant Performance</h2>
@@ -165,7 +245,7 @@ const AIAssistants = () => {
       </section>
 
       {/* Advanced Features */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white">
             <h3 className="text-3xl font-light mb-8 text-center">Enterprise Features</h3>
