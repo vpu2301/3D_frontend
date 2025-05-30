@@ -1,3 +1,4 @@
+
 import { ArrowRight, Play, CheckCircle, Star, Users, Shield, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -68,18 +69,18 @@ const Home = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="animate-fade-in">
-              <h1 className="text-6xl md:text-7xl font-light text-gray-900 mb-8 tracking-tight leading-tight">
+              <h1 className="text-5xl md:text-6xl font-light text-gray-900 mb-8 tracking-tight leading-tight">
                 Reclaim 3 Days Every Week with
                 <span className="block font-medium bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                   Autonomous AI Employees
                 </span>
               </h1>
-              <p className="text-2xl text-gray-600 mb-12 font-light leading-relaxed max-w-4xl mx-auto">
+              <p className="text-xl text-gray-600 mb-12 font-light leading-relaxed">
                 Boost productivity, reduce costs, and free your team from repetitive tasks—so they can focus on what truly matters.
               </p>
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <div className="flex flex-col sm:flex-row gap-6">
                 <Button 
                   size="lg" 
                   className="bg-black hover:bg-gray-800 text-white text-lg px-12 py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
@@ -101,6 +102,23 @@ const Home = () => {
                     Book a Demo
                   </Link>
                 </Button>
+              </div>
+            </div>
+            
+            <div className="relative animate-fade-in lg:block">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src="/lovable-uploads/05a6d222-b447-40b8-aabb-f48a3b3fe366.png" 
+                  alt="AI Employee Team - Diverse professionals representing our autonomous AI workforce"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+              <div className="absolute -bottom-6 -right-6 bg-white rounded-xl p-4 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-gray-900">AI Team Active</span>
+                </div>
               </div>
             </div>
           </div>
