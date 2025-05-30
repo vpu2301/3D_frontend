@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Calculator, Users, Zap, Building2, ArrowRight, Info, Bot, User, UserCheck, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -112,7 +111,8 @@ const PricingCalculator = () => {
         'Direct access to AI Employee specialists',
         'Custom workflow optimization for individual needs'
       ],
-      allowsFree: true
+      allowsFree: true,
+      minimumCost: undefined
     },
     team: {
       label: 'Team/Department Pro (up to 100 employees)',
@@ -147,7 +147,8 @@ const PricingCalculator = () => {
         'Dedicated enterprise account team'
       ],
       allowsFree: false,
-      requiresContactSales: true
+      requiresContactSales: true,
+      minimumCost: undefined
     }
   };
 
