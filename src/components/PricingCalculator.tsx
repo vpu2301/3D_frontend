@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Calculator, Users, Zap, Building2, ArrowRight, Info, Bot, User, UserCheck, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -389,6 +390,10 @@ const PricingCalculator = () => {
     return assignmentType === 'enterprise' || (assignmentType === 'team' && tier === 'enterprise');
   };
 
+  const shouldHidePricing = () => {
+    return assignmentType === 'enterprise';
+  };
+
   return (
     <Card className="w-full max-w-6xl mx-auto bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
       <CardHeader className="text-center pb-8">
@@ -685,7 +690,7 @@ const PricingCalculator = () => {
                 <Bot className="inline-block w-4 h-4 mr-1" />
                 {selectedAssignment.supportDescription}
               </div>
-              {pricing.assignmentDiscount > 0 && (
+              {pricing.assignmentDiscount > 0 && !shouldHidePricing() && (
                 <div className="text-sm text-green-600 font-medium mt-2">
                   {pricing.assignmentDiscount}% volume discount applied
                 </div>
@@ -697,36 +702,54 @@ const PricingCalculator = () => {
               )}
             </div>
 
-            <div className="space-y-4">
-              <div className="bg-white p-6 rounded-2xl border border-gray-100">
-                <div className="text-sm text-gray-600 mb-1">Cost Per AI Worker</div>
-                <div className="text-4xl font-light text-gray-900">
-                  {pricing.isFree ? 'FREE' : `$${pricing.perWorkerCost}`}
+            {shouldHidePricing() ? (
+              <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-8 rounded-2xl text-white text-center">
+                <h4 className="text-2xl font-medium mb-4">Enterprise Pricing</h4>
+                <p className="text-gray-300 mb-6">
+                  Custom pricing tailored to your organization's specific needs and scale.
+                </p>
+                <div className="text-lg text-gray-200 mb-6">
+                  Get a personalized quote with:
                 </div>
-                <div className="text-sm text-gray-600 mt-1">per month</div>
+                <ul className="text-left text-gray-300 mb-8 space-y-2 max-w-md mx-auto">
+                  <li>• Custom volume discounts</li>
+                  <li>• Dedicated infrastructure</li>
+                  <li>• White-glove AI Employee service</li>
+                  <li>• Flexible billing terms</li>
+                </ul>
               </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="bg-white p-6 rounded-2xl border border-gray-100">
+                  <div className="text-sm text-gray-600 mb-1">Cost Per AI Worker</div>
+                  <div className="text-4xl font-light text-gray-900">
+                    {pricing.isFree ? 'FREE' : `$${pricing.perWorkerCost}`}
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">per month</div>
+                </div>
 
-              <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                <div className="text-sm text-gray-600 mb-1">Total Monthly Cost</div>
-                <div className="text-3xl font-light text-gray-900">
-                  {pricing.isFree ? 'FREE' : `$${pricing.monthlyTotal.toLocaleString()}`}
+                <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                  <div className="text-sm text-gray-600 mb-1">Total Monthly Cost</div>
+                  <div className="text-3xl font-light text-gray-900">
+                    {pricing.isFree ? 'FREE' : `$${pricing.monthlyTotal.toLocaleString()}`}
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">
+                    {pricing.isFree ? 'Limited to 2 workers, 20h each' : `${workers[0]} workers × $${pricing.perWorkerCost}`}
+                  </div>
+                  {assignmentType === 'team' && !pricing.isFree && pricing.monthlyTotal === 299 && (
+                    <div className="text-sm text-blue-600 mt-1">Minimum team pricing applied</div>
+                  )}
                 </div>
-                <div className="text-sm text-gray-600 mt-1">
-                  {pricing.isFree ? 'Limited to 2 workers, 20h each' : `${workers[0]} workers × $${pricing.perWorkerCost}`}
-                </div>
-                {assignmentType === 'team' && !pricing.isFree && pricing.monthlyTotal === 299 && (
-                  <div className="text-sm text-blue-600 mt-1">Minimum team pricing applied</div>
+
+                {!pricing.isFree && (
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
+                    <div className="text-sm text-gray-600 mb-1">Annual Total (10% discount)</div>
+                    <div className="text-3xl font-light text-gray-900">${pricing.annualTotal.toLocaleString()}</div>
+                    <div className="text-sm text-green-600 mt-1">Save ${pricing.annualSavings.toLocaleString()}/year</div>
+                  </div>
                 )}
               </div>
-
-              {!pricing.isFree && (
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
-                  <div className="text-sm text-gray-600 mb-1">Annual Total (10% discount)</div>
-                  <div className="text-3xl font-light text-gray-900">${pricing.annualTotal.toLocaleString()}</div>
-                  <div className="text-sm text-green-600 mt-1">Save ${pricing.annualSavings.toLocaleString()}/year</div>
-                </div>
-              )}
-            </div>
+            )}
 
             <div className="space-y-3 mt-8">
               {shouldShowContactSales() ? (
@@ -740,9 +763,11 @@ const PricingCalculator = () => {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               )}
-              <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 py-4 rounded-full">
-                Schedule AI Employee Consultation
-              </Button>
+              {!shouldHidePricing() && (
+                <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 py-4 rounded-full">
+                  Schedule AI Employee Consultation
+                </Button>
+              )}
             </div>
           </div>
         </div>
