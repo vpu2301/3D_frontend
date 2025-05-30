@@ -1,8 +1,8 @@
-
 import { ArrowRight, Play, CheckCircle, Star, Users, Shield, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import ROICalculator from '@/components/ROICalculator';
+import Partnerships from '@/components/Partnerships';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -120,6 +120,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Partnerships Section */}
+      <Partnerships />
 
       {/* Key Benefits Section */}
       <section className="py-32 px-4">
