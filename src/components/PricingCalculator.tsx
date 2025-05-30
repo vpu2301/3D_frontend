@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const PricingCalculator = () => {
   const [workers, setWorkers] = useState([1]);
@@ -19,6 +20,7 @@ const PricingCalculator = () => {
       label: 'Basic',
       price: '-20%',
       description: 'Perfect for getting started with AI workers',
+      manager: 'Self-service support',
       features: [
         'Email support (48h response)',
         'Basic documentation access',
@@ -30,6 +32,7 @@ const PricingCalculator = () => {
       label: 'Standard',
       price: 'Base',
       description: 'Ideal for growing teams and businesses',
+      manager: 'Support team assistance',
       features: [
         'Priority email support (24h response)',
         'Live chat support (business hours)',
@@ -42,6 +45,7 @@ const PricingCalculator = () => {
       label: 'Premium',
       price: '+30%',
       description: 'Advanced support for mission-critical operations',
+      manager: 'Dedicated customer success manager',
       features: [
         'Priority support (12h response)',
         'Phone support (business hours)',
@@ -55,6 +59,7 @@ const PricingCalculator = () => {
       label: 'Enterprise',
       price: '+60%',
       description: 'White-glove service for large organizations',
+      manager: 'Dedicated technical account manager + Customer success manager',
       features: [
         'SLA-backed support (4h response)',
         '24/7 phone and chat support',
@@ -66,6 +71,65 @@ const PricingCalculator = () => {
       ]
     }
   };
+
+  const featureMatrix = [
+    {
+      category: 'Support Response Time',
+      basic: '48 hours',
+      standard: '24 hours',
+      premium: '12 hours',
+      enterprise: '4 hours (SLA-backed)'
+    },
+    {
+      category: 'Support Channels',
+      basic: 'Email only',
+      standard: 'Email + Live chat',
+      premium: 'Email + Chat + Phone',
+      enterprise: '24/7 Phone + Chat + Email'
+    },
+    {
+      category: 'Dedicated Manager',
+      basic: 'None',
+      standard: 'Support team',
+      premium: 'Customer success manager',
+      enterprise: 'Technical + Success managers'
+    },
+    {
+      category: 'Integrations',
+      basic: 'Standard only',
+      standard: 'All standard',
+      premium: 'Standard + Custom assistance',
+      enterprise: 'Custom development support'
+    },
+    {
+      category: 'Analytics & Reporting',
+      basic: 'Basic dashboard',
+      standard: 'Standard analytics',
+      premium: 'Advanced analytics',
+      enterprise: 'Custom reporting + Analytics'
+    },
+    {
+      category: 'Training & Onboarding',
+      basic: 'Self-service docs',
+      standard: 'Documentation + Tutorials',
+      premium: 'Team training sessions',
+      enterprise: 'On-site training + Onboarding'
+    },
+    {
+      category: 'Compliance & SLAs',
+      basic: 'Standard terms',
+      standard: 'Standard terms',
+      premium: 'Enhanced compliance',
+      enterprise: 'Custom SLAs + Full compliance'
+    },
+    {
+      category: 'Priority Features',
+      basic: 'Standard roadmap',
+      standard: 'Standard roadmap',
+      premium: 'Feature input',
+      enterprise: 'Priority feature requests'
+    }
+  ];
 
   const calculatePricing = () => {
     const workerCount = workers[0];
@@ -160,7 +224,6 @@ const PricingCalculator = () => {
             <h3 className="text-2xl font-medium text-gray-900 mb-6">Configure Your AI Workers</h3>
             
             <div className="space-y-6">
-              {/* Number of AI Workers slider */}
               <div>
                 <Label className="block text-lg font-medium text-gray-700 mb-3">
                   Number of AI Workers
@@ -180,7 +243,6 @@ const PricingCalculator = () => {
                 </div>
               </div>
 
-              {/* Monthly Usage Hours slider */}
               <div>
                 <Label className="block text-lg font-medium text-gray-700 mb-3">
                   Monthly Usage Hours (per worker)
@@ -201,7 +263,6 @@ const PricingCalculator = () => {
                 <p className="text-sm text-gray-500 mt-2">160 hours included in base price</p>
               </div>
 
-              {/* Required Integrations slider */}
               <div>
                 <Label className="block text-lg font-medium text-gray-700 mb-3">
                   Required Integrations
@@ -243,6 +304,7 @@ const PricingCalculator = () => {
                       </div>
                       <div className="text-sm text-gray-600 mb-2">{level.description}</div>
                       <div className="text-xs text-gray-500">
+                        <div className="font-medium mb-1">Manager: {level.manager}</div>
                         {level.features.slice(0, 2).map((feature, idx) => (
                           <div key={idx}>• {feature}</div>
                         ))}
@@ -254,21 +316,6 @@ const PricingCalculator = () => {
                       </div>
                     </button>
                   ))}
-                </div>
-                
-                {/* Selected Support Level Details */}
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
-                  <h4 className="font-medium text-gray-900 mb-2">
-                    {supportLevels[supportLevel].label} Support Features:
-                  </h4>
-                  <ul className="space-y-1">
-                    {supportLevels[supportLevel].features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start text-sm text-gray-700">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></div>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
 
@@ -359,6 +406,40 @@ const PricingCalculator = () => {
               </Button>
             </div>
           </div>
+        </div>
+
+        {/* Support Level Features Comparison Table */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-medium text-gray-900 mb-6 text-center">
+            Complete Support Level Comparison
+          </h3>
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50">
+                  <TableHead className="font-medium text-gray-900">Features</TableHead>
+                  <TableHead className="font-medium text-gray-900 text-center">Basic (-20%)</TableHead>
+                  <TableHead className="font-medium text-gray-900 text-center">Standard (Base)</TableHead>
+                  <TableHead className="font-medium text-gray-900 text-center">Premium (+30%)</TableHead>
+                  <TableHead className="font-medium text-gray-900 text-center">Enterprise (+60%)</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {featureMatrix.map((feature, index) => (
+                  <TableRow key={index} className="hover:bg-gray-50">
+                    <TableCell className="font-medium text-gray-900">{feature.category}</TableCell>
+                    <TableCell className="text-center text-gray-700">{feature.basic}</TableCell>
+                    <TableCell className="text-center text-gray-700">{feature.standard}</TableCell>
+                    <TableCell className="text-center text-gray-700">{feature.premium}</TableCell>
+                    <TableCell className="text-center text-gray-700">{feature.enterprise}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <p className="text-sm text-gray-500 text-center mt-4">
+            All support levels include access to our AI worker platform and basic integrations
+          </p>
         </div>
       </CardContent>
     </Card>
