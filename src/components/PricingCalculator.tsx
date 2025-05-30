@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Calculator, Users, Zap, Building2, ArrowRight, Info, Bot, User, UserCheck, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -116,9 +115,9 @@ const PricingCalculator = () => {
       minimumCost: undefined
     },
     team: {
-      label: 'Team/Department Pro (up to 100 employees)',
+      label: 'Team/Department Pro (10-100 employees)',
       icon: Users,
-      description: 'AI workers shared across teams or departments up to 100 employees',
+      description: 'AI workers shared across teams or departments with 10-100 employees',
       baseMultiplier: 1.2, // Increased to cover computational costs
       supportDescription: 'Professional team-based AI Employee support with department coordination',
       features: [
@@ -282,17 +281,22 @@ const PricingCalculator = () => {
       basePrice += (monthlyHours - 160) * 5;
     }
     
-    basePrice = Math.min(basePrice, 800);
+    // Set maximum price cap based on assignment type
+    if (assignmentType === 'personal') {
+      basePrice = Math.min(basePrice, 599); // $599 max for personal workers
+    } else {
+      basePrice = Math.min(basePrice, 800); // Higher cap for team/enterprise
+    }
 
     // Assignment type multiplier with computational cost adjustments
     let assignmentMultiplier = assignmentTypes[assignmentType].baseMultiplier;
     
     // Additional computational cost for team size
     if (assignmentType === 'team') {
-      const teamComputationalMultiplier = Math.min(1 + (currentTeamSize - 1) * 0.01, 1.5); // Max 50% increase
+      const teamComputationalMultiplier = Math.min(1 + (currentTeamSize - 10) * 0.01, 1.5); // Max 50% increase, starting from 10
       assignmentMultiplier *= teamComputationalMultiplier;
     } else if (assignmentType === 'enterprise') {
-      const enterpriseComputationalMultiplier = Math.min(1 + (currentTeamSize - 100) * 0.005, 2); // Scale with enterprise size
+      const enterpriseComputationalMultiplier = Math.min(1 + (currentTeamSize - 100) * 0.005, 2); // Scale with enterprise size, starting from 100
       assignmentMultiplier *= enterpriseComputationalMultiplier;
     }
 
@@ -342,7 +346,10 @@ const PricingCalculator = () => {
 
     // Calculate per worker cost
     const perWorkerBaseCost = basePrice * assignmentMultiplier * tierMultiplier[tier] * deploymentMultiplier * customFeaturesMultiplier * volumeMultiplier;
-    const perWorkerTotalCost = Math.min(perWorkerBaseCost + (excessCost / workerCount) + (integrationCost / workerCount), 1500); // Increased max for enterprise
+    
+    // Apply max price cap per worker based on assignment type
+    const maxPerWorkerPrice = assignmentType === 'personal' ? 599 : 1500;
+    const perWorkerTotalCost = Math.min(perWorkerBaseCost + (excessCost / workerCount) + (integrationCost / workerCount), maxPerWorkerPrice);
     
     let totalMonthlyCost = perWorkerTotalCost * workerCount;
 
@@ -404,7 +411,7 @@ const PricingCalculator = () => {
           AI Worker Pricing Calculator
         </CardTitle>
         <p className="text-xl text-gray-600 font-light">
-          Configure your AI workers with AI Employee support from $0-$1500 per worker per month
+          Configure your AI workers with AI Employee support from $0-$599 per worker per month
         </p>
       </CardHeader>
       
@@ -478,18 +485,18 @@ const PricingCalculator = () => {
                     value={teamSize}
                     onValueChange={setTeamSize}
                     max={assignmentType === 'team' ? 100 : 1000}
-                    min={assignmentType === 'team' ? 2 : 101}
+                    min={assignmentType === 'team' ? 10 : 100}
                     step={1}
                     className="mb-3"
                   />
                   <div className="flex justify-between text-sm text-gray-500">
-                    <span>{assignmentType === 'team' ? '2' : '101'}</span>
+                    <span>{assignmentType === 'team' ? '10' : '100'}</span>
                     <span className="font-medium text-lg text-gray-900">{teamSize[0]} employees</span>
                     <span>{assignmentType === 'team' ? '100' : '1000+'}</span>
                   </div>
                   <p className="text-sm text-gray-500 mt-2">
                     {assignmentType === 'team' 
-                      ? 'Team/Department Pro is for up to 100 employees (minimum $299/month)' 
+                      ? 'Team/Department Pro is for 10-100 employees (minimum $299/month)' 
                       : 'Enterprise tier is for 100+ employees with enhanced computational resources'
                     }
                   </p>
