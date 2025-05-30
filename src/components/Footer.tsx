@@ -96,6 +96,11 @@ const Footer = () => {
                   Maya (Marketing Specialist)
                 </Link>
               </li>
+              <li>
+                <Link to="/solutions/nova" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Nova (Legal Specialist)
+                </Link>
+              </li>
             </ul>
           </div>
 
