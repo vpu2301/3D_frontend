@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -50,6 +49,7 @@ import Felix from "./pages/solutions/Felix";
 import Maya from "./pages/solutions/Maya";
 import Sage from "./pages/solutions/Sage";
 import Nova from "./pages/solutions/Nova";
+import Emma from "./pages/solutions/Emma";
 
 // Use Cases pages
 import DocumentProcessing from "./pages/use-cases/DocumentProcessing";
@@ -154,6 +154,7 @@ const App = () => (
               <Route path="/solutions/maya" element={<Maya />} />
               <Route path="/solutions/sage" element={<Sage />} />
               <Route path="/solutions/nova" element={<Nova />} />
+              <Route path="/solutions/emma" element={<Emma />} />
               
               {/* Use Cases routes */}
               <Route path="/use-cases/document-processing" element={<DocumentProcessing />} />

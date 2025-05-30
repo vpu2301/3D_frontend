@@ -101,6 +101,11 @@ const Footer = () => {
                   Nova (Legal Specialist)
                 </Link>
               </li>
+              <li>
+                <Link to="/solutions/emma" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Emma (Sales Specialist)
+                </Link>
+              </li>
             </ul>
           </div>
 
