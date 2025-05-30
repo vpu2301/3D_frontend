@@ -45,7 +45,7 @@ const PricingCalculator = () => {
     },
     basic: {
       label: 'Basic',
-      price: '-20%',
+      price: 'Base',
       description: 'Perfect for getting started with AI workers',
       aiSupport: 'AI Employee support via email',
       features: [
@@ -58,7 +58,7 @@ const PricingCalculator = () => {
     },
     standard: {
       label: 'Standard',
-      price: 'Base',
+      price: '+20%',
       description: 'Ideal for growing teams and businesses',
       aiSupport: 'Dedicated AI Employee team',
       features: [
@@ -72,7 +72,7 @@ const PricingCalculator = () => {
     },
     premium: {
       label: 'Premium',
-      price: '+30%',
+      price: '+50%',
       description: 'Advanced support for mission-critical operations',
       aiSupport: 'Senior AI Employee specialist',
       features: [
@@ -87,7 +87,7 @@ const PricingCalculator = () => {
     },
     enterprise: {
       label: 'Enterprise',
-      price: '+60%',
+      price: '+80%',
       description: 'White-glove AI Employee service for large organizations',
       aiSupport: 'Dedicated AI Employee account team',
       features: [
@@ -337,13 +337,13 @@ const PricingCalculator = () => {
     const integrationRate = assignmentType === 'personal' ? 50 : assignmentType === 'team' ? 75 : 100;
     const integrationCost = excessIntegrations * integrationRate;
 
-    // FIXED: Tier pricing multipliers - this is the main fix for the bug
+    // FIXED: Updated tier pricing multipliers
     const tierMultiplier = {
       free: 0,
-      basic: 0.8,      // 20% discount
-      standard: 1,     // Base price
-      premium: 1.3,    // 30% increase
-      enterprise: 1.6  // 60% increase
+      basic: 1,        // Base price (no discount)
+      standard: 1.2,   // 20% increase
+      premium: 1.5,    // 50% increase
+      enterprise: 1.8  // 80% increase
     };
 
     console.log('Tier multiplier for', tier, ':', tierMultiplier[tier]);
@@ -821,10 +821,10 @@ const PricingCalculator = () => {
                   {selectedAssignment.allowsFree && (
                     <TableHead className="font-medium text-gray-900 text-center">Free ($0)</TableHead>
                   )}
-                  <TableHead className="font-medium text-gray-900 text-center">Basic (-20%)</TableHead>
-                  <TableHead className="font-medium text-gray-900 text-center">Standard (Base)</TableHead>
-                  <TableHead className="font-medium text-gray-900 text-center">Premium (+30%)</TableHead>
-                  <TableHead className="font-medium text-gray-900 text-center">Enterprise (+60%)</TableHead>
+                  <TableHead className="font-medium text-gray-900 text-center">Basic (Base)</TableHead>
+                  <TableHead className="font-medium text-gray-900 text-center">Standard (+20%)</TableHead>
+                  <TableHead className="font-medium text-gray-900 text-center">Premium (+50%)</TableHead>
+                  <TableHead className="font-medium text-gray-900 text-center">Enterprise (+80%)</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
