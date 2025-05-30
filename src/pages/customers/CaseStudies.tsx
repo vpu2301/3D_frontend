@@ -3,6 +3,7 @@ import { Building2, TrendingUp, Users, ArrowRight, CheckCircle, Calendar, Messag
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const CaseStudies = () => {
   const caseStudies = [
@@ -145,103 +146,105 @@ const CaseStudies = () => {
         </div>
       </section>
 
-      {/* Case Studies Timeline */}
+      {/* Case Studies Carousel */}
       <section className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-emerald-500 via-violet-500 via-pink-500 to-indigo-500 transform md:-translate-x-px"></div>
-            
-            <div className="space-y-20">
-              {caseStudies.map((study, index) => (
-                <div key={index} className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                  {/* Timeline Dot */}
-                  <div className={`absolute left-8 md:left-1/2 w-6 h-6 rounded-full bg-gradient-to-r ${getGradient(study.color)} transform md:-translate-x-3 z-10 ring-4 ring-white shadow-xl`}>
-                    <study.icon className="w-3 h-3 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                  </div>
-                  
-                  {/* Content Card */}
-                  <div className={`w-full md:w-5/12 ml-20 md:ml-0 ${index % 2 === 0 ? 'md:mr-auto md:pr-12' : 'md:ml-auto md:pl-12'}`}>
-                    <Card className={`border-2 ${getBorderColor(study.color)} shadow-2xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-2 bg-white/90 backdrop-blur-sm overflow-hidden`}>
-                      <CardHeader className={`bg-gradient-to-br ${getGradient(study.color)} text-white relative overflow-hidden p-8`}>
-                        <div className="absolute top-0 right-0 w-40 h-40 opacity-10 transform rotate-12">
-                          <study.icon className="w-full h-full" />
-                        </div>
-                        <div className="relative z-10">
-                          <div className="flex items-center justify-between mb-6">
-                            <div className="bg-white/20 p-4 rounded-xl backdrop-blur-sm">
-                              <study.icon className="h-10 w-10 text-white" />
-                            </div>
-                            <div className="text-right">
-                              <span className="bg-white/20 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm block mb-2">
-                                {study.timeline}
-                              </span>
-                              <span className="text-white/90 text-sm">{study.worker}</span>
-                            </div>
-                          </div>
-                          <CardTitle className="text-3xl text-white mb-3 font-bold">{study.company}</CardTitle>
-                          <CardDescription className="text-white/90 text-lg font-medium">{study.industry}</CardDescription>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="p-8">
-                        <div className="space-y-8">
-                          {/* Challenge */}
-                          <div>
-                            <h4 className="font-bold text-gray-900 mb-4 flex items-center text-lg">
-                              <div className="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
-                              Challenge
-                            </h4>
-                            <p className="text-gray-600 pl-6 leading-relaxed">{study.challenge}</p>
-                          </div>
-                          
-                          {/* Solution */}
-                          <div>
-                            <h4 className="font-bold text-gray-900 mb-4 flex items-center text-lg">
-                              <div className="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-                              Solution
-                            </h4>
-                            <p className="text-gray-600 pl-6 leading-relaxed">{study.solution}</p>
-                          </div>
-                          
-                          {/* Results */}
-                          <div>
-                            <h4 className="font-bold text-gray-900 mb-4 flex items-center text-lg">
-                              <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                              Results
-                            </h4>
-                            <p className="text-gray-600 pl-6 mb-6 leading-relaxed">{study.results}</p>
-                            
-                            {/* Metrics Grid */}
-                            <div className="grid grid-cols-2 gap-4 mb-6">
-                              {study.metrics.map((metric, idx) => (
-                                <div key={idx} className="bg-gray-50 p-4 rounded-lg border">
-                                  <div className="text-sm text-gray-600 mb-1">{metric.label}</div>
-                                  <div className={`text-xl font-bold ${metric.increase ? 'text-green-600' : 'text-blue-600'}`}>
-                                    {metric.value}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                            
-                            {/* Savings Highlight */}
-                            <div className={`bg-gradient-to-r ${getGradient(study.color)} p-6 rounded-xl text-white relative overflow-hidden`}>
-                              <div className="absolute top-0 right-0 w-24 h-24 opacity-20">
-                                <TrendingUp className="w-full h-full" />
-                              </div>
-                              <div className="relative z-10">
-                                <p className="font-bold text-2xl mb-1">{study.savings}</p>
-                                <p className="text-white/90">Total annual savings achieved</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Success Stories</h2>
+            <p className="text-lg text-gray-600">Swipe through real transformations across industries</p>
           </div>
+          
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {caseStudies.map((study, index) => (
+                <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                  <Card className={`h-full border-2 ${getBorderColor(study.color)} shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 bg-white/90 backdrop-blur-sm overflow-hidden group`}>
+                    <CardHeader className={`bg-gradient-to-br ${getGradient(study.color)} text-white relative overflow-hidden p-6`}>
+                      <div className="absolute top-0 right-0 w-32 h-32 opacity-10 transform rotate-12 transition-transform group-hover:rotate-0">
+                        <study.icon className="w-full h-full" />
+                      </div>
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
+                            <study.icon className="h-8 w-8 text-white" />
+                          </div>
+                          <div className="text-right">
+                            <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm block mb-1">
+                              {study.timeline}
+                            </span>
+                            <span className="text-white/90 text-xs">{study.worker}</span>
+                          </div>
+                        </div>
+                        <CardTitle className="text-xl text-white mb-2 font-bold">{study.company}</CardTitle>
+                        <CardDescription className="text-white/90 text-sm font-medium">{study.industry}</CardDescription>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-6 flex flex-col h-full">
+                      <div className="space-y-6 flex-grow">
+                        {/* Challenge */}
+                        <div>
+                          <h4 className="font-bold text-gray-900 mb-2 flex items-center text-sm">
+                            <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                            Challenge
+                          </h4>
+                          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{study.challenge}</p>
+                        </div>
+                        
+                        {/* Solution */}
+                        <div>
+                          <h4 className="font-bold text-gray-900 mb-2 flex items-center text-sm">
+                            <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                            Solution
+                          </h4>
+                          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{study.solution}</p>
+                        </div>
+                        
+                        {/* Results */}
+                        <div>
+                          <h4 className="font-bold text-gray-900 mb-2 flex items-center text-sm">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                            Results
+                          </h4>
+                          <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-2">{study.results}</p>
+                          
+                          {/* Metrics Grid */}
+                          <div className="grid grid-cols-2 gap-2 mb-4">
+                            {study.metrics.slice(0, 4).map((metric, idx) => (
+                              <div key={idx} className="bg-gray-50 p-2 rounded-lg border">
+                                <div className="text-xs text-gray-600 mb-1 truncate">{metric.label}</div>
+                                <div className={`text-sm font-bold ${metric.increase ? 'text-green-600' : 'text-blue-600'}`}>
+                                  {metric.value}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          {/* Savings Highlight */}
+                          <div className={`bg-gradient-to-r ${getGradient(study.color)} p-4 rounded-xl text-white relative overflow-hidden`}>
+                            <div className="absolute top-0 right-0 w-16 h-16 opacity-20">
+                              <TrendingUp className="w-full h-full" />
+                            </div>
+                            <div className="relative z-10">
+                              <p className="font-bold text-lg mb-1">{study.savings}</p>
+                              <p className="text-white/90 text-xs">Annual savings achieved</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
         </div>
       </section>
 
