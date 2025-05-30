@@ -67,7 +67,7 @@ const Maya = () => {
             </div>
             
             <div className="relative animate-fade-in">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              <div className="relative rounded-2xl overflow-hidden">
                 <img 
                   src="/lovable-uploads/3854ebf9-ee3e-42dc-972b-5431cd8e362c.png" 
                   alt="Maya - AI Marketing Specialist"
