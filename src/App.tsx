@@ -46,6 +46,8 @@ import Legal from "./pages/solutions/Legal";
 import Aria from "./pages/solutions/Aria";
 import Atlas from "./pages/solutions/Atlas";
 import Felix from "./pages/solutions/Felix";
+import Maya from "./pages/solutions/Maya";
+import Sage from "./pages/solutions/Sage";
 
 // Use Cases pages
 import DocumentProcessing from "./pages/use-cases/DocumentProcessing";
@@ -146,6 +148,8 @@ const App = () => (
               <Route path="/solutions/aria" element={<Aria />} />
               <Route path="/solutions/atlas" element={<Atlas />} />
               <Route path="/solutions/felix" element={<Felix />} />
+              <Route path="/solutions/maya" element={<Maya />} />
+              <Route path="/solutions/sage" element={<Sage />} />
               
               {/* Use Cases routes */}
               <Route path="/use-cases/document-processing" element={<DocumentProcessing />} />
