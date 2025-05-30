@@ -1,5 +1,5 @@
 
-import { ArrowRight, Calculator } from 'lucide-react';
+import { ArrowRight, Calculator, Shield, Clock, Users, Zap, CheckCircle, DollarSign, Calendar, Unlock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -8,40 +8,74 @@ import PricingCalculator from '@/components/PricingCalculator';
 const Pricing = () => {
   const pricingPolicies = [
     {
-      title: 'Transparent Usage-Based Pricing',
-      description: 'Pay only for what you use with clear, predictable costs',
-      details: [
-        'Base price includes 160 hours per worker per month',
-        'Additional usage charged at $12 per hour',
-        'No hidden fees or surprise charges'
-      ]
+      icon: DollarSign,
+      title: 'Simple, Predictable Pricing',
+      subtitle: 'No hidden fees or surprise charges',
+      description: 'Our transparent pricing model ensures you know exactly what you\'ll pay, when you\'ll pay it.',
+      features: [
+        'Base price includes 160 productive hours per AI worker',
+        'Additional usage billed at predictable hourly rates',
+        'Real-time usage tracking and cost monitoring',
+        'Detailed billing breakdown with every invoice'
+      ],
+      highlight: 'Starting at $0/month'
     },
     {
-      title: 'Volume Discounts',
-      description: 'Significant savings for larger deployments',
-      details: [
-        '10% discount for 20+ AI workers',
-        '20% discount for 50+ AI workers',
-        '30% discount for 100+ AI workers'
-      ]
+      icon: Users,
+      title: 'Volume Discounts That Scale',
+      subtitle: 'Bigger teams, bigger savings',
+      description: 'As your AI workforce grows, your per-worker costs decrease with automatic volume pricing.',
+      features: [
+        'Automatic 10% discount on 20+ AI workers',
+        'Scale to 20% savings with 50+ workers',
+        'Enterprise discounts up to 30% for 100+ workers',
+        'No contract minimums or volume commitments'
+      ],
+      highlight: 'Save up to 30%'
     },
     {
-      title: 'Flexible Billing Options',
-      description: 'Choose the payment schedule that works for you',
-      details: [
-        'Monthly billing for flexibility',
-        'Annual billing with 10% discount',
-        'Enterprise custom billing terms'
-      ]
+      icon: Calendar,
+      title: 'Flexible Payment Terms',
+      subtitle: 'Pay how you want, when you want',
+      description: 'Choose from multiple billing options designed to fit your cash flow and planning needs.',
+      features: [
+        'Monthly billing for maximum flexibility',
+        'Annual plans with 10% additional discount',
+        'Enterprise quarterly and custom billing available',
+        'Multiple payment methods accepted'
+      ],
+      highlight: '10% annual savings'
     },
     {
-      title: 'No Lock-in Contracts',
-      description: 'Scale up or down without commitments',
-      details: [
-        'Cancel anytime with 30-day notice',
-        'Upgrade or downgrade instantly',
-        'Data export available at any time'
-      ]
+      icon: Unlock,
+      title: 'No Lock-in Guarantee',
+      subtitle: 'Freedom to scale up or down',
+      description: 'Your business changes, and your AI workforce should adapt with zero friction or penalties.',
+      features: [
+        'Cancel anytime with just 30 days notice',
+        'Instant scaling - add or remove workers immediately',
+        'Complete data portability and export rights',
+        'No early termination fees, ever'
+      ],
+      highlight: 'Cancel anytime'
+    }
+  ];
+
+  const trustIndicators = [
+    {
+      icon: Shield,
+      title: 'Enterprise Security',
+      description: 'SOC 2 Type II certified with bank-grade encryption'
+    },
+    {
+      icon: Clock,
+      title: '99.9% Uptime SLA',
+      description: 'Guaranteed availability with automated failover'
+    },
+    {
+      icon: CheckCircle,
+      title: 'GDPR Compliant',
+      description: 'Full compliance with global data protection regulations'
     }
   ];
 
@@ -80,35 +114,102 @@ const Pricing = () => {
         </div>
       </section>
 
-      {/* Pricing Policies */}
+      {/* Trust Indicators */}
+      <section className="py-16 bg-white px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {trustIndicators.map((indicator, index) => {
+              const IconComponent = indicator.icon;
+              return (
+                <div key={index} className="text-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <IconComponent className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h3 className="font-medium text-gray-900 mb-2">{indicator.title}</h3>
+                  <p className="text-sm text-gray-600">{indicator.description}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Policies - Redesigned */}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              Our Pricing Philosophy
+              Why Teams Choose Our Pricing
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              Fair, transparent, and designed to scale with your success.
+              Built for modern businesses that value transparency, flexibility, and growth.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {pricingPolicies.map((policy, index) => (
-              <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{policy.title}</h3>
-                  <p className="text-gray-600 mb-6">{policy.description}</p>
-                  <ul className="space-y-2">
-                    {policy.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        <span className="text-gray-700">{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {pricingPolicies.map((policy, index) => {
+              const IconComponent = policy.icon;
+              return (
+                <Card key={index} className="border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group">
+                  <CardContent className="p-8">
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                          <IconComponent className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-semibold text-gray-900 mb-1">{policy.title}</h3>
+                          <p className="text-sm text-gray-500 font-medium">{policy.subtitle}</p>
+                        </div>
+                      </div>
+                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-3 py-1 rounded-full">
+                        <span className="text-sm font-medium text-green-700">{policy.highlight}</span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-600 mb-6 leading-relaxed">{policy.description}</p>
+                    
+                    <ul className="space-y-3">
+                      {policy.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start">
+                          <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" />
+                          <span className="text-gray-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Additional Value Props */}
+          <div className="mt-16 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-3xl p-8 lg:p-12">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-light text-gray-900 mb-4">
+                Everything You Need to Succeed
+              </h3>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Our pricing includes everything you need to deploy, manage, and scale your AI workforce effectively.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { title: 'Setup & Onboarding', description: 'Complete setup assistance included' },
+                { title: '24/7 AI Support', description: 'Round-the-clock technical support' },
+                { title: 'Regular Updates', description: 'Continuous AI model improvements' },
+                { title: 'Security & Compliance', description: 'Enterprise-grade data protection' }
+              ].map((item, index) => (
+                <div key={index} className="text-center">
+                  <div className="bg-white rounded-xl p-4 shadow-sm mb-3">
+                    <Zap className="h-8 w-8 text-blue-500 mx-auto" />
+                  </div>
+                  <h4 className="font-medium text-gray-900 mb-2">{item.title}</h4>
+                  <p className="text-sm text-gray-600">{item.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
