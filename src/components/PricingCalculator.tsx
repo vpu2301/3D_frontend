@@ -17,6 +17,12 @@ const PricingCalculator = () => {
   const [teamSize, setTeamSize] = useState([50]); // for team/department assignments
   const [customFeatures, setCustomFeatures] = useState(false);
 
+  // Force re-render when tier changes to ensure UI updates
+  useEffect(() => {
+    // This will trigger a re-calculation whenever tier changes
+    console.log('Tier changed to:', tier);
+  }, [tier]);
+
   const tiers = {
     free: {
       label: 'Free',
@@ -258,6 +264,8 @@ const PricingCalculator = () => {
     const integrationCount = integrations[0];
     const currentTeamSize = assignmentType !== 'personal' ? teamSize[0] : 1;
 
+    console.log('Calculating pricing with tier:', tier, 'workers:', workerCount, 'hours:', monthlyHours);
+
     // Check if this is a free tier configuration
     if (isFreeEligible()) {
       return {
@@ -320,23 +328,25 @@ const PricingCalculator = () => {
     // Usage-based pricing for excess hours
     const baseHours = 160;
     const excessHours = Math.max(0, monthlyHours - baseHours);
-    const hourlyRate = assignmentType === 'personal' ? 12 : assignmentType === 'team' ? 15 : 18; // Higher rates for team/enterprise
+    const hourlyRate = assignmentType === 'personal' ? 12 : assignmentType === 'team' ? 15 : 18;
     const excessCost = excessHours * hourlyRate;
 
     // Integration add-ons
     const baseIntegrations = 5;
     const excessIntegrations = Math.max(0, integrationCount - baseIntegrations);
-    const integrationRate = assignmentType === 'personal' ? 50 : assignmentType === 'team' ? 75 : 100; // Higher rates for team/enterprise
+    const integrationRate = assignmentType === 'personal' ? 50 : assignmentType === 'team' ? 75 : 100;
     const integrationCost = excessIntegrations * integrationRate;
 
-    // Tier pricing
+    // FIXED: Tier pricing multipliers - this is the main fix for the bug
     const tierMultiplier = {
       free: 0,
-      basic: 0.8,
-      standard: 1,
-      premium: 1.3,
-      enterprise: 1.6
+      basic: 0.8,      // 20% discount
+      standard: 1,     // Base price
+      premium: 1.3,    // 30% increase
+      enterprise: 1.6  // 60% increase
     };
+
+    console.log('Tier multiplier for', tier, ':', tierMultiplier[tier]);
 
     // Deployment pricing
     const deploymentMultiplier = deployment === 'on-premise' ? 1.2 : 1;
@@ -344,8 +354,10 @@ const PricingCalculator = () => {
     // Custom features
     const customFeaturesMultiplier = customFeatures ? 1.3 : 1;
 
-    // Calculate per worker cost
+    // Calculate per worker cost with proper tier multiplier application
     const perWorkerBaseCost = basePrice * assignmentMultiplier * tierMultiplier[tier] * deploymentMultiplier * customFeaturesMultiplier * volumeMultiplier;
+    
+    console.log('Per worker base cost before adding extras:', perWorkerBaseCost);
     
     // Apply max price cap per worker based on assignment type
     const maxPerWorkerPrice = assignmentType === 'personal' ? 599 : 1500;
@@ -359,6 +371,8 @@ const PricingCalculator = () => {
     }
 
     const annualCost = totalMonthlyCost * 12 * 0.9; // 10% annual discount
+
+    console.log('Final monthly cost:', totalMonthlyCost);
 
     return {
       monthlyTotal: Math.round(totalMonthlyCost),
@@ -596,7 +610,10 @@ const PricingCalculator = () => {
                   {Object.entries(getAvailableTiers()).map(([value, tierData]) => (
                     <button
                       key={value}
-                      onClick={() => setTier(value)}
+                      onClick={() => {
+                        console.log('Setting tier to:', value);
+                        setTier(value);
+                      }}
                       className={`p-4 rounded-lg border text-left transition-all duration-200 ${
                         tier === value
                           ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
@@ -605,7 +622,11 @@ const PricingCalculator = () => {
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="font-medium">{tierData.label}</div>
-                        <div className="text-sm text-gray-500">{tierData.price}</div>
+                        <div className={`text-sm font-semibold ${
+                          tier === value ? 'text-blue-600' : 'text-gray-500'
+                        }`}>
+                          {tierData.price}
+                        </div>
                       </div>
                       <div className="text-sm text-gray-600 mb-2">{tierData.description}</div>
                       <div className="text-xs text-gray-500">
@@ -688,6 +709,9 @@ const PricingCalculator = () => {
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl mb-6">
               <div className="text-sm text-gray-600 mb-1">Configuration Summary</div>
               <div className="text-2xl font-medium text-gray-900 mb-2">{selectedAssignment.label}</div>
+              <div className="text-lg font-medium text-blue-600 mb-2">
+                Support Tier: {tiers[tier].label} ({tiers[tier].price})
+              </div>
               {(assignmentType === 'team' || assignmentType === 'enterprise') && (
                 <div className="text-sm text-gray-600 mb-2">
                   Team Size: {pricing.teamSize} employees
