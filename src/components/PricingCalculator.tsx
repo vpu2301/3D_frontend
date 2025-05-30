@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Calculator, Users, Zap, Building2, ArrowRight, Info, Bot, User, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,7 @@ const PricingCalculator = () => {
   const [tier, setTier] = useState('standard');
   const [deployment, setDeployment] = useState('cloud');
   const [assignmentType, setAssignmentType] = useState('personal');
+  const [teamSize, setTeamSize] = useState([50]); // for team/department assignments
   const [customFeatures, setCustomFeatures] = useState(false);
 
   const tiers = {
@@ -94,19 +94,42 @@ const PricingCalculator = () => {
       ]
     },
     team: {
-      label: 'Team/Department',
+      label: 'Team/Department Pro (up to 100 employees)',
       icon: Users,
-      description: 'AI workers shared across teams or departments',
-      baseMultiplier: 0.85, // 15% discount for shared usage
-      supportDescription: 'Team-based AI Employee support with department coordination',
+      description: 'AI workers shared across teams or departments up to 100 employees',
+      baseMultiplier: 1.2, // Increased to cover computational costs
+      supportDescription: 'Professional team-based AI Employee support with department coordination',
       features: [
         'Department-level AI Employee coordination',
         'Team training sessions with AI Employees',
         'Shared AI worker management dashboard',
         'Department-specific integration support',
-        'Collaborative workflow optimization'
+        'Collaborative workflow optimization',
+        'Multi-user access controls'
+      ]
+    },
+    enterprise: {
+      label: 'Enterprise (100+ employees)',
+      icon: Building2,
+      description: 'AI workers for large organizations with 100+ employees',
+      baseMultiplier: 1.8, // Higher multiplier for enterprise computational load
+      supportDescription: 'Enterprise-grade AI Employee support with dedicated account management',
+      features: [
+        'Enterprise-wide AI Employee coordination',
+        'Organization-level training programs',
+        'Advanced enterprise dashboard',
+        'Custom enterprise integrations',
+        'Enterprise workflow optimization',
+        'Advanced security and compliance',
+        'Dedicated enterprise account team'
       ]
     }
+  };
+
+  const getTeamSizeTier = () => {
+    if (assignmentType === 'personal') return 'personal';
+    if (assignmentType === 'team') return teamSize[0] <= 100 ? 'team-pro' : 'enterprise';
+    return 'enterprise';
   };
 
   const featureMatrix = [
@@ -127,23 +150,23 @@ const PricingCalculator = () => {
     {
       category: 'AI Employee Management Style',
       basic: 'Self-service portal',
-      standard: assignmentType === 'personal' ? 'Personal AI Employee team' : 'Department AI Employee team',
-      premium: assignmentType === 'personal' ? 'Personal AI Employee manager' : 'Department AI Employee coordinator',
-      enterprise: assignmentType === 'personal' ? 'Dedicated personal AI account team' : 'Dedicated department AI account team'
+      standard: assignmentType === 'personal' ? 'Personal AI Employee team' : getTeamSizeTier() === 'team-pro' ? 'Department AI Employee team' : 'Enterprise AI Employee team',
+      premium: assignmentType === 'personal' ? 'Personal AI Employee manager' : getTeamSizeTier() === 'team-pro' ? 'Department AI Employee coordinator' : 'Enterprise AI Employee coordinator',
+      enterprise: assignmentType === 'personal' ? 'Dedicated personal AI account team' : getTeamSizeTier() === 'team-pro' ? 'Dedicated department AI account team' : 'Dedicated enterprise AI account team'
     },
     {
       category: 'AI Worker Assignment Model',
       basic: 'Standard assignment',
-      standard: assignmentType === 'personal' ? 'Personal AI worker assignment' : 'Team/department AI worker pools',
-      premium: assignmentType === 'personal' ? 'Optimized personal AI assignment' : 'Advanced team AI coordination',
-      enterprise: assignmentType === 'personal' ? 'Custom personal AI development' : 'Custom department AI solutions'
+      standard: assignmentType === 'personal' ? 'Personal AI worker assignment' : getTeamSizeTier() === 'team-pro' ? 'Team/department AI worker pools' : 'Enterprise AI worker coordination',
+      premium: assignmentType === 'personal' ? 'Optimized personal AI assignment' : getTeamSizeTier() === 'team-pro' ? 'Advanced team AI coordination' : 'Advanced enterprise AI coordination',
+      enterprise: assignmentType === 'personal' ? 'Custom personal AI development' : getTeamSizeTier() === 'team-pro' ? 'Custom department AI solutions' : 'Custom enterprise AI solutions'
     },
     {
       category: 'Training & Onboarding',
       basic: 'Self-service documentation',
-      standard: assignmentType === 'personal' ? 'Personal AI Employee tutorials' : 'Team AI Employee sessions',
-      premium: assignmentType === 'personal' ? 'One-on-one AI Employee training' : 'Department-wide AI Employee training',
-      enterprise: assignmentType === 'personal' ? 'Personal AI Employee specialist' : 'On-site department AI training'
+      standard: assignmentType === 'personal' ? 'Personal AI Employee tutorials' : getTeamSizeTier() === 'team-pro' ? 'Team AI Employee sessions' : 'Enterprise AI Employee programs',
+      premium: assignmentType === 'personal' ? 'One-on-one AI Employee training' : getTeamSizeTier() === 'team-pro' ? 'Department-wide AI Employee training' : 'Organization-wide AI Employee training',
+      enterprise: assignmentType === 'personal' ? 'Personal AI Employee specialist' : getTeamSizeTier() === 'team-pro' ? 'On-site department AI training' : 'On-site enterprise AI training'
     },
     {
       category: 'AI Worker Integrations',
@@ -155,16 +178,23 @@ const PricingCalculator = () => {
     {
       category: 'Analytics & Insights',
       basic: 'Basic dashboard',
-      standard: assignmentType === 'personal' ? 'Personal AI analytics' : 'Team AI analytics dashboard',
-      premium: assignmentType === 'personal' ? 'Personal AI insights + recommendations' : 'Department AI insights + coordination',
-      enterprise: assignmentType === 'personal' ? 'Custom personal AI analytics' : 'Enterprise department AI reporting'
+      standard: assignmentType === 'personal' ? 'Personal AI analytics' : getTeamSizeTier() === 'team-pro' ? 'Team AI analytics dashboard' : 'Enterprise AI analytics dashboard',
+      premium: assignmentType === 'personal' ? 'Personal AI insights + recommendations' : getTeamSizeTier() === 'team-pro' ? 'Department AI insights + coordination' : 'Enterprise AI insights + coordination',
+      enterprise: assignmentType === 'personal' ? 'Custom personal AI analytics' : getTeamSizeTier() === 'team-pro' ? 'Enterprise department AI reporting' : 'Custom enterprise AI reporting'
     },
     {
       category: 'Workflow Optimization',
       basic: 'Basic performance metrics',
-      standard: assignmentType === 'personal' ? 'Personal workflow recommendations' : 'Team workflow optimization',
-      premium: assignmentType === 'personal' ? 'Personal AI Employee optimization' : 'Department AI Employee coordination',
-      enterprise: assignmentType === 'personal' ? 'Dedicated personal optimization team' : 'Dedicated department optimization team'
+      standard: assignmentType === 'personal' ? 'Personal workflow recommendations' : getTeamSizeTier() === 'team-pro' ? 'Team workflow optimization' : 'Enterprise workflow optimization',
+      premium: assignmentType === 'personal' ? 'Personal AI Employee optimization' : getTeamSizeTier() === 'team-pro' ? 'Department AI Employee coordination' : 'Enterprise AI Employee coordination',
+      enterprise: assignmentType === 'personal' ? 'Dedicated personal optimization team' : getTeamSizeTier() === 'team-pro' ? 'Dedicated department optimization team' : 'Dedicated enterprise optimization team'
+    },
+    {
+      category: 'Computational Resources',
+      basic: 'Standard allocation',
+      standard: assignmentType === 'personal' ? 'Personal resource allocation' : getTeamSizeTier() === 'team-pro' ? 'Team resource pool' : 'Enterprise resource pool',
+      premium: assignmentType === 'personal' ? 'Enhanced personal resources' : getTeamSizeTier() === 'team-pro' ? 'Enhanced team resources' : 'Enhanced enterprise resources',
+      enterprise: assignmentType === 'personal' ? 'Dedicated personal infrastructure' : getTeamSizeTier() === 'team-pro' ? 'Dedicated team infrastructure' : 'Dedicated enterprise infrastructure'
     },
     {
       category: 'Compliance & SLAs',
@@ -172,13 +202,6 @@ const PricingCalculator = () => {
       standard: 'Enhanced compliance',
       premium: 'AI Employee compliance support',
       enterprise: 'Custom SLAs with AI guarantees'
-    },
-    {
-      category: 'Strategic Consultation',
-      basic: 'Community resources',
-      standard: assignmentType === 'personal' ? 'Personal AI strategy guidance' : 'Department AI strategy sessions',
-      premium: assignmentType === 'personal' ? 'Personal AI Employee strategic sessions' : 'Department AI Employee strategy coordination',
-      enterprise: assignmentType === 'personal' ? 'Personal AI strategy consultation' : 'Enterprise department AI strategy'
     }
   ];
 
@@ -186,45 +209,58 @@ const PricingCalculator = () => {
     const workerCount = workers[0];
     const monthlyHours = hours[0];
     const integrationCount = integrations[0];
+    const currentTeamSize = assignmentType !== 'personal' ? teamSize[0] : 1;
 
-    // Base pricing per worker - starts at $0 for minimal usage
-    let basePrice = 50; // Minimum base price
+    // Base pricing per worker - adjusted for computational costs
+    let basePrice = 50;
     
     // Scale pricing based on usage hours
     if (monthlyHours > 160) {
-      basePrice += (monthlyHours - 160) * 5; // Escalating price for higher usage
+      basePrice += (monthlyHours - 160) * 5;
     }
     
-    // Cap the base price at around $800 before other factors
     basePrice = Math.min(basePrice, 800);
 
-    // Assignment type multiplier
-    const assignmentMultiplier = assignmentTypes[assignmentType].baseMultiplier;
+    // Assignment type multiplier with computational cost adjustments
+    let assignmentMultiplier = assignmentTypes[assignmentType].baseMultiplier;
+    
+    // Additional computational cost for team size
+    if (assignmentType === 'team') {
+      const teamComputationalMultiplier = Math.min(1 + (currentTeamSize - 1) * 0.01, 1.5); // Max 50% increase
+      assignmentMultiplier *= teamComputationalMultiplier;
+    } else if (assignmentType === 'enterprise') {
+      const enterpriseComputationalMultiplier = Math.min(1 + (currentTeamSize - 100) * 0.005, 2); // Scale with enterprise size
+      assignmentMultiplier *= enterpriseComputationalMultiplier;
+    }
 
-    // Volume discounts for multiple workers (enhanced for team assignments)
+    // Volume discounts adjusted for team/enterprise tiers
     let volumeMultiplier = 1;
     if (assignmentType === 'team') {
-      // Better volume discounts for team assignments
-      if (workerCount >= 100) volumeMultiplier = 0.6; // 40% discount
-      else if (workerCount >= 50) volumeMultiplier = 0.7; // 30% discount
-      else if (workerCount >= 20) volumeMultiplier = 0.8; // 20% discount
-      else if (workerCount >= 10) volumeMultiplier = 0.9; // 10% discount
-    } else {
-      // Standard volume discounts for personal assignments
+      if (workerCount >= 50) volumeMultiplier = 0.85; // 15% discount
+      else if (workerCount >= 20) volumeMultiplier = 0.9; // 10% discount
+      else if (workerCount >= 10) volumeMultiplier = 0.95; // 5% discount
+    } else if (assignmentType === 'enterprise') {
       if (workerCount >= 100) volumeMultiplier = 0.7; // 30% discount
       else if (workerCount >= 50) volumeMultiplier = 0.8; // 20% discount
       else if (workerCount >= 20) volumeMultiplier = 0.9; // 10% discount
+    } else {
+      // Personal assignment volume discounts
+      if (workerCount >= 100) volumeMultiplier = 0.7;
+      else if (workerCount >= 50) volumeMultiplier = 0.8;
+      else if (workerCount >= 20) volumeMultiplier = 0.9;
     }
 
     // Usage-based pricing for excess hours
     const baseHours = 160;
     const excessHours = Math.max(0, monthlyHours - baseHours);
-    const excessCost = excessHours * (assignmentType === 'team' ? 10 : 12); // Slightly cheaper for team usage
+    const hourlyRate = assignmentType === 'personal' ? 12 : assignmentType === 'team' ? 15 : 18; // Higher rates for team/enterprise
+    const excessCost = excessHours * hourlyRate;
 
     // Integration add-ons
     const baseIntegrations = 5;
     const excessIntegrations = Math.max(0, integrationCount - baseIntegrations);
-    const integrationCost = excessIntegrations * 50; // $50 per additional integration
+    const integrationRate = assignmentType === 'personal' ? 50 : assignmentType === 'team' ? 75 : 100; // Higher rates for team/enterprise
+    const integrationCost = excessIntegrations * integrationRate;
 
     // Tier pricing
     const tierMultiplier = {
@@ -242,7 +278,7 @@ const PricingCalculator = () => {
 
     // Calculate per worker cost
     const perWorkerBaseCost = basePrice * assignmentMultiplier * tierMultiplier[tier] * deploymentMultiplier * customFeaturesMultiplier * volumeMultiplier;
-    const perWorkerTotalCost = Math.min(perWorkerBaseCost + (excessCost / workerCount) + (integrationCost / workerCount), 1000);
+    const perWorkerTotalCost = Math.min(perWorkerBaseCost + (excessCost / workerCount) + (integrationCost / workerCount), 1500); // Increased max for enterprise
     
     const totalMonthlyCost = perWorkerTotalCost * workerCount;
     const annualCost = totalMonthlyCost * 12 * 0.9; // 10% annual discount
@@ -254,7 +290,8 @@ const PricingCalculator = () => {
       excessHoursCost: Math.round(excessCost),
       integrationsCost: Math.round(integrationCost),
       annualSavings: Math.round(totalMonthlyCost * 12 - annualCost),
-      assignmentDiscount: Math.round((1 - assignmentMultiplier) * 100)
+      assignmentDiscount: Math.round((1 - volumeMultiplier) * 100),
+      teamSize: currentTeamSize
     };
   };
 
@@ -278,7 +315,7 @@ const PricingCalculator = () => {
           AI Worker Pricing Calculator
         </CardTitle>
         <p className="text-xl text-gray-600 font-light">
-          Configure your AI workers with AI Employee support from $0-$1000 per worker per month
+          Configure your AI workers with AI Employee support from $0-$1500 per worker per month
         </p>
       </CardHeader>
       
@@ -312,9 +349,9 @@ const PricingCalculator = () => {
                             <IconComponent className="w-5 h-5 mr-2" />
                             <div className="font-medium">{assignment.label}</div>
                           </div>
-                          {assignment.baseMultiplier < 1 && (
-                            <div className="text-sm text-green-600 font-medium">
-                              {pricing.assignmentDiscount}% off
+                          {value !== 'personal' && (
+                            <div className="text-sm text-orange-600 font-medium">
+                              Higher computational cost
                             </div>
                           )}
                         </div>
@@ -330,6 +367,33 @@ const PricingCalculator = () => {
                   })}
                 </div>
               </div>
+
+              {(assignmentType === 'team' || assignmentType === 'enterprise') && (
+                <div>
+                  <Label className="block text-lg font-medium text-gray-700 mb-3">
+                    Team/Organization Size
+                  </Label>
+                  <Slider
+                    value={teamSize}
+                    onValueChange={setTeamSize}
+                    max={assignmentType === 'team' ? 100 : 1000}
+                    min={assignmentType === 'team' ? 2 : 101}
+                    step={1}
+                    className="mb-3"
+                  />
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>{assignmentType === 'team' ? '2' : '101'}</span>
+                    <span className="font-medium text-lg text-gray-900">{teamSize[0]} employees</span>
+                    <span>{assignmentType === 'team' ? '100' : '1000+'}</span>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    {assignmentType === 'team' 
+                      ? 'Team/Department Pro is for up to 100 employees' 
+                      : 'Enterprise tier is for 100+ employees with enhanced computational resources'
+                    }
+                  </p>
+                </div>
+              )}
 
               <div>
                 <Label className="block text-lg font-medium text-gray-700 mb-3">
@@ -367,7 +431,9 @@ const PricingCalculator = () => {
                   <span className="font-medium text-lg text-gray-900">{hours[0]}h/month</span>
                   <span>400h+</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">160 hours included in base price</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  160 hours included in base price. Excess: ${assignmentType === 'personal' ? '12' : assignmentType === 'team' ? '15' : '18'}/hour
+                </p>
               </div>
 
               <div>
@@ -387,7 +453,9 @@ const PricingCalculator = () => {
                   <span className="font-medium text-lg text-gray-900">{integrations[0]} integrations</span>
                   <span>50+</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">5 integrations included, additional at $50/month each</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  5 integrations included, additional at ${assignmentType === 'personal' ? '50' : assignmentType === 'team' ? '75' : '100'}/month each
+                </p>
               </div>
 
               <div>
@@ -484,13 +552,18 @@ const PricingCalculator = () => {
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl mb-6">
               <div className="text-sm text-gray-600 mb-1">Configuration Summary</div>
               <div className="text-2xl font-medium text-gray-900 mb-2">{selectedAssignment.label}</div>
+              {(assignmentType === 'team' || assignmentType === 'enterprise') && (
+                <div className="text-sm text-gray-600 mb-2">
+                  Team Size: {pricing.teamSize} employees
+                </div>
+              )}
               <div className="text-sm text-gray-600">
                 <Bot className="inline-block w-4 h-4 mr-1" />
                 {selectedAssignment.supportDescription}
               </div>
               {pricing.assignmentDiscount > 0 && (
                 <div className="text-sm text-green-600 font-medium mt-2">
-                  {pricing.assignmentDiscount}% team assignment discount applied
+                  {pricing.assignmentDiscount}% volume discount applied
                 </div>
               )}
             </div>
@@ -533,7 +606,8 @@ const PricingCalculator = () => {
             <Bot className="inline-block w-6 h-6 mr-2" />
             Complete AI Employee Support Comparison
             <span className="block text-lg font-normal text-gray-600 mt-2">
-              {selectedAssignment.label} Configuration
+              {selectedAssignment.label}
+              {(assignmentType === 'team' || assignmentType === 'enterprise') && ` - ${pricing.teamSize} employees`}
             </span>
           </h3>
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
