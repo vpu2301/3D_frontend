@@ -1,8 +1,9 @@
 
-import { ArrowRight, CheckCircle, Star, Zap, Shield, Crown, Users, TrendingUp } from 'lucide-react';
+import { ArrowRight, CheckCircle, Star, Zap, Shield, Crown, Users, Calculator } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import PricingCalculator from '@/components/PricingCalculator';
 
 const Pricing = () => {
   const plans = [
@@ -13,104 +14,107 @@ const Pricing = () => {
       description: 'Perfect for testing and small teams',
       features: [
         '2 AI workers included',
-        'Limited tasks per day',
-        'Basic integrations',
-        'Email support',
-        'Quick proof of value',
-        'Community access'
+        'Up to 80 hours/month per worker',
+        '3 basic integrations',
+        'Community support',
+        'Standard cloud deployment',
+        'Basic analytics'
       ],
-      roi: 'Immediate',
-      payback: 'No cost',
+      limitations: ['Limited daily tasks', 'Basic integrations only', 'Community support only'],
       popular: false,
       icon: Star,
-      cta: 'Start Free'
+      cta: 'Start Free',
+      maxWorkers: 2
     },
     {
       name: 'Professional',
       price: '$1,500',
       period: 'per AI worker/month',
-      description: 'Growing teams ready to scale',
+      description: 'For growing teams ready to scale',
       features: [
         'Unlimited AI workers',
-        'Unlimited daily tasks',
-        'Advanced integrations (200+)',
-        '24/7 priority support',
-        'Advanced analytics & ROI tracking',
+        '160 hours/month per worker (included)',
+        '5 integrations included',
+        '24/7 standard support',
+        'Advanced analytics',
         'Custom workflow automation',
-        '99.9% uptime SLA'
+        '99.9% uptime SLA',
+        'API access'
       ],
-      roi: '500-800%',
-      payback: '4.2 months',
+      addOns: [
+        'Additional hours: $12/hour',
+        'Extra integrations: $200/month each',
+        'Premium support: +50% base price'
+      ],
       popular: true,
       icon: Zap,
-      cta: 'Start Free Trial'
+      cta: 'Start Free Trial',
+      maxWorkers: 'Unlimited'
     },
     {
       name: 'Enterprise',
-      price: '$25K - $500K',
-      period: 'per year',
+      price: 'Custom',
+      period: 'volume pricing available',
       description: 'Large-scale deployments with custom solutions',
       features: [
-        'Unlimited AI workers',
-        'Custom development projects',
+        'Volume discounts (up to 30%)',
+        'Unlimited usage hours',
+        'Unlimited integrations',
         'Dedicated customer success manager',
         'On-premises deployment option',
-        'White-label solutions',
-        'API access & marketplace integration',
-        '99.99% uptime SLA'
+        'Custom features development',
+        '99.99% uptime SLA',
+        'White-label solutions'
       ],
-      roi: '800-1200%',
-      payback: '2-4 months',
+      discounts: [
+        '10% off: 20+ workers',
+        '20% off: 50+ workers', 
+        '30% off: 100+ workers'
+      ],
       popular: false,
       icon: Crown,
-      cta: 'Contact Sales'
+      cta: 'Contact Sales',
+      maxWorkers: 'Unlimited'
     }
   ];
 
-  const revenueStreams = [
+  const pricingPolicies = [
     {
-      name: 'Platform Subscriptions',
-      percentage: '78%',
-      description: 'Free tier + Premium at $1,500–$8,000/mo/worker',
-      margin: '95% gross margins',
-      color: 'from-blue-500 to-purple-500'
+      title: 'Transparent Usage-Based Pricing',
+      description: 'Pay only for what you use with clear, predictable costs',
+      details: [
+        'Base price includes 160 hours per worker per month',
+        'Additional usage charged at $12 per hour',
+        'No hidden fees or surprise charges'
+      ]
     },
     {
-      name: 'Enterprise Services',
-      percentage: '18%',
-      description: 'Custom dev ($250K–$2M projects)',
-      margin: '65% margins',
-      color: 'from-purple-500 to-pink-500'
+      title: 'Volume Discounts',
+      description: 'Significant savings for larger deployments',
+      details: [
+        '10% discount for 20+ AI workers',
+        '20% discount for 50+ AI workers',
+        '30% discount for 100+ AI workers'
+      ]
     },
     {
-      name: 'Marketplace & Data',
-      percentage: '4%',
-      description: 'Third-party AI workers',
-      margin: '90% margins',
-      color: 'from-pink-500 to-red-500'
+      title: 'Flexible Billing Options',
+      description: 'Choose the payment schedule that works for you',
+      details: [
+        'Monthly billing for flexibility',
+        'Annual billing with 10% discount',
+        'Enterprise custom billing terms'
+      ]
+    },
+    {
+      title: 'No Lock-in Contracts',
+      description: 'Scale up or down without commitments',
+      details: [
+        'Cancel anytime with 30-day notice',
+        'Upgrade or downgrade instantly',
+        'Data export available at any time'
+      ]
     }
-  ];
-
-  const growthMetrics = [
-    { year: '2027', arr: '$1B ARR', workers: '400K digital workers' },
-    { year: '2029', arr: '$10B ARR', workers: '4M digital workers' },
-    { year: '2032', arr: '$100B ARR', workers: '40M digital workers' }
-  ];
-
-  const businessMetrics = [
-    { label: 'Avg Contract Value', value: '$65K' },
-    { label: 'Gross Margin', value: '94%' },
-    { label: 'LTV:CAC Ratio', value: '4.7:1' },
-    { label: 'CAC Payback', value: '4.2 mo' }
-  ];
-
-  const upgradeTriggers = [
-    'Reaching email/ticket capacity limits',
-    'Need for deeper system integrations',
-    'Advanced analytics and reporting requests',
-    'Team scaling beyond free tier limits',
-    'Custom workflow requirements',
-    'Enterprise security and compliance needs'
   ];
 
   return (
@@ -120,39 +124,44 @@ const Pricing = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-4xl mx-auto mb-16">
             <h1 className="text-6xl md:text-7xl font-light text-gray-900 mb-8 tracking-tight leading-none">
-              Freemium to
+              Simple, Fair
               <span className="block font-medium bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Enterprise Scale
+                Usage-Based Pricing
               </span>
             </h1>
             <p className="text-xl text-gray-600 mb-12 font-light leading-relaxed">
-              Start free with 2 AI workers, then scale to enterprise with our proven 
-              business model that's projected to reach $100B ARR by 2032.
+              Start free with 2 AI workers, then scale with transparent, 
+              usage-based pricing that grows with your business needs.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Business Metrics */}
-      <section className="py-16 px-4 bg-white">
+      {/* Pricing Calculator */}
+      <section className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Proven Business Model</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
+              Calculate Your Custom Pricing
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+              Configure your exact needs and get an instant, transparent quote.
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {businessMetrics.map((metric, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl font-light text-gray-900 mb-2">{metric.value}</div>
-                <div className="text-gray-600">{metric.label}</div>
-              </div>
-            ))}
-          </div>
+          <PricingCalculator />
         </div>
       </section>
 
       {/* Pricing Plans */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-gray-900 mb-6">Standard Pricing Tiers</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+              Choose a plan that fits your current needs, upgrade anytime.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
             {plans.map((plan, index) => (
               <Card 
@@ -191,18 +200,23 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <div className="bg-gray-50 rounded-2xl p-4 mb-6">
-                    <div className="grid grid-cols-2 gap-4 text-center">
-                      <div>
-                        <div className="text-2xl font-medium text-gray-900">{plan.roi}</div>
-                        <div className="text-sm text-gray-600">Typical ROI</div>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-medium text-gray-900">{plan.payback}</div>
-                        <div className="text-sm text-gray-600">Payback</div>
-                      </div>
+                  {plan.addOns && (
+                    <div className="bg-blue-50 rounded-2xl p-4 mb-6">
+                      <div className="text-sm font-medium text-gray-900 mb-2">Add-ons Available:</div>
+                      {plan.addOns.map((addon, idx) => (
+                        <div key={idx} className="text-sm text-gray-600">{addon}</div>
+                      ))}
                     </div>
-                  </div>
+                  )}
+
+                  {plan.discounts && (
+                    <div className="bg-green-50 rounded-2xl p-4 mb-6">
+                      <div className="text-sm font-medium text-gray-900 mb-2">Volume Discounts:</div>
+                      {plan.discounts.map((discount, idx) => (
+                        <div key={idx} className="text-sm text-gray-600">{discount}</div>
+                      ))}
+                    </div>
+                  )}
 
                   <Button 
                     className={`w-full py-3 rounded-full transition-all duration-300 hover:scale-105 ${
@@ -224,80 +238,34 @@ const Pricing = () => {
         </div>
       </section>
 
-      {/* Revenue Streams */}
+      {/* Pricing Policies */}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              Revenue Streams
+              Our Pricing Philosophy
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              Diversified revenue model with high-margin streams.
+              Fair, transparent, and designed to scale with your success.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {revenueStreams.map((stream, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {pricingPolicies.map((policy, index) => (
               <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                 <CardContent className="p-8">
-                  <div className={`text-6xl font-light bg-gradient-to-r ${stream.color} bg-clip-text text-transparent mb-4`}>
-                    {stream.percentage}
-                  </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{stream.name}</h3>
-                  <p className="text-gray-600 mb-4">{stream.description}</p>
-                  <div className="text-green-600 font-medium">{stream.margin}</div>
+                  <h3 className="text-xl font-medium text-gray-900 mb-4">{policy.title}</h3>
+                  <p className="text-gray-600 mb-6">{policy.description}</p>
+                  <ul className="space-y-2">
+                    {policy.details.map((detail, idx) => (
+                      <li key={idx} className="flex items-start">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <span className="text-gray-700">{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Growth Projections */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              Growth Trajectory
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              Our path to $100B ARR with proven market demand.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {growthMetrics.map((metric, index) => (
-              <div key={index} className="text-center bg-white rounded-3xl p-8 shadow-lg">
-                <div className="text-3xl font-light text-gray-600 mb-2">{metric.year}</div>
-                <div className="text-4xl font-medium text-gray-900 mb-4">{metric.arr}</div>
-                <div className="text-gray-600">{metric.workers}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Upgrade Triggers */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              When Teams Upgrade
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              Common scenarios that drive users from free to paid plans.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {upgradeTriggers.map((trigger, index) => (
-              <div 
-                key={index} 
-                className="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
-              >
-                <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mb-4 group-hover:scale-150 transition-transform duration-300"></div>
-                <span className="text-gray-800 font-medium">{trigger}</span>
-              </div>
             ))}
           </div>
         </div>
@@ -308,20 +276,20 @@ const Pricing = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-light mb-6 tracking-tight">
-              Start Your Journey to Scale
+              Ready to Get Started?
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto font-light">
-              Begin with 2 free AI workers and experience the future of work automation.
+              Begin with 2 free AI workers and experience transparent, usage-based pricing.
             </p>
           </div>
 
           <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
             <div className="text-center lg:text-left">
               <div className="text-6xl font-light mb-4">
-                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">2</span>
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Free</span>
               </div>
-              <div className="text-xl text-gray-300">AI Workers</div>
-              <div className="text-gray-400">Free Forever</div>
+              <div className="text-xl text-gray-300">Start Today</div>
+              <div className="text-gray-400">2 AI Workers • No Credit Card</div>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -341,7 +309,7 @@ const Pricing = () => {
                 className="border-white/30 text-white hover:bg-white/10 rounded-full py-3 px-8 transition-all duration-300"
                 asChild
               >
-                <Link to="/schedule-demo">Schedule Demo</Link>
+                <Link to="/contact">Get Custom Quote</Link>
               </Button>
             </div>
           </div>
