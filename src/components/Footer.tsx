@@ -35,23 +35,23 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Platform */}
+          {/* Product Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-stone-100">Platform</h3>
+            <h3 className="text-lg font-semibold mb-4 text-stone-100">Product</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/platform/automation" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  AI Automation
+                <Link to="/solutions" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Solutions
                 </Link>
               </li>
               <li>
-                <Link to="/platform/workflow" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  Workflow Builder
+                <Link to="/pricing" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Pricing
                 </Link>
               </li>
               <li>
-                <Link to="/platform/analytics" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  Analytics
+                <Link to="/how-it-works" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  How It Works
                 </Link>
               </li>
               <li>
@@ -60,8 +60,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/platform/api" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  API Gateway
+                <Link to="/platform/security" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Security
                 </Link>
               </li>
             </ul>
@@ -69,31 +69,31 @@ const Footer = () => {
 
           {/* Solutions */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-stone-100">Solutions</h3>
+            <h3 className="text-lg font-semibold mb-4 text-stone-100">AI Employees</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/solutions/sales" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  For Sales Teams
+                <Link to="/solutions/aria" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Aria (Executive Assistant)
                 </Link>
               </li>
               <li>
-                <Link to="/solutions/marketing" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  For Marketing
+                <Link to="/solutions/atlas" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Atlas (Support Specialist)
                 </Link>
               </li>
               <li>
-                <Link to="/solutions/operations" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  For Operations
+                <Link to="/solutions/felix" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Felix (Finance Analyst)
                 </Link>
               </li>
               <li>
-                <Link to="/solutions/hr" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  For HR Teams
+                <Link to="/solutions/sage" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Sage (Research Analyst)
                 </Link>
               </li>
               <li>
-                <Link to="/solutions/finance" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  For Finance
+                <Link to="/solutions/maya" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Maya (Marketing Specialist)
                 </Link>
               </li>
             </ul>
@@ -104,28 +104,28 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4 text-stone-100">Resources</h3>
             <ul className="space-y-3">
               <li>
+                <Link to="/customers/case-studies" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Case Studies
+                </Link>
+              </li>
+              <li>
                 <Link to="/resources/blog" className="text-gray-400 hover:text-stone-200 transition-colors">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/resources/guides" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  Guides
+                <Link to="/resources" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Webinars
                 </Link>
               </li>
               <li>
-                <Link to="/watch-demo" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  Demo
+                <Link to="/support/help-center" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  FAQs
                 </Link>
               </li>
               <li>
-                <Link to="/resources/videos" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  Video Library
-                </Link>
-              </li>
-              <li>
-                <Link to="/support" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  Support
+                <Link to="/support/documentation" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Documentation
                 </Link>
               </li>
             </ul>
@@ -136,7 +136,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4 text-stone-100">Company</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/company" className="text-gray-400 hover:text-stone-200 transition-colors">
+                <Link to="/about" className="text-gray-400 hover:text-stone-200 transition-colors">
                   About Us
                 </Link>
               </li>
@@ -151,13 +151,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/pricing" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link to="/company/partners" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  Partners
+                <Link to="/support/contact" className="text-gray-400 hover:text-stone-200 transition-colors">
+                  Support
                 </Link>
               </li>
             </ul>

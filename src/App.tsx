@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,6 +20,7 @@ import ScheduleDemo from "./pages/ScheduleDemo";
 import Careers from "./pages/Careers";
 import JobDetail from "./pages/JobDetail";
 import Blog from "./pages/resources/Blog";
+import HowItWorks from "./pages/HowItWorks";
 
 // Platform pages
 import Automation from "./pages/platform/Automation";
@@ -41,6 +41,11 @@ import Finance from "./pages/solutions/Finance";
 import Support from "./pages/solutions/Support";
 import It from "./pages/solutions/It";
 import Legal from "./pages/solutions/Legal";
+
+// AI Employee solution pages
+import Aria from "./pages/solutions/Aria";
+import Atlas from "./pages/solutions/Atlas";
+import Felix from "./pages/solutions/Felix";
 
 // Use Cases pages
 import DocumentProcessing from "./pages/use-cases/DocumentProcessing";
@@ -106,8 +111,10 @@ const App = () => (
               <Route path="/schedule-demo" element={<ScheduleDemo />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/careers/job/:id" element={<JobDetail />} />
+              <Route path="/how-it-works" element={<HowItWorks />} />
               
               {/* Resources routes */}
+              <Route path="/resources" element={<Training />} />
               <Route path="/resources/blog" element={<Blog />} />
               <Route path="/resources/implementation-guide" element={<ImplementationGuide />} />
               <Route path="/resources/best-practices" element={<BestPractices />} />
@@ -125,6 +132,7 @@ const App = () => (
               <Route path="/platform/security" element={<Security />} />
               
               {/* Solutions routes */}
+              <Route path="/solutions" element={<Sales />} />
               <Route path="/solutions/sales" element={<Sales />} />
               <Route path="/solutions/marketing" element={<Marketing />} />
               <Route path="/solutions/operations" element={<Operations />} />
@@ -133,6 +141,11 @@ const App = () => (
               <Route path="/solutions/support" element={<Support />} />
               <Route path="/solutions/it" element={<It />} />
               <Route path="/solutions/legal" element={<Legal />} />
+              
+              {/* AI Employee solution routes */}
+              <Route path="/solutions/aria" element={<Aria />} />
+              <Route path="/solutions/atlas" element={<Atlas />} />
+              <Route path="/solutions/felix" element={<Felix />} />
               
               {/* Use Cases routes */}
               <Route path="/use-cases/document-processing" element={<DocumentProcessing />} />
