@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from 'react';
-import { Calculator, Users, Zap, Building2, ArrowRight, Info, Bot, User, UserCheck } from 'lucide-react';
+import { Calculator, Users, Zap, Building2, ArrowRight, Info, Bot, User, UserCheck, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,6 +19,25 @@ const PricingCalculator = () => {
   const [customFeatures, setCustomFeatures] = useState(false);
 
   const tiers = {
+    free: {
+      label: 'Free',
+      price: '$0',
+      description: 'Perfect for trying out AI workers',
+      aiSupport: 'Community support only',
+      features: [
+        'Community forum access',
+        'Basic documentation',
+        'Up to 2 AI workers maximum',
+        'Up to 20 hours per month per worker',
+        '1 basic integration only',
+        'Cloud deployment only'
+      ],
+      limitations: {
+        maxWorkers: 2,
+        maxHours: 20,
+        maxIntegrations: 1
+      }
+    },
     basic: {
       label: 'Basic',
       price: '-20%',
@@ -91,7 +111,8 @@ const PricingCalculator = () => {
         'Personalized AI worker configuration',
         'Direct access to AI Employee specialists',
         'Custom workflow optimization for individual needs'
-      ]
+      ],
+      allowsFree: true
     },
     team: {
       label: 'Team/Department Pro (up to 100 employees)',
@@ -106,7 +127,9 @@ const PricingCalculator = () => {
         'Department-specific integration support',
         'Collaborative workflow optimization',
         'Multi-user access controls'
-      ]
+      ],
+      allowsFree: false,
+      minimumCost: 299
     },
     enterprise: {
       label: 'Enterprise (100+ employees)',
@@ -122,7 +145,9 @@ const PricingCalculator = () => {
         'Enterprise workflow optimization',
         'Advanced security and compliance',
         'Dedicated enterprise account team'
-      ]
+      ],
+      allowsFree: false,
+      requiresContactSales: true
     }
   };
 
@@ -132,9 +157,21 @@ const PricingCalculator = () => {
     return 'enterprise';
   };
 
+  // Check if current configuration is free tier eligible
+  const isFreeEligible = () => {
+    return assignmentType === 'personal' && 
+           tier === 'free' && 
+           workers[0] <= 2 && 
+           hours[0] <= 20 && 
+           integrations[0] <= 1 &&
+           deployment === 'cloud' &&
+           !customFeatures;
+  };
+
   const featureMatrix = [
     {
       category: 'AI Employee Support Response Time',
+      free: 'Community only',
       basic: '48 hours',
       standard: '24 hours',
       premium: '12 hours',
@@ -142,6 +179,7 @@ const PricingCalculator = () => {
     },
     {
       category: 'AI Employee Support Channels',
+      free: 'Forum only',
       basic: 'Email only',
       standard: 'Email + Live chat',
       premium: 'Email + Chat + Phone',
@@ -149,6 +187,7 @@ const PricingCalculator = () => {
     },
     {
       category: 'AI Employee Management Style',
+      free: 'Self-service only',
       basic: 'Self-service portal',
       standard: assignmentType === 'personal' ? 'Personal AI Employee team' : getTeamSizeTier() === 'team-pro' ? 'Department AI Employee team' : 'Enterprise AI Employee team',
       premium: assignmentType === 'personal' ? 'Personal AI Employee manager' : getTeamSizeTier() === 'team-pro' ? 'Department AI Employee coordinator' : 'Enterprise AI Employee coordinator',
@@ -156,6 +195,7 @@ const PricingCalculator = () => {
     },
     {
       category: 'AI Worker Assignment Model',
+      free: 'Basic assignment (max 2 workers)',
       basic: 'Standard assignment',
       standard: assignmentType === 'personal' ? 'Personal AI worker assignment' : getTeamSizeTier() === 'team-pro' ? 'Team/department AI worker pools' : 'Enterprise AI worker coordination',
       premium: assignmentType === 'personal' ? 'Optimized personal AI assignment' : getTeamSizeTier() === 'team-pro' ? 'Advanced team AI coordination' : 'Advanced enterprise AI coordination',
@@ -163,6 +203,7 @@ const PricingCalculator = () => {
     },
     {
       category: 'Training & Onboarding',
+      free: 'Self-service documentation only',
       basic: 'Self-service documentation',
       standard: assignmentType === 'personal' ? 'Personal AI Employee tutorials' : getTeamSizeTier() === 'team-pro' ? 'Team AI Employee sessions' : 'Enterprise AI Employee programs',
       premium: assignmentType === 'personal' ? 'One-on-one AI Employee training' : getTeamSizeTier() === 'team-pro' ? 'Department-wide AI Employee training' : 'Organization-wide AI Employee training',
@@ -170,6 +211,7 @@ const PricingCalculator = () => {
     },
     {
       category: 'AI Worker Integrations',
+      free: '1 basic integration only',
       basic: 'Standard only (5 included)',
       standard: 'All standard integrations',
       premium: 'Standard + Custom with AI assistance',
@@ -177,6 +219,7 @@ const PricingCalculator = () => {
     },
     {
       category: 'Analytics & Insights',
+      free: 'Basic usage stats only',
       basic: 'Basic dashboard',
       standard: assignmentType === 'personal' ? 'Personal AI analytics' : getTeamSizeTier() === 'team-pro' ? 'Team AI analytics dashboard' : 'Enterprise AI analytics dashboard',
       premium: assignmentType === 'personal' ? 'Personal AI insights + recommendations' : getTeamSizeTier() === 'team-pro' ? 'Department AI insights + coordination' : 'Enterprise AI insights + coordination',
@@ -184,6 +227,7 @@ const PricingCalculator = () => {
     },
     {
       category: 'Workflow Optimization',
+      free: 'None',
       basic: 'Basic performance metrics',
       standard: assignmentType === 'personal' ? 'Personal workflow recommendations' : getTeamSizeTier() === 'team-pro' ? 'Team workflow optimization' : 'Enterprise workflow optimization',
       premium: assignmentType === 'personal' ? 'Personal AI Employee optimization' : getTeamSizeTier() === 'team-pro' ? 'Department AI Employee coordination' : 'Enterprise AI Employee coordination',
@@ -191,6 +235,7 @@ const PricingCalculator = () => {
     },
     {
       category: 'Computational Resources',
+      free: 'Shared basic resources (20h limit)',
       basic: 'Standard allocation',
       standard: assignmentType === 'personal' ? 'Personal resource allocation' : getTeamSizeTier() === 'team-pro' ? 'Team resource pool' : 'Enterprise resource pool',
       premium: assignmentType === 'personal' ? 'Enhanced personal resources' : getTeamSizeTier() === 'team-pro' ? 'Enhanced team resources' : 'Enhanced enterprise resources',
@@ -198,6 +243,7 @@ const PricingCalculator = () => {
     },
     {
       category: 'Compliance & SLAs',
+      free: 'Basic terms only',
       basic: 'Standard terms',
       standard: 'Enhanced compliance',
       premium: 'AI Employee compliance support',
@@ -210,6 +256,21 @@ const PricingCalculator = () => {
     const monthlyHours = hours[0];
     const integrationCount = integrations[0];
     const currentTeamSize = assignmentType !== 'personal' ? teamSize[0] : 1;
+
+    // Check if this is a free tier configuration
+    if (isFreeEligible()) {
+      return {
+        monthlyTotal: 0,
+        annualTotal: 0,
+        perWorkerCost: 0,
+        excessHoursCost: 0,
+        integrationsCost: 0,
+        annualSavings: 0,
+        assignmentDiscount: 0,
+        teamSize: currentTeamSize,
+        isFree: true
+      };
+    }
 
     // Base pricing per worker - adjusted for computational costs
     let basePrice = 50;
@@ -264,6 +325,7 @@ const PricingCalculator = () => {
 
     // Tier pricing
     const tierMultiplier = {
+      free: 0,
       basic: 0.8,
       standard: 1,
       premium: 1.3,
@@ -280,7 +342,13 @@ const PricingCalculator = () => {
     const perWorkerBaseCost = basePrice * assignmentMultiplier * tierMultiplier[tier] * deploymentMultiplier * customFeaturesMultiplier * volumeMultiplier;
     const perWorkerTotalCost = Math.min(perWorkerBaseCost + (excessCost / workerCount) + (integrationCost / workerCount), 1500); // Increased max for enterprise
     
-    const totalMonthlyCost = perWorkerTotalCost * workerCount;
+    let totalMonthlyCost = perWorkerTotalCost * workerCount;
+
+    // Apply minimum cost for team assignments
+    if (assignmentType === 'team' && totalMonthlyCost < 299) {
+      totalMonthlyCost = 299;
+    }
+
     const annualCost = totalMonthlyCost * 12 * 0.9; // 10% annual discount
 
     return {
@@ -291,7 +359,8 @@ const PricingCalculator = () => {
       integrationsCost: Math.round(integrationCost),
       annualSavings: Math.round(totalMonthlyCost * 12 - annualCost),
       assignmentDiscount: Math.round((1 - volumeMultiplier) * 100),
-      teamSize: currentTeamSize
+      teamSize: currentTeamSize,
+      isFree: false
     };
   };
 
@@ -299,10 +368,24 @@ const PricingCalculator = () => {
   const selectedAssignment = assignmentTypes[assignmentType];
 
   const getTierName = () => {
+    if (pricing.isFree) return 'Free';
     const cost = pricing.perWorkerCost;
     if (cost <= 100) return 'Starter';
     if (cost <= 500) return 'Professional';
     return 'Enterprise';
+  };
+
+  // Filter available tiers based on assignment type
+  const getAvailableTiers = () => {
+    if (!selectedAssignment.allowsFree) {
+      const { free, ...tiersWithoutFree } = tiers;
+      return tiersWithoutFree;
+    }
+    return tiers;
+  };
+
+  const shouldShowContactSales = () => {
+    return assignmentType === 'enterprise' || (assignmentType === 'team' && tier === 'enterprise');
   };
 
   return (
@@ -349,11 +432,23 @@ const PricingCalculator = () => {
                             <IconComponent className="w-5 h-5 mr-2" />
                             <div className="font-medium">{assignment.label}</div>
                           </div>
-                          {value !== 'personal' && (
-                            <div className="text-sm text-orange-600 font-medium">
-                              Higher computational cost
-                            </div>
-                          )}
+                          <div className="flex gap-2">
+                            {assignment.allowsFree && (
+                              <div className="text-sm text-green-600 font-medium">
+                                Free option
+                              </div>
+                            )}
+                            {assignment.minimumCost && (
+                              <div className="text-sm text-blue-600 font-medium">
+                                Starting from ${assignment.minimumCost}
+                              </div>
+                            )}
+                            {value !== 'personal' && (
+                              <div className="text-sm text-orange-600 font-medium">
+                                Higher computational cost
+                              </div>
+                            )}
+                          </div>
                         </div>
                         <div className="text-sm text-gray-600 mb-2">{assignment.description}</div>
                         <div className="text-xs text-gray-500">
@@ -388,7 +483,7 @@ const PricingCalculator = () => {
                   </div>
                   <p className="text-sm text-gray-500 mt-2">
                     {assignmentType === 'team' 
-                      ? 'Team/Department Pro is for up to 100 employees' 
+                      ? 'Team/Department Pro is for up to 100 employees (minimum $299/month)' 
                       : 'Enterprise tier is for 100+ employees with enhanced computational resources'
                     }
                   </p>
@@ -402,15 +497,20 @@ const PricingCalculator = () => {
                 <Slider
                   value={workers}
                   onValueChange={setWorkers}
-                  max={200}
+                  max={tier === 'free' ? 2 : 200}
                   min={1}
                   step={1}
                   className="mb-3"
                 />
                 <div className="flex justify-between text-sm text-gray-500">
                   <span>1</span>
-                  <span className="font-medium text-lg text-gray-900">{workers[0]} workers</span>
-                  <span>200+</span>
+                  <span className="font-medium text-lg text-gray-900">
+                    {workers[0]} workers
+                    {tier === 'free' && workers[0] > 2 && (
+                      <span className="text-red-500 ml-2">(Free tier: max 2)</span>
+                    )}
+                  </span>
+                  <span>{tier === 'free' ? '2 (free limit)' : '200+'}</span>
                 </div>
               </div>
 
@@ -421,18 +521,26 @@ const PricingCalculator = () => {
                 <Slider
                   value={hours}
                   onValueChange={setHours}
-                  max={400}
-                  min={40}
-                  step={10}
+                  max={tier === 'free' ? 20 : 400}
+                  min={tier === 'free' ? 1 : 40}
+                  step={tier === 'free' ? 1 : 10}
                   className="mb-3"
                 />
                 <div className="flex justify-between text-sm text-gray-500">
-                  <span>40h</span>
-                  <span className="font-medium text-lg text-gray-900">{hours[0]}h/month</span>
-                  <span>400h+</span>
+                  <span>{tier === 'free' ? '1h' : '40h'}</span>
+                  <span className="font-medium text-lg text-gray-900">
+                    {hours[0]}h/month
+                    {tier === 'free' && hours[0] > 20 && (
+                      <span className="text-red-500 ml-2">(Free tier: max 20h)</span>
+                    )}
+                  </span>
+                  <span>{tier === 'free' ? '20h (free limit)' : '400h+'}</span>
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
-                  160 hours included in base price. Excess: ${assignmentType === 'personal' ? '12' : assignmentType === 'team' ? '15' : '18'}/hour
+                  {tier === 'free' 
+                    ? '20 hours maximum in free tier'
+                    : `160 hours included in base price. Excess: $${assignmentType === 'personal' ? '12' : assignmentType === 'team' ? '15' : '18'}/hour`
+                  }
                 </p>
               </div>
 
@@ -443,18 +551,26 @@ const PricingCalculator = () => {
                 <Slider
                   value={integrations}
                   onValueChange={setIntegrations}
-                  max={50}
+                  max={tier === 'free' ? 1 : 50}
                   min={1}
                   step={1}
                   className="mb-3"
                 />
                 <div className="flex justify-between text-sm text-gray-500">
                   <span>1</span>
-                  <span className="font-medium text-lg text-gray-900">{integrations[0]} integrations</span>
-                  <span>50+</span>
+                  <span className="font-medium text-lg text-gray-900">
+                    {integrations[0]} integrations
+                    {tier === 'free' && integrations[0] > 1 && (
+                      <span className="text-red-500 ml-2">(Free tier: 1 only)</span>
+                    )}
+                  </span>
+                  <span>{tier === 'free' ? '1 (free limit)' : '50+'}</span>
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
-                  5 integrations included, additional at ${assignmentType === 'personal' ? '50' : assignmentType === 'team' ? '75' : '100'}/month each
+                  {tier === 'free'
+                    ? '1 basic integration included in free tier'
+                    : `5 integrations included, additional at $${assignmentType === 'personal' ? '50' : assignmentType === 'team' ? '75' : '100'}/month each`
+                  }
                 </p>
               </div>
 
@@ -464,7 +580,7 @@ const PricingCalculator = () => {
                   AI Employee Support Tier
                 </Label>
                 <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(tiers).map(([value, tierData]) => (
+                  {Object.entries(getAvailableTiers()).map(([value, tierData]) => (
                     <button
                       key={value}
                       onClick={() => setTier(value)}
@@ -516,14 +632,19 @@ const PricingCalculator = () => {
                   </button>
                   <button
                     onClick={() => setDeployment('on-premise')}
+                    disabled={tier === 'free'}
                     className={`p-3 rounded-lg border text-center ${
                       deployment === 'on-premise'
                         ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        : tier === 'free'
+                        ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <div className="font-medium">On-Premise</div>
-                    <div className="text-sm text-gray-500">+20%</div>
+                    <div className="text-sm text-gray-500">
+                      {tier === 'free' ? 'Not available' : '+20%'}
+                    </div>
                   </button>
                 </div>
               </div>
@@ -535,10 +656,12 @@ const PricingCalculator = () => {
                     id="customFeatures"
                     checked={customFeatures}
                     onChange={(e) => setCustomFeatures(e.target.checked)}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                    disabled={tier === 'free'}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded disabled:opacity-50"
                   />
-                  <Label htmlFor="customFeatures" className="text-lg font-medium text-gray-700">
+                  <Label htmlFor="customFeatures" className={`text-lg font-medium ${tier === 'free' ? 'text-gray-400' : 'text-gray-700'}`}>
                     Custom AI Worker Development (+30%)
+                    {tier === 'free' && <span className="text-sm text-gray-400 ml-2">(Not available in free tier)</span>}
                   </Label>
                 </div>
               </div>
@@ -566,33 +689,56 @@ const PricingCalculator = () => {
                   {pricing.assignmentDiscount}% volume discount applied
                 </div>
               )}
+              {pricing.isFree && (
+                <div className="text-sm text-green-600 font-medium mt-2">
+                  🎉 Free tier - Limited functionality
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
               <div className="bg-white p-6 rounded-2xl border border-gray-100">
                 <div className="text-sm text-gray-600 mb-1">Cost Per AI Worker</div>
-                <div className="text-4xl font-light text-gray-900">${pricing.perWorkerCost}</div>
+                <div className="text-4xl font-light text-gray-900">
+                  {pricing.isFree ? 'FREE' : `$${pricing.perWorkerCost}`}
+                </div>
                 <div className="text-sm text-gray-600 mt-1">per month</div>
               </div>
 
               <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
                 <div className="text-sm text-gray-600 mb-1">Total Monthly Cost</div>
-                <div className="text-3xl font-light text-gray-900">${pricing.monthlyTotal.toLocaleString()}</div>
-                <div className="text-sm text-gray-600 mt-1">{workers[0]} workers × ${pricing.perWorkerCost}</div>
+                <div className="text-3xl font-light text-gray-900">
+                  {pricing.isFree ? 'FREE' : `$${pricing.monthlyTotal.toLocaleString()}`}
+                </div>
+                <div className="text-sm text-gray-600 mt-1">
+                  {pricing.isFree ? 'Limited to 2 workers, 20h each' : `${workers[0]} workers × $${pricing.perWorkerCost}`}
+                </div>
+                {assignmentType === 'team' && !pricing.isFree && pricing.monthlyTotal === 299 && (
+                  <div className="text-sm text-blue-600 mt-1">Minimum team pricing applied</div>
+                )}
               </div>
 
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
-                <div className="text-sm text-gray-600 mb-1">Annual Total (10% discount)</div>
-                <div className="text-3xl font-light text-gray-900">${pricing.annualTotal.toLocaleString()}</div>
-                <div className="text-sm text-green-600 mt-1">Save ${pricing.annualSavings.toLocaleString()}/year</div>
-              </div>
+              {!pricing.isFree && (
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
+                  <div className="text-sm text-gray-600 mb-1">Annual Total (10% discount)</div>
+                  <div className="text-3xl font-light text-gray-900">${pricing.annualTotal.toLocaleString()}</div>
+                  <div className="text-sm text-green-600 mt-1">Save ${pricing.annualSavings.toLocaleString()}/year</div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3 mt-8">
-              <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
-                Get This Quote
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              {shouldShowContactSales() ? (
+                <Button className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
+                  <Phone className="mr-2 h-4 w-4" />
+                  Contact Sales for Enterprise Quote
+                </Button>
+              ) : (
+                <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
+                  {pricing.isFree ? 'Start Free Trial' : 'Get This Quote'}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              )}
               <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 py-4 rounded-full">
                 Schedule AI Employee Consultation
               </Button>
@@ -615,6 +761,9 @@ const PricingCalculator = () => {
               <TableHeader>
                 <TableRow className="bg-gray-50">
                   <TableHead className="font-medium text-gray-900">AI Employee Features</TableHead>
+                  {selectedAssignment.allowsFree && (
+                    <TableHead className="font-medium text-gray-900 text-center">Free ($0)</TableHead>
+                  )}
                   <TableHead className="font-medium text-gray-900 text-center">Basic (-20%)</TableHead>
                   <TableHead className="font-medium text-gray-900 text-center">Standard (Base)</TableHead>
                   <TableHead className="font-medium text-gray-900 text-center">Premium (+30%)</TableHead>
@@ -625,6 +774,9 @@ const PricingCalculator = () => {
                 {featureMatrix.map((feature, index) => (
                   <TableRow key={index} className="hover:bg-gray-50">
                     <TableCell className="font-medium text-gray-900">{feature.category}</TableCell>
+                    {selectedAssignment.allowsFree && (
+                      <TableCell className="text-center text-gray-700">{feature.free}</TableCell>
+                    )}
                     <TableCell className="text-center text-gray-700">{feature.basic}</TableCell>
                     <TableCell className="text-center text-gray-700">{feature.standard}</TableCell>
                     <TableCell className="text-center text-gray-700">{feature.premium}</TableCell>
