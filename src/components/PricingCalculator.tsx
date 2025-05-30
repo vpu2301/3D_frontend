@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { Calculator, Users, Zap, Building2, ArrowRight } from 'lucide-react';
+import { Calculator, Users, Zap, Building2, ArrowRight, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,6 +13,59 @@ const PricingCalculator = () => {
   const [supportLevel, setSupportLevel] = useState('standard');
   const [deployment, setDeployment] = useState('cloud');
   const [customFeatures, setCustomFeatures] = useState(false);
+
+  const supportLevels = {
+    basic: {
+      label: 'Basic',
+      price: '-20%',
+      description: 'Perfect for getting started with AI workers',
+      features: [
+        'Email support (48h response)',
+        'Basic documentation access',
+        'Community forum access',
+        'Standard integrations only'
+      ]
+    },
+    standard: {
+      label: 'Standard',
+      price: 'Base',
+      description: 'Ideal for growing teams and businesses',
+      features: [
+        'Priority email support (24h response)',
+        'Live chat support (business hours)',
+        'Full documentation and tutorials',
+        'All standard integrations',
+        'Basic analytics dashboard'
+      ]
+    },
+    premium: {
+      label: 'Premium',
+      price: '+30%',
+      description: 'Advanced support for mission-critical operations',
+      features: [
+        'Priority support (12h response)',
+        'Phone support (business hours)',
+        'Dedicated customer success manager',
+        'Custom integration assistance',
+        'Advanced analytics and reporting',
+        'Training sessions for your team'
+      ]
+    },
+    enterprise: {
+      label: 'Enterprise',
+      price: '+60%',
+      description: 'White-glove service for large organizations',
+      features: [
+        'SLA-backed support (4h response)',
+        '24/7 phone and chat support',
+        'Dedicated technical account manager',
+        'Custom development support',
+        'On-site training and onboarding',
+        'Custom SLAs and compliance',
+        'Priority feature requests'
+      ]
+    }
+  };
 
   const calculatePricing = () => {
     const workerCount = workers[0];
@@ -108,6 +160,7 @@ const PricingCalculator = () => {
             <h3 className="text-2xl font-medium text-gray-900 mb-6">Configure Your AI Workers</h3>
             
             <div className="space-y-6">
+              {/* Number of AI Workers slider */}
               <div>
                 <Label className="block text-lg font-medium text-gray-700 mb-3">
                   Number of AI Workers
@@ -127,6 +180,7 @@ const PricingCalculator = () => {
                 </div>
               </div>
 
+              {/* Monthly Usage Hours slider */}
               <div>
                 <Label className="block text-lg font-medium text-gray-700 mb-3">
                   Monthly Usage Hours (per worker)
@@ -147,6 +201,7 @@ const PricingCalculator = () => {
                 <p className="text-sm text-gray-500 mt-2">160 hours included in base price</p>
               </div>
 
+              {/* Required Integrations slider */}
               <div>
                 <Label className="block text-lg font-medium text-gray-700 mb-3">
                   Required Integrations
@@ -172,25 +227,48 @@ const PricingCalculator = () => {
                   Support Level
                 </Label>
                 <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { value: 'basic', label: 'Basic', price: '-20%' },
-                    { value: 'standard', label: 'Standard', price: 'Base' },
-                    { value: 'premium', label: 'Premium', price: '+30%' },
-                    { value: 'enterprise', label: 'Enterprise', price: '+60%' }
-                  ].map((option) => (
+                  {Object.entries(supportLevels).map(([value, level]) => (
                     <button
-                      key={option.value}
-                      onClick={() => setSupportLevel(option.value)}
-                      className={`p-3 rounded-lg border text-center ${
-                        supportLevel === option.value
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 hover:border-gray-300'
+                      key={value}
+                      onClick={() => setSupportLevel(value)}
+                      className={`p-4 rounded-lg border text-left transition-all duration-200 ${
+                        supportLevel === value
+                          ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                       }`}
                     >
-                      <div className="font-medium">{option.label}</div>
-                      <div className="text-sm text-gray-500">{option.price}</div>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="font-medium">{level.label}</div>
+                        <div className="text-sm text-gray-500">{level.price}</div>
+                      </div>
+                      <div className="text-sm text-gray-600 mb-2">{level.description}</div>
+                      <div className="text-xs text-gray-500">
+                        {level.features.slice(0, 2).map((feature, idx) => (
+                          <div key={idx}>• {feature}</div>
+                        ))}
+                        {level.features.length > 2 && (
+                          <div className="text-blue-600 font-medium mt-1">
+                            +{level.features.length - 2} more features
+                          </div>
+                        )}
+                      </div>
                     </button>
                   ))}
+                </div>
+                
+                {/* Selected Support Level Details */}
+                <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    {supportLevels[supportLevel].label} Support Features:
+                  </h4>
+                  <ul className="space-y-1">
+                    {supportLevels[supportLevel].features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start text-sm text-gray-700">
+                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
