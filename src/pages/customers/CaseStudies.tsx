@@ -122,23 +122,23 @@ const CaseStudies = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen pricing-page-bg">
       {/* Hero Section */}
-      <section className="pt-24 pb-16 relative overflow-hidden">
+      <section className="pt-24 pb-16 relative overflow-hidden section-with-shapes">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center px-4 py-2 bg-blue-100 rounded-full text-blue-700 text-sm font-medium mb-6">
+          <div className="text-center max-w-4xl mx-auto animate-fade-in">
+            <div className="inline-flex items-center px-4 py-2 pricing-card text-blue-700 text-sm font-medium mb-6">
               <CheckCircle className="h-4 w-4 mr-2" />
               Real AI Worker Success Stories
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-5xl md:text-7xl pricing-title mb-6 leading-tight">
               AI Workers
               <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Delivering Results
               </span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+            <p className="text-xl pricing-text text-gray-600 mb-8 leading-relaxed">
               Discover how our specialized AI workers transformed operations across industries, 
               delivering unprecedented efficiency gains and cost savings.
             </p>
@@ -147,11 +147,11 @@ const CaseStudies = () => {
       </section>
 
       {/* Case Studies Carousel */}
-      <section className="py-20 relative">
+      <section className="py-20 relative pricing-section-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Success Stories</h2>
-            <p className="text-lg text-gray-600">Swipe through real transformations across industries</p>
+          <div className="text-center mb-12 animate-slide-up">
+            <h2 className="text-4xl pricing-title mb-4">Success Stories</h2>
+            <p className="text-lg pricing-text text-gray-600">Swipe through real transformations across industries</p>
           </div>
           
           <Carousel
@@ -164,18 +164,18 @@ const CaseStudies = () => {
             <CarouselContent className="-ml-2 md:-ml-4">
               {caseStudies.map((study, index) => (
                 <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                  <Card className={`h-full border-2 ${getBorderColor(study.color)} shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 bg-white/90 backdrop-blur-sm overflow-hidden group`}>
+                  <Card className={`h-full pricing-card floating-shape hover-lift ${getBorderColor(study.color)} group`}>
                     <CardHeader className={`bg-gradient-to-br ${getGradient(study.color)} text-white relative overflow-hidden p-6`}>
                       <div className="absolute top-0 right-0 w-32 h-32 opacity-10 transform rotate-12 transition-transform group-hover:rotate-0">
                         <study.icon className="w-full h-full" />
                       </div>
                       <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
-                          <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
+                          <div className="glass p-3 rounded-xl">
                             <study.icon className="h-8 w-8 text-white" />
                           </div>
                           <div className="text-right">
-                            <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm block mb-1">
+                            <span className="glass px-3 py-1 rounded-full text-xs font-medium block mb-1">
                               {study.timeline}
                             </span>
                             <span className="text-white/90 text-xs">{study.worker}</span>
@@ -188,7 +188,7 @@ const CaseStudies = () => {
                     <CardContent className="p-6 flex flex-col h-full">
                       <div className="space-y-6 flex-grow">
                         {/* Challenge */}
-                        <div>
+                        <div className="animate-scale-in">
                           <h4 className="font-bold text-gray-900 mb-2 flex items-center text-sm">
                             <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
                             Challenge
@@ -197,7 +197,7 @@ const CaseStudies = () => {
                         </div>
                         
                         {/* Solution */}
-                        <div>
+                        <div className="animate-scale-in">
                           <h4 className="font-bold text-gray-900 mb-2 flex items-center text-sm">
                             <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
                             Solution
@@ -206,7 +206,7 @@ const CaseStudies = () => {
                         </div>
                         
                         {/* Results */}
-                        <div>
+                        <div className="animate-scale-in">
                           <h4 className="font-bold text-gray-900 mb-2 flex items-center text-sm">
                             <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
                             Results
@@ -216,7 +216,7 @@ const CaseStudies = () => {
                           {/* Metrics Grid */}
                           <div className="grid grid-cols-2 gap-2 mb-4">
                             {study.metrics.slice(0, 4).map((metric, idx) => (
-                              <div key={idx} className="bg-gray-50 p-2 rounded-lg border">
+                              <div key={idx} className="pricing-card p-2 border hover-lift">
                                 <div className="text-xs text-gray-600 mb-1 truncate">{metric.label}</div>
                                 <div className={`text-sm font-bold ${metric.increase ? 'text-green-600' : 'text-blue-600'}`}>
                                   {metric.value}
@@ -226,7 +226,7 @@ const CaseStudies = () => {
                           </div>
                           
                           {/* Savings Highlight */}
-                          <div className={`bg-gradient-to-r ${getGradient(study.color)} p-4 rounded-xl text-white relative overflow-hidden`}>
+                          <div className={`bg-gradient-to-r ${getGradient(study.color)} p-4 rounded-xl text-white relative overflow-hidden hover-lift`}>
                             <div className="absolute top-0 right-0 w-16 h-16 opacity-20">
                               <TrendingUp className="w-full h-full" />
                             </div>
@@ -242,61 +242,60 @@ const CaseStudies = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden md:flex" />
-            <CarouselNext className="hidden md:flex" />
+            <CarouselPrevious className="hidden md:flex pricing-button" />
+            <CarouselNext className="hidden md:flex pricing-button" />
           </Carousel>
         </div>
       </section>
 
       {/* Summary Stats */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50"></div>
+      <section className="py-20 pricing-section-bg relative overflow-hidden section-with-shapes">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Combined Impact Across All AI Workers</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl pricing-title mb-6">Combined Impact Across All AI Workers</h2>
+            <p className="text-xl pricing-text text-gray-600 max-w-3xl mx-auto">
               Collective results from deploying our specialized AI workforce
             </p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center bg-white p-6 rounded-xl shadow-lg">
+            <div className="text-center pricing-card p-6 hover-lift floating-shape animate-scale-in">
               <div className="text-4xl font-bold text-blue-600 mb-2">$3.38M+</div>
-              <div className="text-gray-600">Total Annual Savings</div>
+              <div className="text-gray-600 pricing-text">Total Annual Savings</div>
             </div>
-            <div className="text-center bg-white p-6 rounded-xl shadow-lg">
+            <div className="text-center pricing-card p-6 hover-lift floating-shape animate-scale-in">
               <div className="text-4xl font-bold text-green-600 mb-2">95%+</div>
-              <div className="text-gray-600">Average Accuracy Rate</div>
+              <div className="text-gray-600 pricing-text">Average Accuracy Rate</div>
             </div>
-            <div className="text-center bg-white p-6 rounded-xl shadow-lg">
+            <div className="text-center pricing-card p-6 hover-lift floating-shape animate-scale-in">
               <div className="text-4xl font-bold text-purple-600 mb-2">150x</div>
-              <div className="text-gray-600">Maximum Speed Improvement</div>
+              <div className="text-gray-600 pricing-text">Maximum Speed Improvement</div>
             </div>
-            <div className="text-center bg-white p-6 rounded-xl shadow-lg">
+            <div className="text-center pricing-card p-6 hover-lift floating-shape animate-scale-in">
               <div className="text-4xl font-bold text-orange-600 mb-2">96%</div>
-              <div className="text-gray-600">Client Satisfaction</div>
+              <div className="text-gray-600 pricing-text">Client Satisfaction</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 py-20 relative overflow-hidden">
+      <section className="pricing-dark-section py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-600/20 via-transparent to-transparent"></div>
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-4xl md:text-5xl pricing-title text-white mb-6">
             Ready to Deploy Your
             <span className="block text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text">AI Workforce?</span>
           </h2>
-          <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+          <p className="text-xl pricing-text text-gray-300 mb-8 leading-relaxed">
             Join these industry leaders and experience the transformative power of specialized AI workers 
             designed for your specific business needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg" asChild>
+            <Button size="lg" className="pricing-button px-8 py-3 text-lg" asChild>
               <Link to="/get-started">Deploy AI Workers <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-3 text-lg" asChild>
+            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-3 text-lg hover-lift" asChild>
               <Link to="/watch-demo">See Demo</Link>
             </Button>
           </div>
