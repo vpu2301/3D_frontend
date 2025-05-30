@@ -8,9 +8,9 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 
 const PricingCalculator = () => {
-  const [workers, setWorkers] = useState([5]);
+  const [workers, setWorkers] = useState([1]);
   const [hours, setHours] = useState([160]); // hours per month
-  const [integrations, setIntegrations] = useState([10]);
+  const [integrations, setIntegrations] = useState([5]);
   const [supportLevel, setSupportLevel] = useState('standard');
   const [deployment, setDeployment] = useState('cloud');
   const [customFeatures, setCustomFeatures] = useState(false);
@@ -20,46 +20,58 @@ const PricingCalculator = () => {
     const monthlyHours = hours[0];
     const integrationCount = integrations[0];
 
-    // Base pricing per worker
-    let basePrice = 1500;
+    // Base pricing per worker - starts at $0 for minimal usage
+    let basePrice = 50; // Minimum base price
     
-    // Volume discounts
-    if (workerCount >= 100) basePrice *= 0.7; // 30% discount
-    else if (workerCount >= 50) basePrice *= 0.8; // 20% discount
-    else if (workerCount >= 20) basePrice *= 0.9; // 10% discount
+    // Scale pricing based on usage hours
+    if (monthlyHours > 160) {
+      basePrice += (monthlyHours - 160) * 5; // Escalating price for higher usage
+    }
+    
+    // Cap the base price at around $800 before other factors
+    basePrice = Math.min(basePrice, 800);
 
-    // Usage-based pricing
-    const baseHours = 160; // included hours per worker per month
+    // Volume discounts for multiple workers
+    let volumeMultiplier = 1;
+    if (workerCount >= 100) volumeMultiplier = 0.7; // 30% discount
+    else if (workerCount >= 50) volumeMultiplier = 0.8; // 20% discount
+    else if (workerCount >= 20) volumeMultiplier = 0.9; // 10% discount
+
+    // Usage-based pricing for excess hours
+    const baseHours = 160;
     const excessHours = Math.max(0, monthlyHours - baseHours);
     const excessCost = excessHours * 12; // $12 per excess hour
 
     // Integration add-ons
-    const baseIntegrations = 5; // included integrations
+    const baseIntegrations = 5;
     const excessIntegrations = Math.max(0, integrationCount - baseIntegrations);
-    const integrationCost = excessIntegrations * 200; // $200 per additional integration
+    const integrationCost = excessIntegrations * 50; // $50 per additional integration
 
     // Support level pricing
     const supportMultiplier = {
-      basic: 1,
-      standard: 1.2,
-      premium: 1.5,
-      enterprise: 2
+      basic: 0.8,
+      standard: 1,
+      premium: 1.3,
+      enterprise: 1.6
     };
 
     // Deployment pricing
-    const deploymentMultiplier = deployment === 'on-premise' ? 1.3 : 1;
+    const deploymentMultiplier = deployment === 'on-premise' ? 1.2 : 1;
 
     // Custom features
-    const customFeaturesMultiplier = customFeatures ? 1.4 : 1;
+    const customFeaturesMultiplier = customFeatures ? 1.3 : 1;
 
-    const totalWorkerCost = workerCount * basePrice * supportMultiplier[supportLevel] * deploymentMultiplier * customFeaturesMultiplier;
-    const totalMonthlyCost = totalWorkerCost + excessCost + integrationCost;
+    // Calculate per worker cost
+    const perWorkerBaseCost = basePrice * supportMultiplier[supportLevel] * deploymentMultiplier * customFeaturesMultiplier * volumeMultiplier;
+    const perWorkerTotalCost = Math.min(perWorkerBaseCost + (excessCost / workerCount) + (integrationCost / workerCount), 1000);
+    
+    const totalMonthlyCost = perWorkerTotalCost * workerCount;
     const annualCost = totalMonthlyCost * 12 * 0.9; // 10% annual discount
 
     return {
       monthlyTotal: Math.round(totalMonthlyCost),
       annualTotal: Math.round(annualCost),
-      perWorkerCost: Math.round(totalWorkerCost / workerCount),
+      perWorkerCost: Math.round(perWorkerTotalCost),
       excessHoursCost: Math.round(excessCost),
       integrationsCost: Math.round(integrationCost),
       annualSavings: Math.round(totalMonthlyCost * 12 - annualCost)
@@ -69,9 +81,9 @@ const PricingCalculator = () => {
   const pricing = calculatePricing();
 
   const getTier = () => {
-    const workerCount = workers[0];
-    if (workerCount <= 2) return 'Free';
-    if (workerCount <= 50) return 'Professional';
+    const cost = pricing.perWorkerCost;
+    if (cost <= 100) return 'Starter';
+    if (cost <= 500) return 'Professional';
     return 'Enterprise';
   };
 
@@ -82,10 +94,10 @@ const PricingCalculator = () => {
           <Calculator className="h-8 w-8 text-white" />
         </div>
         <CardTitle className="text-4xl font-light text-gray-900 mb-4">
-          Pricing Calculator
+          AI Worker Pricing Calculator
         </CardTitle>
         <p className="text-xl text-gray-600 font-light">
-          Configure your perfect plan with transparent, usage-based pricing
+          Configure your AI workers and see transparent pricing from $0-$1000 per worker per month
         </p>
       </CardHeader>
       
@@ -93,7 +105,7 @@ const PricingCalculator = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Configuration Section */}
           <div className="space-y-8">
-            <h3 className="text-2xl font-medium text-gray-900 mb-6">Configure Your Needs</h3>
+            <h3 className="text-2xl font-medium text-gray-900 mb-6">Configure Your AI Workers</h3>
             
             <div className="space-y-6">
               <div>
@@ -132,7 +144,7 @@ const PricingCalculator = () => {
                   <span className="font-medium text-lg text-gray-900">{hours[0]}h/month</span>
                   <span>400h+</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">160 hours included, additional hours at $12/hour</p>
+                <p className="text-sm text-gray-500 mt-2">160 hours included in base price</p>
               </div>
 
               <div>
@@ -152,7 +164,7 @@ const PricingCalculator = () => {
                   <span className="font-medium text-lg text-gray-900">{integrations[0]} integrations</span>
                   <span>50+</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">5 integrations included, additional at $200/month each</p>
+                <p className="text-sm text-gray-500 mt-2">5 integrations included, additional at $50/month each</p>
               </div>
 
               <div>
@@ -161,10 +173,10 @@ const PricingCalculator = () => {
                 </Label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { value: 'basic', label: 'Basic', price: '+0%' },
-                    { value: 'standard', label: 'Standard', price: '+20%' },
-                    { value: 'premium', label: 'Premium', price: '+50%' },
-                    { value: 'enterprise', label: 'Enterprise', price: '+100%' }
+                    { value: 'basic', label: 'Basic', price: '-20%' },
+                    { value: 'standard', label: 'Standard', price: 'Base' },
+                    { value: 'premium', label: 'Premium', price: '+30%' },
+                    { value: 'enterprise', label: 'Enterprise', price: '+60%' }
                   ].map((option) => (
                     <button
                       key={option.value}
@@ -207,7 +219,7 @@ const PricingCalculator = () => {
                     }`}
                   >
                     <div className="font-medium">On-Premise</div>
-                    <div className="text-sm text-gray-500">+30%</div>
+                    <div className="text-sm text-gray-500">+20%</div>
                   </button>
                 </div>
               </div>
@@ -222,7 +234,7 @@ const PricingCalculator = () => {
                     className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                   />
                   <Label htmlFor="customFeatures" className="text-lg font-medium text-gray-700">
-                    Custom Features Development (+40%)
+                    Custom Features Development (+30%)
                   </Label>
                 </div>
               </div>
@@ -231,7 +243,7 @@ const PricingCalculator = () => {
 
           {/* Results Section */}
           <div className="space-y-8">
-            <h3 className="text-2xl font-medium text-gray-900 mb-6">Your Custom Quote</h3>
+            <h3 className="text-2xl font-medium text-gray-900 mb-6">Your AI Worker Quote</h3>
             
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl mb-6">
               <div className="text-sm text-gray-600 mb-1">Recommended Tier</div>
@@ -241,9 +253,15 @@ const PricingCalculator = () => {
 
             <div className="space-y-4">
               <div className="bg-white p-6 rounded-2xl border border-gray-100">
-                <div className="text-sm text-gray-600 mb-1">Monthly Total</div>
-                <div className="text-4xl font-light text-gray-900">${pricing.monthlyTotal.toLocaleString()}</div>
-                <div className="text-sm text-gray-600 mt-1">${pricing.perWorkerCost}/worker/month</div>
+                <div className="text-sm text-gray-600 mb-1">Cost Per AI Worker</div>
+                <div className="text-4xl font-light text-gray-900">${pricing.perWorkerCost}</div>
+                <div className="text-sm text-gray-600 mt-1">per month</div>
+              </div>
+
+              <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                <div className="text-sm text-gray-600 mb-1">Total Monthly Cost</div>
+                <div className="text-3xl font-light text-gray-900">${pricing.monthlyTotal.toLocaleString()}</div>
+                <div className="text-sm text-gray-600 mt-1">{workers[0]} workers × ${pricing.perWorkerCost}</div>
               </div>
 
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
@@ -251,20 +269,6 @@ const PricingCalculator = () => {
                 <div className="text-3xl font-light text-gray-900">${pricing.annualTotal.toLocaleString()}</div>
                 <div className="text-sm text-green-600 mt-1">Save ${pricing.annualSavings.toLocaleString()}/year</div>
               </div>
-
-              {pricing.excessHoursCost > 0 && (
-                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                  <div className="text-sm text-gray-600">Additional Usage</div>
-                  <div className="text-lg font-medium text-gray-900">+${pricing.excessHoursCost}/month</div>
-                </div>
-              )}
-
-              {pricing.integrationsCost > 0 && (
-                <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                  <div className="text-sm text-gray-600">Extra Integrations</div>
-                  <div className="text-lg font-medium text-gray-900">+${pricing.integrationsCost}/month</div>
-                </div>
-              )}
             </div>
 
             <div className="space-y-3 mt-8">

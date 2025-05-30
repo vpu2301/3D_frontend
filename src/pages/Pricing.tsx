@@ -1,83 +1,11 @@
 
-import { ArrowRight, CheckCircle, Star, Zap, Shield, Crown, Users, Calculator } from 'lucide-react';
+import { ArrowRight, Calculator } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import PricingCalculator from '@/components/PricingCalculator';
 
 const Pricing = () => {
-  const plans = [
-    {
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      description: 'Perfect for testing and small teams',
-      features: [
-        '2 AI workers included',
-        'Up to 80 hours/month per worker',
-        '3 basic integrations',
-        'Community support',
-        'Standard cloud deployment',
-        'Basic analytics'
-      ],
-      limitations: ['Limited daily tasks', 'Basic integrations only', 'Community support only'],
-      popular: false,
-      icon: Star,
-      cta: 'Start Free',
-      maxWorkers: 2
-    },
-    {
-      name: 'Professional',
-      price: '$1,500',
-      period: 'per AI worker/month',
-      description: 'For growing teams ready to scale',
-      features: [
-        'Unlimited AI workers',
-        '160 hours/month per worker (included)',
-        '5 integrations included',
-        '24/7 standard support',
-        'Advanced analytics',
-        'Custom workflow automation',
-        '99.9% uptime SLA',
-        'API access'
-      ],
-      addOns: [
-        'Additional hours: $12/hour',
-        'Extra integrations: $200/month each',
-        'Premium support: +50% base price'
-      ],
-      popular: true,
-      icon: Zap,
-      cta: 'Start Free Trial',
-      maxWorkers: 'Unlimited'
-    },
-    {
-      name: 'Enterprise',
-      price: 'Custom',
-      period: 'volume pricing available',
-      description: 'Large-scale deployments with custom solutions',
-      features: [
-        'Volume discounts (up to 30%)',
-        'Unlimited usage hours',
-        'Unlimited integrations',
-        'Dedicated customer success manager',
-        'On-premises deployment option',
-        'Custom features development',
-        '99.99% uptime SLA',
-        'White-label solutions'
-      ],
-      discounts: [
-        '10% off: 20+ workers',
-        '20% off: 50+ workers', 
-        '30% off: 100+ workers'
-      ],
-      popular: false,
-      icon: Crown,
-      cta: 'Contact Sales',
-      maxWorkers: 'Unlimited'
-    }
-  ];
-
   const pricingPolicies = [
     {
       title: 'Transparent Usage-Based Pricing',
@@ -126,12 +54,12 @@ const Pricing = () => {
             <h1 className="text-6xl md:text-7xl font-light text-gray-900 mb-8 tracking-tight leading-none">
               Simple, Fair
               <span className="block font-medium bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Usage-Based Pricing
+                AI Worker Pricing
               </span>
             </h1>
             <p className="text-xl text-gray-600 mb-12 font-light leading-relaxed">
-              Start free with 2 AI workers, then scale with transparent, 
-              usage-based pricing that grows with your business needs.
+              From $0 to $1000 per month per AI worker. Transparent, 
+              usage-based pricing that scales with your business needs.
             </p>
           </div>
         </div>
@@ -142,99 +70,13 @@ const Pricing = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              Calculate Your Custom Pricing
+              Calculate Your AI Worker Cost
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              Configure your exact needs and get an instant, transparent quote.
+              Configure your exact needs and get an instant, transparent quote for your AI workers.
             </p>
           </div>
           <PricingCalculator />
-        </div>
-      </section>
-
-      {/* Pricing Plans */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Standard Pricing Tiers</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              Choose a plan that fits your current needs, upgrade anytime.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
-            {plans.map((plan, index) => (
-              <Card 
-                key={index} 
-                className={`border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white/80 backdrop-blur-sm overflow-hidden relative ${
-                  plan.popular ? 'ring-2 ring-blue-500 scale-105' : ''
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="bg-blue-500 text-white px-6 py-2 rounded-full text-sm font-medium">
-                      Most Popular
-                    </div>
-                  </div>
-                )}
-                <CardContent className="p-8">
-                  <div className="flex items-center mb-6">
-                    <div className="p-3 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 mr-4">
-                      <plan.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-medium text-gray-900">{plan.name}</h3>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <div className="text-4xl font-light text-gray-900 mb-2">{plan.price}</div>
-                    <div className="text-gray-600 text-sm">{plan.period}</div>
-                    <div className="text-gray-700 font-medium mt-2">{plan.description}</div>
-                  </div>
-
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {plan.addOns && (
-                    <div className="bg-blue-50 rounded-2xl p-4 mb-6">
-                      <div className="text-sm font-medium text-gray-900 mb-2">Add-ons Available:</div>
-                      {plan.addOns.map((addon, idx) => (
-                        <div key={idx} className="text-sm text-gray-600">{addon}</div>
-                      ))}
-                    </div>
-                  )}
-
-                  {plan.discounts && (
-                    <div className="bg-green-50 rounded-2xl p-4 mb-6">
-                      <div className="text-sm font-medium text-gray-900 mb-2">Volume Discounts:</div>
-                      {plan.discounts.map((discount, idx) => (
-                        <div key={idx} className="text-sm text-gray-600">{discount}</div>
-                      ))}
-                    </div>
-                  )}
-
-                  <Button 
-                    className={`w-full py-3 rounded-full transition-all duration-300 hover:scale-105 ${
-                      plan.popular 
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white' 
-                        : 'bg-black hover:bg-gray-800 text-white'
-                    }`}
-                    asChild
-                  >
-                    <Link to={plan.name === 'Free' ? '/start-free-trial' : plan.name === 'Enterprise' ? '/contact' : '/start-free-trial'}>
-                      {plan.cta}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -286,10 +128,10 @@ const Pricing = () => {
           <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
             <div className="text-center lg:text-left">
               <div className="text-6xl font-light mb-4">
-                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Free</span>
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">$0-1000</span>
               </div>
-              <div className="text-xl text-gray-300">Start Today</div>
-              <div className="text-gray-400">2 AI Workers • No Credit Card</div>
+              <div className="text-xl text-gray-300">Per AI Worker/Month</div>
+              <div className="text-gray-400">Start Free • Scale as Needed</div>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
