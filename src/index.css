@@ -254,7 +254,7 @@
   /* Button variant styles */
   .standard-button.variant-outline {
     background: transparent;
-    border: 1px solid #000000;
+    border: 1px solid #d1d5db;
     color: #000000;
     box-shadow: none;
   }
