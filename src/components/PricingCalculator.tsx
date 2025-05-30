@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from 'react';
-import { Calculator, Users, Zap, Building2, ArrowRight, Info } from 'lucide-react';
+import { Calculator, Users, Zap, Building2, ArrowRight, Info, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,123 +12,141 @@ const PricingCalculator = () => {
   const [workers, setWorkers] = useState([1]);
   const [hours, setHours] = useState([160]); // hours per month
   const [integrations, setIntegrations] = useState([5]);
-  const [supportLevel, setSupportLevel] = useState('standard');
+  const [tier, setTier] = useState('standard');
   const [deployment, setDeployment] = useState('cloud');
   const [customFeatures, setCustomFeatures] = useState(false);
 
-  const supportLevels = {
+  const tiers = {
     basic: {
       label: 'Basic',
       price: '-20%',
       description: 'Perfect for getting started with AI workers',
-      manager: 'Self-service support',
+      aiSupport: 'AI Employee support via email',
       features: [
-        'Email support (48h response)',
+        'AI Employee email support (48h response)',
         'Basic documentation access',
         'Community forum access',
-        'Standard integrations only'
+        'Standard integrations only',
+        'Basic AI worker management'
       ]
     },
     standard: {
       label: 'Standard',
       price: 'Base',
       description: 'Ideal for growing teams and businesses',
-      manager: 'Support team assistance',
+      aiSupport: 'Dedicated AI Employee team',
       features: [
-        'Priority email support (24h response)',
-        'Live chat support (business hours)',
+        'Priority AI Employee support (24h response)',
+        'Live chat with AI Employees (business hours)',
         'Full documentation and tutorials',
         'All standard integrations',
-        'Basic analytics dashboard'
+        'Advanced AI worker analytics',
+        'AI Employee training assistance'
       ]
     },
     premium: {
       label: 'Premium',
       price: '+30%',
       description: 'Advanced support for mission-critical operations',
-      manager: 'Dedicated customer success manager',
+      aiSupport: 'Senior AI Employee specialist',
       features: [
-        'Priority support (12h response)',
-        'Phone support (business hours)',
-        'Dedicated customer success manager',
-        'Custom integration assistance',
-        'Advanced analytics and reporting',
-        'Training sessions for your team'
+        'Priority AI Employee support (12h response)',
+        'Phone support with AI Employee specialists',
+        'Dedicated AI Employee customer success manager',
+        'Custom integration assistance from AI team',
+        'Advanced analytics and AI insights',
+        'Personalized training by AI Employees',
+        'AI worker optimization recommendations'
       ]
     },
     enterprise: {
       label: 'Enterprise',
       price: '+60%',
-      description: 'White-glove service for large organizations',
-      manager: 'Dedicated technical account manager + Customer success manager',
+      description: 'White-glove AI Employee service for large organizations',
+      aiSupport: 'Dedicated AI Employee account team',
       features: [
-        'SLA-backed support (4h response)',
-        '24/7 phone and chat support',
-        'Dedicated technical account manager',
-        'Custom development support',
-        'On-site training and onboarding',
-        'Custom SLAs and compliance',
-        'Priority feature requests'
+        'SLA-backed AI Employee support (4h response)',
+        '24/7 AI Employee phone and chat support',
+        'Dedicated AI Employee technical account manager',
+        'Custom AI worker development support',
+        'On-site training by AI Employee specialists',
+        'Custom SLAs with AI Employee guarantees',
+        'Priority AI worker feature requests',
+        'AI Employee strategic consultation'
       ]
     }
   };
 
   const featureMatrix = [
     {
-      category: 'Support Response Time',
+      category: 'AI Employee Support Response Time',
       basic: '48 hours',
       standard: '24 hours',
       premium: '12 hours',
       enterprise: '4 hours (SLA-backed)'
     },
     {
-      category: 'Support Channels',
+      category: 'AI Employee Support Channels',
       basic: 'Email only',
       standard: 'Email + Live chat',
       premium: 'Email + Chat + Phone',
       enterprise: '24/7 Phone + Chat + Email'
     },
     {
-      category: 'Dedicated Manager',
+      category: 'Dedicated AI Employee Manager',
       basic: 'None',
-      standard: 'Support team',
-      premium: 'Customer success manager',
-      enterprise: 'Technical + Success managers'
+      standard: 'AI Employee team',
+      premium: 'AI Employee success manager',
+      enterprise: 'AI Employee account team'
     },
     {
-      category: 'Integrations',
-      basic: 'Standard only',
-      standard: 'All standard',
-      premium: 'Standard + Custom assistance',
-      enterprise: 'Custom development support'
+      category: 'AI Worker Integrations',
+      basic: 'Standard only (5 included)',
+      standard: 'All standard integrations',
+      premium: 'Standard + Custom with AI assistance',
+      enterprise: 'Custom development by AI team'
     },
     {
-      category: 'Analytics & Reporting',
+      category: 'AI Worker Analytics & Insights',
       basic: 'Basic dashboard',
-      standard: 'Standard analytics',
-      premium: 'Advanced analytics',
-      enterprise: 'Custom reporting + Analytics'
+      standard: 'Advanced analytics',
+      premium: 'AI-powered insights + recommendations',
+      enterprise: 'Custom AI analytics + Reporting'
     },
     {
-      category: 'Training & Onboarding',
-      basic: 'Self-service docs',
-      standard: 'Documentation + Tutorials',
-      premium: 'Team training sessions',
-      enterprise: 'On-site training + Onboarding'
+      category: 'AI Employee Training & Onboarding',
+      basic: 'Self-service documentation',
+      standard: 'AI Employee-led tutorials',
+      premium: 'Personalized AI Employee training',
+      enterprise: 'On-site AI Employee specialists'
+    },
+    {
+      category: 'AI Worker Optimization',
+      basic: 'Basic performance metrics',
+      standard: 'Performance recommendations',
+      premium: 'AI Employee optimization guidance',
+      enterprise: 'Dedicated AI optimization team'
     },
     {
       category: 'Compliance & SLAs',
       basic: 'Standard terms',
-      standard: 'Standard terms',
-      premium: 'Enhanced compliance',
-      enterprise: 'Custom SLAs + Full compliance'
+      standard: 'Enhanced compliance',
+      premium: 'AI Employee compliance support',
+      enterprise: 'Custom SLAs with AI guarantees'
     },
     {
-      category: 'Priority Features',
-      basic: 'Standard roadmap',
-      standard: 'Standard roadmap',
-      premium: 'Feature input',
-      enterprise: 'Priority feature requests'
+      category: 'AI Worker Development',
+      basic: 'Standard AI workers only',
+      standard: 'Custom configuration support',
+      premium: 'AI Employee development assistance',
+      enterprise: 'Custom AI worker development'
+    },
+    {
+      category: 'Strategic AI Consultation',
+      basic: 'Community resources',
+      standard: 'Basic AI strategy guidance',
+      premium: 'AI Employee strategic sessions',
+      enterprise: 'Dedicated AI strategy consultation'
     }
   ];
 
@@ -163,8 +182,8 @@ const PricingCalculator = () => {
     const excessIntegrations = Math.max(0, integrationCount - baseIntegrations);
     const integrationCost = excessIntegrations * 50; // $50 per additional integration
 
-    // Support level pricing
-    const supportMultiplier = {
+    // Tier pricing
+    const tierMultiplier = {
       basic: 0.8,
       standard: 1,
       premium: 1.3,
@@ -178,7 +197,7 @@ const PricingCalculator = () => {
     const customFeaturesMultiplier = customFeatures ? 1.3 : 1;
 
     // Calculate per worker cost
-    const perWorkerBaseCost = basePrice * supportMultiplier[supportLevel] * deploymentMultiplier * customFeaturesMultiplier * volumeMultiplier;
+    const perWorkerBaseCost = basePrice * tierMultiplier[tier] * deploymentMultiplier * customFeaturesMultiplier * volumeMultiplier;
     const perWorkerTotalCost = Math.min(perWorkerBaseCost + (excessCost / workerCount) + (integrationCost / workerCount), 1000);
     
     const totalMonthlyCost = perWorkerTotalCost * workerCount;
@@ -196,7 +215,7 @@ const PricingCalculator = () => {
 
   const pricing = calculatePricing();
 
-  const getTier = () => {
+  const getTierName = () => {
     const cost = pricing.perWorkerCost;
     if (cost <= 100) return 'Starter';
     if (cost <= 500) return 'Professional';
@@ -213,7 +232,7 @@ const PricingCalculator = () => {
           AI Worker Pricing Calculator
         </CardTitle>
         <p className="text-xl text-gray-600 font-light">
-          Configure your AI workers and see transparent pricing from $0-$1000 per worker per month
+          Configure your AI workers with AI Employee support from $0-$1000 per worker per month
         </p>
       </CardHeader>
       
@@ -285,32 +304,36 @@ const PricingCalculator = () => {
 
               <div>
                 <Label className="block text-lg font-medium text-gray-700 mb-3">
-                  Support Level
+                  <Bot className="inline-block w-5 h-5 mr-2" />
+                  AI Employee Support Tier
                 </Label>
                 <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(supportLevels).map(([value, level]) => (
+                  {Object.entries(tiers).map(([value, tierData]) => (
                     <button
                       key={value}
-                      onClick={() => setSupportLevel(value)}
+                      onClick={() => setTier(value)}
                       className={`p-4 rounded-lg border text-left transition-all duration-200 ${
-                        supportLevel === value
+                        tier === value
                           ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
                           : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <div className="font-medium">{level.label}</div>
-                        <div className="text-sm text-gray-500">{level.price}</div>
+                        <div className="font-medium">{tierData.label}</div>
+                        <div className="text-sm text-gray-500">{tierData.price}</div>
                       </div>
-                      <div className="text-sm text-gray-600 mb-2">{level.description}</div>
+                      <div className="text-sm text-gray-600 mb-2">{tierData.description}</div>
                       <div className="text-xs text-gray-500">
-                        <div className="font-medium mb-1">Manager: {level.manager}</div>
-                        {level.features.slice(0, 2).map((feature, idx) => (
+                        <div className="font-medium mb-1 text-blue-600">
+                          <Bot className="inline-block w-3 h-3 mr-1" />
+                          {tierData.aiSupport}
+                        </div>
+                        {tierData.features.slice(0, 2).map((feature, idx) => (
                           <div key={idx}>• {feature}</div>
                         ))}
-                        {level.features.length > 2 && (
+                        {tierData.features.length > 2 && (
                           <div className="text-blue-600 font-medium mt-1">
-                            +{level.features.length - 2} more features
+                            +{tierData.features.length - 2} more features
                           </div>
                         )}
                       </div>
@@ -359,7 +382,7 @@ const PricingCalculator = () => {
                     className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                   />
                   <Label htmlFor="customFeatures" className="text-lg font-medium text-gray-700">
-                    Custom Features Development (+30%)
+                    Custom AI Worker Development (+30%)
                   </Label>
                 </div>
               </div>
@@ -372,8 +395,11 @@ const PricingCalculator = () => {
             
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl mb-6">
               <div className="text-sm text-gray-600 mb-1">Recommended Tier</div>
-              <div className="text-2xl font-medium text-gray-900 mb-2">{getTier()}</div>
-              <div className="text-sm text-gray-600">Based on your configuration</div>
+              <div className="text-2xl font-medium text-gray-900 mb-2">{getTierName()}</div>
+              <div className="text-sm text-gray-600">
+                <Bot className="inline-block w-4 h-4 mr-1" />
+                Includes AI Employee support
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -402,22 +428,23 @@ const PricingCalculator = () => {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 py-4 rounded-full">
-                Schedule Consultation
+                Schedule AI Employee Consultation
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Support Level Features Comparison Table */}
+        {/* AI Employee Support Features Comparison Table */}
         <div className="mt-16">
           <h3 className="text-2xl font-medium text-gray-900 mb-6 text-center">
-            Complete Support Level Comparison
+            <Bot className="inline-block w-6 h-6 mr-2" />
+            Complete AI Employee Support Comparison
           </h3>
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="font-medium text-gray-900">Features</TableHead>
+                  <TableHead className="font-medium text-gray-900">AI Employee Features</TableHead>
                   <TableHead className="font-medium text-gray-900 text-center">Basic (-20%)</TableHead>
                   <TableHead className="font-medium text-gray-900 text-center">Standard (Base)</TableHead>
                   <TableHead className="font-medium text-gray-900 text-center">Premium (+30%)</TableHead>
@@ -438,7 +465,8 @@ const PricingCalculator = () => {
             </Table>
           </div>
           <p className="text-sm text-gray-500 text-center mt-4">
-            All support levels include access to our AI worker platform and basic integrations
+            <Bot className="inline-block w-4 h-4 mr-1" />
+            All tiers include access to our AI worker platform and AI Employee support
           </p>
         </div>
       </CardContent>
