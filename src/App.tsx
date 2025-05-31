@@ -1,6 +1,7 @@
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
+import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Chat from './pages/Chat';
@@ -28,24 +29,24 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/ai-employees" element={<AIEmployees />} />
-          <Route path="/ai-assistants/:id" element={<AssistantProfile />} />
-          <Route path="/ai-assistants/:id/configure" element={<AssistantConfiguration />} />
-          <Route path="/teams" element={<Teams />} />
-          <Route path="/teams/:id" element={<TeamDetail />} />
-          <Route path="/ai-agents" element={<AIAgents />} />
-          <Route path="/workflows" element={<Workflows />} />
-          <Route path="/integrations" element={<IntegrationsPage />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/billing" element={<Billing />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="/dev/playground" element={<DevPlayground />} />
-          <Route path="/dev/api" element={<DevAPI />} />
-          <Route path="/dev/docs" element={<DevDocs />} />
-          <Route path="/ai-fine-tuning" element={<AIFineTuning />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+          <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+          <Route path="/ai-employees" element={<ProtectedRoute><AIEmployees /></ProtectedRoute>} />
+          <Route path="/ai-assistants/:id" element={<ProtectedRoute><AssistantProfile /></ProtectedRoute>} />
+          <Route path="/ai-assistants/:id/configure" element={<ProtectedRoute><AssistantConfiguration /></ProtectedRoute>} />
+          <Route path="/teams" element={<ProtectedRoute><Teams /></ProtectedRoute>} />
+          <Route path="/teams/:id" element={<ProtectedRoute><TeamDetail /></ProtectedRoute>} />
+          <Route path="/ai-agents" element={<ProtectedRoute><AIAgents /></ProtectedRoute>} />
+          <Route path="/workflows" element={<ProtectedRoute><Workflows /></ProtectedRoute>} />
+          <Route path="/integrations" element={<ProtectedRoute><IntegrationsPage /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
+          <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
+          <Route path="/dev/playground" element={<ProtectedRoute><DevPlayground /></ProtectedRoute>} />
+          <Route path="/dev/api" element={<ProtectedRoute><DevAPI /></ProtectedRoute>} />
+          <Route path="/dev/docs" element={<ProtectedRoute><DevDocs /></ProtectedRoute>} />
+          <Route path="/ai-fine-tuning" element={<ProtectedRoute><AIFineTuning /></ProtectedRoute>} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
         <Toaster />
