@@ -1,9 +1,5 @@
 
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,25 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { MapPin, Clock, DollarSign, Users, Search, Building, Star, Heart } from 'lucide-react';
 
 const Careers = () => {
-  const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
-
-  useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
-    
-    if (isAuthenticated !== 'true') {
-      navigate('/login');
-      return;
-    }
-    
-    if (email) {
-      setUserEmail(email);
-    }
-  }, [navigate]);
 
   const jobs = [
     {
@@ -123,154 +103,146 @@ const Careers = () => {
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
-      <SidebarProvider>
-        <div className="flex w-full flex-1">
-          <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col">
-            <LoggedInHeader userEmail={userEmail} />
-            
-            <main className="flex-1 p-6">
-              <div className="mb-6">
-                <h1 className="text-3xl font-light text-gray-900">Join the AI Revolution</h1>
-                <p className="text-gray-600">Help us build the future of work with passionate individuals</p>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
+      <main className="pt-16 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6">
+            <h1 className="text-3xl font-light text-gray-900">Join the AI Revolution</h1>
+            <p className="text-gray-600">Help us build the future of work with passionate individuals</p>
+          </div>
 
-              {/* Company Stats */}
-              <section className="mb-8">
-                <Card className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white border-0">
-                  <CardContent className="p-6">
-                    <div className="grid grid-cols-3 gap-6 text-center">
+          {/* Company Stats */}
+          <section className="mb-8">
+            <Card className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white border-0">
+              <CardContent className="p-6">
+                <div className="grid grid-cols-3 gap-6 text-center">
+                  <div>
+                    <Users className="h-8 w-8 mx-auto mb-2 opacity-90" />
+                    <div className="text-2xl font-light">50+</div>
+                    <div className="text-sm opacity-90">Employees</div>
+                  </div>
+                  <div>
+                    <MapPin className="h-8 w-8 mx-auto mb-2 opacity-90" />
+                    <div className="text-2xl font-light">Remote</div>
+                    <div className="text-sm opacity-90">First Culture</div>
+                  </div>
+                  <div>
+                    <Star className="h-8 w-8 mx-auto mb-2 opacity-90" />
+                    <div className="text-2xl font-light">Series A</div>
+                    <div className="text-sm opacity-90">Funding Stage</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Filters */}
+          <section className="mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Search jobs..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-white/80 border-gray-200"
+                />
+              </div>
+              <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+                <SelectTrigger className="bg-white/80 border-gray-200">
+                  <SelectValue placeholder="Department" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Departments</SelectItem>
+                  {departments.map(dept => (
+                    <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={locationFilter} onValueChange={setLocationFilter}>
+                <SelectTrigger className="bg-white/80 border-gray-200">
+                  <SelectValue placeholder="Location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Locations</SelectItem>
+                  {locations.map(location => (
+                    <SelectItem key={location} value={location}>{location}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </section>
+
+          {/* Job Listings */}
+          <section className="mb-12">
+            <h2 className="text-xl font-medium text-gray-900 mb-6">Open Positions ({filteredJobs.length})</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {filteredJobs.map((job) => (
+                <Card key={job.id} className="border-0 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
                       <div>
-                        <Users className="h-8 w-8 mx-auto mb-2 opacity-90" />
-                        <div className="text-2xl font-light">50+</div>
-                        <div className="text-sm opacity-90">Employees</div>
+                        <CardTitle className="text-lg mb-2">{job.title}</CardTitle>
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          <Badge variant="secondary" className="text-xs">{job.department}</Badge>
+                          <Badge variant="outline" className="text-xs">{job.type}</Badge>
+                        </div>
                       </div>
-                      <div>
-                        <MapPin className="h-8 w-8 mx-auto mb-2 opacity-90" />
-                        <div className="text-2xl font-light">Remote</div>
-                        <div className="text-sm opacity-90">First Culture</div>
+                      <span className="text-xs text-gray-500">{job.posted}</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 text-sm mb-4">{job.description}</p>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center text-xs text-gray-600">
+                        <MapPin className="h-3 w-3 mr-2" />
+                        {job.location}
                       </div>
-                      <div>
-                        <Star className="h-8 w-8 mx-auto mb-2 opacity-90" />
-                        <div className="text-2xl font-light">Series A</div>
-                        <div className="text-sm opacity-90">Funding Stage</div>
+                      <div className="flex items-center text-xs text-gray-600">
+                        <DollarSign className="h-3 w-3 mr-2" />
+                        {job.salary}
                       </div>
                     </div>
+                    <Button variant="outline" size="sm" className="w-full">
+                      View Details
+                    </Button>
                   </CardContent>
                 </Card>
-              </section>
+              ))}
+            </div>
 
-              {/* Filters */}
-              <section className="mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input
-                      placeholder="Search jobs..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 bg-white/80 border-gray-200"
-                    />
-                  </div>
-                  <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
-                    <SelectTrigger className="bg-white/80 border-gray-200">
-                      <SelectValue placeholder="Department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Departments</SelectItem>
-                      {departments.map(dept => (
-                        <SelectItem key={dept} value={dept}>{dept}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select value={locationFilter} onValueChange={setLocationFilter}>
-                    <SelectTrigger className="bg-white/80 border-gray-200">
-                      <SelectValue placeholder="Location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Locations</SelectItem>
-                      {locations.map(location => (
-                        <SelectItem key={location} value={location}>{location}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </section>
+            {filteredJobs.length === 0 && (
+              <Card className="text-center py-12 border-0 shadow-sm">
+                <CardContent>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
+                  <p className="text-gray-600">Try adjusting your search criteria or check back later for new openings.</p>
+                </CardContent>
+              </Card>
+            )}
+          </section>
 
-              {/* Job Listings */}
-              <section className="mb-12">
-                <h2 className="text-xl font-medium text-gray-900 mb-6">Open Positions ({filteredJobs.length})</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {filteredJobs.map((job) => (
-                    <Card key={job.id} className="border-0 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer" 
-                          onClick={() => navigate(`/careers/job/${job.id}`)}>
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle className="text-lg mb-2">{job.title}</CardTitle>
-                            <div className="flex flex-wrap gap-2 mb-2">
-                              <Badge variant="secondary" className="text-xs">{job.department}</Badge>
-                              <Badge variant="outline" className="text-xs">{job.type}</Badge>
-                            </div>
-                          </div>
-                          <span className="text-xs text-gray-500">{job.posted}</span>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-gray-600 text-sm mb-4">{job.description}</p>
-                        <div className="space-y-2 mb-4">
-                          <div className="flex items-center text-xs text-gray-600">
-                            <MapPin className="h-3 w-3 mr-2" />
-                            {job.location}
-                          </div>
-                          <div className="flex items-center text-xs text-gray-600">
-                            <DollarSign className="h-3 w-3 mr-2" />
-                            {job.salary}
-                          </div>
-                        </div>
-                        <Button variant="outline" size="sm" className="w-full">
-                          View Details
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-
-                {filteredJobs.length === 0 && (
-                  <Card className="text-center py-12 border-0 shadow-sm">
-                    <CardContent>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
-                      <p className="text-gray-600">Try adjusting your search criteria or check back later for new openings.</p>
-                    </CardContent>
-                  </Card>
-                )}
-              </section>
-
-              {/* Benefits Section */}
-              <section>
-                <div className="text-center mb-8">
-                  <h2 className="text-2xl font-light text-gray-900 mb-4">Why Work at 3days.ai?</h2>
-                  <p className="text-gray-600">We invest in our people and their growth</p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {benefits.map((benefit, index) => (
-                    <Card key={index} className="text-center border-0 shadow-sm">
-                      <CardContent className="p-6">
-                        <div className="p-3 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 w-fit mx-auto mb-4">
-                          <benefit.icon className="h-6 w-6 text-blue-600" />
-                        </div>
-                        <h3 className="font-medium text-gray-900 mb-2">{benefit.title}</h3>
-                        <p className="text-sm text-gray-600">{benefit.description}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </section>
-            </main>
-          </SidebarInset>
+          {/* Benefits Section */}
+          <section>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-light text-gray-900 mb-4">Why Work at 3days.ai?</h2>
+              <p className="text-gray-600">We invest in our people and their growth</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {benefits.map((benefit, index) => (
+                <Card key={index} className="text-center border-0 shadow-sm">
+                  <CardContent className="p-6">
+                    <div className="p-3 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 w-fit mx-auto mb-4">
+                      <benefit.icon className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <h3 className="font-medium text-gray-900 mb-2">{benefit.title}</h3>
+                    <p className="text-sm text-gray-600">{benefit.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
         </div>
-      </SidebarProvider>
+      </main>
     </div>
   );
 };
