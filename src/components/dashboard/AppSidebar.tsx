@@ -42,8 +42,8 @@ const navigationItems = [
     icon: MessageCircle,
   },
   {
-    title: "Task Approvals",
-    url: "/task-approval",
+    title: "Tasks",
+    url: "/tasks",
     icon: ClipboardCheck,
   },
   {
