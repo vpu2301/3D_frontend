@@ -24,15 +24,25 @@ import AIFineTuning from './pages/AIFineTuning';
 import AIAgentsPage from './pages/AIAgentsPage';
 import GetStarted from './pages/GetStarted';
 import StartFreeTrial from './pages/StartFreeTrial';
+import Home from './pages/Home';
+import Features from './pages/Features';
+import About from './pages/About';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
+          {/* Public routes - accessible without authentication */}
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/get-started" element={<GetStarted />} />
           <Route path="/start-free-trial" element={<StartFreeTrial />} />
+          
+          {/* Protected routes - require authentication */}
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
           <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
@@ -51,7 +61,6 @@ function App() {
           <Route path="/dev/api" element={<ProtectedRoute><DevAPI /></ProtectedRoute>} />
           <Route path="/dev/docs" element={<ProtectedRoute><DevDocs /></ProtectedRoute>} />
           <Route path="/ai-fine-tuning" element={<ProtectedRoute><AIFineTuning /></ProtectedRoute>} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
         <Toaster />
       </div>
