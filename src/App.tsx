@@ -51,7 +51,7 @@ import Workflow from "./pages/platform/Workflow";
 import Analytics from "./pages/platform/Analytics";
 import Integrations from "./pages/platform/Integrations";
 import Documents from "./pages/platform/Documents";
-import Tasks from "./pages/platform/Tasks";
+import PlatformTasks from "./pages/platform/Tasks";
 import Api from "./pages/platform/Api";
 import Security from "./pages/platform/Security";
 
@@ -165,9 +165,9 @@ const App = () => (
                 <Chat />
               </ProtectedRoute>
             } />
-            <Route path="/task-approval" element={
+            <Route path="/tasks" element={
               <ProtectedRoute>
-                <TaskApproval />
+                <Tasks />
               </ProtectedRoute>
             } />
             <Route path="/ai-employees" element={
@@ -178,6 +178,11 @@ const App = () => (
             <Route path="/teams" element={
               <ProtectedRoute>
                 <Teams />
+              </ProtectedRoute>
+            } />
+            <Route path="/teams/:id" element={
+              <ProtectedRoute>
+                <TeamDetail />
               </ProtectedRoute>
             } />
             <Route path="/ai-assistants" element={
@@ -264,7 +269,7 @@ const App = () => (
             <Route path="/platform/analytics" element={<Analytics />} />
             <Route path="/platform/integrations" element={<Integrations />} />
             <Route path="/platform/documents" element={<Documents />} />
-            <Route path="/platform/tasks" element={<Tasks />} />
+            <Route path="/platform/tasks" element={<PlatformTasks />} />
             <Route path="/platform/api" element={<Api />} />
             <Route path="/platform/security" element={<Security />} />
             
