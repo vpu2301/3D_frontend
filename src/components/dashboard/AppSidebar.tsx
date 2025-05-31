@@ -22,7 +22,8 @@ import {
   Workflow, 
   Puzzle,
   Settings,
-  HelpCircle
+  HelpCircle,
+  ClipboardCheck
 } from 'lucide-react';
 
 const navigationItems = [
@@ -35,6 +36,11 @@ const navigationItems = [
     title: "Chat",
     url: "/chat",
     icon: MessageCircle,
+  },
+  {
+    title: "Task Approvals",
+    url: "/task-approval",
+    icon: ClipboardCheck,
   },
   {
     title: "AI Employees",

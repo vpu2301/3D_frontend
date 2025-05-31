@@ -32,6 +32,7 @@ import IntegrationsPage from "./pages/IntegrationsPage";
 import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import ProtectedRoute from "./components/ProtectedRoute";
+import TaskApproval from "./pages/TaskApproval";
 
 // Platform pages
 import Automation from "./pages/platform/Automation";
@@ -148,6 +149,11 @@ const App = () => (
             <Route path="/chat" element={
               <ProtectedRoute>
                 <Chat />
+              </ProtectedRoute>
+            } />
+            <Route path="/task-approval" element={
+              <ProtectedRoute>
+                <TaskApproval />
               </ProtectedRoute>
             } />
             <Route path="/ai-employees" element={

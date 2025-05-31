@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Button } from '@/components/ui/button';
@@ -101,16 +101,13 @@ const Chat = () => {
             
             <main className="flex-1 flex flex-col relative">
               <div className="p-6">
-                <div className="flex items-center space-x-4 mb-6">
-                  <SidebarTrigger />
-                  <div className="flex items-center space-x-3">
-                    <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100">
-                      <Bot className="h-8 w-8 text-blue-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-3xl font-light text-gray-800">AI Chat</h1>
-                      <p className="text-gray-500">Chat with your AI assistants</p>
-                    </div>
+                <div className="flex items-center space-x-3">
+                  <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100">
+                    <Bot className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-light text-gray-800">AI Chat</h1>
+                    <p className="text-gray-500">Chat with your AI assistants</p>
                   </div>
                 </div>
               </div>

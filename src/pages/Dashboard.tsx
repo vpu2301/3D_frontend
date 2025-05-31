@@ -10,7 +10,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import AgentsNavbar from '@/components/dashboard/AgentsNavbar';
@@ -83,12 +83,9 @@ const Dashboard = () => {
             
             {/* Main Content */}
             <main className="flex-1 p-6">
-              <div className="flex items-center space-x-4 mb-6">
-                <SidebarTrigger />
-                <div>
-                  <h1 className="text-3xl font-light text-gray-900">Dashboard</h1>
-                  <p className="text-gray-600">Welcome back! Here's what's happening with your AI automation platform today.</p>
-                </div>
+              <div className="mb-6">
+                <h1 className="text-3xl font-light text-gray-900">Dashboard</h1>
+                <p className="text-gray-600">Welcome back! Here's what's happening with your AI automation platform today.</p>
               </div>
 
               {/* Metrics Grid */}
