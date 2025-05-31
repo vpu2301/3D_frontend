@@ -33,6 +33,10 @@ import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import ProtectedRoute from "./components/ProtectedRoute";
 import TaskApproval from "./pages/TaskApproval";
+import Billing from "./pages/Billing";
+import Playground from "./pages/Playground";
+import DevApi from "./pages/DevApi";
+import DevDocs from "./pages/DevDocs";
 
 // Platform pages
 import Automation from "./pages/platform/Automation";
@@ -115,7 +119,10 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
                            location.pathname.startsWith('/workflows') ||
                            location.pathname.startsWith('/integrations') ||
                            location.pathname.startsWith('/settings') ||
-                           location.pathname.startsWith('/help');
+                           location.pathname.startsWith('/billing') ||
+                           location.pathname.startsWith('/help') ||
+                           location.pathname.startsWith('/dev/') ||
+                           location.pathname === '/task-approval';
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -191,9 +198,29 @@ const App = () => (
                 <Settings />
               </ProtectedRoute>
             } />
+            <Route path="/billing" element={
+              <ProtectedRoute>
+                <Billing />
+              </ProtectedRoute>
+            } />
             <Route path="/help" element={
               <ProtectedRoute>
                 <Help />
+              </ProtectedRoute>
+            } />
+            <Route path="/dev/playground" element={
+              <ProtectedRoute>
+                <Playground />
+              </ProtectedRoute>
+            } />
+            <Route path="/dev/api" element={
+              <ProtectedRoute>
+                <DevApi />
+              </ProtectedRoute>
+            } />
+            <Route path="/dev/docs" element={
+              <ProtectedRoute>
+                <DevDocs />
               </ProtectedRoute>
             } />
             <Route path="/get-started" element={<GetStarted />} />

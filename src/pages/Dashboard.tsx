@@ -7,7 +7,11 @@ import {
   TrendingUp, 
   CheckCircle,
   Clock,
-  BarChart3
+  BarChart3,
+  DollarSign,
+  Zap,
+  Target,
+  PieChart
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -72,6 +76,42 @@ const Dashboard = () => {
     }
   ];
 
+  // Cost savings metrics
+  const costSavings = [
+    {
+      title: 'Monthly Cost Savings',
+      value: '$12,450',
+      change: '+23%',
+      icon: DollarSign,
+      color: 'text-green-600',
+      bgColor: 'bg-green-100'
+    },
+    {
+      title: 'Annual Projection',
+      value: '$149,400',
+      change: '+18%',
+      icon: TrendingUp,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
+    },
+    {
+      title: 'Efficiency Gain',
+      value: '340%',
+      change: '+45%',
+      icon: Zap,
+      color: 'text-yellow-600',
+      bgColor: 'bg-yellow-100'
+    },
+    {
+      title: 'ROI',
+      value: '420%',
+      change: '+12%',
+      icon: Target,
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-100'
+    }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <SidebarProvider>
@@ -95,10 +135,52 @@ const Dashboard = () => {
                 ))}
               </div>
 
+              {/* Cost Savings Section */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-light text-gray-900 mb-4">Cost Savings & ROI</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {costSavings.map((saving, index) => (
+                    <MetricCard key={index} {...saving} />
+                  ))}
+                </div>
+              </div>
+
               {/* Dashboard Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <QuickActions />
                 <RecentActivity />
+                
+                {/* Cost Breakdown */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-xl font-medium flex items-center">
+                      <PieChart className="h-5 w-5 mr-2" />
+                      Cost Breakdown
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Labor Savings</span>
+                        <span className="font-medium">$8,200</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Process Optimization</span>
+                        <span className="font-medium">$2,850</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Error Reduction</span>
+                        <span className="font-medium">$1,400</span>
+                      </div>
+                      <div className="border-t pt-2">
+                        <div className="flex justify-between items-center font-semibold">
+                          <span>Total Monthly Savings</span>
+                          <span className="text-green-600">$12,450</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Performance Chart */}

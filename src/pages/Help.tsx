@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,12 +45,9 @@ const Help = () => {
             <LoggedInHeader userEmail={userEmail} />
             
             <main className="flex-1 p-6">
-              <div className="flex items-center space-x-4 mb-6">
-                <SidebarTrigger />
-                <div>
-                  <h1 className="text-3xl font-light text-gray-900">Help & Support</h1>
-                  <p className="text-gray-600">Get the help you need to make the most of 3days.ai</p>
-                </div>
+              <div className="mb-6">
+                <h1 className="text-3xl font-light text-gray-900">Help & Support</h1>
+                <p className="text-gray-600">Get the help you need to make the most of 3days.ai</p>
               </div>
 
               <div className="max-w-4xl space-y-8">

@@ -23,7 +23,11 @@ import {
   Puzzle,
   Settings,
   HelpCircle,
-  ClipboardCheck
+  ClipboardCheck,
+  CreditCard,
+  Code,
+  Terminal,
+  BookOpen
 } from 'lucide-react';
 
 const navigationItems = [
@@ -81,9 +85,32 @@ const settingsItems = [
     icon: Settings,
   },
   {
+    title: "Billing",
+    url: "/billing",
+    icon: CreditCard,
+  },
+  {
     title: "Help & Support",
     url: "/help",
     icon: HelpCircle,
+  },
+];
+
+const devItems = [
+  {
+    title: "Playground",
+    url: "/dev/playground",
+    icon: Terminal,
+  },
+  {
+    title: "API",
+    url: "/dev/api",
+    icon: Code,
+  },
+  {
+    title: "Docs",
+    url: "/dev/docs",
+    icon: BookOpen,
   },
 ];
 
@@ -139,6 +166,28 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {settingsItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={location.pathname === item.url}
+                    tooltip={state === "collapsed" ? item.title : undefined}
+                  >
+                    <Link to={item.url}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Dev</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {devItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 

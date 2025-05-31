@@ -40,7 +40,7 @@ const TaskApproval = () => {
     {
       id: 3,
       title: 'Contract Review Required',
-      assistant: 'Felix (Legal Assistant)',
+      assistant: 'Nova (Legal Assistant)',
       description: 'Client contract terms need approval before signing - ABC Corp',
       priority: 'High',
       category: 'Legal',
@@ -116,7 +116,7 @@ const TaskApproval = () => {
           <SidebarInset className="flex-1 flex flex-col">
             <LoggedInHeader userEmail={userEmail} />
             
-            <main className="flex-1 p-6">
+            <main className="flex-1 p-6 pb-20">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h1 className="text-3xl font-light text-gray-900">Task Approvals</h1>
