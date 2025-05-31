@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Bot, ArrowRight, Check, Sparkles, Users, MessageCircle, Settings, Zap, Shield, UserCheck, Building, Puzzle, Workflow, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -227,10 +229,10 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0">
-        <div className="flex flex-col h-full">
+      <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden p-0">
+        <div className="flex flex-col h-full max-h-[95vh]">
           {/* Header */}
-          <DialogHeader className="px-6 py-4 border-b bg-gray-50">
+          <DialogHeader className="px-6 py-4 border-b bg-gray-50 flex-shrink-0">
             <DialogTitle className="flex items-center space-x-3 text-xl">
               <div className="p-2 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
                 <Sparkles className="h-6 w-6 text-blue-600" />
@@ -239,8 +241,8 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
             </DialogTitle>
           </DialogHeader>
 
-          {/* Progress Steps - Improved */}
-          <div className="px-6 py-4 bg-white border-b">
+          {/* Progress Steps */}
+          <div className="px-6 py-4 bg-white border-b flex-shrink-0">
             <div className="flex items-center justify-between">
               {steps.map((step, index) => (
                 <div key={step.number} className="flex items-center">
@@ -270,418 +272,422 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
             </div>
           </div>
 
-          {/* Content Area */}
-          <div className="flex-1 overflow-y-auto px-6 py-6">
-            {currentStep === 1 && (
-              <div className="max-w-2xl mx-auto space-y-6">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-2">Let's start with the basics</h3>
-                  <p className="text-gray-600">Give your assistant a name and description</p>
-                </div>
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-base font-medium">Assistant Name *</Label>
-                    <Input
-                      id="name"
-                      value={assistantData.name}
-                      onChange={(e) => setAssistantData(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="e.g., Aria, Atlas, Maya..."
-                      className="h-12 text-base"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="description" className="text-base font-medium">Description (Optional)</Label>
-                    <Textarea
-                      id="description"
-                      value={assistantData.description}
-                      onChange={(e) => setAssistantData(prev => ({ ...prev, description: e.target.value }))}
-                      placeholder="Brief description of what this assistant will do..."
-                      className="min-h-[100px] text-base"
-                      rows={4}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentStep === 2 && (
-              <div className="space-y-8">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-2">Choose type and scope</h3>
-                  <p className="text-gray-600">Define what your assistant will do and who can use it</p>
-                </div>
-                
-                <div className="space-y-8">
-                  <div>
-                    <Label className="text-lg font-medium mb-4 block">Assistant Type *</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {assistantTypes.map((type) => (
-                        <Card 
-                          key={type.value}
-                          className={`cursor-pointer transition-all hover:shadow-md ${
-                            assistantData.type === type.value 
-                              ? 'border-blue-500 bg-blue-50 shadow-md' 
-                              : 'hover:border-gray-300'
-                          }`}
-                          onClick={() => setAssistantData(prev => ({ ...prev, type: type.value }))}
-                        >
-                          <CardContent className="p-6">
-                            <h4 className="font-semibold text-lg mb-2">{type.label}</h4>
-                            <p className="text-gray-600">{type.description}</p>
-                          </CardContent>
-                        </Card>
-                      ))}
+          {/* Content Area with ScrollArea */}
+          <div className="flex-1 overflow-hidden">
+            <ScrollArea className="h-full">
+              <div className="px-6 py-6">
+                {currentStep === 1 && (
+                  <div className="max-w-2xl mx-auto space-y-6">
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-semibold text-gray-900 mb-2">Let's start with the basics</h3>
+                      <p className="text-gray-600">Give your assistant a name and description</p>
+                    </div>
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="text-base font-medium">Assistant Name *</Label>
+                        <Input
+                          id="name"
+                          value={assistantData.name}
+                          onChange={(e) => setAssistantData(prev => ({ ...prev, name: e.target.value }))}
+                          placeholder="e.g., Aria, Atlas, Maya..."
+                          className="h-12 text-base"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="description" className="text-base font-medium">Description (Optional)</Label>
+                        <Textarea
+                          id="description"
+                          value={assistantData.description}
+                          onChange={(e) => setAssistantData(prev => ({ ...prev, description: e.target.value }))}
+                          placeholder="Brief description of what this assistant will do..."
+                          className="min-h-[100px] text-base"
+                          rows={4}
+                        />
+                      </div>
                     </div>
                   </div>
+                )}
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                      <Label htmlFor="department" className="text-lg font-medium mb-4 block">Department *</Label>
-                      <Select value={assistantData.department} onValueChange={(value) => setAssistantData(prev => ({ ...prev, department: value }))}>
-                        <SelectTrigger className="h-12 text-base">
-                          <SelectValue placeholder="Select department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {departments.map((dept) => (
-                            <SelectItem key={dept} value={dept}>{dept}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                {currentStep === 2 && (
+                  <div className="space-y-8">
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-semibold text-gray-900 mb-2">Choose type and scope</h3>
+                      <p className="text-gray-600">Define what your assistant will do and who can use it</p>
                     </div>
-
-                    <div>
-                      <Label htmlFor="personality" className="text-lg font-medium mb-4 block">Communication Style</Label>
-                      <Select value={assistantData.personality} onValueChange={(value) => setAssistantData(prev => ({ ...prev, personality: value }))}>
-                        <SelectTrigger className="h-12 text-base">
-                          <SelectValue placeholder="Select communication style" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {personalities.map((personality) => (
-                            <SelectItem key={personality.value} value={personality.value}>
-                              <div>
-                                <div className="font-medium">{personality.label}</div>
-                                <div className="text-sm text-gray-500">{personality.description}</div>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-lg font-medium mb-4 block">Assistant Scope</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Card 
-                        className={`cursor-pointer transition-all hover:shadow-md ${
-                          assistantData.scope === 'personal' 
-                            ? 'border-blue-500 bg-blue-50 shadow-md' 
-                            : 'hover:border-gray-300'
-                        }`}
-                        onClick={() => setAssistantData(prev => ({ ...prev, scope: 'personal' }))}
-                      >
-                        <CardContent className="p-6 text-center">
-                          <Users className="h-8 w-8 mx-auto mb-3 text-blue-600" />
-                          <h4 className="font-semibold text-lg mb-2">Personal</h4>
-                          <p className="text-gray-600">Only you can interact with this assistant</p>
-                        </CardContent>
-                      </Card>
-                      <Card 
-                        className={`cursor-pointer transition-all hover:shadow-md ${
-                          assistantData.scope === 'team' 
-                            ? 'border-blue-500 bg-blue-50 shadow-md' 
-                            : 'hover:border-gray-300'
-                        }`}
-                        onClick={() => setAssistantData(prev => ({ ...prev, scope: 'team' }))}
-                      >
-                        <CardContent className="p-6 text-center">
-                          <Building className="h-8 w-8 mx-auto mb-3 text-green-600" />
-                          <h4 className="font-semibold text-lg mb-2">Team</h4>
-                          <p className="text-gray-600">Shared across your team or department</p>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentStep === 3 && (
-              <div className="space-y-6">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-2">Select capabilities</h3>
-                  <p className="text-gray-600">Choose what your assistant can do</p>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {availableCapabilities.map((capability) => (
-                    <Card 
-                      key={capability}
-                      className={`cursor-pointer transition-all hover:shadow-md ${
-                        assistantData.capabilities.includes(capability)
-                          ? 'border-blue-500 bg-blue-50 shadow-md' 
-                          : 'hover:border-gray-300'
-                      }`}
-                      onClick={() => handleCapabilityToggle(capability)}
-                    >
-                      <CardContent className="p-4 text-center">
-                        <p className="text-sm font-medium">{capability}</p>
-                        {assistantData.capabilities.includes(capability) && (
-                          <Check className="h-4 w-4 text-blue-600 mx-auto mt-2" />
-                        )}
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {currentStep === 4 && (
-              <div className="space-y-8">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-2">Configure autonomy</h3>
-                  <p className="text-gray-600">Set decision-making boundaries and working parameters</p>
-                </div>
-                
-                <div className="space-y-8">
-                  <div>
-                    <Label className="text-lg font-medium mb-4 block">Autonomy Level</Label>
-                    <div className="space-y-3">
-                      {autonomyLevels.map((level) => (
-                        <Card 
-                          key={level.value}
-                          className={`cursor-pointer transition-all hover:shadow-md ${
-                            assistantData.autonomyLevel === level.value
-                              ? 'border-blue-500 bg-blue-50 shadow-md' 
-                              : 'hover:border-gray-300'
-                          }`}
-                          onClick={() => setAssistantData(prev => ({ ...prev, autonomyLevel: level.value }))}
-                        >
-                          <CardContent className="p-6 flex items-center">
-                            <Shield className="h-8 w-8 mr-4 text-blue-600 flex-shrink-0" />
-                            <div>
-                              <h4 className="font-semibold text-lg">{level.label}</h4>
-                              <p className="text-gray-600 mt-1">{level.description}</p>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                      <Label className="text-lg font-medium mb-4 block">Working Hours</Label>
-                      <Select value={assistantData.workingHours} onValueChange={(value) => setAssistantData(prev => ({ ...prev, workingHours: value }))}>
-                        <SelectTrigger className="h-12 text-base">
-                          <SelectValue placeholder="Select working hours" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="24/7">24/7 - Always Available</SelectItem>
-                          <SelectItem value="business">Business Hours (9 AM - 5 PM)</SelectItem>
-                          <SelectItem value="extended">Extended Hours (7 AM - 9 PM)</SelectItem>
-                          <SelectItem value="custom">Custom Schedule</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="budgetLimit" className="text-lg font-medium mb-4 block">Maximum Budget Authority ($)</Label>
-                      <Input
-                        id="budgetLimit"
-                        type="number"
-                        value={assistantData.maxBudgetLimit}
-                        onChange={(e) => setAssistantData(prev => ({ ...prev, maxBudgetLimit: Number(e.target.value) }))}
-                        placeholder="0"
-                        className="h-12 text-base"
-                      />
-                      <p className="text-sm text-gray-500 mt-2">Maximum amount the assistant can spend without approval</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentStep === 5 && (
-              <div className="space-y-6">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-2">Connect integrations</h3>
-                  <p className="text-gray-600">Choose which tools your assistant can access</p>
-                </div>
-                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                  {availableIntegrations.map((integration) => (
-                    <Card 
-                      key={integration}
-                      className={`cursor-pointer transition-all hover:shadow-md ${
-                        assistantData.integrations.includes(integration)
-                          ? 'border-blue-500 bg-blue-50 shadow-md' 
-                          : 'hover:border-gray-300'
-                      }`}
-                      onClick={() => handleIntegrationToggle(integration)}
-                    >
-                      <CardContent className="p-4 text-center">
-                        <p className="text-sm font-medium">{integration}</p>
-                        {assistantData.integrations.includes(integration) && (
-                          <Check className="h-4 w-4 text-blue-600 mx-auto mt-2" />
-                        )}
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {currentStep === 6 && (
-              <div className="space-y-8">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-2">Set approval rules</h3>
-                  <p className="text-gray-600">Define what your assistant can decide independently</p>
-                </div>
-                
-                <div className="space-y-8">
-                  <div>
-                    <Label className="text-lg font-medium mb-4 block">Assistant Can Make Decisions For:</Label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {decisionAreas.map((decision) => (
-                        <Card 
-                          key={decision}
-                          className={`cursor-pointer transition-all hover:shadow-md ${
-                            assistantData.canMakeDecisions.includes(decision)
-                              ? 'border-green-500 bg-green-50 shadow-md' 
-                              : 'hover:border-gray-300'
-                          }`}
-                          onClick={() => handleDecisionToggle(decision)}
-                        >
-                          <CardContent className="p-4">
-                            <p className="text-sm font-medium">{decision}</p>
-                            {assistantData.canMakeDecisions.includes(decision) && (
-                              <Check className="h-4 w-4 text-green-600 mt-2" />
-                            )}
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-lg font-medium mb-4 block">Requires Approval For:</Label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {approvalAreas.map((approval) => (
-                        <Card 
-                          key={approval}
-                          className={`cursor-pointer transition-all hover:shadow-md ${
-                            assistantData.approvalRequired.includes(approval)
-                              ? 'border-orange-500 bg-orange-50 shadow-md' 
-                              : 'hover:border-gray-300'
-                          }`}
-                          onClick={() => handleApprovalToggle(approval)}
-                        >
-                          <CardContent className="p-4">
-                            <p className="text-sm font-medium">{approval}</p>
-                            {assistantData.approvalRequired.includes(approval) && (
-                              <Check className="h-4 w-4 text-orange-600 mt-2" />
-                            )}
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="escalationRules" className="text-lg font-medium mb-4 block">Escalation Rules</Label>
-                    <Textarea
-                      id="escalationRules"
-                      value={assistantData.escalationRules}
-                      onChange={(e) => setAssistantData(prev => ({ ...prev, escalationRules: e.target.value }))}
-                      placeholder="Define when and how the assistant should escalate issues to humans..."
-                      className="min-h-[100px] text-base"
-                      rows={4}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentStep === 7 && (
-              <div className="space-y-6">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-2">Review & Create</h3>
-                  <p className="text-gray-600">Review your assistant configuration</p>
-                </div>
-                <Card className="max-w-4xl mx-auto">
-                  <CardContent className="p-8">
+                    
                     <div className="space-y-8">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                          <h4 className="font-semibold text-lg text-gray-900 mb-4">Basic Information</h4>
-                          <div className="space-y-3">
-                            <div className="flex justify-between"><span className="text-gray-600">Name:</span> <span className="font-medium">{assistantData.name}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-600">Type:</span> <span className="font-medium">{assistantTypes.find(t => t.value === assistantData.type)?.label}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-600">Department:</span> <span className="font-medium">{assistantData.department}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-600">Scope:</span> <Badge variant="outline" className="ml-2">{assistantData.scope}</Badge></div>
-                          </div>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-lg text-gray-900 mb-4">Autonomy Settings</h4>
-                          <div className="space-y-3">
-                            <div className="flex justify-between"><span className="text-gray-600">Level:</span> <span className="font-medium">{autonomyLevels.find(l => l.value === assistantData.autonomyLevel)?.label}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-600">Working Hours:</span> <span className="font-medium">{assistantData.workingHours}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-600">Budget Limit:</span> <span className="font-medium">${assistantData.maxBudgetLimit}</span></div>
-                          </div>
+                      <div>
+                        <Label className="text-lg font-medium mb-4 block">Assistant Type *</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {assistantTypes.map((type) => (
+                            <Card 
+                              key={type.value}
+                              className={`cursor-pointer transition-all hover:shadow-md ${
+                                assistantData.type === type.value 
+                                  ? 'border-blue-500 bg-blue-50 shadow-md' 
+                                  : 'hover:border-gray-300'
+                              }`}
+                              onClick={() => setAssistantData(prev => ({ ...prev, type: type.value }))}
+                            >
+                              <CardContent className="p-6">
+                                <h4 className="font-semibold text-lg mb-2">{type.label}</h4>
+                                <p className="text-gray-600">{type.description}</p>
+                              </CardContent>
+                            </Card>
+                          ))}
                         </div>
                       </div>
 
-                      {assistantData.capabilities.length > 0 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                          <h5 className="font-semibold text-lg text-gray-900 mb-4">Capabilities ({assistantData.capabilities.length})</h5>
-                          <div className="flex flex-wrap gap-2">
-                            {assistantData.capabilities.map((capability) => (
-                              <Badge key={capability} variant="secondary" className="text-sm">{capability}</Badge>
-                            ))}
-                          </div>
+                          <Label htmlFor="department" className="text-lg font-medium mb-4 block">Department *</Label>
+                          <Select value={assistantData.department} onValueChange={(value) => setAssistantData(prev => ({ ...prev, department: value }))}>
+                            <SelectTrigger className="h-12 text-base">
+                              <SelectValue placeholder="Select department" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {departments.map((dept) => (
+                                <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
-                      )}
 
-                      {assistantData.integrations.length > 0 && (
                         <div>
-                          <h5 className="font-semibold text-lg text-gray-900 mb-4">Integrations ({assistantData.integrations.length})</h5>
-                          <div className="flex flex-wrap gap-2">
-                            {assistantData.integrations.map((integration) => (
-                              <Badge key={integration} variant="outline" className="text-sm">{integration}</Badge>
-                            ))}
-                          </div>
+                          <Label htmlFor="personality" className="text-lg font-medium mb-4 block">Communication Style</Label>
+                          <Select value={assistantData.personality} onValueChange={(value) => setAssistantData(prev => ({ ...prev, personality: value }))}>
+                            <SelectTrigger className="h-12 text-base">
+                              <SelectValue placeholder="Select communication style" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {personalities.map((personality) => (
+                                <SelectItem key={personality.value} value={personality.value}>
+                                  <div>
+                                    <div className="font-medium">{personality.label}</div>
+                                    <div className="text-sm text-gray-500">{personality.description}</div>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
-                      )}
+                      </div>
 
-                      {assistantData.canMakeDecisions.length > 0 && (
-                        <div>
-                          <h5 className="font-semibold text-lg text-gray-900 mb-4">Can Make Decisions For</h5>
-                          <div className="flex flex-wrap gap-2">
-                            {assistantData.canMakeDecisions.map((decision) => (
-                              <Badge key={decision} className="bg-green-100 text-green-800 text-sm">{decision}</Badge>
-                            ))}
-                          </div>
+                      <div>
+                        <Label className="text-lg font-medium mb-4 block">Assistant Scope</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Card 
+                            className={`cursor-pointer transition-all hover:shadow-md ${
+                              assistantData.scope === 'personal' 
+                                ? 'border-blue-500 bg-blue-50 shadow-md' 
+                                : 'hover:border-gray-300'
+                            }`}
+                            onClick={() => setAssistantData(prev => ({ ...prev, scope: 'personal' }))}
+                          >
+                            <CardContent className="p-6 text-center">
+                              <Users className="h-8 w-8 mx-auto mb-3 text-blue-600" />
+                              <h4 className="font-semibold text-lg mb-2">Personal</h4>
+                              <p className="text-gray-600">Only you can interact with this assistant</p>
+                            </CardContent>
+                          </Card>
+                          <Card 
+                            className={`cursor-pointer transition-all hover:shadow-md ${
+                              assistantData.scope === 'team' 
+                                ? 'border-blue-500 bg-blue-50 shadow-md' 
+                                : 'hover:border-gray-300'
+                            }`}
+                            onClick={() => setAssistantData(prev => ({ ...prev, scope: 'team' }))}
+                          >
+                            <CardContent className="p-6 text-center">
+                              <Building className="h-8 w-8 mx-auto mb-3 text-green-600" />
+                              <h4 className="font-semibold text-lg mb-2">Team</h4>
+                              <p className="text-gray-600">Shared across your team or department</p>
+                            </CardContent>
+                          </Card>
                         </div>
-                      )}
-
-                      {assistantData.approvalRequired.length > 0 && (
-                        <div>
-                          <h5 className="font-semibold text-lg text-gray-900 mb-4">Requires Approval For</h5>
-                          <div className="flex flex-wrap gap-2">
-                            {assistantData.approvalRequired.map((approval) => (
-                              <Badge key={approval} className="bg-orange-100 text-orange-800 text-sm">{approval}</Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                )}
+
+                {currentStep === 3 && (
+                  <div className="space-y-6">
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-semibold text-gray-900 mb-2">Select capabilities</h3>
+                      <p className="text-gray-600">Choose what your assistant can do</p>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {availableCapabilities.map((capability) => (
+                        <Card 
+                          key={capability}
+                          className={`cursor-pointer transition-all hover:shadow-md ${
+                            assistantData.capabilities.includes(capability)
+                              ? 'border-blue-500 bg-blue-50 shadow-md' 
+                              : 'hover:border-gray-300'
+                          }`}
+                          onClick={() => handleCapabilityToggle(capability)}
+                        >
+                          <CardContent className="p-4 text-center">
+                            <p className="text-sm font-medium">{capability}</p>
+                            {assistantData.capabilities.includes(capability) && (
+                              <Check className="h-4 w-4 text-blue-600 mx-auto mt-2" />
+                            )}
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 4 && (
+                  <div className="space-y-8">
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-semibold text-gray-900 mb-2">Configure autonomy</h3>
+                      <p className="text-gray-600">Set decision-making boundaries and working parameters</p>
+                    </div>
+                    
+                    <div className="space-y-8">
+                      <div>
+                        <Label className="text-lg font-medium mb-4 block">Autonomy Level</Label>
+                        <div className="space-y-3">
+                          {autonomyLevels.map((level) => (
+                            <Card 
+                              key={level.value}
+                              className={`cursor-pointer transition-all hover:shadow-md ${
+                                assistantData.autonomyLevel === level.value
+                                  ? 'border-blue-500 bg-blue-50 shadow-md' 
+                                  : 'hover:border-gray-300'
+                              }`}
+                              onClick={() => setAssistantData(prev => ({ ...prev, autonomyLevel: level.value }))}
+                            >
+                              <CardContent className="p-6 flex items-center">
+                                <Shield className="h-8 w-8 mr-4 text-blue-600 flex-shrink-0" />
+                                <div>
+                                  <h4 className="font-semibold text-lg">{level.label}</h4>
+                                  <p className="text-gray-600 mt-1">{level.description}</p>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                          <Label className="text-lg font-medium mb-4 block">Working Hours</Label>
+                          <Select value={assistantData.workingHours} onValueChange={(value) => setAssistantData(prev => ({ ...prev, workingHours: value }))}>
+                            <SelectTrigger className="h-12 text-base">
+                              <SelectValue placeholder="Select working hours" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="24/7">24/7 - Always Available</SelectItem>
+                              <SelectItem value="business">Business Hours (9 AM - 5 PM)</SelectItem>
+                              <SelectItem value="extended">Extended Hours (7 AM - 9 PM)</SelectItem>
+                              <SelectItem value="custom">Custom Schedule</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="budgetLimit" className="text-lg font-medium mb-4 block">Maximum Budget Authority ($)</Label>
+                          <Input
+                            id="budgetLimit"
+                            type="number"
+                            value={assistantData.maxBudgetLimit}
+                            onChange={(e) => setAssistantData(prev => ({ ...prev, maxBudgetLimit: Number(e.target.value) }))}
+                            placeholder="0"
+                            className="h-12 text-base"
+                          />
+                          <p className="text-sm text-gray-500 mt-2">Maximum amount the assistant can spend without approval</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 5 && (
+                  <div className="space-y-6">
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-semibold text-gray-900 mb-2">Connect integrations</h3>
+                      <p className="text-gray-600">Choose which tools your assistant can access</p>
+                    </div>
+                    <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                      {availableIntegrations.map((integration) => (
+                        <Card 
+                          key={integration}
+                          className={`cursor-pointer transition-all hover:shadow-md ${
+                            assistantData.integrations.includes(integration)
+                              ? 'border-blue-500 bg-blue-50 shadow-md' 
+                              : 'hover:border-gray-300'
+                          }`}
+                          onClick={() => handleIntegrationToggle(integration)}
+                        >
+                          <CardContent className="p-4 text-center">
+                            <p className="text-sm font-medium">{integration}</p>
+                            {assistantData.integrations.includes(integration) && (
+                              <Check className="h-4 w-4 text-blue-600 mx-auto mt-2" />
+                            )}
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 6 && (
+                  <div className="space-y-8">
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-semibold text-gray-900 mb-2">Set approval rules</h3>
+                      <p className="text-gray-600">Define what your assistant can decide independently</p>
+                    </div>
+                    
+                    <div className="space-y-8">
+                      <div>
+                        <Label className="text-lg font-medium mb-4 block">Assistant Can Make Decisions For:</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                          {decisionAreas.map((decision) => (
+                            <Card 
+                              key={decision}
+                              className={`cursor-pointer transition-all hover:shadow-md ${
+                                assistantData.canMakeDecisions.includes(decision)
+                                  ? 'border-green-500 bg-green-50 shadow-md' 
+                                  : 'hover:border-gray-300'
+                              }`}
+                              onClick={() => handleDecisionToggle(decision)}
+                            >
+                              <CardContent className="p-4">
+                                <p className="text-sm font-medium">{decision}</p>
+                                {assistantData.canMakeDecisions.includes(decision) && (
+                                  <Check className="h-4 w-4 text-green-600 mt-2" />
+                                )}
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-lg font-medium mb-4 block">Requires Approval For:</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                          {approvalAreas.map((approval) => (
+                            <Card 
+                              key={approval}
+                              className={`cursor-pointer transition-all hover:shadow-md ${
+                                assistantData.approvalRequired.includes(approval)
+                                  ? 'border-orange-500 bg-orange-50 shadow-md' 
+                                  : 'hover:border-gray-300'
+                              }`}
+                              onClick={() => handleApprovalToggle(approval)}
+                            >
+                              <CardContent className="p-4">
+                                <p className="text-sm font-medium">{approval}</p>
+                                {assistantData.approvalRequired.includes(approval) && (
+                                  <Check className="h-4 w-4 text-orange-600 mt-2" />
+                                )}
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="escalationRules" className="text-lg font-medium mb-4 block">Escalation Rules</Label>
+                        <Textarea
+                          id="escalationRules"
+                          value={assistantData.escalationRules}
+                          onChange={(e) => setAssistantData(prev => ({ ...prev, escalationRules: e.target.value }))}
+                          placeholder="Define when and how the assistant should escalate issues to humans..."
+                          className="min-h-[100px] text-base"
+                          rows={4}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 7 && (
+                  <div className="space-y-6">
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-semibold text-gray-900 mb-2">Review & Create</h3>
+                      <p className="text-gray-600">Review your assistant configuration</p>
+                    </div>
+                    <Card className="max-w-4xl mx-auto">
+                      <CardContent className="p-8">
+                        <div className="space-y-8">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                              <h4 className="font-semibold text-lg text-gray-900 mb-4">Basic Information</h4>
+                              <div className="space-y-3">
+                                <div className="flex justify-between"><span className="text-gray-600">Name:</span> <span className="font-medium">{assistantData.name}</span></div>
+                                <div className="flex justify-between"><span className="text-gray-600">Type:</span> <span className="font-medium">{assistantTypes.find(t => t.value === assistantData.type)?.label}</span></div>
+                                <div className="flex justify-between"><span className="text-gray-600">Department:</span> <span className="font-medium">{assistantData.department}</span></div>
+                                <div className="flex justify-between"><span className="text-gray-600">Scope:</span> <Badge variant="outline" className="ml-2">{assistantData.scope}</Badge></div>
+                              </div>
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-lg text-gray-900 mb-4">Autonomy Settings</h4>
+                              <div className="space-y-3">
+                                <div className="flex justify-between"><span className="text-gray-600">Level:</span> <span className="font-medium">{autonomyLevels.find(l => l.value === assistantData.autonomyLevel)?.label}</span></div>
+                                <div className="flex justify-between"><span className="text-gray-600">Working Hours:</span> <span className="font-medium">{assistantData.workingHours}</span></div>
+                                <div className="flex justify-between"><span className="text-gray-600">Budget Limit:</span> <span className="font-medium">${assistantData.maxBudgetLimit}</span></div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {assistantData.capabilities.length > 0 && (
+                            <div>
+                              <h5 className="font-semibold text-lg text-gray-900 mb-4">Capabilities ({assistantData.capabilities.length})</h5>
+                              <div className="flex flex-wrap gap-2">
+                                {assistantData.capabilities.map((capability) => (
+                                  <Badge key={capability} variant="secondary" className="text-sm">{capability}</Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {assistantData.integrations.length > 0 && (
+                            <div>
+                              <h5 className="font-semibold text-lg text-gray-900 mb-4">Integrations ({assistantData.integrations.length})</h5>
+                              <div className="flex flex-wrap gap-2">
+                                {assistantData.integrations.map((integration) => (
+                                  <Badge key={integration} variant="outline" className="text-sm">{integration}</Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {assistantData.canMakeDecisions.length > 0 && (
+                            <div>
+                              <h5 className="font-semibold text-lg text-gray-900 mb-4">Can Make Decisions For</h5>
+                              <div className="flex flex-wrap gap-2">
+                                {assistantData.canMakeDecisions.map((decision) => (
+                                  <Badge key={decision} className="bg-green-100 text-green-800 text-sm">{decision}</Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {assistantData.approvalRequired.length > 0 && (
+                            <div>
+                              <h5 className="font-semibold text-lg text-gray-900 mb-4">Requires Approval For</h5>
+                              <div className="flex flex-wrap gap-2">
+                                {assistantData.approvalRequired.map((approval) => (
+                                  <Badge key={approval} className="bg-orange-100 text-orange-800 text-sm">{approval}</Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
               </div>
-            )}
+            </ScrollArea>
           </div>
 
           {/* Footer */}
-          <div className="border-t bg-gray-50 px-6 py-4">
+          <div className="border-t bg-gray-50 px-6 py-4 flex-shrink-0">
             <div className="flex justify-between items-center">
               <Button 
                 variant="outline" 

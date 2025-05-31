@@ -27,7 +27,9 @@ import AIEmployees from "./pages/AIEmployees";
 import Teams from "./pages/Teams";
 import AIAssistantsPage from "./pages/AIAssistantsPage";
 import AIAgents from "./pages/AIAgents";
+import AIAgentsPage from "./pages/AIAgentsPage";
 import Workflows from "./pages/Workflows";
+import WorkflowsPage from "./pages/WorkflowsPage";
 import IntegrationsPage from "./pages/IntegrationsPage";
 import Settings from "./pages/Settings";
 import Help from "./pages/Help";
@@ -192,12 +194,12 @@ const App = () => (
             } />
             <Route path="/ai-agents" element={
               <ProtectedRoute>
-                <AIAgents />
+                <AIAgentsPage />
               </ProtectedRoute>
             } />
             <Route path="/workflows" element={
               <ProtectedRoute>
-                <Workflows />
+                <WorkflowsPage />
               </ProtectedRoute>
             } />
             <Route path="/integrations" element={
