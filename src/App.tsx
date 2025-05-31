@@ -33,16 +33,13 @@ import NotFound from './pages/NotFound';
 function App() {
   console.log('App: Rendering App component');
   console.log('App: Current pathname:', window.location.pathname);
-  console.log('App: Signup component imported:', !!Signup);
   
   return (
     <Router>
       <div className="App">
         <Routes>
-          {/* Root redirect to home */}
-          <Route path="/" element={<Navigate to="/home" replace />} />
-          
           {/* Public routes - accessible without authentication */}
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
