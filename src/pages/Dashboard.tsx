@@ -10,7 +10,10 @@ import {
   BarChart3
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/dashboard/AppSidebar';
+import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
+import AgentsNavbar from '@/components/dashboard/AgentsNavbar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import QuickActions from '@/components/dashboard/QuickActions';
 import RecentActivity from '@/components/dashboard/RecentActivity';
@@ -70,49 +73,57 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <DashboardHeader userEmail={userEmail} />
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-light text-gray-900 mb-2">Welcome back!</h2>
-          <p className="text-gray-600">Here's what's happening with your AI automation platform today.</p>
-        </div>
-
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {metrics.map((metric, index) => (
-            <MetricCard key={index} {...metric} />
-          ))}
-        </div>
-
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <QuickActions />
-          <RecentActivity />
-        </div>
-
-        {/* Performance Chart Placeholder */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-medium flex items-center">
-              <TrendingUp className="h-5 w-5 mr-2" />
-              Performance Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
-              <div className="text-center">
-                <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Performance charts and analytics will be displayed here</p>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AppSidebar />
+        <SidebarInset className="flex-1">
+          <LoggedInHeader userEmail={userEmail} />
+          <AgentsNavbar />
+          
+          {/* Main Content */}
+          <main className="flex-1 p-6">
+            <div className="flex items-center space-x-4 mb-6">
+              <SidebarTrigger />
+              <div>
+                <h1 className="text-3xl font-light text-gray-900">Dashboard</h1>
+                <p className="text-gray-600">Welcome back! Here's what's happening with your AI automation platform today.</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+
+            {/* Metrics Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {metrics.map((metric, index) => (
+                <MetricCard key={index} {...metric} />
+              ))}
+            </div>
+
+            {/* Dashboard Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+              <QuickActions />
+              <RecentActivity />
+            </div>
+
+            {/* Performance Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl font-medium flex items-center">
+                  <TrendingUp className="h-5 w-5 mr-2" />
+                  Performance Overview
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
+                  <div className="text-center">
+                    <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600">Performance charts and analytics will be displayed here</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   );
 };
 
