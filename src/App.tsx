@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -25,6 +26,7 @@ import Dashboard from "./pages/Dashboard";
 import Chat from "./pages/Chat";
 import AIEmployees from "./pages/AIEmployees";
 import Teams from "./pages/Teams";
+import TeamDetail from "./pages/TeamDetail";
 import AIAssistantsPage from "./pages/AIAssistantsPage";
 import AIAgents from "./pages/AIAgents";
 import AIAgentsPage from "./pages/AIAgentsPage";
@@ -34,7 +36,8 @@ import IntegrationsPage from "./pages/IntegrationsPage";
 import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import ProtectedRoute from "./components/ProtectedRoute";
-import TaskApproval from "./pages/TaskApproval";
+import Tasks from "./pages/Tasks";
+import AIFineTuning from "./pages/AIFineTuning";
 import Billing from "./pages/Billing";
 import Playground from "./pages/dev/Playground";
 import DevApi from "./pages/dev/Api";
@@ -126,7 +129,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
                            location.pathname.startsWith('/billing') ||
                            location.pathname.startsWith('/help') ||
                            location.pathname.startsWith('/dev/') ||
-                           location.pathname === '/task-approval';
+                           location.pathname === '/tasks';
 
   return (
     <div className="min-h-screen flex flex-col">

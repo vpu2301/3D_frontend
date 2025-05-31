@@ -6,11 +6,19 @@ import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { UserCheck, Plus, Users, Crown, Settings } from 'lucide-react';
+import { UserCheck, Plus, Users, Crown, Settings, Eye } from 'lucide-react';
+import CreateTeamDialog from '@/components/CreateTeamDialog';
 
 const Teams = () => {
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [teams, setTeams] = useState([
+    { id: 1, name: 'Sales Team', members: 8, aiEmployees: 3, leader: 'John Doe', iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-amber-100' },
+    { id: 2, name: 'Marketing Team', members: 6, aiEmployees: 2, leader: 'Jane Smith', iconColor: 'text-pink-600', bgColor: 'from-pink-100 to-fuchsia-100' },
+    { id: 3, name: 'Operations Team', members: 10, aiEmployees: 4, leader: 'Mike Johnson', iconColor: 'text-blue-600', bgColor: 'from-blue-100 to-indigo-100' },
+    { id: 4, name: 'Finance Team', members: 4, aiEmployees: 1, leader: 'Sarah Wilson', iconColor: 'text-green-600', bgColor: 'from-green-100 to-teal-100' },
+  ]);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
@@ -26,12 +34,13 @@ const Teams = () => {
     }
   }, [navigate]);
 
-  const teams = [
-    { id: 1, name: 'Sales Team', members: 8, aiEmployees: 3, leader: 'John Doe', iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-amber-100' },
-    { id: 2, name: 'Marketing Team', members: 6, aiEmployees: 2, leader: 'Jane Smith', iconColor: 'text-pink-600', bgColor: 'from-pink-100 to-fuchsia-100' },
-    { id: 3, name: 'Operations Team', members: 10, aiEmployees: 4, leader: 'Mike Johnson', iconColor: 'text-blue-600', bgColor: 'from-blue-100 to-indigo-100' },
-    { id: 4, name: 'Finance Team', members: 4, aiEmployees: 1, leader: 'Sarah Wilson', iconColor: 'text-green-600', bgColor: 'from-green-100 to-teal-100' },
-  ];
+  const handleTeamCreated = (newTeam: any) => {
+    setTeams(prev => [...prev, newTeam]);
+  };
+
+  const handleViewTeam = (teamId: number) => {
+    navigate(`/teams/${teamId}`);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
@@ -47,7 +56,10 @@ const Teams = () => {
                   <h1 className="text-3xl font-light text-gray-900">Teams</h1>
                   <p className="text-gray-600">Manage your organization's teams and members</p>
                 </div>
-                <Button className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600">
+                <Button 
+                  onClick={() => setShowCreateDialog(true)}
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Create Team
                 </Button>
@@ -64,9 +76,19 @@ const Teams = () => {
                           </div>
                           <span className="font-medium">{team.name}</span>
                         </div>
-                        <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-                          <Settings className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center space-x-1">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="hover:bg-gray-100 h-8 w-8"
+                            onClick={() => handleViewTeam(team.id)}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8">
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="pt-0">
@@ -89,13 +111,24 @@ const Teams = () => {
                           </div>
                           <span className="text-sm text-gray-700">AI Employees: {team.aiEmployees}</span>
                         </div>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="w-full text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
-                        >
-                          Manage Team
-                        </Button>
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
+                            onClick={() => handleViewTeam(team.id)}
+                          >
+                            <Eye className="h-3 w-3 mr-1" />
+                            View Details
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
+                          >
+                            <Settings className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -105,6 +138,12 @@ const Teams = () => {
           </SidebarInset>
         </div>
       </SidebarProvider>
+
+      <CreateTeamDialog 
+        open={showCreateDialog}
+        onOpenChange={setShowCreateDialog}
+        onTeamCreated={handleTeamCreated}
+      />
     </div>
   );
 };
