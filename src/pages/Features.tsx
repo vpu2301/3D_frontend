@@ -1,3 +1,5 @@
+
+import { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -16,6 +18,11 @@ import {
 } from 'lucide-react';
 
 const Features = () => {
+  useEffect(() => {
+    console.log('Features: Component mounted and rendering');
+    console.log('Features: Current location:', window.location.pathname);
+  }, []);
+
   const features = [
     {
       icon: Bot,

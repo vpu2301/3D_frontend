@@ -27,6 +27,7 @@ import StartFreeTrial from './pages/StartFreeTrial';
 import Home from './pages/Home';
 import Features from './pages/Features';
 import About from './pages/About';
+import NotFound from './pages/NotFound';
 
 function App() {
   console.log('App: Rendering App component');
@@ -65,6 +66,9 @@ function App() {
           <Route path="/dev/api" element={<ProtectedRoute><DevAPI /></ProtectedRoute>} />
           <Route path="/dev/docs" element={<ProtectedRoute><DevDocs /></ProtectedRoute>} />
           <Route path="/ai-fine-tuning" element={<ProtectedRoute><AIFineTuning /></ProtectedRoute>} />
+          
+          {/* 404 catch-all route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />
       </div>
