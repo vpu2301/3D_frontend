@@ -1,8 +1,9 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Mail, Inbox, Send, Filter, ArrowRight, Clock, Users, Zap, CheckCircle, Tag, Star, Archive } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const EmailManagement = () => {
   const benefits = [
@@ -83,6 +84,8 @@ const EmailManagement = () => {
 
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+      <Header />
+      
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -213,6 +216,8 @@ const EmailManagement = () => {
           </Button>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };

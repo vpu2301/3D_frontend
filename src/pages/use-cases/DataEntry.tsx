@@ -1,11 +1,14 @@
-
 import { Database, Zap, Clock, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const DataEntry = () => {
   return (
     <div className="min-h-screen">
+      <Header />
+      
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-green-50 to-emerald-100 pt-20 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -94,6 +97,8 @@ const DataEntry = () => {
           </Button>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };
