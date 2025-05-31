@@ -6,7 +6,8 @@ import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, Mic, MicOff, Bot } from 'lucide-react';
+import { Send, Mic, MicOff, Bot, Zap, User, Clock, Calendar } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 
 const Chat = () => {
   const navigate = useNavigate();
@@ -15,15 +16,12 @@ const Chat = () => {
   const [messages, setMessages] = useState<Array<{id: number, text: string, sender: 'user' | 'assistant', timestamp: Date}>>([]);
   const [isListening, setIsListening] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [exampleText, setExampleText] = useState('');
-  const [currentExampleIndex, setCurrentExampleIndex] = useState(0);
 
-  const examplePrompts = [
-    "@Emma -> prepare Sales proposal for our products for Zalando Customer Support team",
-    "@Aria -> schedule meeting with tech leads for Q1 planning session",
-    "@Felix -> analyze Q4 financial reports and create executive summary",
-    "@Maya -> create marketing campaign for new product launch",
-    "@Atlas -> review and optimize customer support workflows"
+  const fastCommands = [
+    { icon: Zap, label: '@Emma', description: 'Sales Assistant', color: 'bg-pink-100' },
+    { icon: User, label: '@Aria', description: 'Support Helper', color: 'bg-blue-100' },
+    { icon: Clock, label: '@Felix', description: 'Finance Expert', color: 'bg-green-100' },
+    { icon: Calendar, label: '@Maya', description: 'Marketing Pro', color: 'bg-purple-100' },
   ];
 
   useEffect(() => {
@@ -46,29 +44,6 @@ const Chat = () => {
       timestamp: new Date()
     }]);
   }, [navigate]);
-
-  // Animated example prompt effect
-  useEffect(() => {
-    if (isTyping || message.trim()) return;
-
-    const currentPrompt = examplePrompts[currentExampleIndex];
-    let charIndex = 0;
-
-    const typeInterval = setInterval(() => {
-      if (charIndex <= currentPrompt.length) {
-        setExampleText(currentPrompt.slice(0, charIndex));
-        charIndex++;
-      } else {
-        clearInterval(typeInterval);
-        setTimeout(() => {
-          setCurrentExampleIndex((prev) => (prev + 1) % examplePrompts.length);
-          setExampleText('');
-        }, 2000);
-      }
-    }, 50);
-
-    return () => clearInterval(typeInterval);
-  }, [currentExampleIndex, isTyping, message, examplePrompts]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
@@ -111,72 +86,117 @@ const Chat = () => {
     }
   };
 
+  const handleFastCommand = (command: string) => {
+    setMessage(command + ' ');
+    setIsTyping(true);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
             <LoggedInHeader userEmail={userEmail} />
             
-            <main className="flex-1 flex flex-col items-center justify-center p-6">
-              <div className="w-full max-w-4xl flex flex-col items-center">
-                <div className="text-center mb-8">
-                  <div className="flex items-center justify-center mb-4">
-                    <SidebarTrigger className="mr-4" />
-                    <Bot className="h-12 w-12 text-blue-600" />
+            <main className="flex-1 flex flex-col relative">
+              <div className="p-6">
+                <div className="flex items-center space-x-4 mb-6">
+                  <SidebarTrigger />
+                  <div className="flex items-center space-x-3">
+                    <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100">
+                      <Bot className="h-8 w-8 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-3xl font-light text-gray-800">AI Chat</h1>
+                      <p className="text-gray-500">Chat with your AI assistants</p>
+                    </div>
                   </div>
-                  <h1 className="text-4xl font-light text-gray-900 mb-2">AI Chat</h1>
-                  <p className="text-gray-600">Interact with your AI assistants through text or voice commands</p>
                 </div>
+              </div>
 
-                {/* Messages Area - Only show if there are messages beyond the welcome */}
-                {messages.length > 1 && (
-                  <div className="w-full mb-6 max-h-96 overflow-y-auto space-y-4 p-4 bg-white rounded-lg border shadow-sm">
-                    {messages.map((msg) => (
+              {/* Messages Area */}
+              <div className="flex-1 px-6 pb-32 overflow-y-auto">
+                <div className="max-w-4xl mx-auto space-y-4">
+                  {messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
                       <div
-                        key={msg.id}
-                        className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                        className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
+                          msg.sender === 'user'
+                            ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white'
+                            : 'bg-white border border-gray-100 text-gray-800'
+                        }`}
                       >
-                        <div
-                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                            msg.sender === 'user'
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-gray-100 text-gray-900'
-                          }`}
-                        >
-                          <p className="text-sm">{msg.text}</p>
-                          <p className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-blue-100' : 'text-gray-500'}`}>
-                            {msg.timestamp.toLocaleTimeString()}
-                          </p>
-                        </div>
+                        <p className="text-sm">{msg.text}</p>
+                        <p className={`text-xs mt-2 ${msg.sender === 'user' ? 'text-blue-100' : 'text-gray-400'}`}>
+                          {msg.timestamp.toLocaleTimeString()}
+                        </p>
                       </div>
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-                {/* Input Area */}
-                <div className="w-full max-w-2xl">
-                  <div className="relative">
-                    <Input
-                      value={message}
-                      onChange={handleInputChange}
-                      onKeyPress={handleKeyPress}
-                      placeholder={isTyping || message.trim() ? "Type your message here..." : exampleText || "Type your message here..."}
-                      className="pr-20 py-3 text-base"
-                    />
-                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                      <Button
-                        onClick={handleVoiceToggle}
-                        variant={isListening ? "default" : "ghost"}
-                        size="icon"
-                        className={`h-8 w-8 ${isListening ? "bg-red-600 hover:bg-red-700" : ""}`}
-                      >
-                        {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                      </Button>
-                      <Button onClick={handleSendMessage} size="icon" className="h-8 w-8">
-                        <Send className="h-4 w-4" />
-                      </Button>
+              {/* Fixed Input Area */}
+              <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-100">
+                <div className="p-6">
+                  <div className="max-w-4xl mx-auto">
+                    {/* Fast Commands */}
+                    {!isTyping && (
+                      <div className="mb-4 flex flex-wrap gap-2">
+                        {fastCommands.map((command, index) => (
+                          <Button
+                            key={index}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleFastCommand(command.label)}
+                            className={`${command.color} text-gray-700 hover:scale-105 transition-all duration-200 border border-gray-200/50`}
+                          >
+                            <command.icon className="h-3 w-3 mr-2" />
+                            <span className="text-xs font-medium">{command.label}</span>
+                            <span className="text-xs text-gray-500 ml-1">- {command.description}</span>
+                          </Button>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Input Field */}
+                    <div className={`relative transition-all duration-300 ${isTyping ? 'max-w-2xl mx-auto' : 'max-w-3xl'}`}>
+                      <Card className="bg-white/90 border-gray-200/50 shadow-lg">
+                        <div className="relative p-2">
+                          <Input
+                            value={message}
+                            onChange={handleInputChange}
+                            onKeyPress={handleKeyPress}
+                            placeholder="Type your message or use @ commands..."
+                            className="border-0 bg-transparent text-base pr-16 focus-visible:ring-0 focus-visible:ring-offset-0"
+                          />
+                          <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+                            <Button
+                              onClick={handleVoiceToggle}
+                              variant="ghost"
+                              size="icon"
+                              className={`h-8 w-8 rounded-full transition-all duration-200 ${
+                                isListening 
+                                  ? "bg-red-100 text-red-600 hover:bg-red-200" 
+                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                              }`}
+                            >
+                              {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                            </Button>
+                            <Button 
+                              onClick={handleSendMessage} 
+                              size="icon" 
+                              className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-all duration-200"
+                            >
+                              <Send className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
                     </div>
                   </div>
                 </div>
