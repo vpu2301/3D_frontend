@@ -1,4 +1,5 @@
 
+import { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -6,6 +7,11 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle, Star, Users, Building2, Zap } from 'lucide-react';
 
 const Home = () => {
+  useEffect(() => {
+    console.log('Home: Component mounted and rendering');
+    console.log('Home: Current location:', window.location.pathname);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       <Header />

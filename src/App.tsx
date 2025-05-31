@@ -29,12 +29,16 @@ import Features from './pages/Features';
 import About from './pages/About';
 
 function App() {
+  console.log('App: Rendering App component');
+  
   return (
     <Router>
       <div className="App">
         <Routes>
+          {/* Root redirect to home */}
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          
           {/* Public routes - accessible without authentication */}
-          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
