@@ -155,11 +155,11 @@ const Features = () => {
               Ready to Experience These Features?
             </h2>
             <p className="text-xl text-blue-100 mb-8">
-              Start your free trial today and see how AI employees can transform your business.
+              Sign up for free and see how AI employees can transform your business.
             </p>
             <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg rounded-full shadow-lg" asChild>
-              <Link to="/get-started">
-                Start Free Trial
+              <Link to="/signup">
+                Sign Up Free
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>

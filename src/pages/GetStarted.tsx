@@ -78,7 +78,7 @@ const GetStarted = () => {
                     <Button 
                       className="w-full"
                       onClick={() => {
-                        if (step.id === 1) navigate('/login');
+                        if (step.id === 1) navigate('/signup');
                         else if (step.id === 2) navigate('/pricing');
                         else if (step.id === 3) navigate('/dashboard');
                       }}
@@ -95,10 +95,10 @@ const GetStarted = () => {
           <div className="text-center">
             <Button 
               size="lg"
-              onClick={() => navigate('/start-free-trial')}
+              onClick={() => navigate('/signup')}
               className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
             >
-              Start Free Trial
+              Sign Up Free
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
