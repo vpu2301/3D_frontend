@@ -31,22 +31,69 @@ import Signup from './pages/Signup';
 import NotFound from './pages/NotFound';
 
 function App() {
+  console.log('=== APP COMPONENT DEBUG ===');
   console.log('App: Rendering App component');
   console.log('App: Current pathname:', window.location.pathname);
+  console.log('App: Current href:', window.location.href);
+  console.log('App: Home component:', Home);
+  console.log('App: Signup component:', Signup);
+  console.log('App: Features component:', Features);
+  console.log('App: About component:', About);
+  console.log('=== END APP DEBUG ===');
   
   return (
     <Router>
       <div className="App">
         <Routes>
           {/* Public routes - accessible without authentication */}
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/features" element={<Features />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/get-started" element={<GetStarted />} />
-          <Route path="/start-free-trial" element={<StartFreeTrial />} />
+          <Route path="/" element={
+            <>
+              {console.log('Rendering Home component for /')}
+              <Home />
+            </>
+          } />
+          <Route path="/home" element={
+            <>
+              {console.log('Rendering Home component for /home')}
+              <Home />
+            </>
+          } />
+          <Route path="/features" element={
+            <>
+              {console.log('Rendering Features component')}
+              <Features />
+            </>
+          } />
+          <Route path="/about" element={
+            <>
+              {console.log('Rendering About component')}
+              <About />
+            </>
+          } />
+          <Route path="/login" element={
+            <>
+              {console.log('Rendering Login component')}
+              <Login />
+            </>
+          } />
+          <Route path="/signup" element={
+            <>
+              {console.log('Rendering Signup component')}
+              <Signup />
+            </>
+          } />
+          <Route path="/get-started" element={
+            <>
+              {console.log('Rendering GetStarted component')}
+              <GetStarted />
+            </>
+          } />
+          <Route path="/start-free-trial" element={
+            <>
+              {console.log('Rendering StartFreeTrial component')}
+              <StartFreeTrial />
+            </>
+          } />
           
           {/* Protected routes - require authentication */}
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -69,7 +116,12 @@ function App() {
           <Route path="/ai-fine-tuning" element={<ProtectedRoute><AIFineTuning /></ProtectedRoute>} />
           
           {/* 404 catch-all route */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={
+            <>
+              {console.log('Rendering NotFound component for unknown route')}
+              <NotFound />
+            </>
+          } />
         </Routes>
         <Toaster />
       </div>
