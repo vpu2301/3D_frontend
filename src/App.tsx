@@ -22,6 +22,8 @@ import DevAPI from './pages/dev/Api';
 import DevDocs from './pages/dev/Docs';
 import AIFineTuning from './pages/AIFineTuning';
 import AIAgentsPage from './pages/AIAgentsPage';
+import GetStarted from './pages/GetStarted';
+import StartFreeTrial from './pages/StartFreeTrial';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/get-started" element={<GetStarted />} />
+          <Route path="/start-free-trial" element={<StartFreeTrial />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
           <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
