@@ -32,6 +32,7 @@ import NotFound from './pages/NotFound';
 
 function App() {
   console.log('App: Rendering App component');
+  console.log('App: Current pathname:', window.location.pathname);
   
   return (
     <Router>

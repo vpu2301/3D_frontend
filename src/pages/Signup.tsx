@@ -27,7 +27,7 @@ const Signup = () => {
 
   const benefits = [
     "Free AI workers to get started",
-    "No credit card required",
+    "No credit card required", 
     "Instant access to automation",
     "24/7 support included",
     "Easy setup in minutes"
