@@ -6,7 +6,8 @@ import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bot, Plus, MessageCircle, Settings } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Bot, Plus, MessageCircle, Settings, Eye, Users, Building } from 'lucide-react';
 import CreateAssistantDialog from '@/components/CreateAssistantDialog';
 
 const AIAssistantsPage = () => {
@@ -14,10 +15,10 @@ const AIAssistantsPage = () => {
   const [userEmail, setUserEmail] = useState('');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [assistants, setAssistants] = useState([
-    { id: 1, name: 'Customer Support Assistant', type: 'Support', conversations: 145, status: 'Active', iconColor: 'text-sky-600', bgColor: 'from-sky-100 to-blue-100' },
-    { id: 2, name: 'Sales Assistant', type: 'Sales', conversations: 89, status: 'Active', iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-red-100' },
-    { id: 3, name: 'Technical Helper', type: 'Technical', conversations: 67, status: 'Active', iconColor: 'text-slate-600', bgColor: 'from-slate-100 to-gray-100' },
-    { id: 4, name: 'HR Assistant', type: 'HR', conversations: 34, status: 'Idle', iconColor: 'text-lime-600', bgColor: 'from-lime-100 to-green-100' },
+    { id: 1, name: 'Customer Support Assistant', type: 'Support', conversations: 145, status: 'Active', iconColor: 'text-sky-600', bgColor: 'from-sky-100 to-blue-100', scope: 'team' },
+    { id: 2, name: 'Sales Assistant', type: 'Sales', conversations: 89, status: 'Active', iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-red-100', scope: 'team' },
+    { id: 3, name: 'Technical Helper', type: 'Technical', conversations: 67, status: 'Active', iconColor: 'text-slate-600', bgColor: 'from-slate-100 to-gray-100', scope: 'personal' },
+    { id: 4, name: 'HR Assistant', type: 'HR', conversations: 34, status: 'Idle', iconColor: 'text-lime-600', bgColor: 'from-lime-100 to-green-100', scope: 'team' },
   ]);
 
   useEffect(() => {
@@ -67,6 +68,10 @@ const AIAssistantsPage = () => {
     }
   }, []);
 
+  const handleViewAssistant = (assistantId: number) => {
+    navigate(`/ai-assistants/${assistantId}`);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-indigo-50">
       <SidebarProvider>
@@ -101,17 +106,35 @@ const AIAssistantsPage = () => {
                           </div>
                           <span className="font-medium">{assistant.name}</span>
                         </div>
-                        <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-                          <Settings className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center space-x-1">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="hover:bg-gray-100 h-8 w-8"
+                            onClick={() => handleViewAssistant(assistant.id)}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8">
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                          <Badge variant="outline" className="text-xs">
                             {assistant.type}
-                          </span>
+                          </Badge>
+                          <div className="flex items-center space-x-1">
+                            {assistant.scope === 'team' ? (
+                              <Building className="h-3 w-3 text-gray-600" />
+                            ) : (
+                              <Users className="h-3 w-3 text-gray-600" />
+                            )}
+                            <span className="text-xs text-gray-600 capitalize">{assistant.scope}</span>
+                          </div>
                         </div>
                         <div className="flex items-center space-x-2">
                           <div className="p-1 rounded bg-gray-100">
@@ -122,13 +145,24 @@ const AIAssistantsPage = () => {
                         <div className={`text-sm font-medium ${assistant.status === 'Active' ? 'text-green-700' : 'text-amber-700'}`}>
                           Status: {assistant.status}
                         </div>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="w-full text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
-                        >
-                          Configure
-                        </Button>
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
+                            onClick={() => handleViewAssistant(assistant.id)}
+                          >
+                            <Eye className="h-3 w-3 mr-1" />
+                            View Details
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
+                          >
+                            <Settings className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

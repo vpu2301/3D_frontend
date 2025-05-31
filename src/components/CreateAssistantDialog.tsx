@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { Bot, ArrowRight, Check, Sparkles, Users, MessageCircle, Settings, Zap } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { Bot, ArrowRight, Check, Sparkles, Users, MessageCircle, Settings, Zap, Shield, UserCheck, Building, Puzzle, Workflow, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface CreateAssistantDialogProps {
@@ -24,18 +25,31 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
     department: '',
     description: '',
     capabilities: [] as string[],
-    personality: 'professional'
+    personality: 'professional',
+    // New fields
+    scope: 'personal', // personal or team
+    autonomyLevel: 'supervised', // supervised, semi-autonomous, autonomous
+    approvalRequired: [] as string[],
+    canMakeDecisions: [] as string[],
+    integrations: [] as string[],
+    workingHours: '24/7',
+    escalationRules: '',
+    maxBudgetLimit: 0,
+    teamMembers: [] as string[]
   });
   const { toast } = useToast();
 
   const steps = [
     { number: 1, title: 'Basic Info', icon: Bot },
-    { number: 2, title: 'Type & Role', icon: Users },
+    { number: 2, title: 'Type & Scope', icon: Users },
     { number: 3, title: 'Capabilities', icon: Zap },
-    { number: 4, title: 'Personality', icon: MessageCircle },
-    { number: 5, title: 'Review', icon: Check }
+    { number: 4, title: 'Autonomy', icon: Shield },
+    { number: 5, title: 'Integrations', icon: Puzzle },
+    { number: 6, title: 'Approval Rules', icon: UserCheck },
+    { number: 7, title: 'Review', icon: Check }
   ];
 
+  // ... keep existing code (assistantTypes, departments, personalities, availableCapabilities)
   const assistantTypes = [
     { value: 'support', label: 'Customer Support', description: 'Handle customer inquiries and provide assistance' },
     { value: 'sales', label: 'Sales Assistant', description: 'Help with lead qualification and sales processes' },
@@ -60,8 +74,29 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
     { value: 'detailed', label: 'Detailed', description: 'Comprehensive and thorough explanations' }
   ];
 
+  const autonomyLevels = [
+    { value: 'supervised', label: 'Supervised', description: 'Requires approval for all actions' },
+    { value: 'semi-autonomous', label: 'Semi-Autonomous', description: 'Can make routine decisions independently' },
+    { value: 'autonomous', label: 'Autonomous', description: 'Full decision-making authority within defined scope' }
+  ];
+
+  const availableIntegrations = [
+    'Slack', 'Microsoft Teams', 'Salesforce', 'HubSpot', 'Google Workspace', 'Microsoft 365',
+    'Zoom', 'Notion', 'Asana', 'Trello', 'Shopify', 'Stripe', 'Zapier', 'Gmail', 'Outlook'
+  ];
+
+  const decisionAreas = [
+    'Customer Responses', 'Meeting Scheduling', 'Document Approvals', 'Budget Allocation',
+    'Task Assignment', 'Data Updates', 'Report Generation', 'Email Responses'
+  ];
+
+  const approvalAreas = [
+    'Financial Transactions', 'Contract Signing', 'Customer Refunds', 'Personnel Decisions',
+    'Policy Changes', 'External Communications', 'Large Purchases', 'System Changes'
+  ];
+
   const handleNext = () => {
-    if (currentStep < 5) {
+    if (currentStep < 7) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -78,6 +113,33 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
       capabilities: prev.capabilities.includes(capability)
         ? prev.capabilities.filter(c => c !== capability)
         : [...prev.capabilities, capability]
+    }));
+  };
+
+  const handleIntegrationToggle = (integration: string) => {
+    setAssistantData(prev => ({
+      ...prev,
+      integrations: prev.integrations.includes(integration)
+        ? prev.integrations.filter(i => i !== integration)
+        : [...prev.integrations, integration]
+    }));
+  };
+
+  const handleDecisionToggle = (decision: string) => {
+    setAssistantData(prev => ({
+      ...prev,
+      canMakeDecisions: prev.canMakeDecisions.includes(decision)
+        ? prev.canMakeDecisions.filter(d => d !== decision)
+        : [...prev.canMakeDecisions, decision]
+    }));
+  };
+
+  const handleApprovalToggle = (approval: string) => {
+    setAssistantData(prev => ({
+      ...prev,
+      approvalRequired: prev.approvalRequired.includes(approval)
+        ? prev.approvalRequired.filter(a => a !== approval)
+        : [...prev.approvalRequired, approval]
     }));
   };
 
@@ -101,7 +163,18 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
       description: assistantData.description,
       capabilities: assistantData.capabilities,
       personality: assistantData.personality,
-      createdAt: new Date()
+      scope: assistantData.scope,
+      autonomyLevel: assistantData.autonomyLevel,
+      approvalRequired: assistantData.approvalRequired,
+      canMakeDecisions: assistantData.canMakeDecisions,
+      integrations: assistantData.integrations,
+      workingHours: assistantData.workingHours,
+      escalationRules: assistantData.escalationRules,
+      maxBudgetLimit: assistantData.maxBudgetLimit,
+      teamMembers: assistantData.teamMembers,
+      createdAt: new Date(),
+      iconColor: 'text-violet-600',
+      bgColor: 'from-violet-100 to-purple-100'
     };
 
     onAssistantCreated(newAssistant);
@@ -119,7 +192,16 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
       department: '',
       description: '',
       capabilities: [],
-      personality: 'professional'
+      personality: 'professional',
+      scope: 'personal',
+      autonomyLevel: 'supervised',
+      approvalRequired: [],
+      canMakeDecisions: [],
+      integrations: [],
+      workingHours: '24/7',
+      escalationRules: '',
+      maxBudgetLimit: 0,
+      teamMembers: []
     });
     onOpenChange(false);
   };
@@ -133,7 +215,11 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
       case 3:
         return assistantData.capabilities.length > 0;
       case 4:
-        return assistantData.personality !== '';
+        return assistantData.autonomyLevel !== '';
+      case 5:
+        return true; // Integrations are optional
+      case 6:
+        return true; // Approval rules are optional
       default:
         return true;
     }
@@ -150,9 +236,9 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
         </DialogHeader>
 
         {/* Progress Steps */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 overflow-x-auto">
           {steps.map((step, index) => (
-            <div key={step.number} className="flex items-center">
+            <div key={step.number} className="flex items-center min-w-0">
               <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
                 currentStep >= step.number 
                   ? 'bg-blue-600 border-blue-600 text-white' 
@@ -170,7 +256,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                 </p>
               </div>
               {index < steps.length - 1 && (
-                <ArrowRight className="h-4 w-4 text-gray-300 mx-4" />
+                <ArrowRight className="h-4 w-4 text-gray-300 mx-4 flex-shrink-0" />
               )}
             </div>
           ))}
@@ -208,43 +294,93 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
           )}
 
           {currentStep === 2 && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Type & Department</h3>
-              <div className="space-y-4">
-                <div>
-                  <Label>Assistant Type *</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-                    {assistantTypes.map((type) => (
-                      <Card 
-                        key={type.value}
-                        className={`cursor-pointer transition-all ${
-                          assistantData.type === type.value 
-                            ? 'border-blue-500 bg-blue-50' 
-                            : 'hover:border-gray-300'
-                        }`}
-                        onClick={() => setAssistantData(prev => ({ ...prev, type: type.value }))}
-                      >
-                        <CardContent className="p-4">
-                          <h4 className="font-medium">{type.label}</h4>
-                          <p className="text-sm text-gray-600 mt-1">{type.description}</p>
-                        </CardContent>
-                      </Card>
+            <div className="space-y-6">
+              <h3 className="text-lg font-medium">Type & Scope</h3>
+              
+              <div>
+                <Label>Assistant Type *</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                  {assistantTypes.map((type) => (
+                    <Card 
+                      key={type.value}
+                      className={`cursor-pointer transition-all ${
+                        assistantData.type === type.value 
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'hover:border-gray-300'
+                      }`}
+                      onClick={() => setAssistantData(prev => ({ ...prev, type: type.value }))}
+                    >
+                      <CardContent className="p-4">
+                        <h4 className="font-medium">{type.label}</h4>
+                        <p className="text-sm text-gray-600 mt-1">{type.description}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="department">Department *</Label>
+                <Select value={assistantData.department} onValueChange={(value) => setAssistantData(prev => ({ ...prev, department: value }))}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departments.map((dept) => (
+                      <SelectItem key={dept} value={dept}>{dept}</SelectItem>
                     ))}
-                  </div>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Assistant Scope</Label>
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  <Card 
+                    className={`cursor-pointer transition-all ${
+                      assistantData.scope === 'personal' 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'hover:border-gray-300'
+                    }`}
+                    onClick={() => setAssistantData(prev => ({ ...prev, scope: 'personal' }))}
+                  >
+                    <CardContent className="p-4 text-center">
+                      <Users className="h-6 w-6 mx-auto mb-2 text-blue-600" />
+                      <h4 className="font-medium">Personal</h4>
+                      <p className="text-sm text-gray-600">Only you can interact with this assistant</p>
+                    </CardContent>
+                  </Card>
+                  <Card 
+                    className={`cursor-pointer transition-all ${
+                      assistantData.scope === 'team' 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'hover:border-gray-300'
+                    }`}
+                    onClick={() => setAssistantData(prev => ({ ...prev, scope: 'team' }))}
+                  >
+                    <CardContent className="p-4 text-center">
+                      <Building className="h-6 w-6 mx-auto mb-2 text-green-600" />
+                      <h4 className="font-medium">Team</h4>
+                      <p className="text-sm text-gray-600">Shared across your team or department</p>
+                    </CardContent>
+                  </Card>
                 </div>
-                <div>
-                  <Label htmlFor="department">Department *</Label>
-                  <Select value={assistantData.department} onValueChange={(value) => setAssistantData(prev => ({ ...prev, department: value }))}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue placeholder="Select department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {departments.map((dept) => (
-                        <SelectItem key={dept} value={dept}>{dept}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="personality">Communication Style</Label>
+                <Select value={assistantData.personality} onValueChange={(value) => setAssistantData(prev => ({ ...prev, personality: value }))}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select communication style" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {personalities.map((personality) => (
+                      <SelectItem key={personality.value} value={personality.value}>
+                        {personality.label} - {personality.description}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           )}
@@ -274,22 +410,81 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
           )}
 
           {currentStep === 4 && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-medium">Autonomy & Decision Making</h3>
+              
+              <div>
+                <Label>Autonomy Level</Label>
+                <div className="grid grid-cols-1 gap-3 mt-2">
+                  {autonomyLevels.map((level) => (
+                    <Card 
+                      key={level.value}
+                      className={`cursor-pointer transition-all ${
+                        assistantData.autonomyLevel === level.value
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'hover:border-gray-300'
+                      }`}
+                      onClick={() => setAssistantData(prev => ({ ...prev, autonomyLevel: level.value }))}
+                    >
+                      <CardContent className="p-4 flex items-center">
+                        <Shield className="h-6 w-6 mr-3 text-blue-600" />
+                        <div>
+                          <h4 className="font-medium">{level.label}</h4>
+                          <p className="text-sm text-gray-600">{level.description}</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label>Working Hours</Label>
+                <Select value={assistantData.workingHours} onValueChange={(value) => setAssistantData(prev => ({ ...prev, workingHours: value }))}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select working hours" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="24/7">24/7 - Always Available</SelectItem>
+                    <SelectItem value="business">Business Hours (9 AM - 5 PM)</SelectItem>
+                    <SelectItem value="extended">Extended Hours (7 AM - 9 PM)</SelectItem>
+                    <SelectItem value="custom">Custom Schedule</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="budgetLimit">Maximum Budget Authority ($)</Label>
+                <Input
+                  id="budgetLimit"
+                  type="number"
+                  value={assistantData.maxBudgetLimit}
+                  onChange={(e) => setAssistantData(prev => ({ ...prev, maxBudgetLimit: Number(e.target.value) }))}
+                  placeholder="0"
+                  className="mt-1"
+                />
+                <p className="text-sm text-gray-500 mt-1">Maximum amount the assistant can spend without approval</p>
+              </div>
+            </div>
+          )}
+
+          {currentStep === 5 && (
             <div className="space-y-4">
-              <h3 className="text-lg font-medium">Personality & Communication Style</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {personalities.map((personality) => (
+              <h3 className="text-lg font-medium">Integrations</h3>
+              <p className="text-gray-600">Connect your assistant to the tools your team uses:</p>
+              <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
+                {availableIntegrations.map((integration) => (
                   <Card 
-                    key={personality.value}
+                    key={integration}
                     className={`cursor-pointer transition-all ${
-                      assistantData.personality === personality.value
+                      assistantData.integrations.includes(integration)
                         ? 'border-blue-500 bg-blue-50' 
                         : 'hover:border-gray-300'
                     }`}
-                    onClick={() => setAssistantData(prev => ({ ...prev, personality: personality.value }))}
+                    onClick={() => handleIntegrationToggle(integration)}
                   >
-                    <CardContent className="p-4">
-                      <h4 className="font-medium">{personality.label}</h4>
-                      <p className="text-sm text-gray-600 mt-1">{personality.description}</p>
+                    <CardContent className="p-3 text-center">
+                      <p className="text-sm font-medium">{integration}</p>
                     </CardContent>
                   </Card>
                 ))}
@@ -297,49 +492,135 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
             </div>
           )}
 
-          {currentStep === 5 && (
+          {currentStep === 6 && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-medium">Decision Making & Approval Rules</h3>
+              
+              <div>
+                <Label>Assistant Can Make Decisions For:</Label>
+                <div className="grid grid-cols-2 gap-3 mt-2">
+                  {decisionAreas.map((decision) => (
+                    <Card 
+                      key={decision}
+                      className={`cursor-pointer transition-all ${
+                        assistantData.canMakeDecisions.includes(decision)
+                          ? 'border-green-500 bg-green-50' 
+                          : 'hover:border-gray-300'
+                      }`}
+                      onClick={() => handleDecisionToggle(decision)}
+                    >
+                      <CardContent className="p-3">
+                        <p className="text-sm font-medium">{decision}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label>Requires Approval For:</Label>
+                <div className="grid grid-cols-2 gap-3 mt-2">
+                  {approvalAreas.map((approval) => (
+                    <Card 
+                      key={approval}
+                      className={`cursor-pointer transition-all ${
+                        assistantData.approvalRequired.includes(approval)
+                          ? 'border-orange-500 bg-orange-50' 
+                          : 'hover:border-gray-300'
+                      }`}
+                      onClick={() => handleApprovalToggle(approval)}
+                    >
+                      <CardContent className="p-3">
+                        <p className="text-sm font-medium">{approval}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="escalationRules">Escalation Rules</Label>
+                <Textarea
+                  id="escalationRules"
+                  value={assistantData.escalationRules}
+                  onChange={(e) => setAssistantData(prev => ({ ...prev, escalationRules: e.target.value }))}
+                  placeholder="Define when and how the assistant should escalate issues to humans..."
+                  className="mt-1"
+                  rows={3}
+                />
+              </div>
+            </div>
+          )}
+
+          {currentStep === 7 && (
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Review & Create</h3>
               <Card>
                 <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium text-gray-900">Assistant Details</h4>
-                      <div className="mt-2 grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-600">Name:</span>
-                          <span className="ml-2 font-medium">{assistantData.name}</span>
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Basic Info</h4>
+                        <div className="space-y-1 text-sm">
+                          <div><span className="text-gray-600">Name:</span> <span className="ml-2 font-medium">{assistantData.name}</span></div>
+                          <div><span className="text-gray-600">Type:</span> <span className="ml-2 font-medium">{assistantTypes.find(t => t.value === assistantData.type)?.label}</span></div>
+                          <div><span className="text-gray-600">Department:</span> <span className="ml-2 font-medium">{assistantData.department}</span></div>
+                          <div><span className="text-gray-600">Scope:</span> <Badge variant="outline" className="ml-2">{assistantData.scope}</Badge></div>
                         </div>
-                        <div>
-                          <span className="text-gray-600">Type:</span>
-                          <span className="ml-2 font-medium">{assistantTypes.find(t => t.value === assistantData.type)?.label}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-600">Department:</span>
-                          <span className="ml-2 font-medium">{assistantData.department}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-600">Personality:</span>
-                          <span className="ml-2 font-medium">{personalities.find(p => p.value === assistantData.personality)?.label}</span>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Autonomy</h4>
+                        <div className="space-y-1 text-sm">
+                          <div><span className="text-gray-600">Level:</span> <span className="ml-2 font-medium">{autonomyLevels.find(l => l.value === assistantData.autonomyLevel)?.label}</span></div>
+                          <div><span className="text-gray-600">Working Hours:</span> <span className="ml-2 font-medium">{assistantData.workingHours}</span></div>
+                          <div><span className="text-gray-600">Budget Limit:</span> <span className="ml-2 font-medium">${assistantData.maxBudgetLimit}</span></div>
                         </div>
                       </div>
                     </div>
-                    {assistantData.description && (
+
+                    {assistantData.capabilities.length > 0 && (
                       <div>
-                        <h5 className="font-medium text-gray-900">Description</h5>
-                        <p className="text-sm text-gray-600 mt-1">{assistantData.description}</p>
+                        <h5 className="font-medium text-gray-900 mb-2">Capabilities ({assistantData.capabilities.length})</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {assistantData.capabilities.map((capability) => (
+                            <Badge key={capability} variant="secondary">{capability}</Badge>
+                          ))}
+                        </div>
                       </div>
                     )}
-                    <div>
-                      <h5 className="font-medium text-gray-900">Capabilities ({assistantData.capabilities.length})</h5>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {assistantData.capabilities.map((capability) => (
-                          <span key={capability} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                            {capability}
-                          </span>
-                        ))}
+
+                    {assistantData.integrations.length > 0 && (
+                      <div>
+                        <h5 className="font-medium text-gray-900 mb-2">Integrations ({assistantData.integrations.length})</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {assistantData.integrations.map((integration) => (
+                            <Badge key={integration} variant="outline">{integration}</Badge>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {assistantData.canMakeDecisions.length > 0 && (
+                      <div>
+                        <h5 className="font-medium text-gray-900 mb-2">Can Make Decisions For</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {assistantData.canMakeDecisions.map((decision) => (
+                            <Badge key={decision} className="bg-green-100 text-green-800">{decision}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {assistantData.approvalRequired.length > 0 && (
+                      <div>
+                        <h5 className="font-medium text-gray-900 mb-2">Requires Approval For</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {assistantData.approvalRequired.map((approval) => (
+                            <Badge key={approval} className="bg-orange-100 text-orange-800">{approval}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -360,7 +641,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            {currentStep < 5 ? (
+            {currentStep < 7 ? (
               <Button 
                 onClick={handleNext}
                 disabled={!canProceed()}

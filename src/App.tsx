@@ -37,6 +37,7 @@ import Billing from "./pages/Billing";
 import Playground from "./pages/dev/Playground";
 import DevApi from "./pages/dev/Api";
 import DevDocs from "./pages/dev/Docs";
+import AssistantProfile from "./pages/AssistantProfile";
 
 // Platform pages
 import Automation from "./pages/platform/Automation";
@@ -176,6 +177,11 @@ const App = () => (
             <Route path="/ai-assistants" element={
               <ProtectedRoute>
                 <AIAssistantsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/ai-assistants/:id" element={
+              <ProtectedRoute>
+                <AssistantProfile />
               </ProtectedRoute>
             } />
             <Route path="/ai-agents" element={
