@@ -1,21 +1,57 @@
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Check if user is already authenticated
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (isAuthenticated === 'true') {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password });
+    setIsLoading(true);
+
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Check credentials
+    if (email === 'vpu2301@gmail.com' && password === 'VOVAp1987@') {
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('userEmail', email);
+      
+      toast({
+        title: 'Login successful!',
+        description: 'Welcome to the 3days.ai platform.',
+      });
+
+      navigate('/dashboard');
+    } else {
+      toast({
+        title: 'Login failed',
+        description: 'Invalid email or password. Please try again.',
+        variant: 'destructive',
+      });
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -83,9 +119,10 @@ const Login = () => {
 
               <Button 
                 type="submit" 
-                className="w-full bg-black hover:bg-gray-800 text-white h-12 rounded-full transition-all duration-300 hover:scale-105"
+                disabled={isLoading}
+                className="w-full bg-black hover:bg-gray-800 text-white h-12 rounded-full transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Sign In
+                {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>
             </form>
 
@@ -121,6 +158,13 @@ const Login = () => {
                   Sign up
                 </Link>
               </p>
+            </div>
+
+            {/* Demo Credentials Info */}
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-800 font-medium mb-2">Demo Credentials:</p>
+              <p className="text-xs text-blue-700">Email: vpu2301@gmail.com</p>
+              <p className="text-xs text-blue-700">Password: VOVAp1987@</p>
             </div>
           </CardContent>
         </Card>

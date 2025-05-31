@@ -21,6 +21,7 @@ import Careers from "./pages/Careers";
 import JobDetail from "./pages/JobDetail";
 import Blog from "./pages/resources/Blog";
 import HowItWorks from "./pages/HowItWorks";
+import Dashboard from "./pages/Dashboard";
 
 // Platform pages
 import Automation from "./pages/platform/Automation";
@@ -108,6 +109,7 @@ const App = () => (
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/company" element={<Company />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/get-started" element={<GetStarted />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
