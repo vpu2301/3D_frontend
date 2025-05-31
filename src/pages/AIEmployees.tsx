@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -64,12 +64,9 @@ const AIEmployees = () => {
             
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                  <SidebarTrigger />
-                  <div>
-                    <h1 className="text-3xl font-light text-gray-900">AI Employees</h1>
-                    <p className="text-gray-600">Manage your artificial intelligence workforce</p>
-                  </div>
+                <div>
+                  <h1 className="text-3xl font-light text-gray-900">AI Employees</h1>
+                  <p className="text-gray-600">Manage your artificial intelligence workforce</p>
                 </div>
                 <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600">
                   <Plus className="h-4 w-4 mr-2" />

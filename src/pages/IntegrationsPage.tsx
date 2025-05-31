@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -123,6 +122,9 @@ const IntegrationsPage = () => {
     })
     .sort((a, b) => b.popularity - a.popularity);
 
+  const connectedIntegrations = filteredIntegrations.filter(i => i.status === 'Connected');
+  const availableIntegrations = filteredIntegrations.filter(i => i.status === 'Disconnected');
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
       <SidebarProvider>
@@ -133,12 +135,9 @@ const IntegrationsPage = () => {
             
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                  <SidebarTrigger />
-                  <div>
-                    <h1 className="text-3xl font-light text-gray-900">Integrations</h1>
-                    <p className="text-gray-600">Connect your favorite tools and services</p>
-                  </div>
+                <div>
+                  <h1 className="text-3xl font-light text-gray-900">Integrations</h1>
+                  <p className="text-gray-600">Connect your favorite tools and services</p>
                 </div>
                 <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600">
                   <Plus className="h-4 w-4 mr-2" />
@@ -147,7 +146,7 @@ const IntegrationsPage = () => {
               </div>
 
               {/* Filters */}
-              <div className="mb-6 flex flex-col sm:flex-row gap-4">
+              <div className="mb-8 flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
@@ -172,71 +171,127 @@ const IntegrationsPage = () => {
                 </Select>
               </div>
 
-              {/* Category Stats */}
-              <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-                {categories.slice(1).map((category) => {
-                  const count = integrations.filter(i => i.category === category).length;
-                  const connected = integrations.filter(i => i.category === category && i.status === 'Connected').length;
-                  return (
-                    <Card key={category} className="bg-white/60 border-gray-200/50">
-                      <CardContent className="p-3 text-center">
-                        <p className="text-sm font-medium text-gray-900">{category}</p>
-                        <p className="text-xs text-gray-600">{connected}/{count} connected</p>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+              {/* Quick Stats */}
+              <div className="mb-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <Card className="bg-white/80 border-gray-200/50">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-2xl font-light text-green-600">{connectedIntegrations.length}</p>
+                    <p className="text-sm text-gray-600">Connected</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white/80 border-gray-200/50">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-2xl font-light text-blue-600">{availableIntegrations.length}</p>
+                    <p className="text-sm text-gray-600">Available</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white/80 border-gray-200/50">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-2xl font-light text-purple-600">{categories.length - 1}</p>
+                    <p className="text-sm text-gray-600">Categories</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white/80 border-gray-200/50">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-2xl font-light text-orange-600">{integrations.length}</p>
+                    <p className="text-sm text-gray-600">Total</p>
+                  </CardContent>
+                </Card>
               </div>
 
-              {/* Integrations Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filteredIntegrations.map((integration) => (
-                  <Card key={integration.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center justify-between text-sm">
-                        <div className="flex items-center space-x-2">
-                          <div className="p-2 rounded-lg bg-gradient-to-br from-indigo-100 to-purple-100">
-                            <Puzzle className="h-4 w-4 text-indigo-600" />
+              {/* Connected Integrations */}
+              {connectedIntegrations.length > 0 && (
+                <div className="mb-8">
+                  <h2 className="text-xl font-medium text-gray-900 mb-4 flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                    Connected Integrations ({connectedIntegrations.length})
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {connectedIntegrations.map((integration) => (
+                      <Card key={integration.id} className="bg-white/80 border-green-200/50 hover:shadow-lg transition-all duration-200">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="flex items-center justify-between text-sm">
+                            <div className="flex items-center space-x-2">
+                              <div className="p-2 rounded-lg bg-gradient-to-br from-green-100 to-emerald-100">
+                                <Puzzle className="h-4 w-4 text-green-600" />
+                              </div>
+                              <span className="font-medium">{integration.name}</span>
+                            </div>
+                            <CheckCircle className="h-4 w-4 text-green-500" />
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
+                                {integration.category}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {integration.popularity}% popular
+                              </span>
+                            </div>
+                            <p className="text-xs text-gray-600 line-clamp-2">{integration.description}</p>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="w-full text-xs bg-green-50 text-green-700 border-green-200 hover:bg-green-100"
+                            >
+                              Configure
+                            </Button>
                           </div>
-                          <span className="font-medium">{integration.name}</span>
-                        </div>
-                        {integration.status === 'Connected' ? (
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                        ) : (
-                          <AlertCircle className="h-4 w-4 text-amber-500" />
-                        )}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
-                            {integration.category}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {integration.popularity}% popular
-                          </span>
-                        </div>
-                        <p className="text-xs text-gray-600 line-clamp-2">{integration.description}</p>
-                        <div className={`text-xs font-medium ${integration.status === 'Connected' ? 'text-green-600' : 'text-amber-600'}`}>
-                          {integration.status}
-                        </div>
-                        <Button 
-                          variant={integration.status === 'Connected' ? 'outline' : 'default'} 
-                          size="sm"
-                          className={`w-full text-xs ${
-                            integration.status === 'Connected' 
-                              ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100' 
-                              : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600'
-                          }`}
-                        >
-                          {integration.status === 'Connected' ? 'Configure' : 'Connect'}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Available Integrations */}
+              {availableIntegrations.length > 0 && (
+                <div>
+                  <h2 className="text-xl font-medium text-gray-900 mb-4 flex items-center">
+                    <Plus className="h-5 w-5 text-blue-500 mr-2" />
+                    Available Integrations ({availableIntegrations.length})
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {availableIntegrations.map((integration) => (
+                      <Card key={integration.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="flex items-center justify-between text-sm">
+                            <div className="flex items-center space-x-2">
+                              <div className="p-2 rounded-lg bg-gradient-to-br from-indigo-100 to-purple-100">
+                                <Puzzle className="h-4 w-4 text-indigo-600" />
+                              </div>
+                              <span className="font-medium">{integration.name}</span>
+                            </div>
+                            <AlertCircle className="h-4 w-4 text-amber-500" />
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                                {integration.category}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {integration.popularity}% popular
+                              </span>
+                            </div>
+                            <p className="text-xs text-gray-600 line-clamp-2">{integration.description}</p>
+                            <Button 
+                              variant="default" 
+                              size="sm"
+                              className="w-full text-xs bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                            >
+                              Connect
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {filteredIntegrations.length === 0 && (
                 <div className="text-center py-12">

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -77,12 +77,9 @@ const AIAssistantsPage = () => {
             
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                  <SidebarTrigger />
-                  <div>
-                    <h1 className="text-3xl font-light text-gray-900">AI Assistants</h1>
-                    <p className="text-gray-600">Configure and manage your AI-powered assistants</p>
-                  </div>
+                <div>
+                  <h1 className="text-3xl font-light text-gray-900">AI Assistants</h1>
+                  <p className="text-gray-600">Configure and manage your AI-powered assistants</p>
                 </div>
                 <Button 
                   onClick={() => setShowCreateDialog(true)}
