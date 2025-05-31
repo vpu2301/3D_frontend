@@ -12,29 +12,45 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   useEffect(() => {
     const checkAuth = () => {
+      console.log('ProtectedRoute: Checking authentication...');
       const authStatus = localStorage.getItem('isAuthenticated');
-      setIsAuthenticated(authStatus === 'true');
+      const userEmail = localStorage.getItem('userEmail');
+      
+      console.log('ProtectedRoute: Auth status from localStorage:', authStatus);
+      console.log('ProtectedRoute: User email from localStorage:', userEmail);
+      
+      const isAuth = authStatus === 'true';
+      setIsAuthenticated(isAuth);
       setIsChecking(false);
+      
+      console.log('ProtectedRoute: Final auth decision:', isAuth);
     };
 
-    checkAuth();
+    // Add a small delay to ensure localStorage is updated
+    const timeoutId = setTimeout(checkAuth, 100);
+    
+    return () => clearTimeout(timeoutId);
   }, []);
+
+  console.log('ProtectedRoute: Rendering with state:', { isChecking, isAuthenticated });
 
   if (isChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-600">Loading...</p>
+          <p className="mt-2 text-sm text-gray-600">Checking authentication...</p>
         </div>
       </div>
     );
   }
 
   if (!isAuthenticated) {
+    console.log('ProtectedRoute: Not authenticated, redirecting to login');
     return <Navigate to="/login" replace />;
   }
 
+  console.log('ProtectedRoute: Authenticated, rendering children');
   return <>{children}</>;
 };
 

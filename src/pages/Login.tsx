@@ -19,8 +19,12 @@ const Login = () => {
 
   // Check if user is already authenticated
   useEffect(() => {
+    console.log('Login: Checking if already authenticated...');
     const isAuthenticated = localStorage.getItem('isAuthenticated');
+    console.log('Login: Current auth status:', isAuthenticated);
+    
     if (isAuthenticated === 'true') {
+      console.log('Login: Already authenticated, redirecting to dashboard');
       navigate('/dashboard');
     }
   }, [navigate]);
@@ -29,21 +33,41 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    console.log('Login: Attempting login with email:', email);
+
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Check credentials
     if (email === 'vpu2301@gmail.com' && password === 'VOVAp1987@') {
+      console.log('Login: Credentials valid, setting authentication...');
+      
+      // Clear any existing auth data first
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('userEmail');
+      
+      // Set new auth data
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('userEmail', email);
+      
+      console.log('Login: Authentication set, localStorage now contains:', {
+        isAuthenticated: localStorage.getItem('isAuthenticated'),
+        userEmail: localStorage.getItem('userEmail')
+      });
       
       toast({
         title: 'Login successful!',
         description: 'Welcome to the 3days.ai platform.',
       });
 
-      navigate('/dashboard');
+      console.log('Login: Navigating to dashboard...');
+      
+      // Add a small delay to ensure localStorage is fully written
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 100);
     } else {
+      console.log('Login: Invalid credentials provided');
       toast({
         title: 'Login failed',
         description: 'Invalid email or password. Please try again.',
