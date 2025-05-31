@@ -42,7 +42,6 @@ const Signup = () => {
     }
     
     console.log('Signup submitted:', { ...formData, password: '[HIDDEN]', confirmPassword: '[HIDDEN]' });
-    // In a real app, this would submit to an API
     navigate('/dashboard');
   };
 
@@ -69,7 +68,6 @@ const Signup = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            {/* Form */}
             <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle className="text-2xl">Create Your Free Account</CardTitle>
@@ -154,7 +152,6 @@ const Signup = () => {
               </CardContent>
             </Card>
 
-            {/* Benefits */}
             <div className="space-y-8">
               <Card className="border-blue-200 bg-blue-50">
                 <CardContent className="p-6">

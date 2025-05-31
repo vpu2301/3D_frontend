@@ -33,6 +33,7 @@ import NotFound from './pages/NotFound';
 function App() {
   console.log('App: Rendering App component');
   console.log('App: Current pathname:', window.location.pathname);
+  console.log('App: Signup component imported:', !!Signup);
   
   return (
     <Router>
