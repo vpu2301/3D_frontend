@@ -73,57 +73,59 @@ const Dashboard = () => {
   ];
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <AppSidebar />
-        <SidebarInset className="flex-1">
-          <LoggedInHeader userEmail={userEmail} />
-          <AgentsNavbar />
-          
-          {/* Main Content */}
-          <main className="flex-1 p-6">
-            <div className="flex items-center space-x-4 mb-6">
-              <SidebarTrigger />
-              <div>
-                <h1 className="text-3xl font-light text-gray-900">Dashboard</h1>
-                <p className="text-gray-600">Welcome back! Here's what's happening with your AI automation platform today.</p>
-              </div>
-            </div>
-
-            {/* Metrics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {metrics.map((metric, index) => (
-                <MetricCard key={index} {...metric} />
-              ))}
-            </div>
-
-            {/* Dashboard Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-              <QuickActions />
-              <RecentActivity />
-            </div>
-
-            {/* Performance Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-medium flex items-center">
-                  <TrendingUp className="h-5 w-5 mr-2" />
-                  Performance Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">Performance charts and analytics will be displayed here</p>
-                  </div>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <SidebarProvider>
+        <div className="flex w-full flex-1">
+          <AppSidebar />
+          <SidebarInset className="flex-1 flex flex-col">
+            <LoggedInHeader userEmail={userEmail} />
+            <AgentsNavbar />
+            
+            {/* Main Content */}
+            <main className="flex-1 p-6">
+              <div className="flex items-center space-x-4 mb-6">
+                <SidebarTrigger />
+                <div>
+                  <h1 className="text-3xl font-light text-gray-900">Dashboard</h1>
+                  <p className="text-gray-600">Welcome back! Here's what's happening with your AI automation platform today.</p>
                 </div>
-              </CardContent>
-            </Card>
-          </main>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+              </div>
+
+              {/* Metrics Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {metrics.map((metric, index) => (
+                  <MetricCard key={index} {...metric} />
+                ))}
+              </div>
+
+              {/* Dashboard Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <QuickActions />
+                <RecentActivity />
+              </div>
+
+              {/* Performance Chart */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-xl font-medium flex items-center">
+                    <TrendingUp className="h-5 w-5 mr-2" />
+                    Performance Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
+                    <div className="text-center">
+                      <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600">Performance charts and analytics will be displayed here</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </main>
+          </SidebarInset>
+        </div>
+      </SidebarProvider>
+    </div>
   );
 };
 

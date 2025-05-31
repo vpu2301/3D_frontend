@@ -1,8 +1,9 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -95,114 +96,126 @@ import SystemStatus from "./pages/support/SystemStatus";
 
 const queryClient = new QueryClient();
 
+// Component to conditionally render Header and Footer
+const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  const isDashboard = location.pathname === '/dashboard';
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {!isDashboard && <Header />}
+      <main className={isDashboard ? 'flex-1' : 'flex-grow'}>
+        {children}
+      </main>
+      {!isDashboard && <Footer />}
+    </div>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/features" element={<Features />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/company" element={<Company />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/get-started" element={<GetStarted />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/start-free-trial" element={<StartFreeTrial />} />
-              <Route path="/watch-demo" element={<WatchDemo />} />
-              <Route path="/schedule-demo" element={<ScheduleDemo />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/careers/job/:id" element={<JobDetail />} />
-              <Route path="/how-it-works" element={<HowItWorks />} />
-              
-              {/* Resources routes */}
-              <Route path="/resources" element={<Training />} />
-              <Route path="/resources/blog" element={<Blog />} />
-              <Route path="/resources/implementation-guide" element={<ImplementationGuide />} />
-              <Route path="/resources/best-practices" element={<BestPractices />} />
-              <Route path="/resources/training" element={<Training />} />
-              <Route path="/resources/community" element={<Community />} />
-              
-              {/* Platform routes */}
-              <Route path="/platform/automation" element={<Automation />} />
-              <Route path="/platform/workflow" element={<Workflow />} />
-              <Route path="/platform/analytics" element={<Analytics />} />
-              <Route path="/platform/integrations" element={<Integrations />} />
-              <Route path="/platform/documents" element={<Documents />} />
-              <Route path="/platform/tasks" element={<Tasks />} />
-              <Route path="/platform/api" element={<Api />} />
-              <Route path="/platform/security" element={<Security />} />
-              
-              {/* Solutions routes */}
-              <Route path="/solutions" element={<Sales />} />
-              <Route path="/solutions/sales" element={<Sales />} />
-              <Route path="/solutions/marketing" element={<Marketing />} />
-              <Route path="/solutions/operations" element={<Operations />} />
-              <Route path="/solutions/hr" element={<Hr />} />
-              <Route path="/solutions/finance" element={<Finance />} />
-              <Route path="/solutions/support" element={<Support />} />
-              <Route path="/solutions/it" element={<It />} />
-              <Route path="/solutions/legal" element={<Legal />} />
-              
-              {/* AI Employee solution routes */}
-              <Route path="/solutions/aria" element={<Aria />} />
-              <Route path="/solutions/atlas" element={<Atlas />} />
-              <Route path="/solutions/felix" element={<Felix />} />
-              <Route path="/solutions/maya" element={<Maya />} />
-              <Route path="/solutions/sage" element={<Sage />} />
-              <Route path="/solutions/nova" element={<Nova />} />
-              <Route path="/solutions/emma" element={<Emma />} />
-              
-              {/* Use Cases routes */}
-              <Route path="/use-cases/document-processing" element={<DocumentProcessing />} />
-              <Route path="/use-cases/data-entry" element={<DataEntry />} />
-              <Route path="/use-cases/customer-onboarding" element={<CustomerOnboarding />} />
-              <Route path="/use-cases/compliance-monitoring" element={<ComplianceMonitoring />} />
-              <Route path="/use-cases/report-generation" element={<ReportGeneration />} />
-              <Route path="/use-cases/email-management" element={<EmailManagement />} />
-              
-              {/* Roles routes */}
-              <Route path="/roles/ceo" element={<CEO />} />
-              <Route path="/roles/operations-manager" element={<OperationsManager />} />
-              <Route path="/roles/it-director" element={<ITDirector />} />
-              <Route path="/roles/finance-teams" element={<FinanceTeams />} />
-              <Route path="/roles/hr-professionals" element={<HRProfessionals />} />
-              <Route path="/roles/sales-leaders" element={<SalesLeaders />} />
-              
-              {/* Product routes */}
-              <Route path="/product/ai-assistants" element={<AIAssistants />} />
-              <Route path="/product/agents" element={<Agents />} />
-              <Route path="/product/workflow-builder" element={<WorkflowBuilder />} />
-              <Route path="/product/fine-tuning" element={<FineTuning />} />
-              
-              {/* Customer routes */}
-              <Route path="/customers/success-stories" element={<SuccessStories />} />
-              <Route path="/customers/case-studies" element={<CaseStudies />} />
-              <Route path="/customers/testimonials" element={<Testimonials />} />
-              <Route path="/customers/roi-calculator" element={<RoiCalculator />} />
-              
-              {/* Support routes */}
-              <Route path="/support/help-center" element={<HelpCenter />} />
-              <Route path="/support/documentation" element={<Documentation />} />
-              <Route path="/support/contact" element={<ContactCenter />} />
-              <Route path="/support/status" element={<SystemStatus />} />
-              
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <LayoutWrapper>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/company" element={<Company />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/get-started" element={<GetStarted />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/start-free-trial" element={<StartFreeTrial />} />
+            <Route path="/watch-demo" element={<WatchDemo />} />
+            <Route path="/schedule-demo" element={<ScheduleDemo />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/careers/job/:id" element={<JobDetail />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
+            
+            {/* Resources routes */}
+            <Route path="/resources" element={<Training />} />
+            <Route path="/resources/blog" element={<Blog />} />
+            <Route path="/resources/implementation-guide" element={<ImplementationGuide />} />
+            <Route path="/resources/best-practices" element={<BestPractices />} />
+            <Route path="/resources/training" element={<Training />} />
+            <Route path="/resources/community" element={<Community />} />
+            
+            {/* Platform routes */}
+            <Route path="/platform/automation" element={<Automation />} />
+            <Route path="/platform/workflow" element={<Workflow />} />
+            <Route path="/platform/analytics" element={<Analytics />} />
+            <Route path="/platform/integrations" element={<Integrations />} />
+            <Route path="/platform/documents" element={<Documents />} />
+            <Route path="/platform/tasks" element={<Tasks />} />
+            <Route path="/platform/api" element={<Api />} />
+            <Route path="/platform/security" element={<Security />} />
+            
+            {/* Solutions routes */}
+            <Route path="/solutions" element={<Sales />} />
+            <Route path="/solutions/sales" element={<Sales />} />
+            <Route path="/solutions/marketing" element={<Marketing />} />
+            <Route path="/solutions/operations" element={<Operations />} />
+            <Route path="/solutions/hr" element={<Hr />} />
+            <Route path="/solutions/finance" element={<Finance />} />
+            <Route path="/solutions/support" element={<Support />} />
+            <Route path="/solutions/it" element={<It />} />
+            <Route path="/solutions/legal" element={<Legal />} />
+            
+            {/* AI Employee solution routes */}
+            <Route path="/solutions/aria" element={<Aria />} />
+            <Route path="/solutions/atlas" element={<Atlas />} />
+            <Route path="/solutions/felix" element={<Felix />} />
+            <Route path="/solutions/maya" element={<Maya />} />
+            <Route path="/solutions/sage" element={<Sage />} />
+            <Route path="/solutions/nova" element={<Nova />} />
+            <Route path="/solutions/emma" element={<Emma />} />
+            
+            {/* Use Cases routes */}
+            <Route path="/use-cases/document-processing" element={<DocumentProcessing />} />
+            <Route path="/use-cases/data-entry" element={<DataEntry />} />
+            <Route path="/use-cases/customer-onboarding" element={<CustomerOnboarding />} />
+            <Route path="/use-cases/compliance-monitoring" element={<ComplianceMonitoring />} />
+            <Route path="/use-cases/report-generation" element={<ReportGeneration />} />
+            <Route path="/use-cases/email-management" element={<EmailManagement />} />
+            
+            {/* Roles routes */}
+            <Route path="/roles/ceo" element={<CEO />} />
+            <Route path="/roles/operations-manager" element={<OperationsManager />} />
+            <Route path="/roles/it-director" element={<ITDirector />} />
+            <Route path="/roles/finance-teams" element={<FinanceTeams />} />
+            <Route path="/roles/hr-professionals" element={<HRProfessionals />} />
+            <Route path="/roles/sales-leaders" element={<SalesLeaders />} />
+            
+            {/* Product routes */}
+            <Route path="/product/ai-assistants" element={<AIAssistants />} />
+            <Route path="/product/agents" element={<Agents />} />
+            <Route path="/product/workflow-builder" element={<WorkflowBuilder />} />
+            <Route path="/product/fine-tuning" element={<FineTuning />} />
+            
+            {/* Customer routes */}
+            <Route path="/customers/success-stories" element={<SuccessStories />} />
+            <Route path="/customers/case-studies" element={<CaseStudies />} />
+            <Route path="/customers/testimonials" element={<Testimonials />} />
+            <Route path="/customers/roi-calculator" element={<RoiCalculator />} />
+            
+            {/* Support routes */}
+            <Route path="/support/help-center" element={<HelpCenter />} />
+            <Route path="/support/documentation" element={<Documentation />} />
+            <Route path="/support/contact" element={<ContactCenter />} />
+            <Route path="/support/status" element={<SystemStatus />} />
+            
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </LayoutWrapper>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
