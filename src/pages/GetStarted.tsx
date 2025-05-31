@@ -26,15 +26,15 @@ const GetStarted = () => {
     },
     {
       id: 2,
-      title: "Choose Your Plan",
-      description: "Select the perfect plan for your needs",
+      title: "Setup Your Workspace",
+      description: "Configure your AI assistants and workflows",
       icon: Zap,
       completed: false
     },
     {
       id: 3,
-      title: "Setup Your Workspace",
-      description: "Configure your AI employees and workflows",
+      title: "Start Automating",
+      description: "Deploy your first AI assistant and see results",
       icon: Shield,
       completed: false
     }
@@ -51,7 +51,7 @@ const GetStarted = () => {
               Get Started with 3days.ai
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Transform your business with AI employees in just a few simple steps
+              Transform your business with AI assistants in just a few simple steps
             </p>
           </div>
 
@@ -79,11 +79,11 @@ const GetStarted = () => {
                       className="w-full"
                       onClick={() => {
                         if (step.id === 1) navigate('/signup');
-                        else if (step.id === 2) navigate('/pricing');
+                        else if (step.id === 2) navigate('/dashboard');
                         else if (step.id === 3) navigate('/dashboard');
                       }}
                     >
-                      {step.id === 1 ? 'Sign Up Now' : step.id === 2 ? 'View Plans' : 'Access Dashboard'}
+                      {step.id === 1 ? 'Sign Up Now' : step.id === 2 ? 'Setup Workspace' : 'Start Now'}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   )}
@@ -98,7 +98,7 @@ const GetStarted = () => {
               onClick={() => navigate('/signup')}
               className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
             >
-              Sign Up Free
+              Sign Up Now
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>

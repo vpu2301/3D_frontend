@@ -26,11 +26,11 @@ const Signup = () => {
   }, []);
 
   const benefits = [
-    "Free AI workers to get started",
-    "No credit card required", 
-    "Instant access to automation",
+    "Free AI assistants to get started",
+    "Instant access to automation", 
+    "Easy setup in minutes",
     "24/7 support included",
-    "Easy setup in minutes"
+    "No complex setup required"
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -60,17 +60,17 @@ const Signup = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Sign Up for Free Workers
+              Sign Up for 3days.ai
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Get started with free AI workers and transform your business operations today.
+              Get started with AI assistants and transform your business operations today.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             <Card className="shadow-lg">
               <CardHeader>
-                <CardTitle className="text-2xl">Create Your Free Account</CardTitle>
+                <CardTitle className="text-2xl">Create Your Account</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -145,7 +145,7 @@ const Signup = () => {
                   </div>
 
                   <Button type="submit" className="w-full" size="lg">
-                    Sign Up for Free
+                    Create Account
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </form>
