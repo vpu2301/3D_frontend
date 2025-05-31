@@ -1,352 +1,164 @@
-import { ArrowRight, Zap, Brain, Shield, BarChart3, Users, Clock, Workflow, Database, Lock, Globe, Smartphone } from 'lucide-react';
+
+import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+import { 
+  Bot, 
+  Workflow, 
+  BarChart, 
+  Shield, 
+  Zap, 
+  Users,
+  ArrowRight,
+  CheckCircle,
+  Clock,
+  DollarSign
+} from 'lucide-react';
 
 const Features = () => {
-  const mainFeatures = [
+  const features = [
     {
-      icon: Brain,
-      title: 'AI-Powered Digital Workers',
-      description: 'Intelligent automation that learns and adapts to your business processes',
-      details: [
-        'Natural language processing for document understanding',
-        'Machine learning algorithms that improve over time',
-        'Context-aware decision making capabilities',
-        'Multi-modal AI supporting text, images, and data'
-      ],
-      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80'
+      icon: Bot,
+      title: "AI Assistants",
+      description: "Intelligent virtual employees that understand context and handle complex tasks autonomously.",
+      benefits: ["Natural language processing", "Task automation", "24/7 availability"]
     },
     {
       icon: Workflow,
-      title: 'Visual Workflow Builder',
-      description: 'Drag-and-drop interface to create complex automation workflows',
-      details: [
-        'No-code workflow design with intuitive interface',
-        'Pre-built templates for common business processes',
-        'Real-time workflow testing and debugging',
-        'Version control and rollback capabilities'
-      ],
-      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80'
+      title: "Workflow Automation",
+      description: "Seamlessly integrate AI into your existing processes with our visual workflow builder.",
+      benefits: ["Drag-and-drop interface", "Pre-built templates", "Custom integrations"]
     },
     {
-      icon: Database,
-      title: 'Universal Integrations',
-      description: 'Connect with 200+ applications and systems seamlessly',
-      details: [
-        'API-first architecture for maximum flexibility',
-        'Pre-built connectors for popular business tools',
-        'Custom integration development support',
-        'Real-time data synchronization across platforms'
-      ],
-      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      icon: BarChart3,
-      title: 'Advanced Analytics',
-      description: 'Deep insights into automation performance and ROI',
-      details: [
-        'Real-time performance monitoring and alerts',
-        'Comprehensive ROI tracking and reporting',
-        'Predictive analytics for process optimization',
-        'Custom dashboards and business intelligence'
-      ],
-      image: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=800&q=80'
-    }
-  ];
-
-  const capabilities = [
-    {
-      icon: Clock,
-      title: 'Time Tracking',
-      description: 'Monitor time saved across all automated processes'
-    },
-    {
-      icon: Users,
-      title: 'Team Collaboration',
-      description: 'Built-in tools for team coordination and task management'
+      icon: BarChart,
+      title: "Analytics & Insights",
+      description: "Real-time dashboards and detailed reports to track performance and ROI.",
+      benefits: ["Performance metrics", "Cost savings tracking", "Predictive analytics"]
     },
     {
       icon: Shield,
-      title: 'Enterprise Security',
-      description: 'Bank-grade security with compliance certifications'
+      title: "Enterprise Security",
+      description: "Bank-level security with compliance standards that enterprises trust.",
+      benefits: ["SOC 2 compliance", "Data encryption", "Access controls"]
     },
     {
-      icon: Globe,
-      title: 'Global Deployment',
-      description: 'Multi-region deployment with local data residency'
+      icon: Zap,
+      title: "Lightning Fast",
+      description: "Deploy AI employees in minutes with our pre-trained models and templates.",
+      benefits: ["Quick deployment", "Pre-configured models", "Instant results"]
     },
     {
-      icon: Smartphone,
-      title: 'Mobile Access',
-      description: 'Full-featured mobile apps for iOS and Android'
-    },
-    {
-      icon: Lock,
-      title: 'Access Control',
-      description: 'Granular permissions and role-based access management'
-    }
-  ];
-
-  const useCases = [
-    {
-      title: 'Document Processing',
-      description: 'Extract, analyze, and process documents automatically',
-      timesSaved: '85%',
-      processes: ['Invoice processing', 'Contract analysis', 'Data extraction', 'Compliance checking'],
-      image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      title: 'Customer Service',
-      description: 'Automate ticket routing, responses, and escalations',
-      timesSaved: '70%',
-      processes: ['Ticket classification', 'Auto-responses', 'Escalation rules', 'Knowledge base updates'],
-      image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      title: 'Data Entry & Migration',
-      description: 'Eliminate manual data entry with intelligent automation',
-      timesSaved: '95%',
-      processes: ['CRM updates', 'Database migration', 'Form processing', 'Data validation'],
-      image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      title: 'Report Generation',
-      description: 'Create and distribute reports automatically',
-      timesSaved: '80%',
-      processes: ['Data collection', 'Report formatting', 'Distribution', 'Performance tracking'],
-      image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80'
+      icon: Users,
+      title: "Team Collaboration",
+      description: "Built for teams with role-based access and collaborative workspaces.",
+      benefits: ["Role management", "Shared workspaces", "Team analytics"]
     }
   ];
 
   return (
-    <div className="min-h-screen pt-16 bg-gradient-to-b from-slate-50 to-white">
-      {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-4xl mx-auto mb-16">
-            <h1 className="text-6xl md:text-7xl font-light text-gray-900 mb-8 tracking-tight leading-none">
+    <div className="min-h-screen bg-white">
+      <Header />
+      
+      <main className="pt-24">
+        {/* Hero Section */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto text-center">
+            <h1 className="text-5xl md:text-6xl font-light text-gray-900 mb-6 tracking-tight">
               Powerful Features for
-              <span className="block font-medium bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Intelligent Automation
-              </span>
+              <span className="block text-blue-600">Modern Businesses</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-12 font-light leading-relaxed">
-              Everything you need to automate complex business processes with AI-powered 
-              digital workers that think, learn, and adapt to your organization.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-black hover:bg-gray-800 text-white rounded-full py-3"
-                asChild
-              >
-                <Link to="/start-free-trial">
-                  Start Free Trial
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full py-3"
-                asChild
-              >
-                <Link to="/schedule-demo">Schedule Demo</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Features with Images */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              Core Platform Features
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              Built from the ground up for enterprise-scale automation.
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto font-light">
+              Everything you need to deploy, manage, and scale AI employees across your organization.
             </p>
           </div>
+        </section>
 
-          <div className="space-y-20">
-            {mainFeatures.map((feature, index) => (
-              <div key={index} className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
-                <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
-                  <div className="flex items-center mb-6">
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 mr-6">
-                      <feature.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-3xl font-medium text-gray-900 mb-2">{feature.title}</h3>
-                      <p className="text-gray-600 text-lg">{feature.description}</p>
-                    </div>
+        {/* Features Grid */}
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {features.map((feature, index) => (
+                <div key={index} className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                    <feature.icon className="h-6 w-6 text-blue-600" />
                   </div>
-                  <ul className="space-y-4">
-                    {feature.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-4 mt-3 flex-shrink-0"></div>
-                        <span className="text-gray-700 text-lg">{detail}</span>
+                  <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
+                  <p className="text-gray-600 mb-6">{feature.description}</p>
+                  <ul className="space-y-2">
+                    {feature.benefits.map((benefit, benefitIndex) => (
+                      <li key={benefitIndex} className="flex items-center text-sm text-gray-600">
+                        <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                        {benefit}
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div className={index % 2 === 1 ? 'lg:col-start-1 lg:row-start-1' : ''}>
-                  <div className="relative">
-                    <img 
-                      src={feature.image} 
-                      alt={feature.title}
-                      className="w-full h-80 object-cover rounded-3xl shadow-2xl"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl"></div>
-                  </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Benefits Section */}
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-light text-gray-900 mb-4">
+                Why Businesses Choose 3days.ai
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Clock className="h-8 w-8 text-green-600" />
                 </div>
+                <h3 className="text-2xl font-medium text-gray-900 mb-4">Save Time</h3>
+                <p className="text-gray-600">
+                  Reduce manual work by up to 80% with intelligent automation that handles repetitive tasks.
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Additional Capabilities */}
-      <section className="py-20 bg-gray-50 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              Built for Enterprise
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              Enterprise-grade capabilities that scale with your business.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {capabilities.map((capability, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/80 backdrop-blur-sm">
-                <CardContent className="p-6 text-center">
-                  <div className="p-3 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-4">
-                    <capability.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">{capability.title}</h3>
-                  <p className="text-gray-600 text-sm">{capability.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Use Cases with Images */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">
-              Real-World Use Cases
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              See how organizations are using 3days.ai to transform their operations.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {useCases.map((useCase, index) => (
-              <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm overflow-hidden">
-                <div className="relative h-48">
-                  <img 
-                    src={useCase.image} 
-                    alt={useCase.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-4 right-4">
-                    <Badge className="bg-green-100 text-green-800 border-green-200">
-                      {useCase.timesSaved} time saved
-                    </Badge>
-                  </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <DollarSign className="h-8 w-8 text-blue-600" />
                 </div>
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{useCase.title}</h3>
-                  <p className="text-gray-600 mb-6">{useCase.description}</p>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 mb-3">Common Processes:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {useCase.processes.map((process, idx) => (
-                        <Badge key={idx} variant="secondary" className="text-xs">
-                          {process}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                <h3 className="text-2xl font-medium text-gray-900 mb-4">Cut Costs</h3>
+                <p className="text-gray-600">
+                  Reduce operational costs by 60% while maintaining or improving service quality.
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <BarChart className="h-8 w-8 text-purple-600" />
+                </div>
+                <h3 className="text-2xl font-medium text-gray-900 mb-4">Scale Fast</h3>
+                <p className="text-gray-600">
+                  Handle increasing workloads without proportional increases in staff or infrastructure costs.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Technical Specs */}
-      <section className="py-20 bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-light mb-6 tracking-tight">
-              Technical Specifications
+        {/* CTA Section */}
+        <section className="py-20 bg-blue-600">
+          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 className="text-4xl font-light text-white mb-6">
+              Ready to Experience These Features?
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto font-light">
-              Enterprise-grade infrastructure built for scale and reliability.
+            <p className="text-xl text-blue-100 mb-8">
+              Start your free trial today and see how AI employees can transform your business.
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-4xl font-light mb-2">99.9%</div>
-              <div className="text-gray-400">Uptime SLA</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-light mb-2">200+</div>
-              <div className="text-gray-400">Integrations</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-light mb-2">SOC 2</div>
-              <div className="text-gray-400">Compliant</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-light mb-2">24/7</div>
-              <div className="text-gray-400">Support</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Get Started?</h2>
-          <p className="text-xl mb-12 opacity-90 font-light">
-            Experience the power of AI automation with a free 30-day trial.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3"
-              asChild
-            >
-              <Link to="/start-free-trial">
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg rounded-full shadow-lg" asChild>
+              <Link to="/get-started">
                 Start Free Trial
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-white/30 text-white hover:bg-white/10 rounded-full py-3"
-              asChild
-            >
-              <Link to="/contact">Contact Sales</Link>
-            </Button>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
     </div>
   );
 };
