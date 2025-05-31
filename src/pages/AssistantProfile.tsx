@@ -138,7 +138,11 @@ const AssistantProfile = () => {
                   >
                     {assistant.status}
                   </Badge>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => navigate(`/ai-assistants/${id}/configure`)}
+                  >
                     <Settings className="h-4 w-4 mr-2" />
                     Configure
                   </Button>

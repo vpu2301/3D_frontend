@@ -38,6 +38,7 @@ import Playground from "./pages/dev/Playground";
 import DevApi from "./pages/dev/Api";
 import DevDocs from "./pages/dev/Docs";
 import AssistantProfile from "./pages/AssistantProfile";
+import AssistantConfiguration from "./pages/AssistantConfiguration";
 
 // Platform pages
 import Automation from "./pages/platform/Automation";
@@ -182,6 +183,11 @@ const App = () => (
             <Route path="/ai-assistants/:id" element={
               <ProtectedRoute>
                 <AssistantProfile />
+              </ProtectedRoute>
+            } />
+            <Route path="/ai-assistants/:id/configure" element={
+              <ProtectedRoute>
+                <AssistantConfiguration />
               </ProtectedRoute>
             } />
             <Route path="/ai-agents" element={
