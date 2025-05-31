@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,7 +26,6 @@ import Chat from "./pages/Chat";
 import AIEmployees from "./pages/AIEmployees";
 import Teams from "./pages/Teams";
 import TeamDetail from "./pages/TeamDetail";
-import AIAssistantsPage from "./pages/AIAssistantsPage";
 import AIAgents from "./pages/AIAgents";
 import AIAgentsPage from "./pages/AIAgentsPage";
 import Workflows from "./pages/Workflows";
@@ -183,11 +181,6 @@ const App = () => (
             <Route path="/teams/:id" element={
               <ProtectedRoute>
                 <TeamDetail />
-              </ProtectedRoute>
-            } />
-            <Route path="/ai-assistants" element={
-              <ProtectedRoute>
-                <AIAssistantsPage />
               </ProtectedRoute>
             } />
             <Route path="/ai-assistants/:id" element={
