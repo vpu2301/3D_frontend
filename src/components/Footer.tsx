@@ -98,7 +98,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/solutions/nova" className="text-gray-400 hover:text-stone-200 transition-colors">
-                  Nova (Legal Specialist)
+                  Nova (HR Specialist)
                 </Link>
               </li>
               <li>

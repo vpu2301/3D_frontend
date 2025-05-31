@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, MessageSquare, Brain, Clock, Globe, Mic, FileText, Users, Zap, Shield, Calendar, Mail, MessageCircle, Calculator, TrendingUp, Search, Scale, PhoneCall } from 'lucide-react';
+import { ArrowRight, MessageSquare, Brain, Clock, Globe, Mic, FileText, Users, Zap, Shield, Calendar, Mail, MessageCircle, Calculator, TrendingUp, Search, UserCheck, PhoneCall } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AIAssistants = () => {
@@ -81,10 +81,10 @@ const AIAssistants = () => {
     },
     {
       name: 'Nova',
-      title: 'Legal Specialist',
-      description: 'Streamlines legal workflows with intelligent contract analysis, compliance monitoring, and legal research capabilities.',
-      icon: Scale,
-      color: 'from-amber-500 to-orange-500',
+      title: 'HR Specialist',
+      description: 'Revolutionizes human resources with intelligent automation for recruitment, employee engagement, and performance management that puts people first.',
+      icon: UserCheck,
+      color: 'from-rose-500 to-pink-500',
       link: '/solutions/nova'
     },
     {
