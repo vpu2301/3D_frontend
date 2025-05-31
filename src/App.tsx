@@ -34,9 +34,9 @@ import Help from "./pages/Help";
 import ProtectedRoute from "./components/ProtectedRoute";
 import TaskApproval from "./pages/TaskApproval";
 import Billing from "./pages/Billing";
-import Playground from "./pages/Playground";
-import DevApi from "./pages/DevApi";
-import DevDocs from "./pages/DevDocs";
+import Playground from "./pages/dev/Playground";
+import DevApi from "./pages/dev/Api";
+import DevDocs from "./pages/dev/Docs";
 
 // Platform pages
 import Automation from "./pages/platform/Automation";
