@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { 
   LayoutDashboard, 
@@ -82,15 +83,18 @@ const settingsItems = [
 
 export function AppSidebar() {
   const location = useLocation();
+  const { state } = useSidebar();
 
   return (
-    <Sidebar className="border-r">
+    <Sidebar className="border-r" collapsible="icon">
       <SidebarHeader className="p-4">
         <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center">
+          <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center flex-shrink-0">
             <div className="w-2 h-2 bg-white rounded-sm"></div>
           </div>
-          <span className="font-medium text-gray-900">Platform</span>
+          {state === "expanded" && (
+            <span className="font-medium text-gray-900 truncate">3days.ai</span>
+          )}
         </div>
       </SidebarHeader>
       
@@ -104,6 +108,7 @@ export function AppSidebar() {
                   <SidebarMenuButton 
                     asChild 
                     isActive={location.pathname === item.url}
+                    tooltip={state === "collapsed" ? item.title : undefined}
                   >
                     <Link to={item.url}>
                       <item.icon className="h-4 w-4" />
@@ -125,6 +130,7 @@ export function AppSidebar() {
                   <SidebarMenuButton 
                     asChild 
                     isActive={location.pathname === item.url}
+                    tooltip={state === "collapsed" ? item.title : undefined}
                   >
                     <Link to={item.url}>
                       <item.icon className="h-4 w-4" />
@@ -139,9 +145,11 @@ export function AppSidebar() {
       </SidebarContent>
       
       <SidebarFooter className="p-4">
-        <div className="text-xs text-gray-500">
-          3days.ai Platform v1.0
-        </div>
+        {state === "expanded" && (
+          <div className="text-xs text-gray-500">
+            3days.ai Platform v1.0
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
