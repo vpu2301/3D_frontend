@@ -14,10 +14,10 @@ const AIAssistantsPage = () => {
   const [userEmail, setUserEmail] = useState('');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [assistants, setAssistants] = useState([
-    { id: 1, name: 'Customer Support Assistant', type: 'Support', conversations: 145, status: 'Active', gradient: 'from-sky-100 to-blue-100' },
-    { id: 2, name: 'Sales Assistant', type: 'Sales', conversations: 89, status: 'Active', gradient: 'from-orange-100 to-red-100' },
-    { id: 3, name: 'Technical Helper', type: 'Technical', conversations: 67, status: 'Active', gradient: 'from-slate-100 to-gray-100' },
-    { id: 4, name: 'HR Assistant', type: 'HR', conversations: 34, status: 'Idle', gradient: 'from-lime-100 to-green-100' },
+    { id: 1, name: 'Customer Support Assistant', type: 'Support', conversations: 145, status: 'Active', iconColor: 'text-sky-600', bgColor: 'from-sky-100 to-blue-100' },
+    { id: 2, name: 'Sales Assistant', type: 'Sales', conversations: 89, status: 'Active', iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-red-100' },
+    { id: 3, name: 'Technical Helper', type: 'Technical', conversations: 67, status: 'Active', iconColor: 'text-slate-600', bgColor: 'from-slate-100 to-gray-100' },
+    { id: 4, name: 'HR Assistant', type: 'HR', conversations: 34, status: 'Idle', iconColor: 'text-lime-600', bgColor: 'from-lime-100 to-green-100' },
   ]);
 
   useEffect(() => {
@@ -36,17 +36,18 @@ const AIAssistantsPage = () => {
 
   const handleAssistantCreated = (newAssistant: any) => {
     // Add gradient based on type
-    const gradients = [
-      'from-violet-100 to-purple-100',
-      'from-emerald-100 to-teal-100',
-      'from-amber-100 to-yellow-100',
-      'from-rose-100 to-pink-100',
-      'from-cyan-100 to-blue-100'
+    const gradientOptions = [
+      { iconColor: 'text-violet-600', bgColor: 'from-violet-100 to-purple-100' },
+      { iconColor: 'text-emerald-600', bgColor: 'from-emerald-100 to-teal-100' },
+      { iconColor: 'text-amber-600', bgColor: 'from-amber-100 to-yellow-100' },
+      { iconColor: 'text-rose-600', bgColor: 'from-rose-100 to-pink-100' },
+      { iconColor: 'text-cyan-600', bgColor: 'from-cyan-100 to-blue-100' }
     ];
     
+    const colorScheme = gradientOptions[assistants.length % gradientOptions.length];
     const assistantWithGradient = {
       ...newAssistant,
-      gradient: gradients[assistants.length % gradients.length]
+      ...colorScheme
     };
 
     setAssistants(prev => [...prev, assistantWithGradient]);
@@ -94,25 +95,29 @@ const AIAssistantsPage = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {assistants.map((assistant) => (
-                  <Card key={assistant.id} className={`bg-gradient-to-br ${assistant.gradient} border-0 shadow-sm hover:shadow-lg transition-all duration-200`}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        <span className="flex items-center">
-                          <div className="p-2 rounded-lg bg-white/50 mr-3">
-                            <Bot className="h-5 w-5 text-gray-700" />
+                  <Card key={assistant.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center justify-between text-sm">
+                        <div className="flex items-center space-x-2">
+                          <div className={`p-2 rounded-lg bg-gradient-to-br ${assistant.bgColor}`}>
+                            <Bot className={`h-4 w-4 ${assistant.iconColor}`} />
                           </div>
-                          {assistant.name}
-                        </span>
-                        <Button variant="ghost" size="icon" className="hover:bg-white/30">
+                          <span className="font-medium">{assistant.name}</span>
+                        </div>
+                        <Button variant="ghost" size="icon" className="hover:bg-gray-100">
                           <Settings className="h-4 w-4" />
                         </Button>
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-0">
                       <div className="space-y-3">
-                        <p className="text-sm text-gray-700">Type: {assistant.type}</p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                            {assistant.type}
+                          </span>
+                        </div>
                         <div className="flex items-center space-x-2">
-                          <div className="p-1 rounded bg-white/40">
+                          <div className="p-1 rounded bg-gray-100">
                             <MessageCircle className="h-3 w-3 text-gray-600" />
                           </div>
                           <span className="text-sm text-gray-700">Conversations: {assistant.conversations}</span>
@@ -122,7 +127,8 @@ const AIAssistantsPage = () => {
                         </div>
                         <Button 
                           variant="outline" 
-                          className="w-full bg-white/60 hover:bg-white/80 border-white/50"
+                          size="sm"
+                          className="w-full text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
                         >
                           Configure
                         </Button>

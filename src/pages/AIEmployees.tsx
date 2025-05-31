@@ -12,10 +12,10 @@ const AIEmployees = () => {
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
   const [employees, setEmployees] = useState([
-    { id: 1, name: 'Aria', department: 'Sales', status: 'Active', tasks: 12, gradient: 'from-pink-100 to-rose-100' },
-    { id: 2, name: 'Atlas', department: 'Operations', status: 'Active', tasks: 8, gradient: 'from-blue-100 to-cyan-100' },
-    { id: 3, name: 'Felix', department: 'Finance', status: 'Idle', tasks: 5, gradient: 'from-green-100 to-emerald-100' },
-    { id: 4, name: 'Maya', department: 'Marketing', status: 'Active', tasks: 15, gradient: 'from-purple-100 to-violet-100' },
+    { id: 1, name: 'Aria', department: 'Sales', status: 'Active', tasks: 12, iconColor: 'text-pink-600', bgColor: 'from-pink-100 to-rose-100' },
+    { id: 2, name: 'Atlas', department: 'Operations', status: 'Active', tasks: 8, iconColor: 'text-blue-600', bgColor: 'from-blue-100 to-cyan-100' },
+    { id: 3, name: 'Felix', department: 'Finance', status: 'Idle', tasks: 5, iconColor: 'text-green-600', bgColor: 'from-green-100 to-emerald-100' },
+    { id: 4, name: 'Maya', department: 'Marketing', status: 'Active', tasks: 15, iconColor: 'text-purple-600', bgColor: 'from-purple-100 to-violet-100' },
   ]);
 
   useEffect(() => {
@@ -40,7 +40,8 @@ const AIEmployees = () => {
         department: assistant.department,
         status: assistant.status || 'Active',
         tasks: Math.floor(Math.random() * 20) + 1, // Random task count for demo
-        gradient: assistant.gradient || 'from-indigo-100 to-blue-100',
+        iconColor: 'text-indigo-600',
+        bgColor: 'from-indigo-100 to-blue-100',
         isAssistant: true
       }));
 
@@ -78,30 +79,34 @@ const AIEmployees = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {employees.map((employee) => (
-                  <Card key={employee.id} className={`bg-gradient-to-br ${employee.gradient} border-0 shadow-sm hover:shadow-lg transition-all duration-200`}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        <span className="flex items-center">
-                          <div className="p-2 rounded-lg bg-white/50 mr-3">
-                            <Users className="h-5 w-5 text-gray-700" />
+                  <Card key={employee.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center justify-between text-sm">
+                        <div className="flex items-center space-x-2">
+                          <div className={`p-2 rounded-lg bg-gradient-to-br ${employee.bgColor}`}>
+                            <Users className={`h-4 w-4 ${employee.iconColor}`} />
                           </div>
                           <div>
-                            <span className="block">{employee.name}</span>
+                            <span className="font-medium">{employee.name}</span>
                             {(employee as any).isAssistant && (
-                              <span className="text-xs text-gray-600 font-normal">AI Assistant</span>
+                              <span className="block text-xs text-gray-600 font-normal">AI Assistant</span>
                             )}
                           </div>
-                        </span>
-                        <Button variant="ghost" size="icon" className="hover:bg-white/30">
+                        </div>
+                        <Button variant="ghost" size="icon" className="hover:bg-gray-100">
                           <Settings className="h-4 w-4" />
                         </Button>
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <p className="text-sm text-gray-700">Department: {employee.department}</p>
+                    <CardContent className="pt-0">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                            {employee.department}
+                          </span>
+                        </div>
                         <div className="flex items-center space-x-2">
-                          <div className="p-1 rounded bg-white/40">
+                          <div className="p-1 rounded bg-gray-100">
                             <Activity className="h-3 w-3 text-gray-600" />
                           </div>
                           <span className={`text-sm font-medium ${employee.status === 'Active' ? 'text-green-700' : 'text-amber-700'}`}>
@@ -109,6 +114,13 @@ const AIEmployees = () => {
                           </span>
                         </div>
                         <p className="text-sm text-gray-700">Active Tasks: {employee.tasks}</p>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="w-full text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
+                        >
+                          Configure
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>

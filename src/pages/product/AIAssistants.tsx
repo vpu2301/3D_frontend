@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, MessageSquare, Brain, Clock, Globe, Mic, FileText, Users, Zap, Shield, Calendar, Mail, MessageCircle, Calculator, TrendingUp, Search, Scale, PhoneCall } from 'lucide-react';
@@ -151,7 +152,7 @@ const AIAssistants = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {aiWorkers.map((worker, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+              <Card key={index} className="bg-white border-gray-200/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
                   <div className={`p-4 rounded-2xl bg-gradient-to-r ${worker.color} w-fit mx-auto mb-6`}>
                     <worker.icon className="h-8 w-8 text-white" />
@@ -188,7 +189,7 @@ const AIAssistants = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+              <Card key={index} className="bg-white border-gray-200/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
