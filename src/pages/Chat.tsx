@@ -42,6 +42,7 @@ const Chat = () => {
   const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string>('current');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const fastCommands = [
     { icon: Zap, label: '@Emma', description: 'Sales Assistant', color: 'bg-pink-100' },
@@ -218,7 +219,7 @@ const Chat = () => {
             
             <main className="flex-1 flex relative">
               {/* Main Chat Area */}
-              <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex flex-col relative">
                 <div className="p-6 border-b border-gray-100">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -237,132 +238,133 @@ const Chat = () => {
                 </div>
 
                 {/* Messages Area */}
-                <div className="flex-1 p-6 pb-32 overflow-y-auto">
-                  <div className="max-w-4xl mx-auto space-y-4">
-                    {messages.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
+                <div className="flex-1 overflow-y-auto pb-40">
+                  <div className="p-6">
+                    <div className="max-w-4xl mx-auto space-y-4">
+                      {messages.map((msg) => (
                         <div
-                          className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
-                            msg.sender === 'user'
-                              ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white'
-                              : 'bg-white border border-gray-100 text-gray-800'
-                          }`}
+                          key={msg.id}
+                          className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
-                          {msg.text && <p className="text-sm">{msg.text}</p>}
-                          {msg.attachments && msg.attachments.length > 0 && (
-                            <div className="mt-2 space-y-2">
-                              {msg.attachments.map((attachment, index) => {
-                                const FileIcon = getFileIcon(attachment.type);
-                                return (
-                                  <div key={index} className="flex items-center space-x-2 p-2 bg-black/10 rounded-lg">
-                                    <FileIcon className="h-4 w-4" />
-                                    <span className="text-xs truncate">{attachment.name}</span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          )}
-                          <p className={`text-xs mt-2 ${msg.sender === 'user' ? 'text-blue-100' : 'text-gray-400'}`}>
-                            {msg.timestamp.toLocaleTimeString()}
-                          </p>
+                          <div
+                            className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
+                              msg.sender === 'user'
+                                ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white'
+                                : 'bg-white border border-gray-100 text-gray-800'
+                            }`}
+                          >
+                            {msg.text && <p className="text-sm">{msg.text}</p>}
+                            {msg.attachments && msg.attachments.length > 0 && (
+                              <div className="mt-2 space-y-2">
+                                {msg.attachments.map((attachment, index) => {
+                                  const FileIcon = getFileIcon(attachment.type);
+                                  return (
+                                    <div key={index} className="flex items-center space-x-2 p-2 bg-black/10 rounded-lg">
+                                      <FileIcon className="h-4 w-4" />
+                                      <span className="text-xs truncate">{attachment.name}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                            <p className={`text-xs mt-2 ${msg.sender === 'user' ? 'text-blue-100' : 'text-gray-400'}`}>
+                              {msg.timestamp.toLocaleTimeString()}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                      <div ref={messagesEndRef} />
+                    </div>
                   </div>
                 </div>
 
-                {/* Fixed Input Area */}
-                <div className="fixed bottom-0 left-0 right-80 bg-white/80 backdrop-blur-lg border-t border-gray-100">
-                  <div className="p-6">
-                    <div className="max-w-4xl mx-auto">
-                      {/* Attachments Preview */}
-                      {attachments.length > 0 && (
-                        <div className="mb-4 flex flex-wrap gap-2">
-                          {attachments.map((file, index) => {
-                            const FileIcon = getFileIcon(file.type);
-                            return (
-                              <div key={index} className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg">
-                                <FileIcon className="h-4 w-4 text-gray-600" />
-                                <span className="text-sm text-gray-700 truncate max-w-32">{file.name}</span>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => removeAttachment(index)}
-                                  className="h-auto p-1"
-                                >
-                                  <X className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      {/* Fast Commands */}
-                      {!isTyping && attachments.length === 0 && (
-                        <div className="mb-4 flex flex-wrap gap-2">
-                          {fastCommands.map((command, index) => (
-                            <Button
-                              key={index}
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleFastCommand(command.label)}
-                              className={`${command.color} text-gray-700 hover:scale-105 transition-all duration-200 border border-gray-200/50`}
-                            >
-                              <command.icon className="h-3 w-3 mr-2" />
-                              <span className="text-xs font-medium">{command.label}</span>
-                              <span className="text-xs text-gray-500 ml-1">- {command.description}</span>
-                            </Button>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Input Field */}
-                      <div className={`relative transition-all duration-300 ${isTyping || attachments.length > 0 ? 'max-w-2xl mx-auto' : 'max-w-3xl'}`}>
-                        <Card className="bg-white/90 border-gray-200/50 shadow-lg">
-                          <div className="relative p-2">
-                            <Input
-                              value={message}
-                              onChange={handleInputChange}
-                              onKeyPress={handleKeyPress}
-                              placeholder="Type your message or use @ commands..."
-                              className="border-0 bg-transparent text-base pr-20 focus-visible:ring-0 focus-visible:ring-offset-0"
-                            />
-                            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+                {/* Fixed Input Area - positioned at bottom of main chat area */}
+                <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-100 p-6">
+                  <div className="max-w-4xl mx-auto">
+                    {/* Attachments Preview */}
+                    {attachments.length > 0 && (
+                      <div className="mb-4 flex flex-wrap gap-2">
+                        {attachments.map((file, index) => {
+                          const FileIcon = getFileIcon(file.type);
+                          return (
+                            <div key={index} className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg">
+                              <FileIcon className="h-4 w-4 text-gray-600" />
+                              <span className="text-sm text-gray-700 truncate max-w-32">{file.name}</span>
                               <Button
-                                onClick={handleFileAttach}
                                 variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                size="sm"
+                                onClick={() => removeAttachment(index)}
+                                className="h-auto p-1"
                               >
-                                <Paperclip className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                onClick={handleVoiceToggle}
-                                variant="ghost"
-                                size="icon"
-                                className={`h-8 w-8 rounded-full transition-all duration-200 ${
-                                  isListening 
-                                    ? "bg-red-100 text-red-600 hover:bg-red-200" 
-                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                }`}
-                              >
-                                {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                              </Button>
-                              <Button 
-                                onClick={handleSendMessage} 
-                                size="icon" 
-                                className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-all duration-200"
-                              >
-                                <Send className="h-4 w-4" />
+                                <X className="h-3 w-3" />
                               </Button>
                             </div>
-                          </div>
-                        </Card>
+                          );
+                        })}
                       </div>
+                    )}
+
+                    {/* Fast Commands */}
+                    {!isTyping && attachments.length === 0 && (
+                      <div className="mb-4 flex flex-wrap gap-2">
+                        {fastCommands.map((command, index) => (
+                          <Button
+                            key={index}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleFastCommand(command.label)}
+                            className={`${command.color} text-gray-700 hover:scale-105 transition-all duration-200 border border-gray-200/50`}
+                          >
+                            <command.icon className="h-3 w-3 mr-2" />
+                            <span className="text-xs font-medium">{command.label}</span>
+                            <span className="text-xs text-gray-500 ml-1">- {command.description}</span>
+                          </Button>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Input Field */}
+                    <div className={`relative transition-all duration-300 ${isTyping || attachments.length > 0 ? 'max-w-2xl mx-auto' : 'max-w-3xl'}`}>
+                      <Card className="bg-white/90 border-gray-200/50 shadow-lg">
+                        <div className="relative p-2">
+                          <Input
+                            value={message}
+                            onChange={handleInputChange}
+                            onKeyPress={handleKeyPress}
+                            placeholder="Type your message or use @ commands..."
+                            className="border-0 bg-transparent text-base pr-20 focus-visible:ring-0 focus-visible:ring-offset-0"
+                          />
+                          <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+                            <Button
+                              onClick={handleFileAttach}
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            >
+                              <Paperclip className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              onClick={handleVoiceToggle}
+                              variant="ghost"
+                              size="icon"
+                              className={`h-8 w-8 rounded-full transition-all duration-200 ${
+                                isListening 
+                                  ? "bg-red-100 text-red-600 hover:bg-red-200" 
+                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                              }`}
+                            >
+                              {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                            </Button>
+                            <Button 
+                              onClick={handleSendMessage} 
+                              size="icon" 
+                              className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-all duration-200"
+                            >
+                              <Send className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
                     </div>
                   </div>
                 </div>
