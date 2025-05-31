@@ -69,7 +69,7 @@ const Emma = () => {
             <div className="relative animate-fade-in">
               <div className="relative rounded-2xl overflow-hidden">
                 <img 
-                  src="/lovable-uploads/35c36576-e7de-466a-bc06-44e278438e79.png" 
+                  src="/lovable-uploads/5888447c-4ba4-4923-bd8b-116a4908a301.png" 
                   alt="Emma - AI Sales Specialist"
                   className="w-full h-auto object-cover"
                 />
