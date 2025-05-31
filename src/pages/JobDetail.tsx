@@ -1,92 +1,57 @@
 
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, MapPin, Clock, Users, Building, Calendar, Share2 } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ArrowLeft, MapPin, Clock, DollarSign, Users, Share2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const JobDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  // Mock job data - in a real app, this would come from an API
+  // Mock job data - in real app, this would come from an API
   const jobs = {
     '1': {
-      title: 'Senior AI Engineer',
-      department: 'Engineering',
-      location: 'Remote / San Francisco',
-      type: 'Full-time',
-      experience: 'Senior Level (7+ years)',
-      salary: '$180,000 - $250,000',
-      posted: '2 days ago',
-      description: 'Lead the development of our core AI automation platform. You\'ll architect and build large-scale ML systems that process millions of workflows daily, working with transformer models, multi-agent systems, and distributed computing frameworks.',
-      requirements: [
-        '7+ years in AI/ML engineering with production experience',
-        'Deep expertise in Python, TensorFlow/PyTorch, and modern ML frameworks',
-        'Experience with LLMs, transformer architectures, and fine-tuning',
-        'Strong background in distributed systems and cloud infrastructure (AWS/GCP)',
-        'Track record of shipping ML products at scale with millions of users',
-        'PhD in Computer Science, ML, or related field preferred',
-        'Experience with MLOps, model deployment, and monitoring systems'
-      ],
+      title: "Senior AI Engineer",
+      department: "Engineering",
+      location: "San Francisco, CA", 
+      type: "Full-time",
+      salary: "$150k - $200k",
+      posted: "2 days ago",
+      description: "We're looking for a Senior AI Engineer to lead the development of our next-generation AI employees and automation systems. You'll work on cutting-edge machine learning models and help scale our platform to serve millions of AI employee interactions daily.",
       responsibilities: [
-        'Design and implement core AI algorithms for workflow automation',
-        'Optimize model performance, inference speed, and resource utilization',
-        'Collaborate with product teams on AI feature development and roadmap',
-        'Mentor junior engineers and establish ML engineering best practices',
-        'Research and integrate cutting-edge AI/ML techniques',
-        'Build scalable ML infrastructure and deployment pipelines',
-        'Work with data teams to improve model training and evaluation'
+        "Design and implement advanced AI models for task automation",
+        "Lead architecture decisions for our AI platform",
+        "Collaborate with product teams to define AI capabilities",
+        "Optimize model performance and scalability",
+        "Mentor junior engineers and establish best practices",
+        "Research and implement state-of-the-art AI techniques"
+      ],
+      requirements: [
+        "5+ years of experience in AI/ML engineering",
+        "Expert knowledge of Python, TensorFlow, and PyTorch",
+        "Experience with distributed systems and cloud platforms",
+        "Strong understanding of NLP and computer vision",
+        "Experience with MLOps and model deployment",
+        "PhD in Computer Science, AI, or related field preferred"
+      ],
+      niceToHave: [
+        "Experience with large language models (LLMs)",
+        "Background in autonomous systems",
+        "Open source contributions to AI projects",
+        "Experience in startup environments"
       ],
       benefits: [
-        'Competitive salary with equity participation',
-        'Comprehensive health, dental, and vision insurance',
-        'Unlimited PTO and flexible remote work',
-        '$5,000 annual learning and development budget',
-        'Top-tier equipment and home office setup allowance',
-        'Quarterly team retreats and company offsites'
-      ],
-      team: 'AI Platform Team (12 engineers)',
-      reportingTo: 'VP of Engineering',
-      aboutTeam: 'Join our world-class AI team building the future of work automation. We\'re a collaborative group of ML engineers, researchers, and infrastructure specialists working on cutting-edge problems at the intersection of AI and enterprise software.'
-    },
-    '2': {
-      title: 'Product Manager - AI Platform',
-      department: 'Product',
-      location: 'Remote / New York',
-      type: 'Full-time',
-      experience: 'Mid-Senior Level (5+ years)',
-      salary: '$150,000 - $200,000',
-      posted: '1 week ago',
-      description: 'Drive product strategy for our AI automation platform. You\'ll work directly with enterprise customers to understand complex workflow needs and translate them into product requirements that our engineering team can execute.',
-      requirements: [
-        '5+ years product management experience in B2B SaaS',
-        'Strong technical background with enterprise software experience',
-        'Experience with AI/ML products and understanding of technical constraints',
-        'Track record of working with enterprise customers ($1M+ deals)',
-        'Excellent analytical skills and experience with product metrics',
-        'Strong communication skills for cross-functional collaboration',
-        'MBA or equivalent business education preferred'
-      ],
-      responsibilities: [
-        'Define product roadmap for AI automation features',
-        'Conduct customer interviews and market research',
-        'Work with engineering on technical specifications and architecture',
-        'Analyze product metrics, user behavior, and business impact',
-        'Lead go-to-market strategy for new features',
-        'Collaborate with sales and customer success on product positioning',
-        'Manage product launches and feature rollouts'
-      ],
-      benefits: [
-        'Competitive salary with equity participation',
-        'Comprehensive health, dental, and vision insurance',
-        'Unlimited PTO and flexible remote work',
-        '$3,000 annual learning and development budget',
-        'Product conference attendance and training',
-        'Quarterly team retreats and company offsites'
-      ],
-      team: 'Product Team (6 PMs)',
-      reportingTo: 'Head of Product',
-      aboutTeam: 'Our product team works closely with customers, engineering, and design to build products that solve real business problems. We\'re data-driven, customer-obsessed, and focused on delivering exceptional user experiences.'
+        "Competitive salary with equity package",
+        "Health, dental, and vision insurance", 
+        "Unlimited PTO policy",
+        "$2000 home office setup budget",
+        "Learning and development stipend",
+        "Stock option program",
+        "Flexible work arrangements"
+      ]
     }
   };
 
@@ -94,181 +59,207 @@ const JobDetail = () => {
 
   if (!job) {
     return (
-      <div className="min-h-screen pt-16 px-4 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-light text-gray-900 mb-4">Job not found</h1>
-          <Link to="/careers">
-            <Button variant="outline">Back to Careers</Button>
-          </Link>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Job Not Found</h2>
+          <Button onClick={() => navigate('/careers')}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Careers
+          </Button>
         </div>
       </div>
     );
   }
 
+  const handleApply = () => {
+    toast({
+      title: "Application Started",
+      description: "Redirecting to application form...",
+    });
+    // In a real app, this would redirect to an application form
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast({
+      title: "Link Copied",
+      description: "Job link copied to clipboard",
+    });
+  };
+
   return (
-    <div className="min-h-screen pt-16 bg-gradient-to-b from-slate-50 to-white">
-      {/* Header */}
-      <section className="py-12 px-4">
-        <div className="max-w-4xl mx-auto">
-          <Link to="/careers" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-8 transition-colors">
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/careers')}
+            className="flex items-center"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Careers
-          </Link>
-
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <h1 className="text-4xl font-light text-gray-900">{job.title}</h1>
-              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                {job.department}
-              </Badge>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-600 mb-6">
-              <div className="flex items-center">
-                <MapPin className="h-4 w-4 mr-2" />
-                {job.location}
-              </div>
-              <div className="flex items-center">
-                <Clock className="h-4 w-4 mr-2" />
-                {job.type}
-              </div>
-              <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-2" />
-                Posted {job.posted}
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3">
-                Apply for this Position
-              </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3">
-                <Share2 className="h-4 w-4 mr-2" />
-                Share Job
-              </Button>
-            </div>
-          </div>
+          </Button>
+          <Button variant="outline" onClick={handleShare}>
+            <Share2 className="h-4 w-4 mr-2" />
+            Share Job
+          </Button>
         </div>
-      </section>
 
-      {/* Job Details */}
-      <section className="pb-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Description */}
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-medium text-gray-900 mb-4">About the Role</h3>
-                  <p className="text-gray-700 leading-relaxed mb-6">{job.description}</p>
-                  <p className="text-gray-700 leading-relaxed">{job.aboutTeam}</p>
-                </CardContent>
-              </Card>
-
-              {/* Responsibilities */}
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-medium text-gray-900 mb-4">Key Responsibilities</h3>
-                  <ul className="space-y-3">
-                    {job.responsibilities.map((resp, idx) => (
-                      <li key={idx} className="text-gray-700 flex items-start">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                        {resp}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              {/* Requirements */}
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-medium text-gray-900 mb-4">Requirements</h3>
-                  <ul className="space-y-3">
-                    {job.requirements.map((req, idx) => (
-                      <li key={idx} className="text-gray-700 flex items-start">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                        {req}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              {/* Benefits */}
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-medium text-gray-900 mb-4">Benefits & Perks</h3>
-                  <ul className="space-y-3">
-                    {job.benefits.map((benefit, idx) => (
-                      <li key={idx} className="text-gray-700 flex items-start">
-                        <div className="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Quick Info */}
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-6">
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">Job Details</h4>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-sm text-gray-500 mb-1">Experience Level</div>
-                      <div className="text-gray-900">{job.experience}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-500 mb-1">Salary Range</div>
-                      <div className="text-gray-900">{job.salary}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-500 mb-1">Team</div>
-                      <div className="text-gray-900">{job.team}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-500 mb-1">Reports To</div>
-                      <div className="text-gray-900">{job.reportingTo}</div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Job Overview */}
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle className="text-3xl mb-2">{job.title}</CardTitle>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <Badge variant="secondary">{job.department}</Badge>
+                      <Badge variant="outline">{job.type}</Badge>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  <span className="text-sm text-gray-500">Posted {job.posted}</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t">
+                  <div className="flex items-center text-gray-600">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    {job.location}
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <Clock className="h-4 w-4 mr-2" />
+                    {job.type}
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    {job.salary}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-700 leading-relaxed">{job.description}</p>
+              </CardContent>
+            </Card>
 
-              {/* Apply Card */}
-              <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-purple-50">
-                <CardContent className="p-6 text-center">
-                  <h4 className="text-lg font-medium text-gray-900 mb-3">Ready to Apply?</h4>
-                  <p className="text-gray-600 mb-6 text-sm">Join our team and help build the future of work automation.</p>
-                  <Button className="w-full bg-black hover:bg-gray-800 text-white mb-3">
-                    Apply Now
-                  </Button>
-                  <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50">
-                    Save for Later
-                  </Button>
-                </CardContent>
-              </Card>
+            {/* Responsibilities */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Key Responsibilities</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  {job.responsibilities.map((responsibility, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span className="text-gray-700">{responsibility}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
 
-              {/* Contact */}
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-6">
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">Questions?</h4>
-                  <p className="text-gray-600 text-sm mb-4">
-                    Have questions about this role? We'd love to hear from you.
-                  </p>
-                  <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50" asChild>
-                    <Link to="/contact">Contact Us</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Requirements */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Requirements</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  {job.requirements.map((requirement, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="w-2 h-2 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span className="text-gray-700">{requirement}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Nice to Have */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Nice to Have</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  {job.niceToHave.map((item, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span className="text-gray-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Apply Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Ready to Apply?</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button onClick={handleApply} className="w-full" size="lg">
+                  Apply Now
+                </Button>
+                <p className="text-sm text-gray-600 text-center">
+                  We typically respond within 3-5 business days
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Benefits */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Benefits & Perks</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {job.benefits.map((benefit, index) => (
+                    <li key={index} className="flex items-center text-sm">
+                      <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"></div>
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Company Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Users className="h-5 w-5 mr-2" />
+                  About 3days.ai
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-4">
+                  We're revolutionizing the future of work with AI employees that seamlessly 
+                  integrate into business operations worldwide.
+                </p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Founded:</span>
+                    <span className="font-medium">2023</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Employees:</span>
+                    <span className="font-medium">50+</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Funding:</span>
+                    <span className="font-medium">Series A</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

@@ -1,114 +1,122 @@
 
-import { Users, Zap, Settings, PlayCircle, CheckCircle, ArrowRight, Shield, Lock, Eye } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ArrowRight, Bot, Settings, Zap, CheckCircle, Play } from 'lucide-react';
 
 const HowItWorks = () => {
   const steps = [
     {
-      step: '01',
-      icon: Users,
-      title: 'Select an AI Employee',
-      description: 'Pick from our catalog of specialized roles like Executive Assistant, Support Specialist, Finance Analyst, and more.',
-      details: 'Browse our library of pre-trained AI workers, each designed for specific department needs and workflows.'
+      step: 1,
+      title: "Choose Your AI Employee",
+      description: "Select from our library of pre-trained AI employees or create a custom one tailored to your specific needs.",
+      icon: Bot,
+      features: ["50+ ready-to-use templates", "Custom training available", "Department-specific specializations"],
+      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&h=300&fit=crop"
     },
     {
-      step: '02',
-      icon: Zap,
-      title: 'Connect Your Tools',
-      description: 'Authorize access to your existing apps (email, CRM, accounting software).',
-      details: 'One-click integrations with 100+ popular business applications. No complex API setup required.'
-    },
-    {
-      step: '03',
+      step: 2,
+      title: "Configure & Train",
+      description: "Set up your AI employee's capabilities, permissions, and workflows. Define what tasks they can handle autonomously.",
       icon: Settings,
-      title: 'Configure Task Workflows',
-      description: 'Outline your preferred processes or let the AI infer them from your existing data.',
-      details: 'Simple drag-and-drop workflow builder or intelligent auto-configuration based on your current processes.'
+      features: ["Drag-and-drop workflow builder", "Permission management", "Integration setup"],
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop"
     },
     {
-      step: '04',
-      icon: PlayCircle,
-      title: 'Go Live and Monitor',
-      description: 'AI starts performing tasks in real-time. Dashboard provides clear metrics and audit logs.',
-      details: 'Real-time performance monitoring with detailed analytics and complete audit trails for compliance.'
-    },
-    {
-      step: '05',
-      icon: CheckCircle,
-      title: 'Continuous Improvement',
-      description: 'AI learns from each interaction, refining accuracy and speed over time.',
-      details: 'Machine learning algorithms continuously optimize performance based on your unique business patterns.'
+      step: 3,
+      title: "Deploy & Automate",
+      description: "Launch your AI employee and watch them handle tasks 24/7. Monitor performance and optimize as needed.",
+      icon: Zap,
+      features: ["Real-time monitoring", "Performance analytics", "Continuous learning"],
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&h=300&fit=crop"
     }
   ];
 
-  const securityFeatures = [
+  const capabilities = [
     {
-      icon: Shield,
-      title: 'SOC 2 Compliance',
-      description: 'Industry-leading security standards and controls'
+      category: "Customer Service",
+      tasks: ["Answer customer inquiries", "Process support tickets", "Handle refunds and returns", "Escalate complex issues"],
+      color: "bg-blue-500"
     },
     {
-      icon: Lock,
-      title: 'Data Encryption',
-      description: 'End-to-end encryption in transit and at rest'
+      category: "Sales & Marketing",
+      tasks: ["Qualify leads", "Send follow-up emails", "Schedule meetings", "Update CRM records"],
+      color: "bg-green-500"
     },
     {
-      icon: Eye,
-      title: 'Role-Based Access',
-      description: 'Granular permission controls and access management'
+      category: "Data Processing",
+      tasks: ["Extract data from documents", "Generate reports", "Analyze trends", "Update databases"],
+      color: "bg-purple-500"
+    },
+    {
+      category: "HR & Operations",
+      tasks: ["Screen resumes", "Schedule interviews", "Onboard new hires", "Process expense reports"],
+      color: "bg-orange-500"
     }
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
-              Deploy AI Workers in
-              <span className="block font-medium bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-                10 Minutes—No Coding Required
-              </span>
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold text-gray-900 mb-6">
+              How 3days.ai Works
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed">
-              Experience effortless onboarding, integrated workflows, and continuous AI learning 
-              that transforms your business operations from day one.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Transform your business operations in three simple steps. Our AI employees integrate 
+              seamlessly into your existing workflows and start delivering value immediately.
             </p>
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+              <Play className="mr-2 h-5 w-5" />
+              Watch 2-Minute Demo
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Step-by-Step Process */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
+      {/* Steps Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Step-by-Step Process</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              From selection to deployment, get your AI workforce running in minutes
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Three Steps to AI Automation
+            </h2>
+            <p className="text-xl text-gray-600">
+              Get started in minutes, not months
             </p>
           </div>
 
-          <div className="space-y-16">
+          <div className="space-y-20">
             {steps.map((step, index) => (
-              <div key={index} className={`flex flex-col lg:flex-row items-center gap-12 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+              <div key={step.step} className={`flex flex-col lg:flex-row items-center gap-12 ${
+                index % 2 === 1 ? 'lg:flex-row-reverse' : ''
+              }`}>
                 <div className="flex-1">
-                  <div className="flex items-center mb-6">
-                    <div className="text-6xl font-light text-blue-500 mr-6">{step.step}</div>
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500">
-                      <step.icon className="h-8 w-8 text-white" />
+                  <div className="flex items-center mb-4">
+                    <div className="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg mr-4">
+                      {step.step}
                     </div>
+                    <step.icon className="h-8 w-8 text-blue-600" />
                   </div>
-                  <h3 className="text-3xl font-medium text-gray-900 mb-4">{step.title}</h3>
-                  <p className="text-xl text-gray-600 mb-4 leading-relaxed">{step.description}</p>
-                  <p className="text-gray-500 leading-relaxed">{step.details}</p>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">{step.title}</h3>
+                  <p className="text-lg text-gray-600 mb-6">{step.description}</p>
+                  <ul className="space-y-2">
+                    {step.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-center">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                        <span className="text-gray-700">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <div className="flex-1">
-                  <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-12 h-80 flex items-center justify-center">
-                    <div className="text-gray-400 text-lg">Interactive Demo Preview</div>
-                  </div>
+                  <img 
+                    src={step.image}
+                    alt={step.title}
+                    className="rounded-lg shadow-xl w-full"
+                  />
                 </div>
               </div>
             ))}
@@ -116,53 +124,98 @@ const HowItWorks = () => {
         </div>
       </section>
 
-      {/* Security & Compliance */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
+      {/* Capabilities Section */}
+      <section className="bg-gray-50 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Security & Compliance</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Enterprise-grade security built in from day one
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              What Can AI Employees Do?
+            </h2>
+            <p className="text-xl text-gray-600">
+              From simple tasks to complex workflows, our AI handles it all
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {securityFeatures.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 text-center">
-                <CardContent className="p-8">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-green-500 to-blue-500 w-fit mx-auto mb-6">
-                    <feature.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {capabilities.map((capability, index) => (
+              <Card key={index} className="h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <div className={`w-3 h-3 rounded-full ${capability.color} mr-3`}></div>
+                    {capability.category}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-3">
+                    {capability.tasks.map((task, taskIndex) => (
+                      <li key={taskIndex} className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                        <span className="text-gray-700">{task}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-12">
-            <p className="text-gray-600 mb-6">
-              Additional compliance certifications: GDPR, HIPAA, and more
-            </p>
+      {/* Benefits Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Why Businesses Choose 3days.ai
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="bg-blue-100 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                <span className="text-3xl font-bold text-blue-600">80%</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Time Saved</h3>
+              <p className="text-gray-600">Automate repetitive tasks and focus on high-value work</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-green-100 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                <span className="text-3xl font-bold text-green-600">24/7</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Always Working</h3>
+              <p className="text-gray-600">AI employees never sleep, take breaks, or call in sick</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-purple-100 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                <span className="text-3xl font-bold text-purple-600">ROI</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Immediate ROI</h3>
+              <p className="text-gray-600">See returns from day one with our quick setup process</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl font-light mb-8 tracking-tight">
-            Ready to See How Fast You Can Deploy?
+      <section className="bg-blue-600 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold text-white mb-4">
+            Ready to Get Started?
           </h2>
-          <p className="text-xl mb-12 opacity-90 font-light">
-            Book a demo to see how quickly you can onboard your first AI worker
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Join thousands of companies that are already transforming their operations with AI employees.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-md py-3" asChild>
-            <Link to="/schedule-demo">
-              Book a Demo
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="space-x-4">
+            <Button size="lg" variant="secondary">
+              Start Free Trial
+            </Button>
+            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600">
+              Schedule Demo
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </section>
     </div>
