@@ -34,59 +34,90 @@ const AssistantProfile = () => {
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
   const [assistant, setAssistant] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
-    
-    if (isAuthenticated !== 'true') {
-      navigate('/login');
-      return;
-    }
-    
-    if (email) {
-      setUserEmail(email);
-    }
+    const checkAuth = () => {
+      const isAuthenticated = localStorage.getItem('isAuthenticated');
+      const email = localStorage.getItem('userEmail');
+      
+      console.log('AssistantProfile - Auth check:', { isAuthenticated, email, assistantId: id });
+      
+      if (isAuthenticated !== 'true') {
+        console.log('Not authenticated, redirecting to login');
+        navigate('/login');
+        return false;
+      }
+      
+      if (email) {
+        setUserEmail(email);
+      }
+      
+      return true;
+    };
 
-    // Load assistant data (from localStorage or API)
-    const storedAssistants = JSON.parse(localStorage.getItem('aiAssistants') || '[]');
-    const defaultAssistants = [
-      { id: 1, name: 'Customer Support Assistant', type: 'Support', conversations: 145, status: 'Active', iconColor: 'text-sky-600', bgColor: 'from-sky-100 to-blue-100' },
-      { id: 2, name: 'Sales Assistant', type: 'Sales', conversations: 89, status: 'Active', iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-red-100' },
-      { id: 3, name: 'Technical Helper', type: 'Technical', conversations: 67, status: 'Active', iconColor: 'text-slate-600', bgColor: 'from-slate-100 to-gray-100' },
-      { id: 4, name: 'HR Assistant', type: 'HR', conversations: 34, status: 'Idle', iconColor: 'text-lime-600', bgColor: 'from-lime-100 to-green-100' },
-    ];
-    
-    const allAssistants = [...defaultAssistants, ...storedAssistants];
-    const foundAssistant = allAssistants.find(a => a.id.toString() === id);
-    
-    if (foundAssistant) {
-      // Add mock data for demonstration
-      setAssistant({
-        ...foundAssistant,
-        efficiency: 94,
-        responsetime: 1.2,
-        satisfactionScore: 4.7,
-        tasksCompleted: 1247,
-        totalCostSavings: 45600,
-        uptime: 99.8,
-        capabilities: foundAssistant.capabilities || ['Customer Service', 'Email Management', 'Document Processing'],
-        integrations: foundAssistant.integrations || ['Slack', 'Salesforce', 'Gmail'],
-        canMakeDecisions: foundAssistant.canMakeDecisions || ['Customer Responses', 'Meeting Scheduling'],
-        approvalRequired: foundAssistant.approvalRequired || ['Financial Transactions', 'Policy Changes'],
-        autonomyLevel: foundAssistant.autonomyLevel || 'semi-autonomous',
-        scope: foundAssistant.scope || 'team',
-        workingHours: foundAssistant.workingHours || '24/7',
-        maxBudgetLimit: foundAssistant.maxBudgetLimit || 1000,
-        recentActivities: [
-          { action: 'Resolved customer inquiry', time: '2 minutes ago', status: 'completed' },
-          { action: 'Scheduled team meeting', time: '15 minutes ago', status: 'completed' },
-          { action: 'Processed expense report', time: '1 hour ago', status: 'pending_approval' },
-          { action: 'Generated weekly report', time: '2 hours ago', status: 'completed' },
-        ]
-      });
+    const loadAssistant = () => {
+      // Load assistant data (from localStorage or API)
+      const storedAssistants = JSON.parse(localStorage.getItem('aiAssistants') || '[]');
+      const defaultAssistants = [
+        { id: 1, name: 'Customer Support Assistant', type: 'Support', department: 'Customer Service', conversations: 145, status: 'Active', iconColor: 'text-sky-600', bgColor: 'from-sky-100 to-blue-100' },
+        { id: 2, name: 'Sales Assistant', type: 'Sales', department: 'Sales', conversations: 89, status: 'Active', iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-red-100' },
+        { id: 3, name: 'Technical Helper', type: 'Technical', department: 'IT', conversations: 67, status: 'Active', iconColor: 'text-slate-600', bgColor: 'from-slate-100 to-gray-100' },
+        { id: 4, name: 'HR Assistant', type: 'HR', department: 'Human Resources', conversations: 34, status: 'Idle', iconColor: 'text-lime-600', bgColor: 'from-lime-100 to-green-100' },
+      ];
+      
+      const allAssistants = [...defaultAssistants, ...storedAssistants];
+      console.log('Looking for assistant with ID:', id, 'in assistants:', allAssistants);
+      
+      const foundAssistant = allAssistants.find(a => a.id.toString() === id);
+      
+      if (foundAssistant) {
+        console.log('Found assistant:', foundAssistant);
+        // Add mock data for demonstration
+        setAssistant({
+          ...foundAssistant,
+          efficiency: 94,
+          responsetime: 1.2,
+          satisfactionScore: 4.7,
+          tasksCompleted: 1247,
+          totalCostSavings: 45600,
+          uptime: 99.8,
+          capabilities: foundAssistant.capabilities || ['Customer Service', 'Email Management', 'Document Processing'],
+          integrations: foundAssistant.integrations || ['Slack', 'Salesforce', 'Gmail'],
+          canMakeDecisions: foundAssistant.canMakeDecisions || ['Customer Responses', 'Meeting Scheduling'],
+          approvalRequired: foundAssistant.approvalRequired || ['Financial Transactions', 'Policy Changes'],
+          autonomyLevel: foundAssistant.autonomyLevel || 'semi-autonomous',
+          scope: foundAssistant.scope || 'team',
+          workingHours: foundAssistant.workingHours || '24/7',
+          maxBudgetLimit: foundAssistant.maxBudgetLimit || 1000,
+          recentActivities: [
+            { action: 'Resolved customer inquiry', time: '2 minutes ago', status: 'completed' },
+            { action: 'Scheduled team meeting', time: '15 minutes ago', status: 'completed' },
+            { action: 'Processed expense report', time: '1 hour ago', status: 'pending_approval' },
+            { action: 'Generated weekly report', time: '2 hours ago', status: 'completed' },
+          ]
+        });
+      } else {
+        console.log('Assistant not found');
+      }
+      setLoading(false);
+    };
+
+    if (checkAuth()) {
+      loadAssistant();
     }
   }, [id, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-sm text-gray-600">Loading assistant...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!assistant) {
     return (
@@ -94,6 +125,7 @@ const AssistantProfile = () => {
         <div className="text-center">
           <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">Assistant not found</h3>
+          <p className="text-gray-600 mb-4">The assistant with ID "{id}" could not be found.</p>
           <Button onClick={() => navigate('/ai-assistants')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Assistants
