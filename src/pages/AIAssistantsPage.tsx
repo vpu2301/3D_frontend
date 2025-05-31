@@ -27,10 +27,10 @@ const AIAssistantsPage = () => {
   }, [navigate]);
 
   const assistants = [
-    { id: 1, name: 'Customer Support Assistant', type: 'Support', conversations: 145, status: 'Active' },
-    { id: 2, name: 'Sales Assistant', type: 'Sales', conversations: 89, status: 'Active' },
-    { id: 3, name: 'Technical Helper', type: 'Technical', conversations: 67, status: 'Active' },
-    { id: 4, name: 'HR Assistant', type: 'HR', conversations: 34, status: 'Idle' },
+    { id: 1, name: 'Customer Support Assistant', type: 'Support', conversations: 145, status: 'Active', gradient: 'from-sky-100 to-blue-100' },
+    { id: 2, name: 'Sales Assistant', type: 'Sales', conversations: 89, status: 'Active', gradient: 'from-orange-100 to-red-100' },
+    { id: 3, name: 'Technical Helper', type: 'Technical', conversations: 67, status: 'Active', gradient: 'from-slate-100 to-gray-100' },
+    { id: 4, name: 'HR Assistant', type: 'HR', conversations: 34, status: 'Idle', gradient: 'from-lime-100 to-green-100' },
   ];
 
   return (
@@ -58,7 +58,7 @@ const AIAssistantsPage = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {assistants.map((assistant) => (
-                  <Card key={assistant.id}>
+                  <Card key={assistant.id} className={`bg-gradient-to-br ${assistant.gradient} border-0 shadow-sm`}>
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
                         <span className="flex items-center">

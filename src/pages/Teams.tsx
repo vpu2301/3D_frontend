@@ -27,10 +27,10 @@ const Teams = () => {
   }, [navigate]);
 
   const teams = [
-    { id: 1, name: 'Sales Team', members: 8, aiEmployees: 3, leader: 'John Doe' },
-    { id: 2, name: 'Marketing Team', members: 6, aiEmployees: 2, leader: 'Jane Smith' },
-    { id: 3, name: 'Operations Team', members: 10, aiEmployees: 4, leader: 'Mike Johnson' },
-    { id: 4, name: 'Finance Team', members: 4, aiEmployees: 1, leader: 'Sarah Wilson' },
+    { id: 1, name: 'Sales Team', members: 8, aiEmployees: 3, leader: 'John Doe', gradient: 'from-orange-100 to-amber-100' },
+    { id: 2, name: 'Marketing Team', members: 6, aiEmployees: 2, leader: 'Jane Smith', gradient: 'from-pink-100 to-fuchsia-100' },
+    { id: 3, name: 'Operations Team', members: 10, aiEmployees: 4, leader: 'Mike Johnson', gradient: 'from-blue-100 to-indigo-100' },
+    { id: 4, name: 'Finance Team', members: 4, aiEmployees: 1, leader: 'Sarah Wilson', gradient: 'from-green-100 to-teal-100' },
   ];
 
   return (
@@ -58,7 +58,7 @@ const Teams = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {teams.map((team) => (
-                  <Card key={team.id}>
+                  <Card key={team.id} className={`bg-gradient-to-br ${team.gradient} border-0 shadow-sm`}>
                     <CardHeader>
                       <CardTitle className="flex items-center">
                         <UserCheck className="h-5 w-5 mr-2" />

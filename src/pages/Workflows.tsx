@@ -27,10 +27,10 @@ const Workflows = () => {
   }, [navigate]);
 
   const workflows = [
-    { id: 1, name: 'Customer Onboarding', status: 'Active', executions: 145, successRate: '94%' },
-    { id: 2, name: 'Invoice Processing', status: 'Active', executions: 289, successRate: '98%' },
-    { id: 3, name: 'Lead Qualification', status: 'Paused', executions: 67, successRate: '92%' },
-    { id: 4, name: 'Support Ticket Routing', status: 'Active', executions: 456, successRate: '96%' },
+    { id: 1, name: 'Customer Onboarding', status: 'Active', executions: 145, successRate: '94%', gradient: 'from-teal-100 to-cyan-100' },
+    { id: 2, name: 'Invoice Processing', status: 'Active', executions: 289, successRate: '98%', gradient: 'from-indigo-100 to-blue-100' },
+    { id: 3, name: 'Lead Qualification', status: 'Paused', executions: 67, successRate: '92%', gradient: 'from-amber-100 to-yellow-100' },
+    { id: 4, name: 'Support Ticket Routing', status: 'Active', executions: 456, successRate: '96%', gradient: 'from-purple-100 to-pink-100' },
   ];
 
   return (
@@ -58,7 +58,7 @@ const Workflows = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {workflows.map((workflow) => (
-                  <Card key={workflow.id}>
+                  <Card key={workflow.id} className={`bg-gradient-to-br ${workflow.gradient} border-0 shadow-sm`}>
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
                         <span className="flex items-center">

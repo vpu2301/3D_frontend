@@ -107,15 +107,22 @@ const queryClient = new QueryClient();
 // Component to conditionally render Header and Footer
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  const isDashboard = location.pathname === '/dashboard';
+  const isDashboardRoute = location.pathname.startsWith('/dashboard') || 
+                           location.pathname.startsWith('/chat') ||
+                           location.pathname.startsWith('/ai-') ||
+                           location.pathname.startsWith('/teams') ||
+                           location.pathname.startsWith('/workflows') ||
+                           location.pathname.startsWith('/integrations') ||
+                           location.pathname.startsWith('/settings') ||
+                           location.pathname.startsWith('/help');
 
   return (
     <div className="min-h-screen flex flex-col">
-      {!isDashboard && <Header />}
-      <main className={isDashboard ? 'flex-1' : 'flex-grow'}>
+      {!isDashboardRoute && <Header />}
+      <main className={isDashboardRoute ? 'flex-1' : 'flex-grow'}>
         {children}
       </main>
-      {!isDashboard && <Footer />}
+      {!isDashboardRoute && <Footer />}
     </div>
   );
 };

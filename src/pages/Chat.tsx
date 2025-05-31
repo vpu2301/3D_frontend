@@ -4,10 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Send, Mic, MicOff, Bot } from 'lucide-react';
 
 const Chat = () => {
@@ -16,6 +14,17 @@ const Chat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Array<{id: number, text: string, sender: 'user' | 'assistant', timestamp: Date}>>([]);
   const [isListening, setIsListening] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [exampleText, setExampleText] = useState('');
+  const [currentExampleIndex, setCurrentExampleIndex] = useState(0);
+
+  const examplePrompts = [
+    "@Emma -> prepare Sales proposal for our products for Zalando Customer Support team",
+    "@Aria -> schedule meeting with tech leads for Q1 planning session",
+    "@Felix -> analyze Q4 financial reports and create executive summary",
+    "@Maya -> create marketing campaign for new product launch",
+    "@Atlas -> review and optimize customer support workflows"
+  ];
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
@@ -30,7 +39,6 @@ const Chat = () => {
       setUserEmail(email);
     }
 
-    // Add welcome message
     setMessages([{
       id: 1,
       text: "Hello! I'm your AI assistant. How can I help you today?",
@@ -38,6 +46,34 @@ const Chat = () => {
       timestamp: new Date()
     }]);
   }, [navigate]);
+
+  // Animated example prompt effect
+  useEffect(() => {
+    if (isTyping || message.trim()) return;
+
+    const currentPrompt = examplePrompts[currentExampleIndex];
+    let charIndex = 0;
+
+    const typeInterval = setInterval(() => {
+      if (charIndex <= currentPrompt.length) {
+        setExampleText(currentPrompt.slice(0, charIndex));
+        charIndex++;
+      } else {
+        clearInterval(typeInterval);
+        setTimeout(() => {
+          setCurrentExampleIndex((prev) => (prev + 1) % examplePrompts.length);
+          setExampleText('');
+        }, 2000);
+      }
+    }, 50);
+
+    return () => clearInterval(typeInterval);
+  }, [currentExampleIndex, isTyping, message, examplePrompts]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
+    setIsTyping(e.target.value.length > 0);
+  };
 
   const handleSendMessage = () => {
     if (!message.trim()) return;
@@ -51,8 +87,8 @@ const Chat = () => {
 
     setMessages(prev => [...prev, newMessage]);
     setMessage('');
+    setIsTyping(false);
 
-    // Simulate AI response
     setTimeout(() => {
       const response = {
         id: messages.length + 2,
@@ -66,11 +102,10 @@ const Chat = () => {
 
   const handleVoiceToggle = () => {
     setIsListening(!isListening);
-    // Voice functionality would be implemented here
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter') {
       e.preventDefault();
       handleSendMessage();
     }
@@ -84,74 +119,67 @@ const Chat = () => {
           <SidebarInset className="flex-1 flex flex-col">
             <LoggedInHeader userEmail={userEmail} />
             
-            <main className="flex-1 p-6">
-              <div className="flex items-center space-x-4 mb-6">
-                <SidebarTrigger />
-                <div>
-                  <h1 className="text-3xl font-light text-gray-900">AI Chat</h1>
+            <main className="flex-1 flex flex-col items-center justify-center p-6">
+              <div className="w-full max-w-4xl flex flex-col items-center">
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center mb-4">
+                    <SidebarTrigger className="mr-4" />
+                    <Bot className="h-12 w-12 text-blue-600" />
+                  </div>
+                  <h1 className="text-4xl font-light text-gray-900 mb-2">AI Chat</h1>
                   <p className="text-gray-600">Interact with your AI assistants through text or voice commands</p>
                 </div>
-              </div>
 
-              <div className="max-w-4xl mx-auto">
-                <Card className="h-[600px] flex flex-col">
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Bot className="h-5 w-5 mr-2" />
-                      AI Assistant Chat
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex-1 flex flex-col">
-                    {/* Messages Area */}
-                    <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 bg-gray-50 rounded-lg">
-                      {messages.map((msg) => (
+                {/* Messages Area - Only show if there are messages beyond the welcome */}
+                {messages.length > 1 && (
+                  <div className="w-full mb-6 max-h-96 overflow-y-auto space-y-4 p-4 bg-white rounded-lg border shadow-sm">
+                    {messages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
                         <div
-                          key={msg.id}
-                          className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                            msg.sender === 'user'
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-gray-100 text-gray-900'
+                          }`}
                         >
-                          <div
-                            className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                              msg.sender === 'user'
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-white border shadow-sm'
-                            }`}
-                          >
-                            <p className="text-sm">{msg.text}</p>
-                            <p className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-blue-100' : 'text-gray-500'}`}>
-                              {msg.timestamp.toLocaleTimeString()}
-                            </p>
-                          </div>
+                          <p className="text-sm">{msg.text}</p>
+                          <p className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-blue-100' : 'text-gray-500'}`}>
+                            {msg.timestamp.toLocaleTimeString()}
+                          </p>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
-                    {/* Input Area */}
-                    <div className="flex items-end space-x-2">
-                      <div className="flex-1">
-                        <Textarea
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          onKeyPress={handleKeyPress}
-                          placeholder="Type your message here..."
-                          className="min-h-[60px] resize-none"
-                        />
-                      </div>
-                      <div className="flex flex-col space-y-2">
-                        <Button
-                          onClick={handleVoiceToggle}
-                          variant={isListening ? "default" : "outline"}
-                          size="icon"
-                          className={isListening ? "bg-red-600 hover:bg-red-700" : ""}
-                        >
-                          {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                        </Button>
-                        <Button onClick={handleSendMessage} size="icon">
-                          <Send className="h-4 w-4" />
-                        </Button>
-                      </div>
+                {/* Input Area */}
+                <div className="w-full max-w-2xl">
+                  <div className="relative">
+                    <Input
+                      value={message}
+                      onChange={handleInputChange}
+                      onKeyPress={handleKeyPress}
+                      placeholder={isTyping || message.trim() ? "Type your message here..." : exampleText || "Type your message here..."}
+                      className="pr-20 py-3 text-base"
+                    />
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                      <Button
+                        onClick={handleVoiceToggle}
+                        variant={isListening ? "default" : "ghost"}
+                        size="icon"
+                        className={`h-8 w-8 ${isListening ? "bg-red-600 hover:bg-red-700" : ""}`}
+                      >
+                        {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                      </Button>
+                      <Button onClick={handleSendMessage} size="icon" className="h-8 w-8">
+                        <Send className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </div>
             </main>
           </SidebarInset>

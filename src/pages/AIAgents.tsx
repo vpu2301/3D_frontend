@@ -27,10 +27,10 @@ const AIAgents = () => {
   }, [navigate]);
 
   const agents = [
-    { id: 1, name: 'Data Processing Agent', purpose: 'Data Analysis', executions: 1250, efficiency: '98%' },
-    { id: 2, name: 'Email Automation Agent', purpose: 'Communication', executions: 890, efficiency: '95%' },
-    { id: 3, name: 'Report Generation Agent', purpose: 'Reporting', executions: 456, efficiency: '97%' },
-    { id: 4, name: 'Invoice Processing Agent', purpose: 'Finance', executions: 234, efficiency: '99%' },
+    { id: 1, name: 'Data Processing Agent', purpose: 'Data Analysis', executions: 1250, efficiency: '98%', gradient: 'from-cyan-100 to-blue-100' },
+    { id: 2, name: 'Email Automation Agent', purpose: 'Communication', executions: 890, efficiency: '95%', gradient: 'from-violet-100 to-purple-100' },
+    { id: 3, name: 'Report Generation Agent', purpose: 'Reporting', executions: 456, efficiency: '97%', gradient: 'from-emerald-100 to-green-100' },
+    { id: 4, name: 'Invoice Processing Agent', purpose: 'Finance', executions: 234, efficiency: '99%', gradient: 'from-rose-100 to-pink-100' },
   ];
 
   return (
@@ -58,7 +58,7 @@ const AIAgents = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {agents.map((agent) => (
-                  <Card key={agent.id}>
+                  <Card key={agent.id} className={`bg-gradient-to-br ${agent.gradient} border-0 shadow-sm`}>
                     <CardHeader>
                       <CardTitle className="flex items-center">
                         <Bot className="h-5 w-5 mr-2" />

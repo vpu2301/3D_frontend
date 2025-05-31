@@ -27,10 +27,10 @@ const AIEmployees = () => {
   }, [navigate]);
 
   const employees = [
-    { id: 1, name: 'Aria', department: 'Sales', status: 'Active', tasks: 12 },
-    { id: 2, name: 'Atlas', department: 'Operations', status: 'Active', tasks: 8 },
-    { id: 3, name: 'Felix', department: 'Finance', status: 'Idle', tasks: 5 },
-    { id: 4, name: 'Maya', department: 'Marketing', status: 'Active', tasks: 15 },
+    { id: 1, name: 'Aria', department: 'Sales', status: 'Active', tasks: 12, gradient: 'from-pink-100 to-rose-100' },
+    { id: 2, name: 'Atlas', department: 'Operations', status: 'Active', tasks: 8, gradient: 'from-blue-100 to-cyan-100' },
+    { id: 3, name: 'Felix', department: 'Finance', status: 'Idle', tasks: 5, gradient: 'from-green-100 to-emerald-100' },
+    { id: 4, name: 'Maya', department: 'Marketing', status: 'Active', tasks: 15, gradient: 'from-purple-100 to-violet-100' },
   ];
 
   return (
@@ -58,7 +58,7 @@ const AIEmployees = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {employees.map((employee) => (
-                  <Card key={employee.id}>
+                  <Card key={employee.id} className={`bg-gradient-to-br ${employee.gradient} border-0 shadow-sm`}>
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
                         <span className="flex items-center">
