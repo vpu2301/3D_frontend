@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -31,7 +32,7 @@ interface ChatHistory {
 }
 
 const Chat = () => {
-  console.log('Chat component is rendering...');
+  console.log('=== Chat component starting to render ===');
   
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
@@ -42,6 +43,7 @@ const Chat = () => {
   const [attachments, setAttachments] = useState<File[]>([]);
   const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string>('current');
+  const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -53,12 +55,12 @@ const Chat = () => {
   ];
 
   useEffect(() => {
-    console.log('Chat useEffect running...');
+    console.log('=== Chat useEffect running ===');
     
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     const email = localStorage.getItem('userEmail');
     
-    console.log('Auth status:', { isAuthenticated, email });
+    console.log('Auth check:', { isAuthenticated, email });
     
     if (isAuthenticated !== 'true') {
       console.log('Not authenticated, redirecting to login');
@@ -82,41 +84,28 @@ const Chat = () => {
     console.log('Setting welcome message:', welcomeMessage);
     setMessages([welcomeMessage]);
 
-    // Load chat history from localStorage
-    const savedHistory = localStorage.getItem('chatHistory');
-    if (savedHistory) {
-      const parsedHistory = JSON.parse(savedHistory);
-      console.log('Loaded chat history:', parsedHistory);
-      setChatHistory(parsedHistory);
-    } else {
-      // Initialize with some sample chat history
-      const sampleHistory: ChatHistory[] = [
-        {
-          id: 'chat-1',
-          title: 'Project Planning Discussion',
-          lastMessage: 'Thanks for the help with the timeline!',
-          timestamp: new Date(Date.now() - 86400000), // 1 day ago
-          messageCount: 12
-        },
-        {
-          id: 'chat-2',
-          title: 'Budget Analysis',
-          lastMessage: 'Can you review these numbers?',
-          timestamp: new Date(Date.now() - 172800000), // 2 days ago
-          messageCount: 8
-        },
-        {
-          id: 'chat-3',
-          title: 'Team Meeting Notes',
-          lastMessage: 'Meeting summary looks good',
-          timestamp: new Date(Date.now() - 259200000), // 3 days ago
-          messageCount: 15
-        }
-      ];
-      console.log('Setting sample history:', sampleHistory);
-      setChatHistory(sampleHistory);
-      localStorage.setItem('chatHistory', JSON.stringify(sampleHistory));
-    }
+    // Sample chat history
+    const sampleHistory: ChatHistory[] = [
+      {
+        id: 'chat-1',
+        title: 'Project Planning Discussion',
+        lastMessage: 'Thanks for the help with the timeline!',
+        timestamp: new Date(Date.now() - 86400000),
+        messageCount: 12
+      },
+      {
+        id: 'chat-2',
+        title: 'Budget Analysis',
+        lastMessage: 'Can you review these numbers?',
+        timestamp: new Date(Date.now() - 172800000),
+        messageCount: 8
+      }
+    ];
+    
+    console.log('Setting chat history:', sampleHistory);
+    setChatHistory(sampleHistory);
+    setIsLoading(false);
+    console.log('=== Chat initialization complete ===');
   }, [navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,7 +149,6 @@ const Chat = () => {
     setAttachments([]);
     setIsTyping(false);
 
-    // Clear file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -196,7 +184,6 @@ const Chat = () => {
 
   const selectChatHistory = (chatId: string) => {
     setCurrentChatId(chatId);
-    // In a real app, you'd load the messages for this chat
     if (chatId !== 'current') {
       setMessages([{
         id: 1,
@@ -222,11 +209,23 @@ const Chat = () => {
     return FileText;
   };
 
-  console.log('Chat component rendering with:', { 
+  console.log('=== Chat render state ===', { 
     userEmail, 
     messagesCount: messages.length, 
-    currentChatId 
+    currentChatId,
+    isLoading
   });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading chat...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <SidebarProvider>
@@ -296,7 +295,7 @@ const Chat = () => {
                 </div>
               </div>
 
-              {/* Fixed Input Area - positioned at bottom of main chat area */}
+              {/* Fixed Input Area */}
               <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-100 p-6">
                 <div className="max-w-4xl mx-auto">
                   {/* Attachments Preview */}
