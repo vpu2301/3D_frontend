@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Chat from './pages/Chat';
 import AIEmployees from './pages/AIEmployees';
 import Teams from './pages/Teams';
+import TeamDetail from './pages/TeamDetail';
 import AIAgents from './pages/AIAgents';
 import Workflows from './pages/Workflows';
 import IntegrationsPage from './pages/IntegrationsPage';
@@ -34,6 +35,7 @@ function App() {
           <Route path="/ai-assistants/:id" element={<AssistantProfile />} />
           <Route path="/ai-assistants/:id/configure" element={<AssistantConfiguration />} />
           <Route path="/teams" element={<Teams />} />
+          <Route path="/teams/:id" element={<TeamDetail />} />
           <Route path="/ai-agents" element={<AIAgents />} />
           <Route path="/workflows" element={<Workflows />} />
           <Route path="/integrations" element={<IntegrationsPage />} />
