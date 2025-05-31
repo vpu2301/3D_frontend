@@ -6,16 +6,19 @@ import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, Plus, Settings, Activity } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Bot, Plus, Settings, Activity, Eye, MessageCircle, Users, Building } from 'lucide-react';
+import CreateAssistantDialog from '@/components/CreateAssistantDialog';
 
 const AIEmployees = () => {
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [employees, setEmployees] = useState([
-    { id: 1, name: 'Aria', department: 'Sales', status: 'Active', tasks: 12, iconColor: 'text-pink-600', bgColor: 'from-pink-100 to-rose-100' },
-    { id: 2, name: 'Atlas', department: 'Operations', status: 'Active', tasks: 8, iconColor: 'text-blue-600', bgColor: 'from-blue-100 to-cyan-100' },
-    { id: 3, name: 'Felix', department: 'Finance', status: 'Idle', tasks: 5, iconColor: 'text-green-600', bgColor: 'from-green-100 to-emerald-100' },
-    { id: 4, name: 'Maya', department: 'Marketing', status: 'Active', tasks: 15, iconColor: 'text-purple-600', bgColor: 'from-purple-100 to-violet-100' },
+    { id: 1, name: 'Aria', department: 'Sales', status: 'Active', tasks: 12, conversations: 89, type: 'Sales', iconColor: 'text-pink-600', bgColor: 'from-pink-100 to-rose-100', scope: 'team' },
+    { id: 2, name: 'Atlas', department: 'Operations', status: 'Active', tasks: 8, conversations: 145, type: 'Support', iconColor: 'text-blue-600', bgColor: 'from-blue-100 to-cyan-100', scope: 'team' },
+    { id: 3, name: 'Felix', department: 'Finance', status: 'Idle', tasks: 5, conversations: 34, type: 'Finance', iconColor: 'text-green-600', bgColor: 'from-green-100 to-emerald-100', scope: 'team' },
+    { id: 4, name: 'Maya', department: 'Marketing', status: 'Active', tasks: 15, conversations: 67, type: 'Marketing', iconColor: 'text-purple-600', bgColor: 'from-purple-100 to-violet-100', scope: 'personal' },
   ]);
 
   useEffect(() => {
@@ -39,20 +42,49 @@ const AIEmployees = () => {
         name: assistant.name,
         department: assistant.department,
         status: assistant.status || 'Active',
-        tasks: Math.floor(Math.random() * 20) + 1, // Random task count for demo
-        iconColor: 'text-indigo-600',
-        bgColor: 'from-indigo-100 to-blue-100',
+        tasks: Math.floor(Math.random() * 20) + 1,
+        conversations: assistant.conversations || Math.floor(Math.random() * 100) + 1,
+        type: assistant.type,
+        iconColor: assistant.iconColor || 'text-indigo-600',
+        bgColor: assistant.bgColor || 'from-indigo-100 to-blue-100',
+        scope: assistant.scope || 'team',
         isAssistant: true
       }));
 
       setEmployees(prev => {
-        // Avoid duplicates
         const existingIds = new Set(prev.map(emp => emp.id));
         const newEmployees = assistantEmployees.filter((emp: any) => !existingIds.has(emp.id));
         return [...prev, ...newEmployees];
       });
     }
   }, [navigate]);
+
+  const handleEmployeeCreated = (newEmployee: any) => {
+    const gradientOptions = [
+      { iconColor: 'text-violet-600', bgColor: 'from-violet-100 to-purple-100' },
+      { iconColor: 'text-emerald-600', bgColor: 'from-emerald-100 to-teal-100' },
+      { iconColor: 'text-amber-600', bgColor: 'from-amber-100 to-yellow-100' },
+      { iconColor: 'text-rose-600', bgColor: 'from-rose-100 to-pink-100' },
+      { iconColor: 'text-cyan-600', bgColor: 'from-cyan-100 to-blue-100' }
+    ];
+    
+    const colorScheme = gradientOptions[employees.length % gradientOptions.length];
+    const employeeWithGradient = {
+      ...newEmployee,
+      ...colorScheme,
+      tasks: Math.floor(Math.random() * 20) + 1,
+      conversations: Math.floor(Math.random() * 100) + 1
+    };
+
+    setEmployees(prev => [...prev, employeeWithGradient]);
+
+    const storedAssistants = JSON.parse(localStorage.getItem('aiAssistants') || '[]');
+    localStorage.setItem('aiAssistants', JSON.stringify([...storedAssistants, employeeWithGradient]));
+  };
+
+  const handleViewEmployee = (employeeId: string | number) => {
+    navigate(`/ai-assistants/${employeeId}`);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
@@ -66,9 +98,12 @@ const AIEmployees = () => {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h1 className="text-3xl font-light text-gray-900">AI Employees</h1>
-                  <p className="text-gray-600">Manage your artificial intelligence workforce</p>
+                  <p className="text-gray-600">Manage your artificial intelligence workforce and assistants</p>
                 </div>
-                <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600">
+                <Button 
+                  onClick={() => setShowCreateDialog(true)}
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Add AI Employee
                 </Button>
@@ -81,7 +116,7 @@ const AIEmployees = () => {
                       <CardTitle className="flex items-center justify-between text-sm">
                         <div className="flex items-center space-x-2">
                           <div className={`p-2 rounded-lg bg-gradient-to-br ${employee.bgColor}`}>
-                            <Users className={`h-4 w-4 ${employee.iconColor}`} />
+                            <Bot className={`h-4 w-4 ${employee.iconColor}`} />
                           </div>
                           <div>
                             <span className="font-medium">{employee.name}</span>
@@ -90,17 +125,35 @@ const AIEmployees = () => {
                             )}
                           </div>
                         </div>
-                        <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-                          <Settings className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center space-x-1">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="hover:bg-gray-100 h-8 w-8"
+                            onClick={() => handleViewEmployee(employee.id)}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8">
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
-                            {employee.department}
-                          </span>
+                          <Badge variant="outline" className="text-xs">
+                            {employee.type || employee.department}
+                          </Badge>
+                          <div className="flex items-center space-x-1">
+                            {employee.scope === 'team' ? (
+                              <Building className="h-3 w-3 text-gray-600" />
+                            ) : (
+                              <Users className="h-3 w-3 text-gray-600" />
+                            )}
+                            <span className="text-xs text-gray-600 capitalize">{employee.scope}</span>
+                          </div>
                         </div>
                         <div className="flex items-center space-x-2">
                           <div className="p-1 rounded bg-gray-100">
@@ -110,23 +163,61 @@ const AIEmployees = () => {
                             {employee.status}
                           </span>
                         </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="p-1 rounded bg-gray-100">
+                            <MessageCircle className="h-3 w-3 text-gray-600" />
+                          </div>
+                          <span className="text-sm text-gray-700">Conversations: {employee.conversations}</span>
+                        </div>
                         <p className="text-sm text-gray-700">Active Tasks: {employee.tasks}</p>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="w-full text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
-                        >
-                          Configure
-                        </Button>
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
+                            onClick={() => handleViewEmployee(employee.id)}
+                          >
+                            <Eye className="h-3 w-3 mr-1" />
+                            View Details
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
+                          >
+                            <Settings className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
+
+              {employees.length === 0 && (
+                <div className="text-center py-12">
+                  <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No AI employees yet</h3>
+                  <p className="text-gray-600 mb-4">Create your first AI employee to get started</p>
+                  <Button 
+                    onClick={() => setShowCreateDialog(true)}
+                    className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add AI Employee
+                  </Button>
+                </div>
+              )}
             </main>
           </SidebarInset>
         </div>
       </SidebarProvider>
+
+      <CreateAssistantDialog 
+        open={showCreateDialog}
+        onOpenChange={setShowCreateDialog}
+        onAssistantCreated={handleEmployeeCreated}
+      />
     </div>
   );
 };

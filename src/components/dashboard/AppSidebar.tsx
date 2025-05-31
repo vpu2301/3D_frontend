@@ -1,4 +1,3 @@
-
 import { useLocation, Link } from 'react-router-dom';
 import {
   Sidebar,
@@ -55,11 +54,6 @@ const navigationItems = [
     title: "Teams",
     url: "/teams",
     icon: UserCheck,
-  },
-  {
-    title: "AI Assistants",
-    url: "/ai-assistants",
-    icon: Bot,
   },
   {
     title: "AI Agents",
