@@ -83,12 +83,19 @@ const settingsItems = [
 
 export function AppSidebar() {
   const location = useLocation();
-  const { state } = useSidebar();
+  const { state, toggleSidebar } = useSidebar();
+
+  const handleLogoClick = () => {
+    toggleSidebar();
+  };
 
   return (
     <Sidebar className="border-r" collapsible="icon">
       <SidebarHeader className="p-4">
-        <div className="flex items-center space-x-2">
+        <div 
+          className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 rounded-lg p-2 -m-2 transition-colors"
+          onClick={handleLogoClick}
+        >
           <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center flex-shrink-0">
             <div className="w-2 h-2 bg-white rounded-sm"></div>
           </div>
