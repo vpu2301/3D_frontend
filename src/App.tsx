@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +22,15 @@ import JobDetail from "./pages/JobDetail";
 import Blog from "./pages/resources/Blog";
 import HowItWorks from "./pages/HowItWorks";
 import Dashboard from "./pages/Dashboard";
+import Chat from "./pages/Chat";
+import AIEmployees from "./pages/AIEmployees";
+import Teams from "./pages/Teams";
+import AIAssistantsPage from "./pages/AIAssistantsPage";
+import AIAgents from "./pages/AIAgents";
+import Workflows from "./pages/Workflows";
+import IntegrationsPage from "./pages/IntegrationsPage";
+import Settings from "./pages/Settings";
+import Help from "./pages/Help";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Platform pages
@@ -128,6 +136,51 @@ const App = () => (
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/chat" element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            } />
+            <Route path="/ai-employees" element={
+              <ProtectedRoute>
+                <AIEmployees />
+              </ProtectedRoute>
+            } />
+            <Route path="/teams" element={
+              <ProtectedRoute>
+                <Teams />
+              </ProtectedRoute>
+            } />
+            <Route path="/ai-assistants" element={
+              <ProtectedRoute>
+                <AIAssistantsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/ai-agents" element={
+              <ProtectedRoute>
+                <AIAgents />
+              </ProtectedRoute>
+            } />
+            <Route path="/workflows" element={
+              <ProtectedRoute>
+                <Workflows />
+              </ProtectedRoute>
+            } />
+            <Route path="/integrations" element={
+              <ProtectedRoute>
+                <IntegrationsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
+            <Route path="/help" element={
+              <ProtectedRoute>
+                <Help />
               </ProtectedRoute>
             } />
             <Route path="/get-started" element={<GetStarted />} />

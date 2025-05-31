@@ -1,8 +1,16 @@
 
 import { Button } from '@/components/ui/button';
-import { Bell, Settings, LogOut } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Settings, LogOut, User } from 'lucide-react';
 import ExpandableSearch from './ExpandableSearch';
 
 interface LoggedInHeaderProps {
@@ -16,6 +24,10 @@ const LoggedInHeader = ({ userEmail }: LoggedInHeaderProps) => {
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('userEmail');
     navigate('/login');
+  };
+
+  const handleSettings = () => {
+    navigate('/settings');
   };
 
   const getInitials = (email: string) => {
@@ -34,22 +46,34 @@ const LoggedInHeader = ({ userEmail }: LoggedInHeaderProps) => {
             <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900">
               <Bell className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900">
-              <Settings className="h-5 w-5" />
-            </Button>
             
-            <div className="flex items-center space-x-3">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-blue-100 text-blue-600 text-sm">
-                  {getInitials(userEmail)}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-sm text-gray-700 hidden sm:block">{userEmail}</span>
-              <Button onClick={handleLogout} variant="outline" size="sm">
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center space-x-2 hover:bg-gray-100">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-blue-100 text-blue-600 text-sm">
+                      {getInitials(userEmail)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm text-gray-700 hidden sm:block">{userEmail}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 bg-white border shadow-lg">
+                <DropdownMenuItem className="flex items-center space-x-2 cursor-pointer">
+                  <User className="h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSettings} className="flex items-center space-x-2 cursor-pointer">
+                  <Settings className="h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2 cursor-pointer text-red-600">
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
