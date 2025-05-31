@@ -26,9 +26,8 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
     description: '',
     capabilities: [] as string[],
     personality: 'professional',
-    // New fields
-    scope: 'personal', // personal or team
-    autonomyLevel: 'supervised', // supervised, semi-autonomous, autonomous
+    scope: 'personal',
+    autonomyLevel: 'supervised',
     approvalRequired: [] as string[],
     canMakeDecisions: [] as string[],
     integrations: [] as string[],
@@ -49,7 +48,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
     { number: 7, title: 'Review', icon: Check }
   ];
 
-  // ... keep existing code (assistantTypes, departments, personalities, availableCapabilities)
+  // ... keep existing code (assistantTypes, departments, personalities, etc.)
   const assistantTypes = [
     { value: 'support', label: 'Customer Support', description: 'Handle customer inquiries and provide assistance' },
     { value: 'sales', label: 'Sales Assistant', description: 'Help with lead qualification and sales processes' },
@@ -218,9 +217,9 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
       case 4:
         return assistantData.autonomyLevel !== '';
       case 5:
-        return true; // Integrations are optional
+        return true;
       case 6:
-        return true; // Approval rules are optional
+        return true;
       default:
         return true;
     }
@@ -228,59 +227,58 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden">
-        <DialogHeader className="border-b pb-4 mb-6">
-          <DialogTitle className="flex items-center space-x-3 text-xl">
-            <div className="p-2 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
-              <Sparkles className="h-6 w-6 text-blue-600" />
-            </div>
-            <span>Create New AI Assistant</span>
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0">
+        <div className="flex flex-col h-full">
+          {/* Header */}
+          <DialogHeader className="px-6 py-4 border-b bg-gray-50">
+            <DialogTitle className="flex items-center space-x-3 text-xl">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
+                <Sparkles className="h-6 w-6 text-blue-600" />
+              </div>
+              <span>Create New AI Assistant</span>
+            </DialogTitle>
+          </DialogHeader>
 
-        {/* Progress Steps - Improved Layout */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between overflow-x-auto pb-4">
-            {steps.map((step, index) => (
-              <div key={step.number} className="flex items-center min-w-0">
-                <div className="flex flex-col items-center">
-                  <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all ${
-                    currentStep >= step.number 
-                      ? 'bg-blue-600 border-blue-600 text-white shadow-lg' 
-                      : 'border-gray-300 text-gray-400 bg-white'
-                  }`}>
-                    {currentStep > step.number ? (
-                      <Check className="h-6 w-6" />
-                    ) : (
-                      <step.icon className="h-6 w-6" />
-                    )}
-                  </div>
-                  <div className="mt-2 text-center">
-                    <p className={`text-sm font-medium ${currentStep >= step.number ? 'text-gray-900' : 'text-gray-400'}`}>
+          {/* Progress Steps - Improved */}
+          <div className="px-6 py-4 bg-white border-b">
+            <div className="flex items-center justify-between">
+              {steps.map((step, index) => (
+                <div key={step.number} className="flex items-center">
+                  <div className="flex flex-col items-center">
+                    <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${
+                      currentStep >= step.number 
+                        ? 'bg-blue-600 border-blue-600 text-white' 
+                        : 'border-gray-300 text-gray-400 bg-white'
+                    }`}>
+                      {currentStep > step.number ? (
+                        <Check className="h-5 w-5" />
+                      ) : (
+                        <step.icon className="h-5 w-5" />
+                      )}
+                    </div>
+                    <p className={`text-xs mt-2 font-medium ${currentStep >= step.number ? 'text-gray-900' : 'text-gray-400'}`}>
                       {step.title}
                     </p>
                   </div>
+                  {index < steps.length - 1 && (
+                    <div className={`w-12 h-0.5 mx-2 ${
+                      currentStep > step.number ? 'bg-blue-600' : 'bg-gray-300'
+                    }`} />
+                  )}
                 </div>
-                {index < steps.length - 1 && (
-                  <div className={`w-16 h-0.5 mx-4 ${
-                    currentStep > step.number ? 'bg-blue-600' : 'bg-gray-300'
-                  }`} />
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Step Content - Improved Spacing */}
-        <div className="flex-1 overflow-y-auto px-1">
-          <div className="space-y-8">
+          {/* Content Area */}
+          <div className="flex-1 overflow-y-auto px-6 py-6">
             {currentStep === 1 && (
-              <div className="space-y-6">
-                <div className="text-center mb-6">
+              <div className="max-w-2xl mx-auto space-y-6">
+                <div className="text-center mb-8">
                   <h3 className="text-2xl font-semibold text-gray-900 mb-2">Let's start with the basics</h3>
                   <p className="text-gray-600">Give your assistant a name and description</p>
                 </div>
-                <div className="max-w-2xl mx-auto space-y-6">
+                <div className="space-y-6">
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-base font-medium">Assistant Name *</Label>
                     <Input
@@ -308,7 +306,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
 
             {currentStep === 2 && (
               <div className="space-y-8">
-                <div className="text-center mb-6">
+                <div className="text-center mb-8">
                   <h3 className="text-2xl font-semibold text-gray-900 mb-2">Choose type and scope</h3>
                   <p className="text-gray-600">Define what your assistant will do and who can use it</p>
                 </div>
@@ -410,7 +408,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
 
             {currentStep === 3 && (
               <div className="space-y-6">
-                <div className="text-center mb-6">
+                <div className="text-center mb-8">
                   <h3 className="text-2xl font-semibold text-gray-900 mb-2">Select capabilities</h3>
                   <p className="text-gray-600">Choose what your assistant can do</p>
                 </div>
@@ -439,7 +437,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
 
             {currentStep === 4 && (
               <div className="space-y-8">
-                <div className="text-center mb-6">
+                <div className="text-center mb-8">
                   <h3 className="text-2xl font-semibold text-gray-900 mb-2">Configure autonomy</h3>
                   <p className="text-gray-600">Set decision-making boundaries and working parameters</p>
                 </div>
@@ -505,7 +503,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
 
             {currentStep === 5 && (
               <div className="space-y-6">
-                <div className="text-center mb-6">
+                <div className="text-center mb-8">
                   <h3 className="text-2xl font-semibold text-gray-900 mb-2">Connect integrations</h3>
                   <p className="text-gray-600">Choose which tools your assistant can access</p>
                 </div>
@@ -534,7 +532,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
 
             {currentStep === 6 && (
               <div className="space-y-8">
-                <div className="text-center mb-6">
+                <div className="text-center mb-8">
                   <h3 className="text-2xl font-semibold text-gray-900 mb-2">Set approval rules</h3>
                   <p className="text-gray-600">Define what your assistant can decide independently</p>
                 </div>
@@ -605,7 +603,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
 
             {currentStep === 7 && (
               <div className="space-y-6">
-                <div className="text-center mb-6">
+                <div className="text-center mb-8">
                   <h3 className="text-2xl font-semibold text-gray-900 mb-2">Review & Create</h3>
                   <p className="text-gray-600">Review your assistant configuration</p>
                 </div>
@@ -681,40 +679,42 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
               </div>
             )}
           </div>
-        </div>
 
-        {/* Navigation Buttons - Improved Spacing */}
-        <div className="flex justify-between items-center pt-6 border-t mt-8">
-          <Button 
-            variant="outline" 
-            onClick={handleBack}
-            disabled={currentStep === 1}
-            className="h-12 px-6"
-          >
-            Back
-          </Button>
-          <div className="space-x-3">
-            <Button variant="outline" onClick={() => onOpenChange(false)} className="h-12 px-6">
-              Cancel
-            </Button>
-            {currentStep < 7 ? (
+          {/* Footer */}
+          <div className="border-t bg-gray-50 px-6 py-4">
+            <div className="flex justify-between items-center">
               <Button 
-                onClick={handleNext}
-                disabled={!canProceed()}
-                className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 h-12 px-6"
+                variant="outline" 
+                onClick={handleBack}
+                disabled={currentStep === 1}
+                className="h-10 px-6"
               >
-                Next
-                <ArrowRight className="h-4 w-4 ml-2" />
+                Back
               </Button>
-            ) : (
-              <Button 
-                onClick={handleCreate}
-                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 h-12 px-6"
-              >
-                <Sparkles className="h-4 w-4 mr-2" />
-                Create Assistant
-              </Button>
-            )}
+              <div className="space-x-3">
+                <Button variant="outline" onClick={() => onOpenChange(false)} className="h-10 px-6">
+                  Cancel
+                </Button>
+                {currentStep < 7 ? (
+                  <Button 
+                    onClick={handleNext}
+                    disabled={!canProceed()}
+                    className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 h-10 px-6"
+                  >
+                    Next
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                ) : (
+                  <Button 
+                    onClick={handleCreate}
+                    className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 h-10 px-6"
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Create Assistant
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </DialogContent>
