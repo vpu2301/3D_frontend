@@ -31,6 +31,8 @@ interface ChatHistory {
 }
 
 const Chat = () => {
+  console.log('Chat component is rendering...');
+  
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -51,30 +53,41 @@ const Chat = () => {
   ];
 
   useEffect(() => {
+    console.log('Chat useEffect running...');
+    
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     const email = localStorage.getItem('userEmail');
     
+    console.log('Auth status:', { isAuthenticated, email });
+    
     if (isAuthenticated !== 'true') {
+      console.log('Not authenticated, redirecting to login');
       navigate('/login');
       return;
     }
     
     if (email) {
       setUserEmail(email);
+      console.log('User email set:', email);
     }
 
     // Initialize with welcome message
-    setMessages([{
+    const welcomeMessage = {
       id: 1,
       text: "Hello! I'm your AI assistant. How can I help you today?",
-      sender: 'assistant',
+      sender: 'assistant' as const,
       timestamp: new Date()
-    }]);
+    };
+    
+    console.log('Setting welcome message:', welcomeMessage);
+    setMessages([welcomeMessage]);
 
     // Load chat history from localStorage
     const savedHistory = localStorage.getItem('chatHistory');
     if (savedHistory) {
-      setChatHistory(JSON.parse(savedHistory));
+      const parsedHistory = JSON.parse(savedHistory);
+      console.log('Loaded chat history:', parsedHistory);
+      setChatHistory(parsedHistory);
     } else {
       // Initialize with some sample chat history
       const sampleHistory: ChatHistory[] = [
@@ -100,6 +113,7 @@ const Chat = () => {
           messageCount: 15
         }
       ];
+      console.log('Setting sample history:', sampleHistory);
       setChatHistory(sampleHistory);
       localStorage.setItem('chatHistory', JSON.stringify(sampleHistory));
     }
@@ -207,6 +221,12 @@ const Chat = () => {
     if (fileType.startsWith('image/')) return Image;
     return FileText;
   };
+
+  console.log('Chat component rendering with:', { 
+    userEmail, 
+    messagesCount: messages.length, 
+    currentChatId 
+  });
 
   return (
     <SidebarProvider>
