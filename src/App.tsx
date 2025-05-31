@@ -8,16 +8,16 @@ import AIEmployees from './pages/AIEmployees';
 import Teams from './pages/Teams';
 import AIAgents from './pages/AIAgents';
 import Workflows from './pages/Workflows';
-import Integrations from './pages/Integrations';
+import IntegrationsPage from './pages/IntegrationsPage';
 import Settings from './pages/Settings';
 import Billing from './pages/Billing';
 import Help from './pages/Help';
 import AssistantProfile from './pages/AssistantProfile';
 import AssistantConfiguration from './pages/AssistantConfiguration';
 import Tasks from './pages/Tasks';
-import DevPlayground from './pages/DevPlayground';
-import DevAPI from './pages/DevAPI';
-import DevDocs from './pages/DevDocs';
+import DevPlayground from './pages/dev/Playground';
+import DevAPI from './pages/dev/Api';
+import DevDocs from './pages/dev/Docs';
 import AIFineTuning from './pages/AIFineTuning';
 import AIAgentsPage from './pages/AIAgentsPage';
 
@@ -36,7 +36,7 @@ function App() {
           <Route path="/teams" element={<Teams />} />
           <Route path="/ai-agents" element={<AIAgents />} />
           <Route path="/workflows" element={<Workflows />} />
-          <Route path="/integrations" element={<Integrations />} />
+          <Route path="/integrations" element={<IntegrationsPage />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/billing" element={<Billing />} />
           <Route path="/help" element={<Help />} />
