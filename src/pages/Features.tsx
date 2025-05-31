@@ -3,19 +3,9 @@ import { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
-import { 
-  Bot, 
-  Workflow, 
-  BarChart, 
-  Shield, 
-  Zap, 
-  Users,
-  ArrowRight,
-  CheckCircle,
-  Clock,
-  DollarSign
-} from 'lucide-react';
+import { ArrowRight, Zap, Clock, Shield, BarChart3, Users, Cog } from 'lucide-react';
 
 const Features = () => {
   useEffect(() => {
@@ -23,148 +13,154 @@ const Features = () => {
     console.log('Features: Current location:', window.location.pathname);
   }, []);
 
-  const features = [
-    {
-      icon: Bot,
-      title: "AI Assistants",
-      description: "Intelligent virtual employees that understand context and handle complex tasks autonomously.",
-      benefits: ["Natural language processing", "Task automation", "24/7 availability"]
-    },
-    {
-      icon: Workflow,
-      title: "Workflow Automation",
-      description: "Seamlessly integrate AI into your existing processes with our visual workflow builder.",
-      benefits: ["Drag-and-drop interface", "Pre-built templates", "Custom integrations"]
-    },
-    {
-      icon: BarChart,
-      title: "Analytics & Insights",
-      description: "Real-time dashboards and detailed reports to track performance and ROI.",
-      benefits: ["Performance metrics", "Cost savings tracking", "Predictive analytics"]
-    },
-    {
-      icon: Shield,
-      title: "Enterprise Security",
-      description: "Bank-level security with compliance standards that enterprises trust.",
-      benefits: ["SOC 2 compliance", "Data encryption", "Access controls"]
-    },
-    {
-      icon: Zap,
-      title: "Lightning Fast",
-      description: "Deploy AI employees in minutes with our pre-trained models and templates.",
-      benefits: ["Quick deployment", "Pre-configured models", "Instant results"]
-    },
-    {
-      icon: Users,
-      title: "Team Collaboration",
-      description: "Built for teams with role-based access and collaborative workspaces.",
-      benefits: ["Role management", "Shared workspaces", "Team analytics"]
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-white">
       <Header />
       
       <main className="pt-24">
-        {/* Hero Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto text-center">
-            <h1 className="text-5xl md:text-6xl font-light text-gray-900 mb-6 tracking-tight">
-              Powerful Features for
-              <span className="block text-blue-600">Modern Businesses</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Powerful Features for Modern Business
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto font-light">
-              Everything you need to deploy, manage, and scale AI employees across your organization.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Discover how 3days.ai transforms your operations with intelligent automation, 
+              advanced analytics, and seamless integrations.
             </p>
           </div>
-        </section>
 
-        {/* Features Grid */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <div key={index} className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                    <feature.icon className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
-                  <p className="text-gray-600 mb-6">{feature.description}</p>
-                  <ul className="space-y-2">
-                    {feature.benefits.map((benefit, benefitIndex) => (
-                      <li key={benefitIndex} className="flex items-center text-sm text-gray-600">
-                        <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <Card className="shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader>
+                <Zap className="h-8 w-8 text-blue-600 mb-2" />
+                <CardTitle>Lightning Fast Deployment</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Get up and running in minutes, not months. Our pre-trained AI employees 
+                  are ready to work from day one.
+                </p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• 3-minute setup process</li>
+                  <li>• Pre-configured workflows</li>
+                  <li>• Instant integration</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader>
+                <Clock className="h-8 w-8 text-green-600 mb-2" />
+                <CardTitle>24/7 Availability</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Your AI employees never sleep, take breaks, or call in sick. 
+                  Consistent performance around the clock.
+                </p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• Continuous operation</li>
+                  <li>• No downtime</li>
+                  <li>• Global timezone support</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader>
+                <Shield className="h-8 w-8 text-purple-600 mb-2" />
+                <CardTitle>Enterprise Security</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Bank-level security with end-to-end encryption, compliance certifications, 
+                  and advanced access controls.
+                </p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• SOC 2 Type II certified</li>
+                  <li>• GDPR compliant</li>
+                  <li>• Zero-trust architecture</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader>
+                <BarChart3 className="h-8 w-8 text-orange-600 mb-2" />
+                <CardTitle>Advanced Analytics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Real-time insights and performance metrics to optimize your operations 
+                  and measure ROI.
+                </p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• Performance dashboards</li>
+                  <li>• Predictive analytics</li>
+                  <li>• Custom reporting</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader>
+                <Users className="h-8 w-8 text-red-600 mb-2" />
+                <CardTitle>Seamless Collaboration</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  AI employees that work alongside your human team, enhancing 
+                  productivity without disruption.
+                </p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• Team integration</li>
+                  <li>• Workflow handoffs</li>
+                  <li>• Smart notifications</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader>
+                <Cog className="h-8 w-8 text-indigo-600 mb-2" />
+                <CardTitle>Easy Customization</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Tailor AI employees to your specific business needs with 
+                  intuitive configuration tools.
+                </p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• No-code customization</li>
+                  <li>• Business rule engine</li>
+                  <li>• Flexible workflows</li>
+                </ul>
+              </CardContent>
+            </Card>
           </div>
-        </section>
 
-        {/* Benefits Section */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-light text-gray-900 mb-4">
-                Why Businesses Choose 3days.ai
-              </h2>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Clock className="h-8 w-8 text-green-600" />
-                </div>
-                <h3 className="text-2xl font-medium text-gray-900 mb-4">Save Time</h3>
-                <p className="text-gray-600">
-                  Reduce manual work by up to 80% with intelligent automation that handles repetitive tasks.
-                </p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <DollarSign className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="text-2xl font-medium text-gray-900 mb-4">Cut Costs</h3>
-                <p className="text-gray-600">
-                  Reduce operational costs by 60% while maintaining or improving service quality.
-                </p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <BarChart className="h-8 w-8 text-purple-600" />
-                </div>
-                <h3 className="text-2xl font-medium text-gray-900 mb-4">Scale Fast</h3>
-                <p className="text-gray-600">
-                  Handle increasing workloads without proportional increases in staff or infrastructure costs.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-blue-600">
-          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl font-light text-white mb-6">
-              Ready to Experience These Features?
+          <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-12 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Ready to Experience the Future?
             </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              Sign up for free and see how AI employees can transform your business.
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              Join thousands of companies already using AI employees to transform their operations.
             </p>
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg rounded-full shadow-lg" asChild>
-              <Link to="/signup">
-                Sign Up Free
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
+                <Link to="/signup">
+                  Start Free Trial
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link to="/watch-demo">
+                  Watch Demo
+                </Link>
+              </Button>
+            </div>
           </div>
-        </section>
+        </div>
       </main>
       
       <Footer />

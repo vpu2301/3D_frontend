@@ -1,176 +1,140 @@
 
-import { useState } from 'react';
+import { useEffect } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
+import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
 
 const Contact = () => {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    subject: '',
-    message: ''
-  });
+  useEffect(() => {
+    console.log('Contact: Component mounted and rendering');
+    console.log('Contact: Current location:', window.location.pathname);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "We'll get back to you within 24 hours.",
-    });
-    setFormData({ name: '', email: '', company: '', subject: '', message: '' });
+    console.log('Contact form submitted');
   };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const contactInfo = [
-    {
-      icon: Mail,
-      title: "Email",
-      details: "contact@3days.ai",
-      description: "Send us an email anytime"
-    },
-    {
-      icon: Phone,
-      title: "Phone",
-      details: "+1 (555) 123-4567",
-      description: "Mon-Fri from 8am to 5pm"
-    },
-    {
-      icon: MapPin,
-      title: "Office",
-      details: "123 AI Street, Tech City, TC 12345",
-      description: "Come say hello"
-    },
-    {
-      icon: Clock,
-      title: "Working hours",
-      details: "Mon-Fri: 8am-5pm PST",
-      description: "Weekend support available"
-    }
-  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Have questions about 3days.ai? We'd love to hear from you. 
-            Send us a message and we'll respond as soon as possible.
-          </p>
-        </div>
+    <div className="min-h-screen bg-white">
+      <Header />
+      
+      <main className="pt-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Get in Touch
+            </h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Have questions about 3days.ai? We're here to help you get started 
+              with AI employees for your business.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Contact Information */}
-          <div className="lg:col-span-1">
-            <div className="space-y-6">
-              {contactInfo.map((info, index) => (
-                <Card key={index}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-blue-100 p-3 rounded-lg">
-                        <info.icon className="h-6 w-6 text-blue-600" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <Card className="shadow-lg">
+                <CardHeader>
+                  <CardTitle>Send us a Message</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="firstName">First Name</Label>
+                        <Input id="firstName" required />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                          {info.title}
-                        </h3>
-                        <p className="text-gray-900 font-medium mb-1">{info.details}</p>
-                        <p className="text-sm text-gray-600">{info.description}</p>
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input id="lastName" required />
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    
+                    <div>
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" type="email" required />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="company">Company</Label>
+                      <Input id="company" />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="message">Message</Label>
+                      <Textarea id="message" rows={6} required />
+                    </div>
+
+                    <Button type="submit" className="w-full">
+                      Send Message
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="space-y-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <Mail className="h-6 w-6 text-blue-600" />
+                    <h3 className="font-semibold">Email Us</h3>
+                  </div>
+                  <p className="text-gray-600">hello@3days.ai</p>
+                  <p className="text-gray-600">support@3days.ai</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <Phone className="h-6 w-6 text-green-600" />
+                    <h3 className="font-semibold">Call Us</h3>
+                  </div>
+                  <p className="text-gray-600">+1 (555) 123-4567</p>
+                  <p className="text-sm text-gray-500">Mon-Fri 9AM-6PM PST</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <MapPin className="h-6 w-6 text-purple-600" />
+                    <h3 className="font-semibold">Visit Us</h3>
+                  </div>
+                  <p className="text-gray-600">
+                    123 AI Street<br />
+                    San Francisco, CA 94102<br />
+                    United States
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <MessageCircle className="h-6 w-6 text-orange-600" />
+                    <h3 className="font-semibold">Live Chat</h3>
+                  </div>
+                  <p className="text-gray-600 mb-3">
+                    Get instant answers to your questions
+                  </p>
+                  <Button variant="outline" className="w-full">
+                    Start Chat
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
-
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Send us a message</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="name">Name *</Label>
-                      <Input
-                        id="name"
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="company">Company</Label>
-                    <Input
-                      id="company"
-                      value={formData.company}
-                      onChange={(e) => handleInputChange('company', e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="subject">Subject *</Label>
-                    <Select onValueChange={(value) => handleInputChange('subject', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a subject" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="general">General Inquiry</SelectItem>
-                        <SelectItem value="sales">Sales Question</SelectItem>
-                        <SelectItem value="support">Technical Support</SelectItem>
-                        <SelectItem value="partnership">Partnership</SelectItem>
-                        <SelectItem value="demo">Request Demo</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="message">Message *</Label>
-                    <Textarea
-                      id="message"
-                      rows={6}
-                      value={formData.message}
-                      onChange={(e) => handleInputChange('message', e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <Button type="submit" className="w-full" size="lg">
-                    Send Message
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
         </div>
-      </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 };
