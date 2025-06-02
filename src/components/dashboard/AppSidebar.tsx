@@ -28,7 +28,8 @@ import {
   Terminal,
   BookOpen,
   Play,
-  GitBranch
+  GitBranch,
+  Network
 } from 'lucide-react';
 
 const navigationItems = [
@@ -61,6 +62,11 @@ const navigationItems = [
     title: "AI Agents",
     url: "/ai-agents",
     icon: Bot,
+  },
+  {
+    title: "Networks",
+    url: "/networks",
+    icon: Network,
   },
   {
     title: "Workflows",
