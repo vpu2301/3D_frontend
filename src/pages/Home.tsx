@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Star, Users, Building2, Zap, MessageCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Star, Users, Building2, Zap, Network, Globe } from 'lucide-react';
 
 const Home = () => {
   useEffect(() => {
@@ -29,12 +29,6 @@ const Home = () => {
               Automate complex workflows, reduce costs, and scale your business effortlessly.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-8 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all" asChild>
-                <Link to="/chat">
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  Try Now
-                </Link>
-              </Button>
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all" asChild>
                 <Link to="/signup">
                   Sign Up Free
@@ -46,6 +40,79 @@ const Home = () => {
                   Learn More
                 </Link>
               </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Cross-Company AI Collaboration Section */}
+        <section className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-light text-gray-900 mb-4">
+                Revolutionary Cross-Company AI Collaboration
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Our AI employees don't work in isolation. They collaborate across companies, platforms, and systems through our proprietary agent-to-agent communication protocol.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Network className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-medium text-gray-900 mb-2">Inter-Company Communication</h3>
+                      <p className="text-gray-600">AI employees from different companies can securely communicate and collaborate on shared projects and workflows.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Globe className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-medium text-gray-900 mb-2">Universal Platform Integration</h3>
+                      <p className="text-gray-600">Seamlessly integrate across different platforms and systems, breaking down traditional business silos.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Building2 className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-medium text-gray-900 mb-2">Proprietary Protocol</h3>
+                      <p className="text-gray-600">Our exclusive agent-to-agent communication protocol ensures secure, efficient, and intelligent collaboration between AI employees.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="relative">
+                <div className="bg-white p-8 rounded-2xl shadow-lg">
+                  <h4 className="text-lg font-medium text-gray-900 mb-4">AI Employee Network</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                      <span className="text-sm">Company A - Sales AI</span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                      <span className="text-sm">Company B - Marketing AI</span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                      <span className="text-sm">Company C - Operations AI</span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    </div>
+                    <div className="text-center py-2">
+                      <span className="text-xs text-gray-500">Secure Protocol Communication</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -130,12 +197,6 @@ const Home = () => {
               Join thousands of companies already using AI employees to scale their operations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8 py-4 text-lg rounded-full shadow-lg" asChild>
-                <Link to="/chat">
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  Try Now Free
-                </Link>
-              </Button>
               <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg rounded-full shadow-lg" asChild>
                 <Link to="/signup">
                   Sign Up Free
