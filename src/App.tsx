@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -20,6 +19,7 @@ import Tasks from './pages/Tasks';
 import DevPlayground from './pages/dev/Playground';
 import DevAPI from './pages/dev/Api';
 import DevDocs from './pages/dev/Docs';
+import DevDemo from './pages/dev/Demo';
 import AIFineTuning from './pages/AIFineTuning';
 import AIAgentsPage from './pages/AIAgentsPage';
 import GetStarted from './pages/GetStarted';
@@ -211,6 +211,7 @@ function App() {
           <Route path="/dev/playground" element={<ProtectedRoute><DevPlayground /></ProtectedRoute>} />
           <Route path="/dev/api" element={<ProtectedRoute><DevAPI /></ProtectedRoute>} />
           <Route path="/dev/docs" element={<ProtectedRoute><DevDocs /></ProtectedRoute>} />
+          <Route path="/dev/demo" element={<ProtectedRoute><DevDemo /></ProtectedRoute>} />
           <Route path="/ai-fine-tuning" element={<ProtectedRoute><AIFineTuning /></ProtectedRoute>} />
           
           {/* 404 catch-all route */}
