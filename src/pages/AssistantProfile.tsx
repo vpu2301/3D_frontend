@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -151,6 +152,11 @@ const AssistantProfile = () => {
     }
   }, [id, navigate]);
 
+  const handleConfigureClick = () => {
+    // Navigate to settings page since there's no specific configure route
+    navigate('/settings');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -224,7 +230,7 @@ const AssistantProfile = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => navigate(`/ai-assistants/${id}/configure`)}
+                    onClick={handleConfigureClick}
                   >
                     <Settings className="h-4 w-4 mr-2" />
                     Configure
