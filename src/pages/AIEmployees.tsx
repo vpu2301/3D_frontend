@@ -7,6 +7,7 @@ import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Bot, Plus, Settings, Activity, Eye, MessageCircle, Users, Building } from 'lucide-react';
 import CreateAssistantDialog from '@/components/CreateAssistantDialog';
 
@@ -15,10 +16,58 @@ const AIEmployees = () => {
   const [userEmail, setUserEmail] = useState('');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [employees, setEmployees] = useState([
-    { id: 1, name: 'Aria', department: 'Sales', status: 'Active', tasks: 12, conversations: 89, type: 'Sales', iconColor: 'text-pink-600', bgColor: 'from-pink-100 to-rose-100', scope: 'team' },
-    { id: 2, name: 'Atlas', department: 'Operations', status: 'Active', tasks: 8, conversations: 145, type: 'Support', iconColor: 'text-blue-600', bgColor: 'from-blue-100 to-cyan-100', scope: 'team' },
-    { id: 3, name: 'Felix', department: 'Finance', status: 'Idle', tasks: 5, conversations: 34, type: 'Finance', iconColor: 'text-green-600', bgColor: 'from-green-100 to-emerald-100', scope: 'team' },
-    { id: 4, name: 'Maya', department: 'Marketing', status: 'Active', tasks: 15, conversations: 67, type: 'Marketing', iconColor: 'text-purple-600', bgColor: 'from-purple-100 to-violet-100', scope: 'personal' },
+    { 
+      id: 1, 
+      name: 'Aria', 
+      department: 'Sales', 
+      status: 'Active', 
+      tasks: 12, 
+      conversations: 89, 
+      type: 'Sales', 
+      iconColor: 'text-pink-600', 
+      bgColor: 'from-pink-100 to-rose-100', 
+      scope: 'team',
+      avatar: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop&crop=face'
+    },
+    { 
+      id: 2, 
+      name: 'Atlas', 
+      department: 'Operations', 
+      status: 'Active', 
+      tasks: 8, 
+      conversations: 145, 
+      type: 'Support', 
+      iconColor: 'text-blue-600', 
+      bgColor: 'from-blue-100 to-cyan-100', 
+      scope: 'team',
+      avatar: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop&crop=face'
+    },
+    { 
+      id: 3, 
+      name: 'Felix', 
+      department: 'Finance', 
+      status: 'Idle', 
+      tasks: 5, 
+      conversations: 34, 
+      type: 'Finance', 
+      iconColor: 'text-green-600', 
+      bgColor: 'from-green-100 to-emerald-100', 
+      scope: 'team',
+      avatar: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400&h=400&fit=crop&crop=face'
+    },
+    { 
+      id: 4, 
+      name: 'Maya', 
+      department: 'Marketing', 
+      status: 'Active', 
+      tasks: 15, 
+      conversations: 67, 
+      type: 'Marketing', 
+      iconColor: 'text-purple-600', 
+      bgColor: 'from-purple-100 to-violet-100', 
+      scope: 'personal',
+      avatar: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&h=400&fit=crop&crop=face'
+    },
   ]);
 
   useEffect(() => {
@@ -48,6 +97,7 @@ const AIEmployees = () => {
         iconColor: assistant.iconColor || 'text-indigo-600',
         bgColor: assistant.bgColor || 'from-indigo-100 to-blue-100',
         scope: assistant.scope || 'team',
+        avatar: assistant.avatar || 'https://images.unsplash.com/photo-1501286353178-1ec881214838?w=400&h=400&fit=crop&crop=face',
         isAssistant: true
       }));
 
@@ -68,10 +118,21 @@ const AIEmployees = () => {
       { iconColor: 'text-cyan-600', bgColor: 'from-cyan-100 to-blue-100' }
     ];
     
+    const avatarOptions = [
+      'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop&crop=face',
+      'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop&crop=face',
+      'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400&h=400&fit=crop&crop=face',
+      'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&h=400&fit=crop&crop=face',
+      'https://images.unsplash.com/photo-1501286353178-1ec881214838?w=400&h=400&fit=crop&crop=face'
+    ];
+    
     const colorScheme = gradientOptions[employees.length % gradientOptions.length];
+    const selectedAvatar = avatarOptions[employees.length % avatarOptions.length];
+    
     const employeeWithGradient = {
       ...newEmployee,
       ...colorScheme,
+      avatar: selectedAvatar,
       tasks: Math.floor(Math.random() * 20) + 1,
       conversations: Math.floor(Math.random() * 100) + 1
     };
@@ -114,9 +175,17 @@ const AIEmployees = () => {
                   <Card key={employee.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
                     <CardHeader className="pb-3">
                       <CardTitle className="flex items-center justify-between text-sm">
-                        <div className="flex items-center space-x-2">
-                          <div className={`p-2 rounded-lg bg-gradient-to-br ${employee.bgColor}`}>
-                            <Bot className={`h-4 w-4 ${employee.iconColor}`} />
+                        <div className="flex items-center space-x-3">
+                          <div className="relative">
+                            <Avatar className="h-12 w-12">
+                              <AvatarImage src={employee.avatar} alt={employee.name} />
+                              <AvatarFallback className={`bg-gradient-to-br ${employee.bgColor} ${employee.iconColor} font-medium`}>
+                                {employee.name.charAt(0)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className={`absolute -bottom-1 -right-1 p-1 rounded-full bg-gradient-to-br ${employee.bgColor}`}>
+                              <Bot className={`h-3 w-3 ${employee.iconColor}`} />
+                            </div>
                           </div>
                           <div>
                             <span className="font-medium">{employee.name}</span>

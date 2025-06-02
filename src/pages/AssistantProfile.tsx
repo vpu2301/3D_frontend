@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Bot, 
   Settings, 
@@ -60,10 +61,50 @@ const AssistantProfile = () => {
       // Load assistant data (from localStorage or API)
       const storedAssistants = JSON.parse(localStorage.getItem('aiAssistants') || '[]');
       const defaultAssistants = [
-        { id: 1, name: 'Customer Support Assistant', type: 'Support', department: 'Customer Service', conversations: 145, status: 'Active', iconColor: 'text-sky-600', bgColor: 'from-sky-100 to-blue-100' },
-        { id: 2, name: 'Sales Assistant', type: 'Sales', department: 'Sales', conversations: 89, status: 'Active', iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-red-100' },
-        { id: 3, name: 'Technical Helper', type: 'Technical', department: 'IT', conversations: 67, status: 'Active', iconColor: 'text-slate-600', bgColor: 'from-slate-100 to-gray-100' },
-        { id: 4, name: 'HR Assistant', type: 'HR', department: 'Human Resources', conversations: 34, status: 'Idle', iconColor: 'text-lime-600', bgColor: 'from-lime-100 to-green-100' },
+        { 
+          id: 1, 
+          name: 'Aria', 
+          type: 'Sales', 
+          department: 'Sales', 
+          conversations: 89, 
+          status: 'Active', 
+          iconColor: 'text-pink-600', 
+          bgColor: 'from-pink-100 to-rose-100',
+          avatar: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop&crop=face'
+        },
+        { 
+          id: 2, 
+          name: 'Atlas', 
+          type: 'Support', 
+          department: 'Operations', 
+          conversations: 145, 
+          status: 'Active', 
+          iconColor: 'text-blue-600', 
+          bgColor: 'from-blue-100 to-cyan-100',
+          avatar: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop&crop=face'
+        },
+        { 
+          id: 3, 
+          name: 'Felix', 
+          type: 'Finance', 
+          department: 'Finance', 
+          conversations: 34, 
+          status: 'Idle', 
+          iconColor: 'text-green-600', 
+          bgColor: 'from-green-100 to-emerald-100',
+          avatar: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400&h=400&fit=crop&crop=face'
+        },
+        { 
+          id: 4, 
+          name: 'Maya', 
+          type: 'Marketing', 
+          department: 'Marketing', 
+          conversations: 67, 
+          status: 'Active', 
+          iconColor: 'text-purple-600', 
+          bgColor: 'from-purple-100 to-violet-100',
+          avatar: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&h=400&fit=crop&crop=face'
+        },
       ];
       
       const allAssistants = [...defaultAssistants, ...storedAssistants];
@@ -90,6 +131,7 @@ const AssistantProfile = () => {
           scope: foundAssistant.scope || 'team',
           workingHours: foundAssistant.workingHours || '24/7',
           maxBudgetLimit: foundAssistant.maxBudgetLimit || 1000,
+          avatar: foundAssistant.avatar || 'https://images.unsplash.com/photo-1501286353178-1ec881214838?w=400&h=400&fit=crop&crop=face',
           recentActivities: [
             { action: 'Resolved customer inquiry', time: '2 minutes ago', status: 'completed' },
             { action: 'Scheduled team meeting', time: '15 minutes ago', status: 'completed' },
@@ -155,8 +197,16 @@ const AssistantProfile = () => {
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Back
                   </Button>
-                  <div className={`p-3 rounded-2xl bg-gradient-to-br ${assistant.bgColor || 'from-blue-100 to-indigo-100'}`}>
-                    <Bot className={`h-8 w-8 ${assistant.iconColor || 'text-blue-600'}`} />
+                  <div className="relative">
+                    <Avatar className="h-16 w-16">
+                      <AvatarImage src={assistant.avatar} alt={assistant.name} />
+                      <AvatarFallback className={`bg-gradient-to-br ${assistant.bgColor || 'from-blue-100 to-indigo-100'} ${assistant.iconColor || 'text-blue-600'} text-lg font-medium`}>
+                        {assistant.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className={`absolute -bottom-1 -right-1 p-2 rounded-full bg-gradient-to-br ${assistant.bgColor || 'from-blue-100 to-indigo-100'}`}>
+                      <Bot className={`h-4 w-4 ${assistant.iconColor || 'text-blue-600'}`} />
+                    </div>
                   </div>
                   <div>
                     <h1 className="text-3xl font-light text-gray-900">{assistant.name}</h1>
