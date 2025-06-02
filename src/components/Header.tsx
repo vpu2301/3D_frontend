@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity, Brain, Network } from 'lucide-react';
@@ -72,7 +71,8 @@ const Header = () => {
         { name: 'Fine Tuning', href: '/product/fine-tuning', icon: Brain },
         { name: 'Analytics Dashboard', href: '/platform/analytics', icon: BarChart },
         { name: 'Integration Hub', href: '/platform/integrations', icon: Database },
-        { name: 'API Gateway', href: '/platform/api', icon: Cog }
+        { name: 'API Gateway', href: '/platform/api', icon: Cog },
+        { name: 'Agentic Communication', href: '/platform/agentic-communication', icon: MessageSquare }
       ]
     },
     {

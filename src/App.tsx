@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -67,6 +66,7 @@ import Analytics from './pages/platform/Analytics';
 import Integrations from './pages/platform/Integrations';
 import Api from './pages/platform/Api';
 import Security from './pages/platform/Security';
+import AgenticCommunication from './pages/platform/AgenticCommunication';
 
 // Use cases
 import DocumentProcessing from './pages/use-cases/DocumentProcessing';
@@ -160,6 +160,7 @@ function App() {
           <Route path="/platform/integrations" element={<Integrations />} />
           <Route path="/platform/api" element={<Api />} />
           <Route path="/platform/security" element={<Security />} />
+          <Route path="/platform/agentic-communication" element={<AgenticCommunication />} />
 
           {/* Use cases routes */}
           <Route path="/use-cases/document-processing" element={<DocumentProcessing />} />
