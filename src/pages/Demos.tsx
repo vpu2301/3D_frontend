@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -37,6 +36,7 @@ const Demos = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [typedText, setTypedText] = useState('');
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
@@ -284,14 +284,24 @@ const Demos = () => {
       setDemoProgress(((i + 1) / aiEmployeeSteps.length) * 100);
     }
 
-    // Complete demo
+    // Complete demo and transition
+    setCurrentAction('Transitioning to AI Employees page');
+    setIsTransitioning(true);
+    
+    // Wait a moment to show the completion
     setTimeout(() => {
       setShowCreateDialog(false);
       setIsRunning(false);
       setShowCursor(false);
       setCurrentAction('');
       setTypedText('');
-    }, 1000);
+      setIsTransitioning(false);
+      
+      // Navigate to AI Employees page after a brief pause
+      setTimeout(() => {
+        navigate('/ai-employees');
+      }, 1500);
+    }, 2000);
   };
 
   const resetDemo = () => {
@@ -306,6 +316,7 @@ const Demos = () => {
     setIsTyping(false);
     setIsClicking(false);
     setTypedText('');
+    setIsTransitioning(false);
   };
 
   const handleAssistantCreated = (assistant: any) => {
@@ -352,6 +363,11 @@ const Demos = () => {
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span>{currentAction}</span>
               </>
+            ) : isTransitioning ? (
+              <>
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                <span>{currentAction}</span>
+              </>
             ) : (
               <>
                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
@@ -373,6 +389,17 @@ const Demos = () => {
         >
           <span className="text-blue-800">{typedText}</span>
           <span className="animate-pulse">|</span>
+        </div>
+      )}
+
+      {/* Transition Overlay */}
+      {isTransitioning && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-[9990] flex items-center justify-center">
+          <div className="bg-white rounded-lg p-8 text-center shadow-xl">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Demo Complete!</h3>
+            <p className="text-gray-600">Redirecting to AI Employees page...</p>
+          </div>
         </div>
       )}
 
@@ -515,6 +542,20 @@ const Demos = () => {
                           </div>
                         )}
 
+                        {/* Transition Status */}
+                        {isTransitioning && (
+                          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                              <span className="font-medium text-purple-800">Demo Complete</span>
+                            </div>
+                            <h4 className="font-semibold text-purple-900 mb-1">Transitioning to AI Employees</h4>
+                            <p className="text-sm text-purple-700">
+                              Redirecting you to the actual AI Employees page...
+                            </p>
+                          </div>
+                        )}
+
                         {/* Steps List */}
                         <div className="space-y-2">
                           <h4 className="font-medium text-gray-900 mb-3">All Steps</h4>
@@ -543,7 +584,7 @@ const Demos = () => {
                         </div>
 
                         {/* Demo Complete */}
-                        {activeDemo && !isRunning && demoProgress === 100 && (
+                        {activeDemo && !isRunning && demoProgress === 100 && !isTransitioning && (
                           <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
                             <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
                             <h3 className="font-semibold text-green-800 mb-1">Demo Complete!</h3>
