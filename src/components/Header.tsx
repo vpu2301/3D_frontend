@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity, Brain } from 'lucide-react';
+import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity, Brain, Network } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
@@ -67,6 +67,7 @@ const Header = () => {
       items: [
         { name: 'AI Assistants', href: '/product/ai-assistants', icon: Zap },
         { name: 'Agents', href: '/product/agents', icon: Users },
+        { name: 'Cross-Company Collaboration', href: '/product/cross-company-collaboration', icon: Network },
         { name: 'Workflow Builder', href: '/product/workflow-builder', icon: Cog },
         { name: 'Fine Tuning', href: '/product/fine-tuning', icon: Brain },
         { name: 'Analytics Dashboard', href: '/platform/analytics', icon: BarChart },

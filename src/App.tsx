@@ -58,6 +58,7 @@ import Emma from './pages/solutions/Emma';
 // Product pages
 import AIAssistants from './pages/product/AIAssistants';
 import Agents from './pages/product/Agents';
+import CrossCompanyCollaboration from './pages/product/CrossCompanyCollaboration';
 import WorkflowBuilder from './pages/product/WorkflowBuilder';
 import FineTuning from './pages/product/FineTuning';
 
@@ -150,6 +151,7 @@ function App() {
           {/* Product routes */}
           <Route path="/product/ai-assistants" element={<AIAssistants />} />
           <Route path="/product/agents" element={<Agents />} />
+          <Route path="/product/cross-company-collaboration" element={<CrossCompanyCollaboration />} />
           <Route path="/product/workflow-builder" element={<WorkflowBuilder />} />
           <Route path="/product/fine-tuning" element={<FineTuning />} />
 
