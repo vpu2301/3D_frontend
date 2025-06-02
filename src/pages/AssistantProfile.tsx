@@ -2,34 +2,18 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import CommunicationSettings from '@/components/dashboard/CommunicationSettings';
-import { 
-  Bot, 
-  Settings, 
-  Activity, 
-  MessageCircle, 
-  Clock, 
-  Shield, 
-  Users, 
-  Zap, 
-  TrendingUp,
-  CheckCircle,
-  AlertCircle,
-  Calendar,
-  DollarSign,
-  Target,
-  BarChart3,
-  Workflow,
-  ArrowLeft,
-  Network
-} from 'lucide-react';
+import { Bot, ArrowLeft, Network } from 'lucide-react';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
+import AssistantProfileHeader from '@/components/assistant/AssistantProfileHeader';
+import AssistantStatsCards from '@/components/assistant/AssistantStatsCards';
+import AssistantOverviewTab from '@/components/assistant/AssistantOverviewTab';
+import AssistantCapabilitiesTab from '@/components/assistant/AssistantCapabilitiesTab';
+import AssistantAutonomyTab from '@/components/assistant/AssistantAutonomyTab';
+import AssistantIntegrationsTab from '@/components/assistant/AssistantIntegrationsTab';
+import AssistantActivityTab from '@/components/assistant/AssistantActivityTab';
 
 const AssistantProfile = () => {
   const { id } = useParams();
@@ -156,6 +140,10 @@ const AssistantProfile = () => {
     navigate('/settings');
   };
 
+  const handleBackClick = () => {
+    navigate('/ai-employees');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -174,7 +162,7 @@ const AssistantProfile = () => {
           <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">Assistant not found</h3>
           <p className="text-gray-600 mb-4">The assistant with ID "{id}" could not be found.</p>
-          <Button onClick={() => navigate('/ai-employees')}>
+          <Button onClick={handleBackClick}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to AI Employees
           </Button>
@@ -192,102 +180,13 @@ const AssistantProfile = () => {
             <LoggedInHeader userEmail={userEmail} />
             
             <main className="flex-1 p-6">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => navigate('/ai-employees')}
-                  >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back
-                  </Button>
-                  <div className="relative">
-                    <Avatar className="h-16 w-16">
-                      <AvatarImage src={assistant.avatar} alt={assistant.name} />
-                      <AvatarFallback className={`bg-gradient-to-br ${assistant.bgColor || 'from-blue-100 to-indigo-100'} ${assistant.iconColor || 'text-blue-600'} text-lg font-medium`}>
-                        {assistant.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className={`absolute -bottom-1 -right-1 p-2 rounded-full bg-gradient-to-br ${assistant.bgColor || 'from-blue-100 to-indigo-100'}`}>
-                      <Bot className={`h-4 w-4 ${assistant.iconColor || 'text-blue-600'}`} />
-                    </div>
-                  </div>
-                  <div>
-                    <h1 className="text-3xl font-light text-gray-900">{assistant.name}</h1>
-                    <p className="text-gray-600">{assistant.type} • {assistant.department}</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge 
-                    variant={assistant.status === 'Active' ? 'default' : 'secondary'}
-                    className={assistant.status === 'Active' ? 'bg-green-500' : ''}
-                  >
-                    {assistant.status}
-                  </Badge>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={handleConfigureClick}
-                  >
-                    <Settings className="h-4 w-4 mr-2" />
-                    Configure
-                  </Button>
-                </div>
-              </div>
+              <AssistantProfileHeader 
+                assistant={assistant}
+                onBack={handleBackClick}
+                onConfigure={handleConfigureClick}
+              />
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Efficiency</p>
-                        <p className="text-2xl font-light text-gray-900">{assistant.efficiency}%</p>
-                      </div>
-                      <TrendingUp className="h-8 w-8 text-green-600" />
-                    </div>
-                    <Progress value={assistant.efficiency} className="mt-3" />
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Response Time</p>
-                        <p className="text-2xl font-light text-gray-900">{assistant.responsetime}s</p>
-                      </div>
-                      <Clock className="h-8 w-8 text-blue-600" />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Satisfaction</p>
-                        <p className="text-2xl font-light text-gray-900">{assistant.satisfactionScore}/5</p>
-                      </div>
-                      <Target className="h-8 w-8 text-purple-600" />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Cost Savings</p>
-                        <p className="text-2xl font-light text-gray-900">${assistant.totalCostSavings.toLocaleString()}</p>
-                      </div>
-                      <DollarSign className="h-8 w-8 text-green-600" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+              <AssistantStatsCards assistant={assistant} />
 
               {/* Main Content Tabs */}
               <Tabs defaultValue="overview" className="space-y-6">
@@ -300,180 +199,20 @@ const AssistantProfile = () => {
                   <TabsTrigger value="activity">Activity</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="overview" className="space-y-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Performance Metrics */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center">
-                          <BarChart3 className="h-5 w-5 mr-2" />
-                          Performance Metrics
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Tasks Completed</span>
-                          <span className="font-medium">{assistant.tasksCompleted.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Conversations</span>
-                          <span className="font-medium">{assistant.conversations}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Uptime</span>
-                          <span className="font-medium">{assistant.uptime}%</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Working Hours</span>
-                          <Badge variant="outline">{assistant.workingHours}</Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Configuration Summary */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center">
-                          <Settings className="h-5 w-5 mr-2" />
-                          Configuration
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Scope</span>
-                          <Badge variant="outline" className="capitalize">{assistant.scope}</Badge>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Autonomy Level</span>
-                          <Badge variant="outline" className="capitalize">{assistant.autonomyLevel.replace('-', ' ')}</Badge>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Budget Authority</span>
-                          <span className="font-medium">${assistant.maxBudgetLimit}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Department</span>
-                          <Badge variant="outline">{assistant.department}</Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  {/* Recent Activity */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Activity className="h-5 w-5 mr-2" />
-                        Recent Activity
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {assistant.recentActivities.map((activity: any, index: number) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center space-x-3">
-                              {activity.status === 'completed' ? (
-                                <CheckCircle className="h-5 w-5 text-green-600" />
-                              ) : (
-                                <AlertCircle className="h-5 w-5 text-orange-600" />
-                              )}
-                              <div>
-                                <p className="font-medium text-sm">{activity.action}</p>
-                                <p className="text-xs text-gray-600">{activity.time}</p>
-                              </div>
-                            </div>
-                            <Badge 
-                              variant={activity.status === 'completed' ? 'default' : 'secondary'}
-                              className={activity.status === 'completed' ? 'bg-green-500' : 'bg-orange-500'}
-                            >
-                              {activity.status.replace('_', ' ')}
-                            </Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                <TabsContent value="overview">
+                  <AssistantOverviewTab assistant={assistant} />
                 </TabsContent>
 
-                <TabsContent value="capabilities" className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Zap className="h-5 w-5 mr-2" />
-                        Assistant Capabilities
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {assistant.capabilities.map((capability: string, index: number) => (
-                          <div key={index} className="p-4 bg-blue-50 rounded-lg text-center">
-                            <p className="font-medium text-blue-900">{capability}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                <TabsContent value="capabilities">
+                  <AssistantCapabilitiesTab assistant={assistant} />
                 </TabsContent>
 
-                <TabsContent value="autonomy" className="space-y-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center text-green-700">
-                          <CheckCircle className="h-5 w-5 mr-2" />
-                          Can Make Decisions For
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          {assistant.canMakeDecisions.map((decision: string, index: number) => (
-                            <div key={index} className="p-3 bg-green-50 rounded-lg">
-                              <p className="text-green-800 font-medium">{decision}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center text-orange-700">
-                          <AlertCircle className="h-5 w-5 mr-2" />
-                          Requires Approval For
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          {assistant.approvalRequired.map((approval: string, index: number) => (
-                            <div key={index} className="p-3 bg-orange-50 rounded-lg">
-                              <p className="text-orange-800 font-medium">{approval}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                <TabsContent value="autonomy">
+                  <AssistantAutonomyTab assistant={assistant} />
                 </TabsContent>
 
-                <TabsContent value="integrations" className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Workflow className="h-5 w-5 mr-2" />
-                        Connected Integrations
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {assistant.integrations.map((integration: string, index: number) => (
-                          <div key={index} className="p-4 border rounded-lg text-center hover:bg-gray-50 transition-colors">
-                            <p className="font-medium">{integration}</p>
-                            <p className="text-xs text-gray-600 mt-1">Connected</p>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                <TabsContent value="integrations">
+                  <AssistantIntegrationsTab assistant={assistant} />
                 </TabsContent>
 
                 <TabsContent value="communication" className="space-y-6">
@@ -489,40 +228,8 @@ const AssistantProfile = () => {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="activity" className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Calendar className="h-5 w-5 mr-2" />
-                        Activity Log
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {assistant.recentActivities.map((activity: any, index: number) => (
-                          <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                            <div className="flex items-center space-x-4">
-                              {activity.status === 'completed' ? (
-                                <CheckCircle className="h-6 w-6 text-green-600" />
-                              ) : (
-                                <AlertCircle className="h-6 w-6 text-orange-600" />
-                              )}
-                              <div>
-                                <p className="font-medium">{activity.action}</p>
-                                <p className="text-sm text-gray-600">{activity.time}</p>
-                              </div>
-                            </div>
-                            <Badge 
-                              variant={activity.status === 'completed' ? 'default' : 'secondary'}
-                              className={activity.status === 'completed' ? 'bg-green-500' : 'bg-orange-500'}
-                            >
-                              {activity.status.replace('_', ' ')}
-                            </Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                <TabsContent value="activity">
+                  <AssistantActivityTab assistant={assistant} />
                 </TabsContent>
               </Tabs>
             </main>
