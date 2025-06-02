@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -10,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import CommunicationSettings from '@/components/dashboard/CommunicationSettings';
 import { 
   Bot, 
   Settings, 
@@ -27,7 +27,8 @@ import {
   Target,
   BarChart3,
   Workflow,
-  ArrowLeft
+  ArrowLeft,
+  Network
 } from 'lucide-react';
 
 const AssistantProfile = () => {
@@ -285,11 +286,12 @@ const AssistantProfile = () => {
 
               {/* Main Content Tabs */}
               <Tabs defaultValue="overview" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-5">
+                <TabsList className="grid w-full grid-cols-6">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="capabilities">Capabilities</TabsTrigger>
                   <TabsTrigger value="autonomy">Autonomy</TabsTrigger>
                   <TabsTrigger value="integrations">Integrations</TabsTrigger>
+                  <TabsTrigger value="communication">Communication</TabsTrigger>
                   <TabsTrigger value="activity">Activity</TabsTrigger>
                 </TabsList>
 
@@ -467,6 +469,19 @@ const AssistantProfile = () => {
                       </div>
                     </CardContent>
                   </Card>
+                </TabsContent>
+
+                <TabsContent value="communication" className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2 mb-4">
+                      <Network className="h-6 w-6 text-blue-600" />
+                      <h3 className="text-xl font-medium text-gray-900">Communication Settings for {assistant.name}</h3>
+                    </div>
+                    <p className="text-gray-600 mb-6">
+                      Configure how {assistant.name} communicates with other AI employees and external networks.
+                    </p>
+                    <CommunicationSettings />
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="activity" className="space-y-6">
