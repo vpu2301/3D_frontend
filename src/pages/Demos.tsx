@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import CreateAssistantDialog from '@/components/CreateAssistantDialog';
 import { 
   Play, 
   Pause, 
@@ -18,7 +19,8 @@ import {
   CheckCircle,
   Mouse,
   ArrowRight,
-  Zap
+  Zap,
+  Clock
 } from 'lucide-react';
 
 const Demos = () => {
@@ -28,6 +30,7 @@ const Demos = () => {
   const [demoProgress, setDemoProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -77,50 +80,58 @@ const Demos = () => {
   const aiEmployeeSteps = [
     {
       id: 1,
-      title: "Navigate to AI Employees",
-      description: "Click on the AI Employees section in the sidebar",
-      action: "cursor-move",
-      target: { x: 150, y: 200 },
+      title: "Open Create Assistant Dialog",
+      description: "Click the 'Create New Assistant' button to start",
+      action: "dialog-open",
       duration: 2000
     },
     {
       id: 2,
-      title: "Click Create New Employee",
-      description: "Press the 'Create New Employee' button",
-      action: "cursor-click",
-      target: { x: 400, y: 150 },
-      duration: 1500
-    },
-    {
-      id: 3,
-      title: "Enter Employee Details",
-      description: "Fill in the employee name and role",
-      action: "typing",
-      target: { x: 500, y: 250 },
+      title: "Enter Basic Information",
+      description: "Fill in assistant name and description",
+      action: "form-fill",
       duration: 3000
     },
     {
+      id: 3,
+      title: "Select Type & Department",
+      description: "Choose assistant type and department",
+      action: "selection",
+      duration: 2500
+    },
+    {
       id: 4,
-      title: "Select AI Model",
-      description: "Choose the appropriate AI model for your employee",
-      action: "cursor-click",
-      target: { x: 450, y: 320 },
-      duration: 2000
+      title: "Configure Capabilities",
+      description: "Select what the assistant can do",
+      action: "capabilities",
+      duration: 3000
     },
     {
       id: 5,
-      title: "Configure Permissions",
-      description: "Set up access levels and permissions",
-      action: "cursor-move",
-      target: { x: 380, y: 400 },
+      title: "Set Autonomy Level",
+      description: "Define decision-making boundaries",
+      action: "autonomy",
       duration: 2500
     },
     {
       id: 6,
+      title: "Connect Integrations",
+      description: "Choose tools and services to connect",
+      action: "integrations",
+      duration: 2000
+    },
+    {
+      id: 7,
+      title: "Configure Approval Rules",
+      description: "Set up decision and approval workflows",
+      action: "approvals",
+      duration: 2500
+    },
+    {
+      id: 8,
       title: "Review & Create",
-      description: "Review settings and create your AI employee",
-      action: "cursor-click",
-      target: { x: 500, y: 480 },
+      description: "Review settings and create the assistant",
+      action: "create",
       duration: 2000
     }
   ];
@@ -131,14 +142,13 @@ const Demos = () => {
     setCurrentStep(0);
     setDemoProgress(0);
 
+    // Open the create dialog
+    setShowCreateDialog(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     for (let i = 0; i < aiEmployeeSteps.length; i++) {
       setCurrentStep(i);
       const step = aiEmployeeSteps[i];
-      
-      // Animate cursor movement
-      if (step.action === 'cursor-move' || step.action === 'cursor-click') {
-        await animateCursor(step.target);
-      }
       
       // Wait for step duration
       await new Promise(resolve => setTimeout(resolve, step.duration));
@@ -147,25 +157,11 @@ const Demos = () => {
       setDemoProgress(((i + 1) / aiEmployeeSteps.length) * 100);
     }
 
-    setIsRunning(false);
-  };
-
-  const animateCursor = async (target: { x: number; y: number }) => {
-    const startX = cursorPosition.x;
-    const startY = cursorPosition.y;
-    const duration = 1000;
-    const steps = 30;
-    
-    for (let i = 0; i <= steps; i++) {
-      const progress = i / steps;
-      const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
-      
-      const newX = startX + (target.x - startX) * easeProgress;
-      const newY = startY + (target.y - startY) * easeProgress;
-      
-      setCursorPosition({ x: newX, y: newY });
-      await new Promise(resolve => setTimeout(resolve, duration / steps));
-    }
+    // Close dialog and complete demo
+    setTimeout(() => {
+      setShowCreateDialog(false);
+      setIsRunning(false);
+    }, 1000);
   };
 
   const resetDemo = () => {
@@ -174,6 +170,12 @@ const Demos = () => {
     setCurrentStep(0);
     setDemoProgress(0);
     setCursorPosition({ x: 0, y: 0 });
+    setShowCreateDialog(false);
+  };
+
+  const handleAssistantCreated = (assistant: any) => {
+    // Handle the created assistant (demo purposes)
+    console.log('Demo assistant created:', assistant);
   };
 
   return (
@@ -190,228 +192,190 @@ const Demos = () => {
                 <p className="text-gray-600">Experience our platform features with realistic, step-by-step demonstrations</p>
               </div>
 
-              {/* Demo Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {demos.map((demo) => (
-                  <Card 
-                    key={demo.id}
-                    className={`transition-all duration-300 hover:shadow-lg ${
-                      activeDemo === demo.id ? 'ring-2 ring-blue-500 bg-blue-50' : ''
-                    }`}
-                  >
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className={`p-3 rounded-lg ${demo.color}`}>
-                          <demo.icon className="h-6 w-6 text-white" />
-                        </div>
-                        <Badge 
-                          variant={demo.status === 'ready' ? 'default' : 'secondary'}
-                          className={demo.status === 'ready' ? 'bg-green-500' : ''}
-                        >
-                          {demo.status === 'ready' ? 'Ready' : 'Coming Soon'}
-                        </Badge>
-                      </div>
-                      <CardTitle className="text-lg">{demo.title}</CardTitle>
-                      <p className="text-sm text-gray-600">{demo.description}</p>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">{demo.duration}</span>
-                        <Button 
-                          onClick={() => demo.id === 'ai-employee-setup' && runAIEmployeeDemo()}
-                          disabled={demo.status !== 'ready' || isRunning}
-                          size="sm"
-                          className={demo.status === 'ready' ? '' : 'opacity-50 cursor-not-allowed'}
-                        >
-                          <Play className="h-4 w-4 mr-1" />
-                          {demo.status === 'ready' ? 'Start Demo' : 'Coming Soon'}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              {/* Active Demo Display */}
-              {activeDemo && (
-                <Card className="mb-6 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="flex items-center text-blue-800">
-                          <Zap className="h-5 w-5 mr-2" />
-                          AI Employee Setup Demo
-                        </CardTitle>
-                        <p className="text-blue-600 mt-1">Watch as we guide you through setting up your first AI employee</p>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button 
-                          onClick={resetDemo} 
-                          variant="outline"
-                          disabled={isRunning}
-                        >
-                          <RotateCcw className="h-4 w-4 mr-2" />
-                          Reset
-                        </Button>
-                      </div>
-                    </div>
-                    {isRunning && (
-                      <div className="mt-4">
-                        <div className="flex justify-between text-sm text-blue-600 mb-2">
-                          <span>Progress</span>
-                          <span>{Math.round(demoProgress)}%</span>
-                        </div>
-                        <Progress value={demoProgress} className="h-2" />
-                      </div>
-                    )}
-                  </CardHeader>
-                </Card>
-              )}
-
-              {/* Demo Viewport */}
-              {activeDemo === 'ai-employee-setup' && (
-                <Card className="relative border-2 border-gray-300 bg-white min-h-[600px] overflow-hidden">
-                  <CardHeader className="bg-gray-100 border-b">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                      <span className="ml-4 text-sm text-gray-600">3days.ai - AI Employees</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-0 relative">
-                    {/* Simulated UI */}
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-semibold">AI Employees</h2>
-                        <Button className="bg-blue-600 hover:bg-blue-700">
-                          <Users className="h-4 w-4 mr-2" />
-                          Create New Employee
-                        </Button>
-                      </div>
-                      
-                      {/* Mock form */}
-                      <div className="max-w-md space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Employee Name</label>
-                          <input 
-                            type="text" 
-                            placeholder="Enter employee name..." 
-                            className="w-full p-2 border rounded-md"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Role</label>
-                          <select className="w-full p-2 border rounded-md">
-                            <option>Select a role...</option>
-                            <option>Sales Assistant</option>
-                            <option>Customer Support</option>
-                            <option>Data Analyst</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium mb-1">AI Model</label>
-                          <select className="w-full p-2 border rounded-md">
-                            <option>GPT-4 Turbo</option>
-                            <option>Claude 3</option>
-                            <option>Custom Model</option>
-                          </select>
-                        </div>
-                        <Button className="w-full">
-                          Create AI Employee
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Animated Cursor */}
-                    {isRunning && (
-                      <div 
-                        className="absolute pointer-events-none transition-all duration-100 ease-out z-50"
-                        style={{
-                          left: `${cursorPosition.x}px`,
-                          top: `${cursorPosition.y}px`,
-                          transform: 'translate(-50%, -50%)'
-                        }}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Demo Cards - Left Side */}
+                <div className="lg:col-span-2 space-y-6">
+                  {/* Demo Cards Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {demos.map((demo) => (
+                      <Card 
+                        key={demo.id}
+                        className={`transition-all duration-300 hover:shadow-lg ${
+                          activeDemo === demo.id ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+                        }`}
                       >
-                        <Mouse className="h-6 w-6 text-blue-600 drop-shadow-lg" />
-                      </div>
-                    )}
-
-                    {/* Current Step Indicator */}
-                    {isRunning && currentStep < aiEmployeeSteps.length && (
-                      <div className="absolute top-4 right-4 bg-blue-600 text-white p-3 rounded-lg shadow-lg max-w-xs">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                          <span className="font-medium">Step {currentStep + 1}</span>
-                        </div>
-                        <p className="text-sm mt-1">{aiEmployeeSteps[currentStep].description}</p>
-                      </div>
-                    )}
-
-                    {/* Completion Message */}
-                    {activeDemo && !isRunning && demoProgress === 100 && (
-                      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                        <div className="bg-white p-6 rounded-lg shadow-xl text-center max-w-md">
-                          <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                          <h3 className="text-xl font-semibold mb-2">Demo Complete!</h3>
-                          <p className="text-gray-600 mb-4">
-                            You've successfully learned how to set up an AI employee. 
-                            Ready to try it for real?
-                          </p>
-                          <div className="flex space-x-2">
-                            <Button onClick={() => navigate('/ai-employees')} className="flex-1">
-                              <ArrowRight className="h-4 w-4 mr-2" />
-                              Try Now
-                            </Button>
-                            <Button onClick={resetDemo} variant="outline" className="flex-1">
-                              Watch Again
+                        <CardHeader className="pb-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className={`p-3 rounded-lg ${demo.color}`}>
+                              <demo.icon className="h-6 w-6 text-white" />
+                            </div>
+                            <Badge 
+                              variant={demo.status === 'ready' ? 'default' : 'secondary'}
+                              className={demo.status === 'ready' ? 'bg-green-500' : ''}
+                            >
+                              {demo.status === 'ready' ? 'Ready' : 'Coming Soon'}
+                            </Badge>
+                          </div>
+                          <CardTitle className="text-lg">{demo.title}</CardTitle>
+                          <p className="text-sm text-gray-600">{demo.description}</p>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-500 flex items-center">
+                              <Clock className="h-4 w-4 mr-1" />
+                              {demo.duration}
+                            </span>
+                            <Button 
+                              onClick={() => demo.id === 'ai-employee-setup' && runAIEmployeeDemo()}
+                              disabled={demo.status !== 'ready' || isRunning}
+                              size="sm"
+                              className={demo.status === 'ready' ? '' : 'opacity-50 cursor-not-allowed'}
+                            >
+                              <Play className="h-4 w-4 mr-1" />
+                              {demo.status === 'ready' ? 'Start Demo' : 'Coming Soon'}
                             </Button>
                           </div>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
 
-              {/* Steps List for Active Demo */}
-              {activeDemo === 'ai-employee-setup' && (
-                <Card className="mt-6">
-                  <CardHeader>
-                    <CardTitle className="text-lg">Demo Steps</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {aiEmployeeSteps.map((step, index) => (
-                        <div 
-                          key={step.id}
-                          className={`flex items-center space-x-3 p-3 rounded-lg ${
-                            index < currentStep ? 'bg-green-50 border border-green-200' :
-                            index === currentStep && isRunning ? 'bg-blue-50 border border-blue-200' :
-                            'bg-gray-50 border border-gray-200'
-                          }`}
-                        >
-                          {index < currentStep ? (
-                            <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                          ) : index === currentStep && isRunning ? (
-                            <div className="h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
-                          ) : (
-                            <div className="h-5 w-5 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
-                          )}
+                  {/* Active Demo Info */}
+                  {activeDemo && (
+                    <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
                           <div>
-                            <h4 className="font-medium">{step.title}</h4>
-                            <p className="text-sm text-gray-600">{step.description}</p>
+                            <CardTitle className="flex items-center text-blue-800">
+                              <Zap className="h-5 w-5 mr-2" />
+                              AI Employee Setup Demo
+                            </CardTitle>
+                            <p className="text-blue-600 mt-1">Follow along as we create your first AI employee</p>
                           </div>
+                          <Button 
+                            onClick={resetDemo} 
+                            variant="outline"
+                            disabled={isRunning}
+                            size="sm"
+                          >
+                            <RotateCcw className="h-4 w-4 mr-2" />
+                            Reset
+                          </Button>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                      </CardHeader>
+                    </Card>
+                  )}
+                </div>
+
+                {/* Progress Panel - Right Side */}
+                {activeDemo && (
+                  <div className="lg:col-span-1">
+                    <Card className="sticky top-6">
+                      <CardHeader>
+                        <CardTitle className="text-lg flex items-center">
+                          <Settings className="h-5 w-5 mr-2" />
+                          Demo Progress
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        {/* Overall Progress */}
+                        <div>
+                          <div className="flex justify-between text-sm text-gray-600 mb-2">
+                            <span>Overall Progress</span>
+                            <span>{Math.round(demoProgress)}%</span>
+                          </div>
+                          <Progress value={demoProgress} className="h-2" />
+                        </div>
+
+                        {/* Current Step */}
+                        {isRunning && currentStep < aiEmployeeSteps.length && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                              <span className="font-medium text-blue-800">
+                                Step {currentStep + 1} of {aiEmployeeSteps.length}
+                              </span>
+                            </div>
+                            <h4 className="font-semibold text-blue-900 mb-1">
+                              {aiEmployeeSteps[currentStep].title}
+                            </h4>
+                            <p className="text-sm text-blue-700">
+                              {aiEmployeeSteps[currentStep].description}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Steps List */}
+                        <div className="space-y-2">
+                          <h4 className="font-medium text-gray-900 mb-3">All Steps</h4>
+                          {aiEmployeeSteps.map((step, index) => (
+                            <div 
+                              key={step.id}
+                              className={`flex items-center space-x-3 p-2 rounded-lg transition-all ${
+                                index < currentStep ? 'bg-green-50 border border-green-200' :
+                                index === currentStep && isRunning ? 'bg-blue-50 border border-blue-200' :
+                                'bg-gray-50'
+                              }`}
+                            >
+                              {index < currentStep ? (
+                                <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                              ) : index === currentStep && isRunning ? (
+                                <div className="h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+                              ) : (
+                                <div className="h-4 w-4 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium truncate">{step.title}</p>
+                                <p className="text-xs text-gray-500 truncate">{step.description}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Demo Complete */}
+                        {activeDemo && !isRunning && demoProgress === 100 && (
+                          <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                            <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                            <h3 className="font-semibold text-green-800 mb-1">Demo Complete!</h3>
+                            <p className="text-sm text-green-600 mb-3">
+                              Ready to create your own AI employee?
+                            </p>
+                            <div className="space-y-2">
+                              <Button 
+                                onClick={() => navigate('/ai-employees')} 
+                                size="sm"
+                                className="w-full"
+                              >
+                                <ArrowRight className="h-4 w-4 mr-2" />
+                                Try Now
+                              </Button>
+                              <Button 
+                                onClick={resetDemo} 
+                                variant="outline" 
+                                size="sm"
+                                className="w-full"
+                              >
+                                Watch Again
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+              </div>
             </main>
           </SidebarInset>
         </div>
       </SidebarProvider>
+
+      {/* Create Assistant Dialog */}
+      <CreateAssistantDialog
+        open={showCreateDialog}
+        onOpenChange={setShowCreateDialog}
+        onAssistantCreated={handleAssistantCreated}
+      />
     </div>
   );
 };
