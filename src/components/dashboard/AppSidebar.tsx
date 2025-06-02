@@ -1,4 +1,3 @@
-
 import { useLocation, Link } from 'react-router-dom';
 import {
   Sidebar,
@@ -28,7 +27,8 @@ import {
   Code,
   Terminal,
   BookOpen,
-  Play
+  Play,
+  GitBranch
 } from 'lucide-react';
 
 const navigationItems = [
@@ -71,6 +71,11 @@ const navigationItems = [
     title: "Integrations",
     url: "/integrations",
     icon: Puzzle,
+  },
+  {
+    title: "Flows",
+    url: "/flows",
+    icon: GitBranch,
   },
 ];
 

@@ -36,6 +36,7 @@ import Careers from './pages/Careers';
 import HowItWorks from './pages/HowItWorks';
 import WatchDemo from './pages/WatchDemo';
 import ScheduleDemo from './pages/ScheduleDemo';
+import Flows from './pages/platform/Flows';
 
 // Solution pages
 import Sales from './pages/solutions/Sales';
@@ -209,6 +210,7 @@ function App() {
           <Route path="/ai-agents" element={<ProtectedRoute><AIAgents /></ProtectedRoute>} />
           <Route path="/workflows" element={<ProtectedRoute><Workflows /></ProtectedRoute>} />
           <Route path="/integrations" element={<ProtectedRoute><IntegrationsPage /></ProtectedRoute>} />
+          <Route path="/flows" element={<ProtectedRoute><Flows /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
           <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
