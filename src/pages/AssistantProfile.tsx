@@ -1,8 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,6 +29,7 @@ import {
   ArrowLeft,
   Network
 } from 'lucide-react';
+import { AppSidebar } from '@/components/dashboard/AppSidebar';
 
 const AssistantProfile = () => {
   const { id } = useParams();
