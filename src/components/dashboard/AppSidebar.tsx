@@ -1,3 +1,4 @@
+
 import { useLocation, Link } from 'react-router-dom';
 import {
   Sidebar,
@@ -108,8 +109,8 @@ const devItems = [
     icon: BookOpen,
   },
   {
-    title: "Demo",
-    url: "/dev/demo",
+    title: "Demos",
+    url: "/demos",
     icon: Play,
   },
 ];
