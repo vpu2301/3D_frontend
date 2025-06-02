@@ -26,7 +26,8 @@ import {
   CreditCard,
   Code,
   Terminal,
-  BookOpen
+  BookOpen,
+  Play
 } from 'lucide-react';
 
 const navigationItems = [
@@ -105,6 +106,11 @@ const devItems = [
     title: "Docs",
     url: "/dev/docs",
     icon: BookOpen,
+  },
+  {
+    title: "Demo",
+    url: "/dev/demo",
+    icon: Play,
   },
 ];
 
