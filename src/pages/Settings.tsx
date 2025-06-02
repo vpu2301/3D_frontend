@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Settings as SettingsIcon, User, Bell, Shield, Palette, Key, Copy, Plus, Trash2, Eye, EyeOff, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import CommunicationSettings from '@/components/dashboard/CommunicationSettings';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -180,6 +181,9 @@ const Settings = () => {
                     <Button>Save Profile</Button>
                   </CardContent>
                 </Card>
+
+                {/* Communication Settings */}
+                <CommunicationSettings />
 
                 {/* API Keys & Tokens */}
                 <Card>
