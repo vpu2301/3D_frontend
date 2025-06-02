@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Star, Users, Building2, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle, Star, Users, Building2, Zap, MessageCircle } from 'lucide-react';
 
 const Home = () => {
   useEffect(() => {
@@ -29,6 +29,12 @@ const Home = () => {
               Automate complex workflows, reduce costs, and scale your business effortlessly.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-8 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all" asChild>
+                <Link to="/chat">
+                  <MessageCircle className="mr-2 h-5 w-5" />
+                  Try Now
+                </Link>
+              </Button>
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all" asChild>
                 <Link to="/signup">
                   Sign Up Free
@@ -123,12 +129,20 @@ const Home = () => {
             <p className="text-xl text-blue-100 mb-8">
               Join thousands of companies already using AI employees to scale their operations.
             </p>
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg rounded-full shadow-lg" asChild>
-              <Link to="/signup">
-                Sign Up Free
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8 py-4 text-lg rounded-full shadow-lg" asChild>
+                <Link to="/chat">
+                  <MessageCircle className="mr-2 h-5 w-5" />
+                  Try Now Free
+                </Link>
+              </Button>
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg rounded-full shadow-lg" asChild>
+                <Link to="/signup">
+                  Sign Up Free
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </section>
       </main>
