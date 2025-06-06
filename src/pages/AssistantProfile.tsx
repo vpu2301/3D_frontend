@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -10,6 +11,9 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import CommunicationSettings from '@/components/dashboard/CommunicationSettings';
+import OwnerInfo from '@/components/dashboard/OwnerInfo';
+import AIEmployeeConnections from '@/components/dashboard/AIEmployeeConnections';
+import EnhancedActivityLog from '@/components/dashboard/EnhancedActivityLog';
 import { 
   Bot, 
   Settings, 
@@ -28,7 +32,8 @@ import {
   BarChart3,
   Workflow,
   ArrowLeft,
-  Network
+  Network,
+  UserCheck
 } from 'lucide-react';
 
 const AssistantProfile = () => {
@@ -133,6 +138,141 @@ const AssistantProfile = () => {
           workingHours: foundAssistant.workingHours || '24/7',
           maxBudgetLimit: foundAssistant.maxBudgetLimit || 1000,
           avatar: foundAssistant.avatar || 'https://images.unsplash.com/photo-1501286353178-1ec881214838?w=400&h=400&fit=crop&crop=face',
+          owner: {
+            type: 'person',
+            name: 'Sarah Johnson',
+            email: 'sarah.johnson@company.com',
+            role: 'Sales Director',
+            avatar: 'https://images.unsplash.com/photo-1494790108755-2616b9b0bce2?w=400&h=400&fit=crop&crop=face'
+          },
+          connections: [
+            {
+              id: '2',
+              name: 'Atlas',
+              type: 'Support Assistant',
+              department: 'Operations',
+              location: 'internal',
+              avatar: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop&crop=face',
+              status: 'active',
+              lastInteraction: '2 hours ago'
+            },
+            {
+              id: '3',
+              name: 'Felix',
+              type: 'Finance Assistant',
+              department: 'Finance',
+              location: 'internal',
+              avatar: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400&h=400&fit=crop&crop=face',
+              status: 'active',
+              lastInteraction: '1 day ago'
+            },
+            {
+              id: 'ext1',
+              name: 'Nova',
+              type: 'Marketing Assistant',
+              department: 'Marketing',
+              location: 'external',
+              company: 'Partner Corp',
+              avatar: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&h=400&fit=crop&crop=face',
+              status: 'active',
+              lastInteraction: '3 hours ago'
+            }
+          ],
+          enhancedActivities: [
+            {
+              id: '1',
+              action: 'Processed customer inquiry from John Doe',
+              time: '2 minutes ago',
+              status: 'completed',
+              category: 'communication',
+              priority: 'medium',
+              details: [
+                {
+                  timestamp: '2024-01-15 14:30:00',
+                  description: 'Received inquiry via email',
+                  metadata: { source: 'email', subject: 'Product pricing question' }
+                },
+                {
+                  timestamp: '2024-01-15 14:31:15',
+                  description: 'Analyzed inquiry and categorized as pricing request',
+                  metadata: { category: 'pricing', confidence: 0.95 }
+                },
+                {
+                  timestamp: '2024-01-15 14:32:00',
+                  description: 'Generated response and sent to customer',
+                  metadata: { responseTime: '2 minutes', customerSatisfaction: 4.8 }
+                }
+              ],
+              participants: ['John Doe', 'Aria'],
+              relatedConnections: ['Atlas', 'Felix']
+            },
+            {
+              id: '2',
+              action: 'Collaborated with Atlas on support ticket',
+              time: '15 minutes ago',
+              status: 'completed',
+              category: 'collaboration',
+              priority: 'high',
+              details: [
+                {
+                  timestamp: '2024-01-15 14:15:00',
+                  description: 'Escalated complex inquiry to Atlas',
+                  metadata: { ticketId: 'TK-12345', escalationReason: 'Technical complexity' }
+                },
+                {
+                  timestamp: '2024-01-15 14:20:00',
+                  description: 'Received resolution from Atlas',
+                  metadata: { resolutionTime: '5 minutes', solution: 'API configuration update' }
+                }
+              ],
+              participants: ['Aria', 'Atlas'],
+              relatedConnections: ['Atlas']
+            },
+            {
+              id: '3',
+              action: 'System health check completed',
+              time: '1 hour ago',
+              status: 'completed',
+              category: 'system',
+              priority: 'low',
+              details: [
+                {
+                  timestamp: '2024-01-15 13:30:00',
+                  description: 'Initiated system health check',
+                  metadata: { components: ['memory', 'processing', 'network'] }
+                },
+                {
+                  timestamp: '2024-01-15 13:31:00',
+                  description: 'All systems operational',
+                  metadata: { memoryUsage: '45%', cpuUsage: '23%', networkLatency: '12ms' }
+                }
+              ],
+              participants: ['System Monitor'],
+              relatedConnections: []
+            },
+            {
+              id: '4',
+              action: 'Generated weekly sales report',
+              time: '2 hours ago',
+              status: 'completed',
+              category: 'task',
+              priority: 'medium',
+              details: [
+                {
+                  timestamp: '2024-01-15 12:30:00',
+                  description: 'Started data collection for weekly report',
+                  metadata: { dateRange: '2024-01-08 to 2024-01-14', sources: ['CRM', 'Email', 'Calls'] }
+                },
+                {
+                  timestamp: '2024-01-15 12:45:00',
+                  description: 'Compiled and formatted report',
+                  metadata: { totalLeads: 127, conversions: 23, revenue: '$45,600' }
+                }
+              ],
+              participants: ['Aria', 'Sales Team'],
+              relatedConnections: ['Felix']
+            }
+          ],
           recentActivities: [
             { action: 'Resolved customer inquiry', time: '2 minutes ago', status: 'completed' },
             { action: 'Scheduled team meeting', time: '15 minutes ago', status: 'completed' },
@@ -286,11 +426,12 @@ const AssistantProfile = () => {
 
               {/* Main Content Tabs */}
               <Tabs defaultValue="overview" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-6">
+                <TabsList className="grid w-full grid-cols-7">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="owner">Owner</TabsTrigger>
+                  <TabsTrigger value="connections">Connections</TabsTrigger>
                   <TabsTrigger value="capabilities">Capabilities</TabsTrigger>
                   <TabsTrigger value="autonomy">Autonomy</TabsTrigger>
-                  <TabsTrigger value="integrations">Integrations</TabsTrigger>
                   <TabsTrigger value="communication">Communication</TabsTrigger>
                   <TabsTrigger value="activity">Activity</TabsTrigger>
                 </TabsList>
@@ -390,6 +531,14 @@ const AssistantProfile = () => {
                   </Card>
                 </TabsContent>
 
+                <TabsContent value="owner" className="space-y-6">
+                  <OwnerInfo owner={assistant.owner} />
+                </TabsContent>
+
+                <TabsContent value="connections" className="space-y-6">
+                  <AIEmployeeConnections connections={assistant.connections} />
+                </TabsContent>
+
                 <TabsContent value="capabilities" className="space-y-6">
                   <Card>
                     <CardHeader>
@@ -450,27 +599,6 @@ const AssistantProfile = () => {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="integrations" className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Workflow className="h-5 w-5 mr-2" />
-                        Connected Integrations
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {assistant.integrations.map((integration: string, index: number) => (
-                          <div key={index} className="p-4 border rounded-lg text-center hover:bg-gray-50 transition-colors">
-                            <p className="font-medium">{integration}</p>
-                            <p className="text-xs text-gray-600 mt-1">Connected</p>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
                 <TabsContent value="communication" className="space-y-6">
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2 mb-4">
@@ -485,39 +613,7 @@ const AssistantProfile = () => {
                 </TabsContent>
 
                 <TabsContent value="activity" className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Calendar className="h-5 w-5 mr-2" />
-                        Activity Log
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {assistant.recentActivities.map((activity: any, index: number) => (
-                          <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                            <div className="flex items-center space-x-4">
-                              {activity.status === 'completed' ? (
-                                <CheckCircle className="h-6 w-6 text-green-600" />
-                              ) : (
-                                <AlertCircle className="h-6 w-6 text-orange-600" />
-                              )}
-                              <div>
-                                <p className="font-medium">{activity.action}</p>
-                                <p className="text-sm text-gray-600">{activity.time}</p>
-                              </div>
-                            </div>
-                            <Badge 
-                              variant={activity.status === 'completed' ? 'default' : 'secondary'}
-                              className={activity.status === 'completed' ? 'bg-green-500' : 'bg-orange-500'}
-                            >
-                              {activity.status.replace('_', ' ')}
-                            </Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <EnhancedActivityLog activities={assistant.enhancedActivities} />
                 </TabsContent>
               </Tabs>
             </main>
