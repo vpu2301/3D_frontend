@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Settings, LogOut, User } from 'lucide-react';
+import { Settings, LogOut, User, Brain } from 'lucide-react';
 import ExpandableSearch from './ExpandableSearch';
 
 interface LoggedInHeaderProps {
@@ -38,7 +38,13 @@ const LoggedInHeader = ({ userEmail }: LoggedInHeaderProps) => {
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                <Brain className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-lg font-light text-gray-900 hidden sm:block">3Days.ai</span>
+            </div>
             <ExpandableSearch />
           </div>
           

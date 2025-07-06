@@ -6,7 +6,7 @@ import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { UserCheck, Plus, Users, Crown, Settings, Eye } from 'lucide-react';
+import { Users, Plus, Bot, Crown, Settings, Eye, UserPlus } from 'lucide-react';
 import CreateTeamDialog from '@/components/CreateTeamDialog';
 
 const Teams = () => {
@@ -14,10 +14,46 @@ const Teams = () => {
   const [userEmail, setUserEmail] = useState('');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [teams, setTeams] = useState([
-    { id: 1, name: 'Sales Team', members: 8, aiEmployees: 3, leader: 'John Doe', iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-amber-100' },
-    { id: 2, name: 'Marketing Team', members: 6, aiEmployees: 2, leader: 'Jane Smith', iconColor: 'text-pink-600', bgColor: 'from-pink-100 to-fuchsia-100' },
-    { id: 3, name: 'Operations Team', members: 10, aiEmployees: 4, leader: 'Mike Johnson', iconColor: 'text-blue-600', bgColor: 'from-blue-100 to-indigo-100' },
-    { id: 4, name: 'Finance Team', members: 4, aiEmployees: 1, leader: 'Sarah Wilson', iconColor: 'text-green-600', bgColor: 'from-green-100 to-teal-100' },
+    { 
+      id: 1, 
+      name: 'Sales Hybrid Team', 
+      humanMembers: 5, 
+      aiWorkers: 3, 
+      leader: 'John Doe', 
+      iconColor: 'text-orange-600', 
+      bgColor: 'from-orange-100 to-amber-100',
+      description: 'Human sales reps working alongside AI assistants'
+    },
+    { 
+      id: 2, 
+      name: 'Marketing Automation', 
+      humanMembers: 3, 
+      aiWorkers: 4, 
+      leader: 'Jane Smith', 
+      iconColor: 'text-pink-600', 
+      bgColor: 'from-pink-100 to-fuchsia-100',
+      description: 'Content creation and campaign management team'
+    },
+    { 
+      id: 3, 
+      name: 'Operations Support', 
+      humanMembers: 6, 
+      aiWorkers: 8, 
+      leader: 'Mike Johnson', 
+      iconColor: 'text-blue-600', 
+      bgColor: 'from-blue-100 to-indigo-100',
+      description: 'Process automation and workflow optimization'
+    },
+    { 
+      id: 4, 
+      name: 'Customer Success', 
+      humanMembers: 4, 
+      aiWorkers: 2, 
+      leader: 'Sarah Wilson', 
+      iconColor: 'text-green-600', 
+      bgColor: 'from-green-100 to-teal-100',
+      description: '24/7 customer support with AI escalation'
+    },
   ]);
 
   useEffect(() => {
@@ -53,8 +89,8 @@ const Teams = () => {
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-3xl font-light text-gray-900">Teams</h1>
-                  <p className="text-gray-600">Manage your organization's teams and members</p>
+                  <h1 className="text-3xl font-light text-gray-900">Human Teams</h1>
+                  <p className="text-gray-600">Manage hybrid teams of human workers and AI assistants</p>
                 </div>
                 <Button 
                   onClick={() => setShowCreateDialog(true)}
@@ -72,9 +108,12 @@ const Teams = () => {
                       <CardTitle className="flex items-center justify-between text-sm">
                         <div className="flex items-center space-x-2">
                           <div className={`p-2 rounded-lg bg-gradient-to-br ${team.bgColor}`}>
-                            <UserCheck className={`h-4 w-4 ${team.iconColor}`} />
+                            <Users className={`h-4 w-4 ${team.iconColor}`} />
                           </div>
-                          <span className="font-medium">{team.name}</span>
+                          <div>
+                            <span className="font-medium">{team.name}</span>
+                            <p className="text-xs text-gray-500 font-normal mt-1">{team.description}</p>
+                          </div>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Button 
@@ -103,13 +142,13 @@ const Teams = () => {
                           <div className="p-1 rounded bg-gray-100">
                             <Users className="h-3 w-3 text-blue-600" />
                           </div>
-                          <span className="text-sm text-gray-700">Members: {team.members}</span>
+                          <span className="text-sm text-gray-700">Human Workers: {team.humanMembers}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <div className="p-1 rounded bg-gray-100">
-                            <UserCheck className="h-3 w-3 text-green-600" />
+                            <Bot className="h-3 w-3 text-green-600" />
                           </div>
-                          <span className="text-sm text-gray-700">AI Employees: {team.aiEmployees}</span>
+                          <span className="text-sm text-gray-700">AI Workers: {team.aiWorkers}</span>
                         </div>
                         <div className="flex space-x-2">
                           <Button 
@@ -119,14 +158,14 @@ const Teams = () => {
                             onClick={() => handleViewTeam(team.id)}
                           >
                             <Eye className="h-3 w-3 mr-1" />
-                            View Details
+                            View Team
                           </Button>
                           <Button 
                             variant="outline" 
                             size="sm"
                             className="text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
                           >
-                            <Settings className="h-3 w-3" />
+                            <UserPlus className="h-3 w-3" />
                           </Button>
                         </div>
                       </div>

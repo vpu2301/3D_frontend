@@ -1,3 +1,4 @@
+
 import { useLocation, Link } from 'react-router-dom';
 import {
   Sidebar,
@@ -28,7 +29,8 @@ import {
   Terminal,
   BookOpen,
   Play,
-  GitBranch
+  GitBranch,
+  Brain
 } from 'lucide-react';
 
 const navigationItems = [
@@ -48,19 +50,19 @@ const navigationItems = [
     icon: ClipboardCheck,
   },
   {
-    title: "AI Employees",
+    title: "AI Workers",
     url: "/ai-employees",
+    icon: Bot,
+  },
+  {
+    title: "Human Teams",
+    url: "/teams",
     icon: Users,
   },
   {
-    title: "Teams",
-    url: "/teams",
-    icon: UserCheck,
-  },
-  {
-    title: "AI Agents",
+    title: "Worker Groups",
     url: "/ai-agents",
-    icon: Bot,
+    icon: UserCheck,
   },
   {
     title: "Workflows",
@@ -73,7 +75,7 @@ const navigationItems = [
     icon: Puzzle,
   },
   {
-    title: "Flows",
+    title: "Work Flows",
     url: "/flows",
     icon: GitBranch,
   },
@@ -136,17 +138,17 @@ export function AppSidebar() {
           onClick={handleLogoClick}
         >
           <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center flex-shrink-0">
-            <div className="w-2 h-2 bg-white rounded-sm"></div>
+            <Brain className="w-3 h-3 text-white" />
           </div>
           {state === "expanded" && (
-            <span className="font-medium text-gray-900 truncate">3days.ai</span>
+            <span className="font-medium text-gray-900 truncate">3Days.ai</span>
           )}
         </div>
       </SidebarHeader>
       
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>Worker Management</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => (
@@ -190,7 +192,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Dev</SidebarGroupLabel>
+          <SidebarGroupLabel>Developer Tools</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {devItems.map((item) => (
@@ -215,7 +217,7 @@ export function AppSidebar() {
       <SidebarFooter className="p-4">
         {state === "expanded" && (
           <div className="text-xs text-gray-500">
-            3days.ai Platform v1.0
+            3Days.ai Platform v1.0
           </div>
         )}
       </SidebarFooter>

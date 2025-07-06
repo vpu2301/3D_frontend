@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -7,35 +8,38 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Users, Crown, Bot, Settings, Mail, Plus, UserPlus } from 'lucide-react';
+import { Users, Crown, Bot, Settings, Mail, Plus, UserPlus, Activity } from 'lucide-react';
 
 const TeamDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [userEmail, setUserEmail] = useState('');
 
-  // Mock team data - in real app this would come from an API
+  // Mock team data focused on hybrid human-AI teams
   const team = {
     id: parseInt(id || '1'),
-    name: 'Sales Team',
-    description: 'Responsible for driving revenue growth and managing client relationships',
+    name: 'Sales Hybrid Team',
+    description: 'Human sales representatives working alongside AI assistants for maximum efficiency',
     leader: 'John Doe',
-    members: [
+    humanMembers: [
       { id: 1, name: 'John Doe', email: 'john@company.com', role: 'Team Lead', avatar: 'JD' },
       { id: 2, name: 'Sarah Johnson', email: 'sarah@company.com', role: 'Senior Sales Rep', avatar: 'SJ' },
       { id: 3, name: 'Mike Wilson', email: 'mike@company.com', role: 'Sales Rep', avatar: 'MW' },
       { id: 4, name: 'Lisa Chen', email: 'lisa@company.com', role: 'Sales Rep', avatar: 'LC' },
     ],
-    aiEmployees: [
-      { id: 1, name: 'Emma', role: 'Sales Assistant', status: 'Active' },
-      { id: 2, name: 'Maya', role: 'Marketing Assistant', status: 'Active' },
+    aiWorkers: [
+      { id: 1, name: 'Emma', role: 'Lead Qualification AI', status: 'Active', efficiency: '95%' },
+      { id: 2, name: 'Maya', role: 'Customer Outreach AI', status: 'Active', efficiency: '92%' },
+      { id: 3, name: 'Nova', role: 'Data Analysis AI', status: 'Active', efficiency: '98%' },
     ],
     stats: {
-      totalTasks: 45,
-      completedTasks: 38,
-      activeTasks: 7,
+      totalTasks: 156,
+      completedTasks: 142,
+      activeTasks: 14,
       monthlyGoal: 100000,
-      currentRevenue: 75000
+      currentRevenue: 85000,
+      aiProductivity: '340%',
+      humanSatisfaction: '4.8/5'
     }
   };
 
@@ -70,7 +74,7 @@ const TeamDetail = () => {
                 <div className="flex space-x-2">
                   <Button variant="outline">
                     <UserPlus className="h-4 w-4 mr-2" />
-                    Invite Members
+                    Add Workers
                   </Button>
                   <Button>
                     <Settings className="h-4 w-4 mr-2" />
@@ -83,14 +87,14 @@ const TeamDetail = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <div className="text-2xl font-light text-blue-600">{team.members.length}</div>
-                    <div className="text-sm text-gray-600">Team Members</div>
+                    <div className="text-2xl font-light text-blue-600">{team.humanMembers.length}</div>
+                    <div className="text-sm text-gray-600">Human Workers</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <div className="text-2xl font-light text-green-600">{team.aiEmployees.length}</div>
-                    <div className="text-sm text-gray-600">AI Employees</div>
+                    <div className="text-2xl font-light text-green-600">{team.aiWorkers.length}</div>
+                    <div className="text-sm text-gray-600">AI Workers</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -110,23 +114,23 @@ const TeamDetail = () => {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Team Members */}
+                {/* Human Team Members */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Users className="h-5 w-5" />
-                        <span>Team Members</span>
+                        <span>Human Workers</span>
                       </div>
                       <Button size="sm" variant="outline">
                         <Plus className="h-4 w-4 mr-2" />
-                        Add Member
+                        Add Human
                       </Button>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {team.members.map((member) => (
+                      {team.humanMembers.map((member) => (
                         <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div className="flex items-center space-x-3">
                             <Avatar>
@@ -151,36 +155,46 @@ const TeamDetail = () => {
                   </CardContent>
                 </Card>
 
-                {/* AI Employees */}
+                {/* AI Workers */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Bot className="h-5 w-5" />
-                        <span>AI Employees</span>
+                        <span>AI Workers</span>
                       </div>
                       <Button size="sm" variant="outline">
                         <Plus className="h-4 w-4 mr-2" />
-                        Assign AI
+                        Deploy AI
                       </Button>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {team.aiEmployees.map((ai) => (
+                      {team.aiWorkers.map((ai) => (
                         <div key={ai.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div className="flex items-center space-x-3">
                             <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500">
                               <Bot className="h-4 w-4 text-white" />
                             </div>
                             <div>
-                              <div className="font-medium">{ai.name}</div>
+                              <div className="flex items-center space-x-2">
+                                <span className="font-medium">{ai.name}</span>
+                                <Badge variant="outline" className="text-xs text-green-700 bg-green-50">
+                                  {ai.efficiency}
+                                </Badge>
+                              </div>
                               <div className="text-sm text-gray-600">{ai.role}</div>
                             </div>
                           </div>
-                          <Badge variant="outline" className="text-green-700 bg-green-50">
-                            {ai.status}
-                          </Badge>
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="outline" className="text-green-700 bg-green-50">
+                              {ai.status}
+                            </Badge>
+                            <Button variant="ghost" size="sm">
+                              <Activity className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       ))}
                     </div>

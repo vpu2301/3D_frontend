@@ -28,7 +28,7 @@ const Login = () => {
         
         // Set authentication state
         localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userEmail', 'admin@marketmind.ai');
+        localStorage.setItem('userEmail', 'admin@3days.ai');
         
         toast({
           title: "Welcome back!",
@@ -49,7 +49,7 @@ const Login = () => {
         
         toast({
           title: "Welcome back!",
-          description: "Successfully logged in to MarketMind AI.",
+          description: "Successfully logged in to 3Days.ai.",
         });
 
         console.log('Login: Redirecting to dashboard...');
@@ -82,10 +82,10 @@ const Login = () => {
             <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
               <Brain className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-light text-gray-900">MarketMind AI</span>
+            <span className="text-2xl font-light text-gray-900">3Days.ai</span>
           </Link>
           <h2 className="text-3xl font-light text-gray-900">Welcome back</h2>
-          <p className="text-gray-600 mt-2">Sign in to your AI marketing dashboard</p>
+          <p className="text-gray-600 mt-2">Sign in to your AI worker dashboard</p>
         </div>
 
         {/* Login Card */}
@@ -93,7 +93,7 @@ const Login = () => {
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-light">Sign in</CardTitle>
             <CardDescription>
-              Enter your credentials to access your account
+              Enter your credentials to access your AI workers
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -153,7 +153,7 @@ const Login = () => {
         {/* Back to Home */}
         <div className="text-center">
           <Link to="/" className="text-sm text-gray-600 hover:text-gray-900">
-            ← Back to MarketMind AI
+            ← Back to 3Days.ai
           </Link>
         </div>
       </div>
