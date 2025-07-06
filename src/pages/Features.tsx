@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap, Clock, Shield, BarChart3, Users, Cog } from 'lucide-react';
+import { ArrowRight, Bot, Palette, MessageCircle, BarChart3, Mail, Target, Play, Building2, Globe, Shield, Zap } from 'lucide-react';
 
 const Features = () => {
   useEffect(() => {
@@ -13,147 +13,233 @@ const Features = () => {
     console.log('Features: Current location:', window.location.pathname);
   }, []);
 
+  const coreModules = [
+    {
+      title: "Content Copilot",
+      description: "Multilingual GPT-4-grade copy in your brand voice for posts, blogs, emails, and marketing materials.",
+      icon: Bot,
+      features: ["Brand voice training", "Multi-language support", "SEO optimization", "Content scheduling"],
+      color: "from-blue-500 to-blue-600"
+    },
+    {
+      title: "Visual Generator",
+      description: "Create brand-consistent product images, social posts, and short video clips with 1-click AI generation.",
+      icon: Palette,
+      features: ["Product photography", "Social media visuals", "Video generation", "Brand consistency"],
+      color: "from-green-500 to-green-600"
+    },
+    {
+      title: "AI Chatbot", 
+      description: "24/7 customer support for your website and Facebook with fine-tuned responses on your FAQs and products.",
+      icon: MessageCircle,
+      features: ["Always-on support", "FAQ integration", "Multi-platform deployment", "Lead qualification"],
+      color: "from-purple-500 to-purple-600"
+    },
+    {
+      title: "Growth Analytics",
+      description: "Track engagement, measure performance, and get data-driven recommendations to increase your ROAS.",
+      icon: BarChart3,
+      features: ["Performance tracking", "ROAS optimization", "Smart recommendations", "A/B testing"],
+      color: "from-orange-500 to-orange-600"
+    }
+  ];
+
+  const futureModules = [
+    {
+      title: "AI Email Responder",
+      description: "Automated email campaigns and customer responses",
+      icon: Mail,
+      timeline: "Q2 2024"
+    },
+    {
+      title: "Ad Budget Autopilot", 
+      description: "Automated ad spend optimization across platforms",
+      icon: Target,
+      timeline: "Q2 2024"
+    },
+    {
+      title: "Voice & Video Generation",
+      description: "AI-powered voice-overs and video content creation",
+      icon: Play,
+      timeline: "Q3 2024"
+    },
+    {
+      title: "Agency Marketplace",
+      description: "Templates and tools marketplace for agencies",
+      icon: Building2,
+      timeline: "Q4 2024"
+    }
+  ];
+
+  const benefits = [
+    {
+      title: "Save 20 Hours Per Week",
+      description: "Automate the marketing tasks that currently take you hours every week",
+      icon: Zap,
+      stat: "20hrs",
+      color: "text-blue-600"
+    },
+    {
+      title: "Multilingual by Default",
+      description: "Create content in multiple languages to reach global markets",
+      icon: Globe,
+      stat: "12+",
+      color: "text-green-600"
+    },
+    {
+      title: "GDPR Compliant",
+      description: "EU hosting with SOC-2 certification and per-tenant encryption",
+      icon: Shield,
+      stat: "100%",
+      color: "text-purple-600"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
       
       <main className="pt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Powerful Features for Modern Business
+              Complete AI Marketing Suite for SMBs
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Discover how 3days.ai transforms your operations with intelligent automation, 
-              advanced analytics, and seamless integrations.
+              Everything you need to automate content creation, customer service, and marketing optimization in one platform.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Zap className="h-8 w-8 text-blue-600 mb-2" />
-                <CardTitle>Lightning Fast Deployment</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Get up and running in minutes, not months. Our pre-trained AI employees 
-                  are ready to work from day one.
-                </p>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• 3-minute setup process</li>
-                  <li>• Pre-configured workflows</li>
-                  <li>• Instant integration</li>
-                </ul>
-              </CardContent>
-            </Card>
+          {/* Core Modules */}
+          <section className="mb-20">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Core AI Modules</h2>
+              <p className="text-lg text-gray-600">Available in all plans from day one</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {coreModules.map((module, index) => (
+                <Card key={index} className="shadow-lg hover:shadow-xl transition-shadow border-0 overflow-hidden">
+                  <CardHeader className={`bg-gradient-to-r ${module.color} text-white`}>
+                    <div className="flex items-center">
+                      <module.icon className="h-8 w-8 mr-3" />
+                      <CardTitle className="text-xl">{module.title}</CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <p className="text-gray-600 mb-6">{module.description}</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {module.features.map((feature, featureIndex) => (
+                        <div key={featureIndex} className="flex items-center text-sm text-gray-700">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
 
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Clock className="h-8 w-8 text-green-600 mb-2" />
-                <CardTitle>24/7 Availability</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Your AI employees never sleep, take breaks, or call in sick. 
-                  Consistent performance around the clock.
-                </p>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Continuous operation</li>
-                  <li>• No downtime</li>
-                  <li>• Global timezone support</li>
-                </ul>
-              </CardContent>
-            </Card>
+          {/* Benefits Section */}
+          <section className="mb-20 bg-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-16">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why SMBs Choose MarketMind AI</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {benefits.map((benefit, index) => (
+                <Card key={index} className="text-center border-0 shadow-sm bg-white">
+                  <CardContent className="p-8">
+                    <div className={`w-16 h-16 ${benefit.color.replace('text-', 'bg-').replace('600', '100')} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                      <benefit.icon className={`h-8 w-8 ${benefit.color}`} />
+                    </div>
+                    <div className={`text-3xl font-bold ${benefit.color} mb-2`}>
+                      {benefit.stat}
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
+                    <p className="text-gray-600">{benefit.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
 
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Shield className="h-8 w-8 text-purple-600 mb-2" />
-                <CardTitle>Enterprise Security</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Bank-level security with end-to-end encryption, compliance certifications, 
-                  and advanced access controls.
-                </p>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• SOC 2 Type II certified</li>
-                  <li>• GDPR compliant</li>
-                  <li>• Zero-trust architecture</li>
-                </ul>
-              </CardContent>
-            </Card>
+          {/* Future Modules */}
+          <section className="mb-20">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Coming Soon</h2>
+              <p className="text-lg text-gray-600">Advanced features in development</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {futureModules.map((module, index) => (
+                <Card key={index} className="border border-gray-200 hover:shadow-md transition-shadow">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <module.icon className="h-6 w-6 text-gray-600" />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2">{module.title}</h3>
+                    <p className="text-sm text-gray-600 mb-3">{module.description}</p>
+                    <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                      {module.timeline}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
 
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <BarChart3 className="h-8 w-8 text-orange-600 mb-2" />
-                <CardTitle>Advanced Analytics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Real-time insights and performance metrics to optimize your operations 
-                  and measure ROI.
-                </p>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Performance dashboards</li>
-                  <li>• Predictive analytics</li>
-                  <li>• Custom reporting</li>
-                </ul>
-              </CardContent>
-            </Card>
+          {/* Technical Advantages */}
+          <section className="mb-20">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Built for European SMBs</h2>
+              <p className="text-lg text-gray-600">Privacy-first, multilingual, and compliant</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="h-8 w-8 text-green-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">GDPR Compliant</h3>
+                <p className="text-gray-600">EU hosting, SOC-2 certified, per-tenant encryption</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Globe className="h-8 w-8 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Multilingual</h3>
+                <p className="text-gray-600">Native support for 12+ European languages</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Zap className="h-8 w-8 text-purple-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">High Performance</h3>
+                <p className="text-gray-600">80%+ gross margin with proprietary AI models</p>
+              </div>
+            </div>
+          </section>
 
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Users className="h-8 w-8 text-red-600 mb-2" />
-                <CardTitle>Seamless Collaboration</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  AI employees that work alongside your human team, enhancing 
-                  productivity without disruption.
-                </p>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Team integration</li>
-                  <li>• Workflow handoffs</li>
-                  <li>• Smart notifications</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Cog className="h-8 w-8 text-indigo-600 mb-2" />
-                <CardTitle>Easy Customization</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Tailor AI employees to your specific business needs with 
-                  intuitive configuration tools.
-                </p>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• No-code customization</li>
-                  <li>• Business rule engine</li>
-                  <li>• Flexible workflows</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Ready to Experience the Future?
-            </h2>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join thousands of companies already using AI employees to transform their operations.
+          {/* CTA Section */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-center text-white">
+            <h2 className="text-3xl font-bold mb-4">Ready to Automate Your Marketing?</h2>
+            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+              Join the AI marketing revolution and turn 20 hours of weekly marketing work into minutes.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100" asChild>
                 <Link to="/signup">
-                  Start Free Trial
+                  Start 14-Day Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600" asChild>
                 <Link to="/watch-demo">
                   Watch Demo
                 </Link>

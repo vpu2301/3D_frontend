@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Star, Users, Building2, Zap, Network, Globe } from 'lucide-react';
+import { ArrowRight, CheckCircle, Star, Users, Building2, Zap, Network, Globe, BarChart3, MessageCircle, Bot, Palette } from 'lucide-react';
 
 const Home = () => {
   useEffect(() => {
@@ -21,167 +21,180 @@ const Home = () => {
         <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto text-center">
             <h1 className="text-5xl md:text-7xl font-light text-gray-900 mb-6 tracking-tight">
-              AI Employees for
-              <span className="block text-blue-600">Modern Business</span>
+              AI Growth Team
+              <span className="block text-blue-600">in a Box</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto font-light leading-relaxed">
-              Transform your operations with intelligent AI assistants that work 24/7. 
-              Automate complex workflows, reduce costs, and scale your business effortlessly.
+              Turn 20 hours per week of marketing work into minutes. MarketMind AI automates content creation, 
+              ad visuals, customer service chat, and campaign optimization for SMBs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all" asChild>
                 <Link to="/signup">
-                  Sign Up Free
+                  Start 14-Day Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="px-8 py-4 text-lg rounded-full border-2 hover:bg-gray-50" asChild>
-                <Link to="/features">
-                  Learn More
+                <Link to="/watch-demo">
+                  Watch Demo
                 </Link>
               </Button>
             </div>
+            <p className="text-sm text-gray-500 mt-4">91% of AI-using SMBs say it directly fuels growth</p>
           </div>
         </section>
 
-        {/* Cross-Company AI Collaboration Section */}
-        <section className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-light text-gray-900 mb-4">
-                Revolutionary Cross-Company AI Collaboration
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Our AI employees don't work in isolation. They collaborate across companies, platforms, and systems through our proprietary agent-to-agent communication protocol.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Network className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-medium text-gray-900 mb-2">Inter-Company Communication</h3>
-                      <p className="text-gray-600">AI employees from different companies can securely communicate and collaborate on shared projects and workflows.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Globe className="h-6 w-6 text-green-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-medium text-gray-900 mb-2">Universal Platform Integration</h3>
-                      <p className="text-gray-600">Seamlessly integrate across different platforms and systems, breaking down traditional business silos.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Building2 className="h-6 w-6 text-purple-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-medium text-gray-900 mb-2">Proprietary Protocol</h3>
-                      <p className="text-gray-600">Our exclusive agent-to-agent communication protocol ensures secure, efficient, and intelligent collaboration between AI employees.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="relative">
-                <div className="bg-white p-8 rounded-2xl shadow-lg">
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">AI Employee Network</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                      <span className="text-sm">Company A - Sales AI</span>
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                      <span className="text-sm">Company B - Marketing AI</span>
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                      <span className="text-sm">Company C - Operations AI</span>
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    </div>
-                    <div className="text-center py-2">
-                      <span className="text-xs text-gray-500">Secure Protocol Communication</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
+        {/* Core Modules Section */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-light text-gray-900 mb-4">
-                Why Choose 3days.ai?
+                Complete AI Marketing Suite
               </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Our AI employees deliver results in just 3 days, transforming how you work
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Everything you need to automate your marketing and grow your business
               </p>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                  <Zap className="h-6 w-6 text-blue-600" />
+                  <Bot className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">Lightning Fast Setup</h3>
-                <p className="text-gray-600">
-                  Deploy AI employees in minutes, not months. Our pre-trained models get you started immediately.
+                <h3 className="text-xl font-medium text-gray-900 mb-4">Content Copilot</h3>
+                <p className="text-gray-600 mb-4">
+                  Multilingual GPT-4-grade copy in your brand voice for posts, blogs, and emails.
                 </p>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• Brand voice training</li>
+                  <li>• Multi-language support</li>
+                  <li>• SEO optimization</li>
+                </ul>
               </div>
               
               <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                  <Users className="h-6 w-6 text-green-600" />
+                  <Palette className="h-6 w-6 text-green-600" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">24/7 Availability</h3>
-                <p className="text-gray-600">
-                  Your AI employees never sleep, take breaks, or call in sick. Consistent performance around the clock.
+                <h3 className="text-xl font-medium text-gray-900 mb-4">Visual Generator</h3>
+                <p className="text-gray-600 mb-4">
+                  Product images, social posts, and short clips with 1-click AI generation.
                 </p>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• Brand-consistent visuals</li>
+                  <li>• Product photography</li>
+                  <li>• Video generation</li>
+                </ul>
               </div>
               
               <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
-                  <Building2 className="h-6 w-6 text-purple-600" />
+                  <MessageCircle className="h-6 w-6 text-purple-600" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">Enterprise Ready</h3>
-                <p className="text-gray-600">
-                  Secure, scalable, and compliant. Built for businesses that demand the highest standards.
+                <h3 className="text-xl font-medium text-gray-900 mb-4">AI Chatbot</h3>
+                <p className="text-gray-600 mb-4">
+                  24/7 customer support for your website and Facebook with fine-tuned responses.
                 </p>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• Always-on support</li>
+                  <li>• FAQ integration</li>
+                  <li>• Multi-platform</li>
+                </ul>
+              </div>
+              
+              <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                  <BarChart3 className="h-6 w-6 text-orange-600" />
+                </div>
+                <h3 className="text-xl font-medium text-gray-900 mb-4">Growth Analytics</h3>
+                <p className="text-gray-600 mb-4">
+                  Track engagement and get data-driven recommendations to increase ROAS.
+                </p>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• Performance tracking</li>
+                  <li>• ROAS optimization</li>
+                  <li>• Smart recommendations</li>
+                </ul>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Pricing Preview Section */}
+        <section className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-4xl font-light text-gray-900 mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+              Choose the plan that fits your business size and needs
+            </p>
+            
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <div className="bg-white p-8 rounded-2xl shadow-sm">
+                <h3 className="text-xl font-medium text-gray-900 mb-2">Starter</h3>
+                <div className="text-3xl font-bold text-gray-900 mb-4">€49<span className="text-lg font-normal text-gray-600">/mo</span></div>
+                <p className="text-gray-600 mb-6">Perfect for solo founders</p>
+                <ul className="text-sm text-gray-600 space-y-2 text-left">
+                  <li>• 200k text tokens</li>
+                  <li>• 100 AI images</li>
+                  <li>• Basic chatbot</li>
+                  <li>• Growth analytics</li>
+                </ul>
+              </div>
+              
+              <div className="bg-blue-600 text-white p-8 rounded-2xl shadow-lg transform scale-105">
+                <h3 className="text-xl font-medium mb-2">Growth</h3>
+                <div className="text-3xl font-bold mb-4">€99<span className="text-lg font-normal opacity-80">/mo</span></div>
+                <p className="opacity-90 mb-6">For growing teams (5-15 people)</p>
+                <ul className="text-sm space-y-2 text-left opacity-90">
+                  <li>• 1M text tokens</li>
+                  <li>• 500 AI images</li>
+                  <li>• Advanced chatbot</li>
+                  <li>• Full analytics suite</li>
+                </ul>
+              </div>
+              
+              <div className="bg-white p-8 rounded-2xl shadow-sm">
+                <h3 className="text-xl font-medium text-gray-900 mb-2">Pro</h3>
+                <div className="text-3xl font-bold text-gray-900 mb-4">€199<span className="text-lg font-normal text-gray-600">/mo</span></div>
+                <p className="text-gray-600 mb-6">For agencies & multi-brand</p>
+                <ul className="text-sm text-gray-600 space-y-2 text-left">
+                  <li>• 3M text tokens</li>
+                  <li>• 1k AI images</li>
+                  <li>• API access</li>
+                  <li>• White-label options</li>
+                </ul>
+              </div>
+            </div>
+            
+            <p className="text-sm text-gray-500 mt-8">14-day free trial • Annual billing saves 15%</p>
           </div>
         </section>
 
         {/* Social Proof */}
         <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-light text-gray-900 mb-12">
-              Trusted by Forward-Thinking Companies
+            <h2 className="text-3xl font-light text-gray-900 mb-4">
+              Trusted by SMBs Across Europe
             </h2>
+            <p className="text-xl text-gray-600 mb-12">
+              Join thousands of businesses automating their marketing with AI
+            </p>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center opacity-60">
-              <div className="h-12 bg-gray-200 rounded flex items-center justify-center">
-                <span className="text-gray-500 font-medium">Company A</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-blue-600 mb-2">91%</div>
+                <p className="text-gray-600">of AI-using SMBs report direct growth impact</p>
               </div>
-              <div className="h-12 bg-gray-200 rounded flex items-center justify-center">
-                <span className="text-gray-500 font-medium">Company B</span>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-green-600 mb-2">20hrs</div>
+                <p className="text-gray-600">per week saved on marketing tasks</p>
               </div>
-              <div className="h-12 bg-gray-200 rounded flex items-center justify-center">
-                <span className="text-gray-500 font-medium">Company C</span>
-              </div>
-              <div className="h-12 bg-gray-200 rounded flex items-center justify-center">
-                <span className="text-gray-500 font-medium">Company D</span>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-purple-600 mb-2">85%</div>
+                <p className="text-gray-600">of customer service leaders adopting GenAI</p>
               </div>
             </div>
           </div>
@@ -191,15 +204,15 @@ const Home = () => {
         <section className="py-20 bg-blue-600">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl font-light text-white mb-6">
-              Ready to Transform Your Business?
+              Ready to Transform Your Marketing?
             </h2>
             <p className="text-xl text-blue-100 mb-8">
-              Join thousands of companies already using AI employees to scale their operations.
+              Join the AI marketing revolution and turn hours of work into minutes.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg rounded-full shadow-lg" asChild>
                 <Link to="/signup">
-                  Sign Up Free
+                  Start Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>

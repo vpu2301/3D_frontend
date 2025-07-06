@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity, Brain, Network } from 'lucide-react';
+import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity, Brain, Network, Bot, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
@@ -21,114 +22,64 @@ const Header = () => {
     };
   }, []);
 
-  const solutionsItems = [
-    {
-      category: 'BUSINESS SOLUTIONS',
-      items: [
-        { name: 'Sales Automation', href: '/solutions/sales', icon: Target },
-        { name: 'Marketing Operations', href: '/solutions/marketing', icon: BarChart },
-        { name: 'Business Operations', href: '/solutions/operations', icon: Cog },
-        { name: 'Human Resources', href: '/solutions/hr', icon: Users },
-        { name: 'Finance & Accounting', href: '/solutions/finance', icon: DollarSign },
-        { name: 'Customer Support', href: '/solutions/support', icon: MessageCircle },
-        { name: 'IT Operations', href: '/solutions/it', icon: Database },
-        { name: 'Legal Workflows', href: '/solutions/legal', icon: Scale }
-      ]
-    },
-    {
-      category: 'USE CASES',
-      items: [
-        { name: 'Document Processing', href: '/use-cases/document-processing', icon: FileText },
-        { name: 'Data Entry Automation', href: '/use-cases/data-entry', icon: Database },
-        { name: 'Customer Onboarding', href: '/use-cases/customer-onboarding', icon: UserCheck },
-        { name: 'Compliance Monitoring', href: '/use-cases/compliance-monitoring', icon: Shield },
-        { name: 'Report Generation', href: '/use-cases/report-generation', icon: BarChart },
-        { name: 'Email Management', href: '/use-cases/email-management', icon: Mail }
-      ]
-    },
-    {
-      category: 'ROLES',
-      items: [
-        { name: 'For CEOs', href: '/roles/ceo', icon: Briefcase },
-        { name: 'For Operations Managers', href: '/roles/operations-manager', icon: Cog },
-        { name: 'For IT Directors', href: '/roles/it-director', icon: Database },
-        { name: 'For Finance Teams', href: '/roles/finance-teams', icon: DollarSign },
-        { name: 'For HR Professionals', href: '/roles/hr-professionals', icon: Users },
-        { name: 'For Sales Leaders', href: '/roles/sales-leaders', icon: Target }
-      ]
-    }
-  ];
-
   const productItems = [
     {
-      category: 'Product',
-      icon: Building2,
+      category: 'CORE MODULES',
       items: [
-        { name: 'AI Assistants', href: '/product/ai-assistants', icon: Zap },
-        { name: 'Agents', href: '/product/agents', icon: Users },
-        { name: 'Cross-Company Collaboration', href: '/product/cross-company-collaboration', icon: Network },
-        { name: 'Workflow Builder', href: '/product/workflow-builder', icon: Cog },
-        { name: 'Fine Tuning', href: '/product/fine-tuning', icon: Brain },
-        { name: 'Analytics Dashboard', href: '/platform/analytics', icon: BarChart },
-        { name: 'Integration Hub', href: '/platform/integrations', icon: Database },
-        { name: 'API Gateway', href: '/platform/api', icon: Cog },
-        { name: 'Agentic Communication', href: '/platform/agentic-communication', icon: MessageSquare }
+        { name: 'Content Copilot', href: '/product/content-copilot', icon: Bot },
+        { name: 'Visual Generator', href: '/product/visual-generator', icon: Palette },
+        { name: 'AI Chatbot', href: '/product/ai-chatbot', icon: MessageCircle },
+        { name: 'Growth Analytics', href: '/product/growth-analytics', icon: BarChart }
       ]
     },
     {
-      category: 'Resources',
-      icon: BookOpen,
+      category: 'FUTURE MODULES',
       items: [
-        { name: 'Blog', href: '/resources/blog', icon: BookOpen },
-        { name: 'Watch Demo', href: '/watch-demo', icon: Play },
-        { name: 'Schedule Demo', href: '/schedule-demo', icon: Calendar },
-        { name: 'Contact Support', href: '/contact', icon: MessageCircle }
+        { name: 'Email Automation', href: '/product/email-automation', icon: Mail },
+        { name: 'Ad Budget Autopilot', href: '/product/ad-autopilot', icon: Target },
+        { name: 'Voice & Video AI', href: '/product/voice-video', icon: Play },
+        { name: 'Agency Marketplace', href: '/product/marketplace', icon: Building2 }
       ]
     }
   ];
 
-  const companyItems = [
+  const solutionsItems = [
     {
-      category: 'Company',
-      icon: Building2,
+      category: 'BY BUSINESS SIZE',
       items: [
-        { name: 'About Us', href: '/about', icon: Building2 },
-        { name: 'Our Story', href: '/company', icon: BookOpen },
-        { name: 'Careers', href: '/careers', icon: Briefcase },
-        { name: 'Contact', href: '/contact', icon: MessageCircle }
+        { name: 'Solo Founders', href: '/solutions/solo-founders', icon: Users },
+        { name: 'Small Teams (5-15)', href: '/solutions/small-teams', icon: Building2 },
+        { name: 'Agencies & Multi-brand', href: '/solutions/agencies', icon: Network }
+      ]
+    },
+    {
+      category: 'BY INDUSTRY',
+      items: [
+        { name: 'E-commerce', href: '/solutions/ecommerce', icon: DollarSign },
+        { name: 'Professional Services', href: '/solutions/professional-services', icon: Briefcase },
+        { name: 'Local Businesses', href: '/solutions/local-business', icon: Building2 },
+        { name: 'SaaS Companies', href: '/solutions/saas', icon: Zap }
       ]
     }
   ];
 
-  const customersItems = [
+  const resourcesItems = [
     {
-      category: 'Customer Stories',
-      icon: Heart,
+      category: 'LEARN',
       items: [
-        { name: 'Success Stories', href: '/customers/success-stories', icon: Trophy },
-        { name: 'Case Studies', href: '/customers/case-studies', icon: BookMarked },
-        { name: 'Testimonials', href: '/customers/testimonials', icon: MessageSquare },
-        { name: 'ROI Calculator', href: '/customers/roi-calculator', icon: BarChart }
+        { name: 'Success Stories', href: '/resources/success-stories', icon: Trophy },
+        { name: 'AI Marketing Guide', href: '/resources/ai-marketing-guide', icon: BookOpen },
+        { name: 'ROI Calculator', href: '/resources/roi-calculator', icon: BarChart },
+        { name: 'Best Practices', href: '/resources/best-practices', icon: Target }
       ]
     },
     {
-      category: 'Customer Success',
-      icon: Trophy,
-      items: [
-        { name: 'Implementation Guide', href: '/resources/implementation-guide', icon: CheckCircle },
-        { name: 'Best Practices', href: '/resources/best-practices', icon: Target },
-        { name: 'Training Resources', href: '/resources/training', icon: BookOpen },
-        { name: 'Community Forum', href: '/resources/community', icon: Users }
-      ]
-    },
-    {
-      category: 'Support',
-      icon: Headphones,
+      category: 'SUPPORT',
       items: [
         { name: 'Help Center', href: '/support/help-center', icon: HelpCircle },
         { name: 'Documentation', href: '/support/documentation', icon: BookOpen },
         { name: 'Contact Support', href: '/contact', icon: MessageCircle },
-        { name: 'System Status', href: '/support/status', icon: Activity }
+        { name: 'Community', href: '/community', icon: Users }
       ]
     }
   ];
@@ -146,13 +97,12 @@ const Header = () => {
     if (!isOpen) return null;
 
     return (
-      <div className="absolute top-full left-0 transform translate-x-0 w-screen max-w-5xl bg-white border border-gray-200 shadow-2xl z-50 mt-1 rounded-lg">
+      <div className="absolute top-full left-0 transform translate-x-0 w-screen max-w-4xl bg-white border border-gray-200 shadow-2xl z-50 mt-1 rounded-lg">
         <div className="px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {items.map((category, categoryIndex) => (
               <div key={categoryIndex} className="space-y-3">
                 <div className="flex items-center space-x-2 border-b border-gray-200 pb-2">
-                  {category.icon && <category.icon className="h-4 w-4 text-blue-600" />}
                   <h3 className="font-semibold text-gray-900 text-xs uppercase tracking-wide">
                     {category.category}
                   </h3>
@@ -185,32 +135,15 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-              <div className="w-3 h-3 bg-white rounded-sm"></div>
+              <Brain className="w-4 h-4 text-white" />
             </div>
             <span className="text-xl font-light text-gray-900 tracking-tight">
-              3days.ai
+              MarketMind AI
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {/* Solutions Dropdown */}
-            <div className="relative">
-              <button
-                onMouseEnter={(e) => handleDropdownToggle('solutions', e)}
-                onTouchStart={(e) => handleDropdownToggle('solutions', e)}
-                className={`flex items-center text-gray-600 hover:text-gray-900 transition-colors py-2 px-3 rounded-md hover:bg-gray-50 ${
-                  activeDropdown === 'solutions' ? 'text-blue-600 bg-blue-50' : ''
-                }`}
-              >
-                Solutions
-                <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${
-                  activeDropdown === 'solutions' ? 'rotate-180' : ''
-                }`} />
-              </button>
-              {renderEnhancedMegaMenu(solutionsItems, activeDropdown === 'solutions')}
-            </div>
-
             {/* Product Dropdown */}
             <div className="relative">
               <button
@@ -228,38 +161,38 @@ const Header = () => {
               {renderEnhancedMegaMenu(productItems, activeDropdown === 'product')}
             </div>
 
-            {/* Customers Dropdown */}
+            {/* Solutions Dropdown */}
             <div className="relative">
               <button
-                onMouseEnter={(e) => handleDropdownToggle('customers', e)}
-                onTouchStart={(e) => handleDropdownToggle('customers', e)}
+                onMouseEnter={(e) => handleDropdownToggle('solutions', e)}
+                onTouchStart={(e) => handleDropdownToggle('solutions', e)}
                 className={`flex items-center text-gray-600 hover:text-gray-900 transition-colors py-2 px-3 rounded-md hover:bg-gray-50 ${
-                  activeDropdown === 'customers' ? 'text-blue-600 bg-blue-50' : ''
+                  activeDropdown === 'solutions' ? 'text-blue-600 bg-blue-50' : ''
                 }`}
               >
-                Customers
+                Solutions
                 <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${
-                  activeDropdown === 'customers' ? 'rotate-180' : ''
+                  activeDropdown === 'solutions' ? 'rotate-180' : ''
                 }`} />
               </button>
-              {renderEnhancedMegaMenu(customersItems, activeDropdown === 'customers')}
+              {renderEnhancedMegaMenu(solutionsItems, activeDropdown === 'solutions')}
             </div>
 
-            {/* Company Dropdown */}
+            {/* Resources Dropdown */}
             <div className="relative">
               <button
-                onMouseEnter={(e) => handleDropdownToggle('company', e)}
-                onTouchStart={(e) => handleDropdownToggle('company', e)}
+                onMouseEnter={(e) => handleDropdownToggle('resources', e)}
+                onTouchStart={(e) => handleDropdownToggle('resources', e)}
                 className={`flex items-center text-gray-600 hover:text-gray-900 transition-colors py-2 px-3 rounded-md hover:bg-gray-50 ${
-                  activeDropdown === 'company' ? 'text-blue-600 bg-blue-50' : ''
+                  activeDropdown === 'resources' ? 'text-blue-600 bg-blue-50' : ''
                 }`}
               >
-                Company
+                Resources
                 <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${
-                  activeDropdown === 'company' ? 'rotate-180' : ''
+                  activeDropdown === 'resources' ? 'rotate-180' : ''
                 }`} />
               </button>
-              {renderEnhancedMegaMenu(companyItems, activeDropdown === 'company')}
+              {renderEnhancedMegaMenu(resourcesItems, activeDropdown === 'resources')}
             </div>
 
             {/* Pricing Link */}
@@ -282,7 +215,7 @@ const Header = () => {
               <Link to="/login">Login</Link>
             </Button>
             <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-md hover:shadow-lg transition-all" asChild>
-              <Link to="/get-started">Get Started</Link>
+              <Link to="/signup">Start Free Trial</Link>
             </Button>
           </div>
 
@@ -311,7 +244,7 @@ const Header = () => {
                 Login
               </Link>
               <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md" asChild>
-                <Link to="/get-started" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
+                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>Start Free Trial</Link>
               </Button>
             </div>
           </div>
