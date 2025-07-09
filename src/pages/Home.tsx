@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Star, Users, Building2, Zap, Network, Globe, BarChart3, MessageCircle, Bot, Palette } from 'lucide-react';
+import { ArrowRight, CheckCircle, Star, Users, Building2, Zap, Network, Globe, BarChart3, MessageCircle, Bot, Palette, Microscope, Heart, Brain, FlaskConical, Dna, Stethoscope, Activity } from 'lucide-react';
 
 const Home = () => {
   useEffect(() => {
@@ -21,12 +21,12 @@ const Home = () => {
         <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto text-center">
             <h1 className="text-5xl md:text-7xl font-light text-gray-900 mb-6 tracking-tight">
-              AI Growth Team
-              <span className="block text-blue-600">in a Box</span>
+              AI Research Team
+              <span className="block text-blue-600">for Life Sciences</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto font-light leading-relaxed">
-              Turn 20 hours per week of marketing work into minutes. MarketMind AI automates content creation, 
-              ad visuals, customer service chat, and campaign optimization for SMBs.
+              Transform 40 hours per week of research work into minutes. Observio AI automates data analysis, 
+              literature review, experiment design, and regulatory compliance for healthcare and biotech organizations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all" asChild>
@@ -41,7 +41,7 @@ const Home = () => {
                 </Link>
               </Button>
             </div>
-            <p className="text-sm text-gray-500 mt-4">91% of AI-using SMBs say it directly fuels growth</p>
+            <p className="text-sm text-gray-500 mt-4">94% of biotech researchers say AI directly accelerates discovery</p>
           </div>
         </section>
 
@@ -50,71 +50,71 @@ const Home = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-light text-gray-900 mb-4">
-                Complete AI Marketing Suite
+                Complete AI Research Suite
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Everything you need to automate your marketing and grow your business
+                Everything you need to automate research and accelerate discovery
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                  <Bot className="h-6 w-6 text-blue-600" />
+                  <Brain className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">Content Copilot</h3>
+                <h3 className="text-xl font-medium text-gray-900 mb-4">Research Assistant</h3>
                 <p className="text-gray-600 mb-4">
-                  Multilingual GPT-4-grade copy in your brand voice for posts, blogs, and emails.
+                  AI-powered literature review, hypothesis generation, and experimental design optimization.
                 </p>
                 <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Brand voice training</li>
-                  <li>• Multi-language support</li>
-                  <li>• SEO optimization</li>
+                  <li>• PubMed integration</li>
+                  <li>• Smart citation analysis</li>
+                  <li>• Protocol generation</li>
                 </ul>
               </div>
               
               <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                  <Palette className="h-6 w-6 text-green-600" />
+                  <BarChart3 className="h-6 w-6 text-green-600" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">Visual Generator</h3>
+                <h3 className="text-xl font-medium text-gray-900 mb-4">Data Analytics</h3>
                 <p className="text-gray-600 mb-4">
-                  Product images, social posts, and short clips with 1-click AI generation.
+                  Advanced statistical analysis, biomarker discovery, and predictive modeling.
                 </p>
                 <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Brand-consistent visuals</li>
-                  <li>• Product photography</li>
-                  <li>• Video generation</li>
+                  <li>• Omics analysis</li>
+                  <li>• Clinical trial optimization</li>
+                  <li>• Real-world evidence</li>
                 </ul>
               </div>
               
               <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
-                  <MessageCircle className="h-6 w-6 text-purple-600" />
+                  <FlaskConical className="h-6 w-6 text-purple-600" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">AI Chatbot</h3>
+                <h3 className="text-xl font-medium text-gray-900 mb-4">Lab Automation</h3>
                 <p className="text-gray-600 mb-4">
-                  24/7 customer support for your website and Facebook with fine-tuned responses.
+                  Automated experiment tracking, quality control, and results interpretation.
                 </p>
                 <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Always-on support</li>
-                  <li>• FAQ integration</li>
-                  <li>• Multi-platform</li>
+                  <li>• LIMS integration</li>
+                  <li>• Quality monitoring</li>
+                  <li>• Result validation</li>
                 </ul>
               </div>
               
               <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
-                  <BarChart3 className="h-6 w-6 text-orange-600" />
+                  <Stethoscope className="h-6 w-6 text-orange-600" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">Growth Analytics</h3>
+                <h3 className="text-xl font-medium text-gray-900 mb-4">Regulatory Compliance</h3>
                 <p className="text-gray-600 mb-4">
-                  Track engagement and get data-driven recommendations to increase ROAS.
+                  FDA/EMA submission preparation, clinical documentation, and safety monitoring.
                 </p>
                 <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Performance tracking</li>
-                  <li>• ROAS optimization</li>
-                  <li>• Smart recommendations</li>
+                  <li>• Regulatory tracking</li>
+                  <li>• Document generation</li>
+                  <li>• Compliance monitoring</li>
                 </ul>
               </div>
             </div>
@@ -128,48 +128,48 @@ const Home = () => {
               Simple, Transparent Pricing
             </h2>
             <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-              Choose the plan that fits your business size and needs
+              Choose the plan that fits your research needs and organization size
             </p>
             
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="bg-white p-8 rounded-2xl shadow-sm">
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Starter</h3>
-                <div className="text-3xl font-bold text-gray-900 mb-4">€49<span className="text-lg font-normal text-gray-600">/mo</span></div>
-                <p className="text-gray-600 mb-6">Perfect for solo founders</p>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">Researcher</h3>
+                <div className="text-3xl font-bold text-gray-900 mb-4">$89<span className="text-lg font-normal text-gray-600">/mo</span></div>
+                <p className="text-gray-600 mb-6">Perfect for individual researchers</p>
                 <ul className="text-sm text-gray-600 space-y-2 text-left">
-                  <li>• 200k text tokens</li>
-                  <li>• 100 AI images</li>
-                  <li>• Basic chatbot</li>
-                  <li>• Growth analytics</li>
+                  <li>• 500k analysis tokens</li>
+                  <li>• 200 data visualizations</li>
+                  <li>• Basic literature review</li>
+                  <li>• Standard support</li>
                 </ul>
               </div>
               
               <div className="bg-blue-600 text-white p-8 rounded-2xl shadow-lg transform scale-105">
-                <h3 className="text-xl font-medium mb-2">Growth</h3>
-                <div className="text-3xl font-bold mb-4">€99<span className="text-lg font-normal opacity-80">/mo</span></div>
-                <p className="opacity-90 mb-6">For growing teams (5-15 people)</p>
+                <h3 className="text-xl font-medium mb-2">Lab Team</h3>
+                <div className="text-3xl font-bold mb-4">$249<span className="text-lg font-normal opacity-80">/mo</span></div>
+                <p className="opacity-90 mb-6">For research teams (5-20 people)</p>
                 <ul className="text-sm space-y-2 text-left opacity-90">
-                  <li>• 1M text tokens</li>
-                  <li>• 500 AI images</li>
-                  <li>• Advanced chatbot</li>
-                  <li>• Full analytics suite</li>
+                  <li>• 2M analysis tokens</li>
+                  <li>• 1k data visualizations</li>
+                  <li>• Advanced analytics</li>
+                  <li>• Priority support</li>
                 </ul>
               </div>
               
               <div className="bg-white p-8 rounded-2xl shadow-sm">
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Pro</h3>
-                <div className="text-3xl font-bold text-gray-900 mb-4">€199<span className="text-lg font-normal text-gray-600">/mo</span></div>
-                <p className="text-gray-600 mb-6">For agencies & multi-brand</p>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">Enterprise</h3>
+                <div className="text-3xl font-bold text-gray-900 mb-4">$599<span className="text-lg font-normal text-gray-600">/mo</span></div>
+                <p className="text-gray-600 mb-6">For biotech & pharma companies</p>
                 <ul className="text-sm text-gray-600 space-y-2 text-left">
-                  <li>• 3M text tokens</li>
-                  <li>• 1k AI images</li>
-                  <li>• API access</li>
+                  <li>• Unlimited tokens</li>
+                  <li>• Custom integrations</li>
+                  <li>• Regulatory compliance</li>
                   <li>• White-label options</li>
                 </ul>
               </div>
             </div>
             
-            <p className="text-sm text-gray-500 mt-8">14-day free trial • Annual billing saves 15%</p>
+            <p className="text-sm text-gray-500 mt-8">14-day free trial • Annual billing saves 20%</p>
           </div>
         </section>
 
@@ -177,24 +177,24 @@ const Home = () => {
         <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl font-light text-gray-900 mb-4">
-              Trusted by SMBs Across Europe
+              Trusted by Leading Research Organizations
             </h2>
             <p className="text-xl text-gray-600 mb-12">
-              Join thousands of businesses automating their marketing with AI
+              Join thousands of researchers accelerating discovery with AI
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">91%</div>
-                <p className="text-gray-600">of AI-using SMBs report direct growth impact</p>
+                <div className="text-4xl font-bold text-blue-600 mb-2">94%</div>
+                <p className="text-gray-600">of researchers report faster discovery with AI</p>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-green-600 mb-2">20hrs</div>
-                <p className="text-gray-600">per week saved on marketing tasks</p>
+                <div className="text-4xl font-bold text-green-600 mb-2">40hrs</div>
+                <p className="text-gray-600">per week saved on data analysis</p>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-purple-600 mb-2">85%</div>
-                <p className="text-gray-600">of customer service leaders adopting GenAI</p>
+                <div className="text-4xl font-bold text-purple-600 mb-2">3x</div>
+                <p className="text-gray-600">faster time to publication</p>
               </div>
             </div>
           </div>
@@ -204,10 +204,10 @@ const Home = () => {
         <section className="py-20 bg-blue-600">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl font-light text-white mb-6">
-              Ready to Transform Your Marketing?
+              Ready to Accelerate Your Research?
             </h2>
             <p className="text-xl text-blue-100 mb-8">
-              Join the AI marketing revolution and turn hours of work into minutes.
+              Join the AI research revolution and turn weeks of work into hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg rounded-full shadow-lg" asChild>

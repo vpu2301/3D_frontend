@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity, Brain, Network, Bot, Palette } from 'lucide-react';
+import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity, Brain, Network, Bot, Palette, FlaskConical, Microscope, Stethoscope, Dna, TestTube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
@@ -26,39 +26,39 @@ const Header = () => {
     {
       category: 'CORE MODULES',
       items: [
-        { name: 'Content Copilot', href: '/product/content-copilot', icon: Bot },
-        { name: 'Visual Generator', href: '/product/visual-generator', icon: Palette },
-        { name: 'AI Chatbot', href: '/product/ai-chatbot', icon: MessageCircle },
-        { name: 'Growth Analytics', href: '/product/growth-analytics', icon: BarChart }
+        { name: 'Research Assistant', href: '/product/research-assistant', icon: Brain },
+        { name: 'Data Analytics', href: '/product/data-analytics', icon: BarChart },
+        { name: 'Lab Automation', href: '/product/lab-automation', icon: FlaskConical },
+        { name: 'Regulatory Compliance', href: '/product/regulatory-compliance', icon: Shield }
       ]
     },
     {
-      category: 'FUTURE MODULES',
+      category: 'SPECIALIZED TOOLS',
       items: [
-        { name: 'Email Automation', href: '/product/email-automation', icon: Mail },
-        { name: 'Ad Budget Autopilot', href: '/product/ad-autopilot', icon: Target },
-        { name: 'Voice & Video AI', href: '/product/voice-video', icon: Play },
-        { name: 'Agency Marketplace', href: '/product/marketplace', icon: Building2 }
+        { name: 'Genomics Analysis', href: '/product/genomics-analysis', icon: Dna },
+        { name: 'Clinical Trials', href: '/product/clinical-trials', icon: Stethoscope },
+        { name: 'Drug Discovery', href: '/product/drug-discovery', icon: TestTube },
+        { name: 'Biomarker Detection', href: '/product/biomarker-detection', icon: Microscope }
       ]
     }
   ];
 
   const solutionsItems = [
     {
-      category: 'BY BUSINESS SIZE',
+      category: 'BY ORGANIZATION SIZE',
       items: [
-        { name: 'Solo Founders', href: '/solutions/solo-founders', icon: Users },
-        { name: 'Small Teams (5-15)', href: '/solutions/small-teams', icon: Building2 },
-        { name: 'Agencies & Multi-brand', href: '/solutions/agencies', icon: Network }
+        { name: 'Academic Labs', href: '/solutions/academic-labs', icon: Users },
+        { name: 'Biotech Startups', href: '/solutions/biotech-startups', icon: Building2 },
+        { name: 'Pharmaceutical Companies', href: '/solutions/pharmaceutical', icon: Network }
       ]
     },
     {
-      category: 'BY INDUSTRY',
+      category: 'BY RESEARCH AREA',
       items: [
-        { name: 'E-commerce', href: '/solutions/ecommerce', icon: DollarSign },
-        { name: 'Professional Services', href: '/solutions/professional-services', icon: Briefcase },
-        { name: 'Local Businesses', href: '/solutions/local-business', icon: Building2 },
-        { name: 'SaaS Companies', href: '/solutions/saas', icon: Zap }
+        { name: 'Oncology Research', href: '/solutions/oncology', icon: Heart },
+        { name: 'Neuroscience', href: '/solutions/neuroscience', icon: Brain },
+        { name: 'Cardiovascular', href: '/solutions/cardiovascular', icon: Activity },
+        { name: 'Infectious Disease', href: '/solutions/infectious-disease', icon: Shield }
       ]
     }
   ];
@@ -67,8 +67,8 @@ const Header = () => {
     {
       category: 'LEARN',
       items: [
-        { name: 'Success Stories', href: '/resources/success-stories', icon: Trophy },
-        { name: 'AI Marketing Guide', href: '/resources/ai-marketing-guide', icon: BookOpen },
+        { name: 'Research Success Stories', href: '/resources/success-stories', icon: Trophy },
+        { name: 'AI in Healthcare Guide', href: '/resources/ai-healthcare-guide', icon: BookOpen },
         { name: 'ROI Calculator', href: '/resources/roi-calculator', icon: BarChart },
         { name: 'Best Practices', href: '/resources/best-practices', icon: Target }
       ]
@@ -77,9 +77,9 @@ const Header = () => {
       category: 'SUPPORT',
       items: [
         { name: 'Help Center', href: '/support/help-center', icon: HelpCircle },
-        { name: 'Documentation', href: '/support/documentation', icon: BookOpen },
+        { name: 'API Documentation', href: '/support/documentation', icon: BookOpen },
         { name: 'Contact Support', href: '/contact', icon: MessageCircle },
-        { name: 'Community', href: '/community', icon: Users }
+        { name: 'Research Community', href: '/community', icon: Users }
       ]
     }
   ];
@@ -135,10 +135,10 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-              <Brain className="w-4 h-4 text-white" />
+              <Microscope className="w-4 h-4 text-white" />
             </div>
             <span className="text-xl font-light text-gray-900 tracking-tight">
-              MarketMind AI
+              Observio
             </span>
           </Link>
 
