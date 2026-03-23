@@ -3,14 +3,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Bot, BarChart3, Settings, Users } from 'lucide-react';
 
-const QuickActions = () => {
+interface QuickActionsProps {
+  onCreateWorker?: () => void;
+}
+
+const QuickActions = ({ onCreateWorker }: QuickActionsProps) => {
   return (
     <Card className="lg:col-span-1">
       <CardHeader>
         <CardTitle className="text-xl font-medium">Quick Actions</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Button className="w-full justify-start" variant="outline">
+        <Button className="w-full justify-start" variant="outline" onClick={onCreateWorker}>
           <Bot className="h-4 w-4 mr-2" />
           Create New AI Worker
         </Button>

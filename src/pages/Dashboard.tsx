@@ -23,10 +23,12 @@ import AgentsNavbar from '@/components/dashboard/AgentsNavbar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import QuickActions from '@/components/dashboard/QuickActions';
 import RecentActivity from '@/components/dashboard/RecentActivity';
+import CreateAgentWizard from '@/components/dashboard/CreateAgentWizard';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
+  const [wizardOpen, setWizardOpen] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
@@ -121,7 +123,7 @@ const Dashboard = () => {
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
             <LoggedInHeader userEmail={userEmail} />
-            <AgentsNavbar />
+            <AgentsNavbar onAddAgent={() => setWizardOpen(true)} />
             
             {/* Main Content */}
             <main className="flex-1 p-6">
@@ -149,7 +151,7 @@ const Dashboard = () => {
 
               {/* Dashboard Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                <QuickActions />
+                <QuickActions onCreateWorker={() => setWizardOpen(true)} />
                 <RecentActivity />
                 
                 {/* Worker Distribution */}
@@ -215,6 +217,11 @@ const Dashboard = () => {
           </SidebarInset>
         </div>
       </SidebarProvider>
+      <CreateAgentWizard
+        open={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+        onComplete={() => setWizardOpen(false)}
+      />
     </div>
   );
 };
