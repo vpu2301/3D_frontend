@@ -28,6 +28,7 @@ import CreateAgentWizard from '@/components/dashboard/CreateAgentWizard';
 const Dashboard = () => {
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
+  const [wizardOpen, setWizardOpen] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
