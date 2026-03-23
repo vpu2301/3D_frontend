@@ -151,7 +151,7 @@ const Dashboard = () => {
 
               {/* Dashboard Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                <QuickActions />
+                <QuickActions onCreateWorker={() => setWizardOpen(true)} />
                 <RecentActivity />
                 
                 {/* Worker Distribution */}
