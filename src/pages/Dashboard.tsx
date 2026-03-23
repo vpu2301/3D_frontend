@@ -123,7 +123,7 @@ const Dashboard = () => {
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
             <LoggedInHeader userEmail={userEmail} />
-            <AgentsNavbar />
+            <AgentsNavbar onAddAgent={() => setWizardOpen(true)} />
             
             {/* Main Content */}
             <main className="flex-1 p-6">
