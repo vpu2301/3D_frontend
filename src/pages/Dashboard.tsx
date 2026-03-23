@@ -23,6 +23,7 @@ import AgentsNavbar from '@/components/dashboard/AgentsNavbar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import QuickActions from '@/components/dashboard/QuickActions';
 import RecentActivity from '@/components/dashboard/RecentActivity';
+import CreateAgentWizard from '@/components/dashboard/CreateAgentWizard';
 
 const Dashboard = () => {
   const navigate = useNavigate();
