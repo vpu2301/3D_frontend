@@ -217,6 +217,11 @@ const Dashboard = () => {
           </SidebarInset>
         </div>
       </SidebarProvider>
+      <CreateAgentWizard
+        open={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+        onComplete={() => setWizardOpen(false)}
+      />
     </div>
   );
 };
