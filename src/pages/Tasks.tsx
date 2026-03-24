@@ -142,7 +142,7 @@ const Tasks = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-orange-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />

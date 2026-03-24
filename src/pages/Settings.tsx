@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -138,7 +138,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
@@ -146,8 +146,7 @@ const Settings = () => {
             <LoggedInHeader userEmail={userEmail} />
             
             <main className="flex-1 p-6">
-              <div className="flex items-center space-x-4 mb-6">
-                <SidebarTrigger />
+              <div className="flex items-center justify-between mb-6">
                 <div>
                   <h1 className="text-3xl font-light text-gray-900">Settings</h1>
                   <p className="text-gray-600">Manage your account and platform preferences</p>

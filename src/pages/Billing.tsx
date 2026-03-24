@@ -34,7 +34,7 @@ const Billing = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
@@ -42,9 +42,11 @@ const Billing = () => {
             <LoggedInHeader userEmail={userEmail} />
             
             <main className="flex-1 p-6">
-              <div className="mb-6">
-                <h1 className="text-3xl font-light text-gray-900">Billing</h1>
-                <p className="text-gray-600">Manage your subscription and billing information</p>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h1 className="text-3xl font-light text-gray-900">Billing</h1>
+                  <p className="text-gray-600">Manage your subscription and billing information</p>
+                </div>
               </div>
 
               <div className="max-w-4xl space-y-8">
