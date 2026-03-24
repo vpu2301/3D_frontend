@@ -45,7 +45,7 @@ const AIAgents = () => {
                 </div>
                 <Button
                   onClick={() => setWizardOpen(true)}
-                  className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Deploy Agent

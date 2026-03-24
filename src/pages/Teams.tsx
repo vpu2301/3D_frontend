@@ -94,7 +94,7 @@ const Teams = () => {
                 </div>
                 <Button 
                   onClick={() => setShowCreateDialog(true)}
-                  className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Create Team
