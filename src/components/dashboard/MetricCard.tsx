@@ -13,7 +13,7 @@ interface MetricCardProps {
 
 const MetricCard = ({ title, value, change, icon: Icon, color, bgColor }: MetricCardProps) => {
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div>
