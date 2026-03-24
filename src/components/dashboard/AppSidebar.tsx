@@ -25,10 +25,6 @@ import {
   HelpCircle,
   ClipboardCheck,
   CreditCard,
-  Code,
-  Terminal,
-  BookOpen,
-  Play,
   GitBranch,
   Brain
 } from 'lucide-react';
