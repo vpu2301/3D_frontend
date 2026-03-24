@@ -3,6 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Minimalistic icon style for DACH market */
+.lucide {
+  stroke-width: 1.5 !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
