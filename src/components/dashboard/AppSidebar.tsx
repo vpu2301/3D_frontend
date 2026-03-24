@@ -99,28 +99,6 @@ const settingsItems = [
   },
 ];
 
-const devItems = [
-  {
-    title: "Playground",
-    url: "/dev/playground",
-    icon: Terminal,
-  },
-  {
-    title: "API",
-    url: "/dev/api",
-    icon: Code,
-  },
-  {
-    title: "Docs",
-    url: "/dev/docs",
-    icon: BookOpen,
-  },
-  {
-    title: "Demos",
-    url: "/demos",
-    icon: Play,
-  },
-];
 
 export function AppSidebar() {
   const location = useLocation();
