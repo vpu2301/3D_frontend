@@ -14,7 +14,7 @@ const QuickActions = ({ onCreateWorker }: QuickActionsProps) => {
         <CardTitle className="text-xl font-medium">Quick Actions</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Button className="w-full justify-start" variant="outline" onClick={onCreateWorker}>
+        <Button className="w-full justify-start bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white" onClick={onCreateWorker}>
           <Bot className="h-4 w-4 mr-2" />
           Create New AI Worker
         </Button>
