@@ -146,8 +146,7 @@ const Settings = () => {
             <LoggedInHeader userEmail={userEmail} />
             
             <main className="flex-1 p-6">
-              <div className="flex items-center space-x-4 mb-6">
-                <SidebarTrigger />
+              <div className="flex items-center justify-between mb-6">
                 <div>
                   <h1 className="text-3xl font-light text-gray-900">Settings</h1>
                   <p className="text-gray-600">Manage your account and platform preferences</p>

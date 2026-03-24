@@ -211,7 +211,7 @@ const Chat = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-purple-50">
         <AppSidebar />
         <SidebarInset className="flex-1">
           <LoggedInHeader userEmail={userEmail} />
