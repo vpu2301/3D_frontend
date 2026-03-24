@@ -34,7 +34,7 @@ const AgentsNavbar = ({ onAddAgent }: AgentsNavbarProps) => {
             </div>
           </div>
           
-          <Button variant="outline" size="sm" className="flex items-center space-x-2" onClick={onAddAgent}>
+          <Button size="sm" className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600" onClick={onAddAgent}>
             <Plus className="h-4 w-4" />
             <span>Add Agent</span>
           </Button>
