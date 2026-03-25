@@ -68,22 +68,21 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			boxShadow: {
+				'neu': '6px 6px 12px hsl(220 14% 82%), -6px -6px 12px hsl(0 0% 100%)',
+				'neu-sm': '3px 3px 6px hsl(220 14% 82%), -3px -3px 6px hsl(0 0% 100%)',
+				'neu-lg': '10px 10px 20px hsl(220 14% 80%), -10px -10px 20px hsl(0 0% 100%)',
+				'neu-inset': 'inset 3px 3px 6px hsl(220 14% 82%), inset -3px -3px 6px hsl(0 0% 100%)',
+				'neu-inset-sm': 'inset 2px 2px 4px hsl(220 14% 84%), inset -2px -2px 4px hsl(0 0% 100%)',
+			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
 				}
 			},
 			animation: {
