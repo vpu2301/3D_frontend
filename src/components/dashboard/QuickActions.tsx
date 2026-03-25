@@ -13,20 +13,20 @@ const QuickActions = ({ onCreateWorker }: QuickActionsProps) => {
       <CardHeader>
         <CardTitle className="text-xl font-medium">Quick Actions</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <Button className="w-full justify-start bg-accent text-accent-foreground hover:bg-accent/90 shadow-neu-sm hover:shadow-neu rounded-xl" onClick={onCreateWorker}>
+      <CardContent className="space-y-4">
+        <Button className="w-full justify-start bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white" onClick={onCreateWorker}>
           <Bot className="h-4 w-4 mr-2" />
           Create New AI Worker
         </Button>
-        <Button className="w-full justify-start rounded-xl shadow-neu-sm hover:shadow-neu" variant="outline">
+        <Button className="w-full justify-start" variant="outline">
           <BarChart3 className="h-4 w-4 mr-2" />
           View Analytics
         </Button>
-        <Button className="w-full justify-start rounded-xl shadow-neu-sm hover:shadow-neu" variant="outline">
+        <Button className="w-full justify-start" variant="outline">
           <Settings className="h-4 w-4 mr-2" />
           Manage Automations
         </Button>
-        <Button className="w-full justify-start rounded-xl shadow-neu-sm hover:shadow-neu" variant="outline">
+        <Button className="w-full justify-start" variant="outline">
           <Users className="h-4 w-4 mr-2" />
           User Management
         </Button>
