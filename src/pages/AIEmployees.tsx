@@ -148,7 +148,7 @@ const AIEmployees = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f5ede3] via-white to-purple-50">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
@@ -158,7 +158,7 @@ const AIEmployees = () => {
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-3xl font-light text-gray-900">AI Employees</h1>
+                  <h1 className="text-3xl font-bold text-gray-900">AI Employees</h1>
                   <p className="text-gray-600">Manage your artificial intelligence workforce and assistants</p>
                 </div>
                 <Button 
@@ -265,7 +265,7 @@ const AIEmployees = () => {
 
               {employees.length === 0 && (
                 <div className="text-center py-12">
-                  <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <Bot className="h-16 w-16 text-black/50 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No AI employees yet</h3>
                   <p className="text-gray-600 mb-4">Create your first AI employee to get started</p>
                   <Button 

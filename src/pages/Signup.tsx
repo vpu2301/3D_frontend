@@ -53,7 +53,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#181512]">
       <Header />
       
       <main className="pt-24">

@@ -40,7 +40,7 @@ const Felix = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">

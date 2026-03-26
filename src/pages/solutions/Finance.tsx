@@ -14,7 +14,7 @@ const Finance = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#181512]">
       <Header />
       
       <main className="pt-24">
@@ -68,7 +68,7 @@ const Finance = () => {
 
             <Card className="shadow-lg">
               <CardHeader>
-                <Shield className="h-8 w-8 text-orange-600 mb-2" />
+                <Shield className="h-8 w-8 text-[#111111] mb-2" />
                 <CardTitle>Fraud Detection</CardTitle>
               </CardHeader>
               <CardContent>

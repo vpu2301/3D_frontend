@@ -103,17 +103,17 @@ const Careers = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-[#f5ede3] via-white to-purple-50 dark:from-[#181512] dark:via-[#1c1916] dark:to-[#1c1916]">
       <main className="pt-16 p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
-            <h1 className="text-3xl font-light text-gray-900">Join the AI Revolution</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Join the AI Revolution</h1>
             <p className="text-gray-600">Help us build the future of work with passionate individuals</p>
           </div>
 
           {/* Company Stats */}
           <section className="mb-8">
-            <Card className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white border-0">
+            <Card className="bg-[#f5ede3] text-[#111111] border-0">
               <CardContent className="p-6">
                 <div className="grid grid-cols-3 gap-6 text-center">
                   <div>
@@ -140,7 +140,7 @@ const Careers = () => {
           <section className="mb-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black/50 h-4 w-4" />
                 <Input
                   placeholder="Search jobs..."
                   value={searchTerm}

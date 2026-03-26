@@ -46,7 +46,7 @@ const Documents = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -59,7 +59,7 @@ const Documents = () => {
               analyzes, and processes documents with human-level accuracy at machine speed.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full" asChild>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/start-free-trial">Process Documents Now</Link>
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
@@ -84,7 +84,7 @@ const Documents = () => {
             {features.map((feature, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-500 w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
@@ -149,8 +149,8 @@ const Documents = () => {
               <p className="text-gray-600">Review and validate extracted data if needed</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Download className="h-8 w-8 text-orange-600" />
+              <div className="w-16 h-16 bg-[#1b1b1b] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Download className="h-8 w-8 text-[#111111]" />
               </div>
               <h3 className="text-lg font-medium mb-2">4. Export</h3>
               <p className="text-gray-600">Export to your systems or trigger automated workflows</p>
@@ -162,12 +162,12 @@ const Documents = () => {
       {/* Use Cases */}
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white">
+          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8">
             <h3 className="text-3xl font-light mb-8 text-center">Real-World Applications</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h4 className="text-xl font-medium mb-4">Finance & Accounting</h4>
-                <ul className="space-y-3 text-gray-300">
+                <ul className="space-y-3 text-black/60">
                   <li>• Automated invoice processing and AP/AR</li>
                   <li>• Expense report digitization</li>
                   <li>• Tax document preparation</li>
@@ -176,7 +176,7 @@ const Documents = () => {
               </div>
               <div>
                 <h4 className="text-xl font-medium mb-4">Legal & Compliance</h4>
-                <ul className="space-y-3 text-gray-300">
+                <ul className="space-y-3 text-black/60">
                   <li>• Contract analysis and management</li>
                   <li>• Legal document review</li>
                   <li>• Compliance documentation</li>
@@ -189,13 +189,13 @@ const Documents = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Go Paperless?</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Transform your document processes with AI-powered automation.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Start Processing
               <ArrowRight className="ml-2 h-4 w-4" />

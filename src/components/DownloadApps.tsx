@@ -5,7 +5,7 @@ import { Smartphone, Download, Apple, Zap } from 'lucide-react';
 
 const DownloadApps = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
+    <section className="py-20 bg-[#f5ede3] text-[#111111]">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-light mb-6">Get 3days.ai on Mobile</h2>
@@ -21,7 +21,7 @@ const DownloadApps = () => {
               <div className="w-64 h-96 bg-gradient-to-b from-gray-800 to-gray-900 rounded-3xl mx-auto lg:mx-0 p-4 shadow-2xl">
                 <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white rounded-2xl p-4 flex flex-col">
                   <div className="text-center mb-4">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                    <div className="w-8 h-8 bg-[#111111] rounded-lg mx-auto mb-2 flex items-center justify-center">
                       <div className="w-2 h-2 bg-white rounded-sm"></div>
                     </div>
                     <h3 className="text-sm font-medium text-gray-900">3days.ai</h3>
@@ -50,30 +50,30 @@ const DownloadApps = () => {
           {/* Right side - Download buttons and features */}
           <div className="space-y-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Card className="bg-white/10 border-white/20 hover:bg-white/20 transition-all duration-200">
+              <Card className="bg-white border-black/8 hover:bg-gray-50 transition-all duration-200">
                 <CardContent className="p-6 text-center">
-                  <Apple className="h-12 w-12 mx-auto mb-4 text-white" />
+                  <Apple className="h-12 w-12 mx-auto mb-4 text-[#111111]" />
                   <h3 className="text-lg font-medium mb-2">iOS App</h3>
                   <p className="text-sm opacity-80 mb-4">Download for iPhone and iPad</p>
-                  <Button className="w-full bg-white text-gray-900 hover:bg-gray-100">
+                  <Button className="w-full bg-[#111111] text-white hover:bg-[#222222] rounded-full">
                     App Store
                   </Button>
                 </CardContent>
               </Card>
               
-              <Card className="bg-white/10 border-white/20 hover:bg-white/20 transition-all duration-200">
+              <Card className="bg-white border-black/8 hover:bg-gray-50 transition-all duration-200">
                 <CardContent className="p-6 text-center">
-                  <Smartphone className="h-12 w-12 mx-auto mb-4 text-white" />
+                  <Smartphone className="h-12 w-12 mx-auto mb-4 text-[#111111]" />
                   <h3 className="text-lg font-medium mb-2">Android App</h3>
                   <p className="text-sm opacity-80 mb-4">Download for Android devices</p>
-                  <Button className="w-full bg-white text-gray-900 hover:bg-gray-100">
+                  <Button className="w-full bg-[#111111] text-white hover:bg-[#222222] rounded-full">
                     Google Play
                   </Button>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="bg-white/5 rounded-2xl p-6">
+            <div className="bg-black/4 rounded-2xl p-6">
               <h4 className="text-lg font-medium mb-4">Mobile Features</h4>
               <div className="space-y-3">
                 <div className="flex items-center">
@@ -89,7 +89,7 @@ const DownloadApps = () => {
                   <span className="text-sm">Quick approval workflows</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="w-2 h-2 bg-orange-400 rounded-full mr-3"></div>
+                  <div className="w-2 h-2 bg-[#111111] rounded-full mr-3"></div>
                   <span className="text-sm">Offline sync capabilities</span>
                 </div>
               </div>

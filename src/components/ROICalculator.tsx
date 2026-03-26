@@ -33,7 +33,7 @@ const ROICalculator = () => {
   return (
     <Card className="w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-sm border-0 shadow-2xl">
       <CardHeader className="text-center pb-8">
-        <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <div className="w-16 h-16 bg-[#111111] rounded-2xl flex items-center justify-center mx-auto mb-6">
           <Calculator className="h-8 w-8 text-white" />
         </div>
         <CardTitle className="text-4xl font-light text-gray-900 mb-4">
@@ -125,7 +125,7 @@ const ROICalculator = () => {
                 <div className="text-3xl font-light text-gray-900">${results.monthlyCostSavings.toLocaleString()}</div>
               </div>
 
-              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-2xl">
+              <div className="bg-gradient-to-r from-yellow-50 to-[#111111] p-6 rounded-2xl">
                 <div className="text-sm text-gray-600 mb-1">Annual Cost Savings</div>
                 <div className="text-3xl font-light text-gray-900">${results.annualCostSavings.toLocaleString()}</div>
               </div>
@@ -139,7 +139,7 @@ const ROICalculator = () => {
               </div>
             </div>
 
-            <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-lg px-8 py-4 rounded-full transition-all duration-300 hover:scale-105">
+            <Button className="w-full bg-[#111111] hover:from-blue-600 hover:to-purple-600 text-white text-lg px-8 py-4 rounded-full transition-all duration-300 hover:scale-105">
               Start Your Free Trial
             </Button>
           </div>

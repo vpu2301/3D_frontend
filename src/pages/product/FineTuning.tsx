@@ -74,14 +74,14 @@ const FineTuning = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
               AI Fine-Tuning & 
-              <span className="block font-medium bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="block font-medium text-[#111111]">
                 Custom Knowledge Bases
               </span>
             </h1>
@@ -90,7 +90,7 @@ const FineTuning = () => {
               creating intelligent assistants that understand your business inside and out.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-md" asChild>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-md" asChild>
                 <Link to="/start-free-trial">Start Fine-Tuning</Link>
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
@@ -136,7 +136,7 @@ const FineTuning = () => {
             {tuningProcess.map((process, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 text-center">
                 <CardContent className="p-8">
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-[#222222] rounded-full flex items-center justify-center mx-auto mb-6">
                     <process.icon className="h-8 w-8 text-white" />
                   </div>
                   <div className="text-3xl font-light text-purple-600 mb-4">Step {process.step}</div>
@@ -164,7 +164,7 @@ const FineTuning = () => {
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-6">
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 mr-4">
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-500 to-[#222222] mr-4">
                       <feature.icon className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-xl font-medium text-gray-900">{feature.title}</h3>
@@ -191,7 +191,7 @@ const FineTuning = () => {
             {dataSources.map((source, index) => (
               <Card key={index} className="border-0 shadow-md hover:shadow-lg transition-all duration-300 text-center">
                 <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-[#222222] rounded-lg flex items-center justify-center mx-auto mb-4">
                     <Database className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="text-sm font-medium text-gray-900">{source}</h3>
@@ -232,7 +232,7 @@ const FineTuning = () => {
               </div>
             </div>
             <div className="text-center">
-              <div className="w-64 h-64 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto">
+              <div className="w-64 h-64 bg-gradient-to-r from-purple-500 to-[#222222] rounded-full flex items-center justify-center mx-auto">
                 <Shield className="h-32 w-32 text-white" />
               </div>
             </div>
@@ -241,13 +241,13 @@ const FineTuning = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Create Your Custom AI?</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Transform your business knowledge into intelligent AI workers that understand your specific needs.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-md py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Start Fine-Tuning
               <ArrowRight className="ml-2 h-4 w-4" />

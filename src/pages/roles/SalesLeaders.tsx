@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 const SalesLeaders = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen dark:bg-[#181512]">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 to-cyan-100 pt-20 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

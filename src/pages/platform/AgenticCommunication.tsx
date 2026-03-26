@@ -103,7 +103,7 @@ const AgenticCommunication = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-gray-50 to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -146,7 +146,7 @@ const AgenticCommunication = () => {
             {features.map((feature, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
@@ -172,7 +172,7 @@ const AgenticCommunication = () => {
             {useCases.map((useCase, index) => (
               <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
                 <div className="flex items-center mb-6">
-                  <div className="p-3 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 mr-4">
+                  <div className="p-3 rounded-2xl bg-[#111111] mr-4">
                     <useCase.icon className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900">{useCase.title}</h3>
@@ -285,25 +285,25 @@ const AgenticCommunication = () => {
       </section>
 
       {/* Security Deep Dive */}
-      <section className="py-20 px-4 bg-gray-900 text-white">
+      <section className="py-20 px-4 bg-[#f5ede3] text-[#111111]">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-r from-gray-800 via-black to-gray-800 rounded-3xl p-12">
+          <div className="bg-white rounded-3xl p-12 border border-black/8">
             <h3 className="text-3xl font-light mb-8 text-center">Security Architecture</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
                 <Lock className="h-12 w-12 text-blue-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Zero-Trust Network</h4>
-                <p className="text-gray-300">Every agent connection is verified and encrypted, with no implicit trust between network participants.</p>
+                <p className="text-black/60">Every agent connection is verified and encrypted, with no implicit trust between network participants.</p>
               </div>
               <div className="text-center">
                 <Shield className="h-12 w-12 text-green-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Granular Permissions</h4>
-                <p className="text-gray-300">Fine-grained access control determines exactly what data each agent can access and share.</p>
+                <p className="text-black/60">Fine-grained access control determines exactly what data each agent can access and share.</p>
               </div>
               <div className="text-center">
                 <Activity className="h-12 w-12 text-purple-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Real-Time Monitoring</h4>
-                <p className="text-gray-300">Continuous monitoring of all agent communications with instant threat detection and response.</p>
+                <p className="text-black/60">Continuous monitoring of all agent communications with instant threat detection and response.</p>
               </div>
             </div>
           </div>
@@ -311,14 +311,14 @@ const AgenticCommunication = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Connect Your AI Agents?</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Join the future of inter-organizational AI collaboration with our agentic communication protocol.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3" asChild>
+            <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
               <Link to="/get-started">
                 Start Integration
                 <ArrowRight className="ml-2 h-4 w-4" />

@@ -108,7 +108,7 @@ export function AppSidebar() {
     <Sidebar className="border-r" collapsible="icon">
       <SidebarHeader className="p-4">
         <div 
-          className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 rounded-lg p-2 -m-2 transition-colors"
+          className="flex items-center space-x-2 cursor-pointer hover:bg-accent rounded-lg p-2 -m-2 transition-colors"
           onClick={handleLogoClick}
         >
           <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center flex-shrink-0">

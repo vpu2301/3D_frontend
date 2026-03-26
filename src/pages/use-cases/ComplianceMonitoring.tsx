@@ -72,7 +72,7 @@ const ComplianceMonitoring = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       <Header />
       
       {/* Hero Section */}
@@ -90,7 +90,7 @@ const ComplianceMonitoring = () => {
               Stay ahead of regulatory requirements with automated compliance monitoring that detects violations in real-time and maintains audit trails
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full" asChild>
+              <Button size="lg" className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/get-started">Start Monitoring</Link>
               </Button>
               <Button size="lg" variant="outline" className="px-8 py-3 rounded-full" asChild>
@@ -113,7 +113,7 @@ const ComplianceMonitoring = () => {
             {benefits.map((benefit, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-red-500 to-[#222222] w-fit mx-auto mb-6">
                     <benefit.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-4">{benefit.title}</h3>
@@ -137,7 +137,7 @@ const ComplianceMonitoring = () => {
             {features.map((feature, index) => (
               <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
                 <div className="flex items-center mb-6">
-                  <div className="p-3 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 mr-4">
+                  <div className="p-3 rounded-2xl bg-[#111111] mr-4">
                     <feature.icon className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900">{feature.title}</h3>
@@ -182,7 +182,7 @@ const ComplianceMonitoring = () => {
           <p className="text-xl text-gray-600 mb-8">
             Protect your organization with automated compliance monitoring that works 24/7
           </p>
-          <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full" asChild>
+          <Button size="lg" className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
             <Link to="/get-started">
               Start Monitoring Now
               <ArrowRight className="ml-2 h-4 w-4" />

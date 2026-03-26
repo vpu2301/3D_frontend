@@ -57,7 +57,7 @@ const WorkflowBuilder = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -70,7 +70,7 @@ const WorkflowBuilder = () => {
               no-code builder. Connect systems, automate processes, and scale your operations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full" asChild>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/start-free-trial">Start Building</Link>
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
@@ -158,7 +158,7 @@ const WorkflowBuilder = () => {
               <div className="text-gray-600">Uptime reliability</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-orange-600 mb-2">24/7</div>
+              <div className="text-4xl font-light text-[#111111] mb-2">24/7</div>
               <div className="text-gray-600">Monitoring & support</div>
             </div>
           </div>
@@ -195,8 +195,8 @@ const WorkflowBuilder = () => {
               <p className="text-gray-600">Test your workflow with real data and scenarios</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-orange-600" />
+              <div className="w-16 h-16 bg-[#1b1b1b] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-[#111111]" />
               </div>
               <h3 className="text-lg font-medium mb-2">4. Deploy</h3>
               <p className="text-gray-600">Launch your workflow and monitor performance</p>
@@ -208,23 +208,23 @@ const WorkflowBuilder = () => {
       {/* Enterprise Features */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white">
+          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8">
             <h3 className="text-3xl font-light mb-8 text-center">Enterprise Capabilities</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
                 <Users className="h-12 w-12 text-green-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Team Collaboration</h4>
-                <p className="text-gray-300">Share workflows and collaborate with team members</p>
+                <p className="text-black/60">Share workflows and collaborate with team members</p>
               </div>
               <div className="text-center">
                 <Clock className="h-12 w-12 text-blue-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Advanced Scheduling</h4>
-                <p className="text-gray-300">Complex scheduling and time-based triggers</p>
+                <p className="text-black/60">Complex scheduling and time-based triggers</p>
               </div>
               <div className="text-center">
                 <Shield className="h-12 w-12 text-purple-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Security & Compliance</h4>
-                <p className="text-gray-300">Enterprise-grade security and audit trails</p>
+                <p className="text-black/60">Enterprise-grade security and audit trails</p>
               </div>
             </div>
           </div>
@@ -232,13 +232,13 @@ const WorkflowBuilder = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Start Building Workflows</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Transform your business processes with powerful, visual workflow automation.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Try Builder Free
               <ArrowRight className="ml-2 h-4 w-4" />

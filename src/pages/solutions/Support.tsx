@@ -14,7 +14,7 @@ const Support = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#181512]">
       <Header />
       
       <main className="pt-24">
@@ -68,7 +68,7 @@ const Support = () => {
 
             <Card className="shadow-lg">
               <CardHeader>
-                <Star className="h-8 w-8 text-orange-600 mb-2" />
+                <Star className="h-8 w-8 text-[#111111] mb-2" />
                 <CardTitle>Customer Sentiment Analysis</CardTitle>
               </CardHeader>
               <CardContent>

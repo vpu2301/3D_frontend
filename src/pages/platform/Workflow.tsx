@@ -57,7 +57,7 @@ const WorkflowPlatform = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -70,7 +70,7 @@ const WorkflowPlatform = () => {
               Connect systems, automate decisions, and scale operations with visual workflow automation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full" asChild>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/start-free-trial">Build Workflows</Link>
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
@@ -95,7 +95,7 @@ const WorkflowPlatform = () => {
             {features.map((feature, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-[#222222] w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
@@ -210,23 +210,23 @@ const WorkflowPlatform = () => {
       {/* Advanced Features */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white">
+          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8">
             <h3 className="text-3xl font-light mb-8 text-center">Enterprise Workflow Features</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
                 <Zap className="h-12 w-12 text-indigo-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">High Performance</h4>
-                <p className="text-gray-300">Scale to millions of workflow executions per day</p>
+                <p className="text-black/60">Scale to millions of workflow executions per day</p>
               </div>
               <div className="text-center">
                 <Users className="h-12 w-12 text-purple-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Team Collaboration</h4>
-                <p className="text-gray-300">Version control and collaborative workflow development</p>
+                <p className="text-black/60">Version control and collaborative workflow development</p>
               </div>
               <div className="text-center">
                 <Shield className="h-12 w-12 text-green-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Enterprise Security</h4>
-                <p className="text-gray-300">Role-based access and audit trails for compliance</p>
+                <p className="text-black/60">Role-based access and audit trails for compliance</p>
               </div>
             </div>
           </div>
@@ -234,13 +234,13 @@ const WorkflowPlatform = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Automate Your Workflows</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Start building powerful automation workflows that scale with your business.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Start Building
               <ArrowRight className="ml-2 h-4 w-4" />

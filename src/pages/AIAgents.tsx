@@ -31,7 +31,7 @@ const AIAgents = () => {
   const bgs = ['from-cyan-100 to-blue-100', 'from-violet-100 to-purple-100', 'from-emerald-100 to-green-100', 'from-rose-100 to-pink-100', 'from-amber-100 to-yellow-100'];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f5ede3] via-white to-purple-50">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
@@ -40,7 +40,7 @@ const AIAgents = () => {
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-3xl font-light text-foreground">AI Agents</h1>
+                  <h1 className="text-3xl font-bold text-foreground">AI Agents</h1>
                   <p className="text-muted-foreground">Autonomous AI agents for task automation</p>
                 </div>
                 <Button

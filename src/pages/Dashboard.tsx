@@ -1,19 +1,13 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Bot, 
-  Users, 
-  TrendingUp, 
-  CheckCircle,
-  Clock,
+import {
+  Bot,
+  Users,
+  TrendingUp,
   BarChart3,
-  DollarSign,
-  Zap,
-  Target,
   PieChart,
   Briefcase,
-  Activity
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -44,40 +38,26 @@ const Dashboard = () => {
     }
   }, [navigate]);
 
-  // Key metrics data focused on AI Workers
+  // Key metrics data
   const metrics = [
     {
-      title: 'Active AI Workers',
-      value: '24',
-      change: '+12%',
-      icon: Bot,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
-    },
-    {
       title: 'Tasks Completed',
-      value: '1,234',
-      change: '+8%',
-      icon: CheckCircle,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100'
+      value: '47',
+      subtitle: '+12 today',
+      bgColor: 'bg-[#cce8ca]',
     },
     {
-      title: 'Work Hours Saved',
-      value: '456',
-      change: '+15%',
-      icon: Clock,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100'
+      title: 'Hours Saved',
+      value: '18.4h',
+      subtitle: 'this week',
+      bgColor: 'bg-[#bdd8ec]',
     },
     {
-      title: 'Human Workers',
-      value: '89',
-      change: '+5%',
-      icon: Users,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100'
-    }
+      title: 'Automation Rate',
+      value: '73%',
+      subtitle: 'of routine work',
+      bgColor: 'bg-[#f5c6cc]',
+    },
   ];
 
   // Worker productivity metrics
@@ -85,39 +65,31 @@ const Dashboard = () => {
     {
       title: 'Worker Productivity',
       value: '340%',
-      change: '+23%',
-      icon: Activity,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100'
+      subtitle: '+23% this month',
+      bgColor: 'bg-[#cce8ca]',
     },
     {
       title: 'Cost Per Task',
       value: '$2.50',
-      change: '-18%',
-      icon: DollarSign,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
+      subtitle: '-18% vs last month',
+      bgColor: 'bg-[#bdd8ec]',
     },
     {
       title: 'Efficiency Gain',
       value: '85%',
-      change: '+45%',
-      icon: Zap,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-100'
+      subtitle: '+45% this quarter',
+      bgColor: 'bg-[#fde9c4]',
     },
     {
       title: 'Worker Utilization',
       value: '92%',
-      change: '+12%',
-      icon: Target,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100'
-    }
+      subtitle: '+12% this month',
+      bgColor: 'bg-[#e4d4f4]',
+    },
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
+    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
@@ -133,16 +105,21 @@ const Dashboard = () => {
               </div>
 
               {/* Primary Metrics Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 {metrics.map((metric, index) => (
                   <MetricCard key={index} {...metric} />
                 ))}
               </div>
 
+              {/* Recent Activity */}
+              <div className="mb-8">
+                <RecentActivity />
+              </div>
+
               {/* Worker Performance Section */}
               <div className="mb-8">
                 <h2 className="text-2xl font-light text-gray-900 mb-4">Worker Performance & Efficiency</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {workerMetrics.map((metric, index) => (
                     <MetricCard key={index} {...metric} />
                   ))}
@@ -152,7 +129,6 @@ const Dashboard = () => {
               {/* Dashboard Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <QuickActions onCreateWorker={() => setWizardOpen(true)} />
-                <RecentActivity />
                 
                 {/* Worker Distribution */}
                 <Card>

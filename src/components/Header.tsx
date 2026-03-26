@@ -1,262 +1,245 @@
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Building2, Users, BookOpen, Play, Calendar, MessageCircle, Heart, Trophy, Headphones, Zap, Database, FileText, Shield, BarChart, Mail, Cog, Scale, DollarSign, UserCheck, Briefcase, Target, CheckCircle, BookMarked, HelpCircle, MessageSquare, Activity, Brain, Network, Bot, Palette, FlaskConical, Microscope, Stethoscope, Dna, TestTube } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Menu, X, ChevronDown, Bot, Zap, BarChart3, Shield, Users, Building2, Workflow, Brain, BookOpen, HelpCircle, MessageCircle } from 'lucide-react';
+import ThemeSelector from './ThemeSelector';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = () => {
-      setActiveDropdown(null);
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = () => setActiveDropdown(null);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setActiveDropdown(null);
+  }, [location]);
 
   const productItems = [
     {
-      category: 'CORE MODULES',
+      category: 'PRODUCT',
       items: [
-        { name: 'Research Assistant', href: '/product/research-assistant', icon: Brain },
-        { name: 'Data Analytics', href: '/product/data-analytics', icon: BarChart },
-        { name: 'Lab Automation', href: '/product/lab-automation', icon: FlaskConical },
-        { name: 'Regulatory Compliance', href: '/product/regulatory-compliance', icon: Shield }
+        { name: 'AI Copilot', href: '/product/ai-assistants', icon: Brain, desc: 'Personal AI for every employee' },
+        { name: 'Workflow Automation', href: '/product/workflow-builder', icon: Workflow, desc: 'Automate repetitive tasks' },
+        { name: 'Analytics', href: '/platform/analytics', icon: BarChart3, desc: 'Team productivity insights' },
+        { name: 'Agents', href: '/product/agents', icon: Bot, desc: 'Autonomous AI agents' },
       ]
     },
     {
-      category: 'SPECIALIZED TOOLS',
+      category: 'PLATFORM',
       items: [
-        { name: 'Genomics Analysis', href: '/product/genomics-analysis', icon: Dna },
-        { name: 'Clinical Trials', href: '/product/clinical-trials', icon: Stethoscope },
-        { name: 'Drug Discovery', href: '/product/drug-discovery', icon: TestTube },
-        { name: 'Biomarker Detection', href: '/product/biomarker-detection', icon: Microscope }
+        { name: 'Integrations', href: '/platform/integrations', icon: Zap, desc: '200+ tool connections' },
+        { name: 'Security', href: '/platform/security', icon: Shield, desc: 'SOC 2, enterprise-grade' },
+        { name: 'Fine-Tuning', href: '/product/fine-tuning', icon: Brain, desc: 'Custom AI for your org' },
       ]
     }
   ];
 
   const solutionsItems = [
     {
-      category: 'BY ORGANIZATION SIZE',
+      category: 'BY TEAM',
       items: [
-        { name: 'Academic Labs', href: '/solutions/academic-labs', icon: Users },
-        { name: 'Biotech Startups', href: '/solutions/biotech-startups', icon: Building2 },
-        { name: 'Pharmaceutical Companies', href: '/solutions/pharmaceutical', icon: Network }
+        { name: 'Sales Teams', href: '/solutions/sales', icon: Users, desc: 'Close more, faster' },
+        { name: 'Operations', href: '/solutions/operations', icon: Building2, desc: 'Run leaner processes' },
+        { name: 'Marketing', href: '/solutions/marketing', icon: Zap, desc: 'Campaigns on autopilot' },
+        { name: 'HR & People', href: '/solutions/hr', icon: Users, desc: 'Streamline HR workflows' },
       ]
     },
     {
-      category: 'BY RESEARCH AREA',
+      category: 'BY ROLE',
       items: [
-        { name: 'Oncology Research', href: '/solutions/oncology', icon: Heart },
-        { name: 'Neuroscience', href: '/solutions/neuroscience', icon: Brain },
-        { name: 'Cardiovascular', href: '/solutions/cardiovascular', icon: Activity },
-        { name: 'Infectious Disease', href: '/solutions/infectious-disease', icon: Shield }
+        { name: 'For CEOs', href: '/roles/ceo', icon: Building2, desc: 'Strategic visibility' },
+        { name: 'For IT Leaders', href: '/roles/it-director', icon: Shield, desc: 'Secure deployment' },
+        { name: 'For Sales Leaders', href: '/roles/sales-leaders', icon: Users, desc: 'Pipeline automation' },
       ]
     }
   ];
 
   const resourcesItems = [
     {
-      category: 'LEARN',
+      category: 'RESOURCES',
       items: [
-        { name: 'Research Success Stories', href: '/resources/success-stories', icon: Trophy },
-        { name: 'AI in Healthcare Guide', href: '/resources/ai-healthcare-guide', icon: BookOpen },
-        { name: 'ROI Calculator', href: '/resources/roi-calculator', icon: BarChart },
-        { name: 'Best Practices', href: '/resources/best-practices', icon: Target }
-      ]
-    },
-    {
-      category: 'SUPPORT',
-      items: [
-        { name: 'Help Center', href: '/support/help-center', icon: HelpCircle },
-        { name: 'API Documentation', href: '/support/documentation', icon: BookOpen },
-        { name: 'Contact Support', href: '/contact', icon: MessageCircle },
-        { name: 'Research Community', href: '/community', icon: Users }
+        { name: 'Documentation', href: '/support/documentation', icon: BookOpen, desc: 'API & integration docs' },
+        { name: 'Case Studies', href: '/customers/case-studies', icon: BarChart3, desc: 'Real customer results' },
+        { name: 'Help Center', href: '/support/help-center', icon: HelpCircle, desc: 'Guides & tutorials' },
+        { name: 'Contact', href: '/contact', icon: MessageCircle, desc: 'Talk to us' },
       ]
     }
   ];
-
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
 
   const handleDropdownToggle = (dropdown: string, e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
 
-  const renderEnhancedMegaMenu = (items: any[], isOpen: boolean) => {
+  const renderMegaMenu = (items: any[], isOpen: boolean) => {
     if (!isOpen) return null;
-
     return (
-      <div className="absolute top-full left-0 transform translate-x-0 w-screen max-w-4xl bg-white border border-gray-200 shadow-2xl z-50 mt-1 rounded-lg">
-        <div className="px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {items.map((category, categoryIndex) => (
-              <div key={categoryIndex} className="space-y-3">
-                <div className="flex items-center space-x-2 border-b border-gray-200 pb-2">
-                  <h3 className="font-semibold text-gray-900 text-xs uppercase tracking-wide">
-                    {category.category}
-                  </h3>
-                </div>
-                <div className="space-y-1">
-                  {category.items.map((item: any, itemIndex: number) => (
-                    <Link
-                      key={itemIndex}
-                      to={item.href}
-                      className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors text-sm py-2 px-3 rounded-lg hover:bg-blue-50 group"
-                      onClick={() => setActiveDropdown(null)}
-                    >
-                      {item.icon && <item.icon className="h-4 w-4 text-gray-400 group-hover:text-blue-600 flex-shrink-0" />}
-                      <span className="font-medium">{item.name}</span>
-                    </Link>
-                  ))}
-                </div>
+      <div className="absolute top-full left-0 mt-2 min-w-[520px] border border-[#141413]/10 bg-[#f0ede6] shadow-xl shadow-[#141413]/10 z-50 overflow-hidden dark:bg-[#1c1916] dark:border-white/10 dark:shadow-black/40" style={{ borderRadius: '10px' }}>
+        <div className="p-5 grid grid-cols-2 gap-4">
+          {items.map((category, ci) => (
+            <div key={ci}>
+              <div className="text-black/30 text-[10px] font-semibold uppercase tracking-widest mb-3 px-2 dark:text-white/25">
+                {category.category}
               </div>
-            ))}
-          </div>
+              <div className="space-y-0.5">
+                {category.items.map((item: any, ii: number) => (
+                  <Link
+                    key={ii}
+                    to={item.href}
+                    className="flex items-start gap-3 px-2 py-2.5 hover:bg-[#141413]/5 transition-colors group dark:hover:bg-white/6"
+                    style={{ borderRadius: '8px' }}
+                    onClick={() => setActiveDropdown(null)}
+                  >
+                    <div className="w-8 h-8 bg-[#141413]/8 border border-[#141413]/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[#141413]/12 transition-colors dark:bg-white/6 dark:border-white/10 dark:group-hover:bg-white/10" style={{ borderRadius: '6px' }}>
+                      <item.icon className="w-4 h-4 text-black/40 group-hover:text-black/70 transition-colors dark:text-white/35 dark:group-hover:text-white/65" />
+                    </div>
+                    <div>
+                      <div className="text-black/80 text-sm font-medium group-hover:text-black transition-colors dark:text-white/70 dark:group-hover:text-white">{item.name}</div>
+                      {item.desc && <div className="text-black/40 text-xs mt-0.5 dark:text-white/30">{item.desc}</div>}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
   };
 
   return (
-    <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      scrolled
+        ? 'bg-[#f0ede6]/95 border-b border-[#141413]/8 backdrop-blur-xl shadow-sm dark:bg-[#181512]/95 dark:border-white/8'
+        : 'bg-transparent'
+    }`}>
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-              <Microscope className="w-4 h-4 text-white" />
+          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <div className="w-7 h-7 bg-[#141413] flex items-center justify-center dark:bg-white/90" style={{ borderRadius: '4px' }}>
+              <Bot className="w-3.5 h-3.5 text-white dark:text-[#141413]" />
             </div>
-            <span className="text-xl font-light text-gray-900 tracking-tight">
-              Observio
-            </span>
+            <span className="text-[#141413] font-semibold text-base tracking-tight dark:text-white">3Days.ai</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {/* Product Dropdown */}
-            <div className="relative">
-              <button
-                onMouseEnter={(e) => handleDropdownToggle('product', e)}
-                onTouchStart={(e) => handleDropdownToggle('product', e)}
-                className={`flex items-center text-gray-600 hover:text-gray-900 transition-colors py-2 px-3 rounded-md hover:bg-gray-50 ${
-                  activeDropdown === 'product' ? 'text-blue-600 bg-blue-50' : ''
-                }`}
-              >
-                Product
-                <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${
-                  activeDropdown === 'product' ? 'rotate-180' : ''
-                }`} />
-              </button>
-              {renderEnhancedMegaMenu(productItems, activeDropdown === 'product')}
-            </div>
-
-            {/* Solutions Dropdown */}
-            <div className="relative">
-              <button
-                onMouseEnter={(e) => handleDropdownToggle('solutions', e)}
-                onTouchStart={(e) => handleDropdownToggle('solutions', e)}
-                className={`flex items-center text-gray-600 hover:text-gray-900 transition-colors py-2 px-3 rounded-md hover:bg-gray-50 ${
-                  activeDropdown === 'solutions' ? 'text-blue-600 bg-blue-50' : ''
-                }`}
-              >
-                Solutions
-                <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${
-                  activeDropdown === 'solutions' ? 'rotate-180' : ''
-                }`} />
-              </button>
-              {renderEnhancedMegaMenu(solutionsItems, activeDropdown === 'solutions')}
-            </div>
-
-            {/* Resources Dropdown */}
-            <div className="relative">
-              <button
-                onMouseEnter={(e) => handleDropdownToggle('resources', e)}
-                onTouchStart={(e) => handleDropdownToggle('resources', e)}
-                className={`flex items-center text-gray-600 hover:text-gray-900 transition-colors py-2 px-3 rounded-md hover:bg-gray-50 ${
-                  activeDropdown === 'resources' ? 'text-blue-600 bg-blue-50' : ''
-                }`}
-              >
-                Resources
-                <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${
-                  activeDropdown === 'resources' ? 'rotate-180' : ''
-                }`} />
-              </button>
-              {renderEnhancedMegaMenu(resourcesItems, activeDropdown === 'resources')}
-            </div>
-
-            {/* Pricing Link */}
-            <Link 
-              to="/pricing" 
-              className={`text-gray-600 hover:text-gray-900 transition-colors py-2 px-3 rounded-md hover:bg-gray-50 ${
-                isActive('/pricing') ? 'text-blue-600 bg-blue-50' : ''
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            {[
+              { label: 'Product', key: 'product', items: productItems },
+              { label: 'Solutions', key: 'solutions', items: solutionsItems },
+              { label: 'Resources', key: 'resources', items: resourcesItems },
+            ].map(({ label, key, items }) => (
+              <div key={key} className="relative">
+                <button
+                  onMouseEnter={(e) => handleDropdownToggle(key, e)}
+                  className={`flex items-center gap-1 px-3.5 py-2 text-sm font-medium rounded-full transition-colors ${
+                    activeDropdown === key
+                      ? 'text-[#111111] bg-black/6 dark:text-white dark:bg-white/10'
+                      : 'text-black/55 hover:text-[#111111] hover:bg-black/4 dark:text-white/55 dark:hover:text-white dark:hover:bg-white/8'
+                  }`}
+                >
+                  {label}
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${activeDropdown === key ? 'rotate-180' : ''}`} />
+                </button>
+                {renderMegaMenu(items, activeDropdown === key)}
+              </div>
+            ))}
+            <Link
+              to="/pricing"
+              className={`px-3.5 py-2 text-sm font-medium rounded-full transition-colors ${
+                location.pathname === '/pricing'
+                  ? 'text-[#111111] bg-black/6 dark:text-white dark:bg-white/10'
+                  : 'text-black/55 hover:text-[#111111] hover:bg-black/4 dark:text-white/55 dark:hover:text-white dark:hover:bg-white/8'
               }`}
             >
               Pricing
             </Link>
           </nav>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" className="text-gray-600 hover:text-gray-900 hover:bg-gray-50" asChild>
-              <Link to="/contact">Contact</Link>
-            </Button>
-            <Button variant="ghost" className="text-gray-600 hover:text-gray-900 hover:bg-gray-50" asChild>
-              <Link to="/login">Login</Link>
-            </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-md hover:shadow-lg transition-all" asChild>
-              <Link to="/signup">Start Free Trial</Link>
-            </Button>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-600 hover:text-gray-900 transition-colors p-2 rounded-md hover:bg-gray-50"
+          {/* Desktop CTAs */}
+          <div className="hidden md:flex items-center gap-2">
+            <ThemeSelector />
+            <Link
+              to="/login"
+              className="text-black/55 hover:text-[#111111] text-sm font-medium transition-colors px-3.5 py-2 rounded-full hover:bg-black/4 dark:text-white/55 dark:hover:text-white dark:hover:bg-white/8"
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+              Sign in
+            </Link>
+            <Link to="/signup">
+              <button className="px-5 py-2 bg-[#141413] hover:bg-[#2a2a28] text-white text-sm font-medium transition-all duration-200" style={{ borderRadius: '4px' }}>
+                Start for free
+              </button>
+            </Link>
           </div>
-        </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 py-4 bg-white">
-            <div className="space-y-4">
-              <Link to="/pricing" className="block text-gray-600 hover:text-gray-900 py-2 px-3 rounded-md hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>
-                Pricing
+          {/* Mobile toggle */}
+          <button
+            className="md:hidden p-2 text-black/60 hover:text-black transition-colors rounded-lg hover:bg-black/5 dark:text-white/60 dark:hover:text-white dark:hover:bg-white/8"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="md:hidden border-t border-[#141413]/8 bg-[#f0ede6]/98 backdrop-blur-xl dark:bg-[#181512]/98 dark:border-white/8">
+          <div className="max-w-7xl mx-auto px-6 py-5 space-y-1">
+            {[
+              { label: 'Product', href: '/product/ai-assistants' },
+              { label: 'Solutions', href: '/solutions/sales' },
+              { label: 'Pricing', href: '/pricing' },
+              { label: 'Resources', href: '/support/help-center' },
+            ].map(item => (
+              <Link
+                key={item.href}
+                to={item.href}
+                className="block px-4 py-3 text-black/60 hover:text-black hover:bg-black/4 text-sm font-medium transition-colors rounded-xl dark:text-white/60 dark:hover:text-white dark:hover:bg-white/6"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.label}
               </Link>
-              <Link to="/contact" className="block text-gray-600 hover:text-gray-900 py-2 px-3 rounded-md hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>
-                Contact
+            ))}
+            <div className="pt-4 space-y-2">
+              <Link
+                to="/login"
+                className="block text-center px-4 py-3 border border-[#141413]/12 text-[#141413]/60 hover:text-[#141413] text-sm font-medium transition-colors dark:border-white/12 dark:text-white/60 dark:hover:text-white"
+                style={{ borderRadius: '4px' }}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Sign in
               </Link>
-              <Link to="/login" className="block text-gray-600 hover:text-gray-900 py-2 px-3 rounded-md hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>
-                Login
+              <Link
+                to="/signup"
+                className="block text-center px-4 py-3 bg-[#141413] hover:bg-[#2a2a28] text-white text-sm font-medium transition-colors"
+                style={{ borderRadius: '4px' }}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Start for free
               </Link>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md" asChild>
-                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>Start Free Trial</Link>
-              </Button>
             </div>
           </div>
-        )}
-      </div>
-      
-      {/* Overlay to close dropdown when clicking outside */}
+        </div>
+      )}
+
+      {/* Dropdown overlay */}
       {activeDropdown && (
-        <div 
-          className="fixed inset-0 z-40"
-          onClick={() => setActiveDropdown(null)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setActiveDropdown(null)} />
       )}
     </header>
   );

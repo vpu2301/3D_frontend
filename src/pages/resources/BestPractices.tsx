@@ -65,7 +65,7 @@ const BestPractices = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -78,7 +78,7 @@ const BestPractices = () => {
               best practices to maximize your automation success and avoid common pitfalls.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-md" asChild>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-md" asChild>
                 <Link to="/resources/training">View Training Resources</Link>
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
@@ -103,7 +103,7 @@ const BestPractices = () => {
             {practices.map((category, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                     <category.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-6">{category.category}</h3>
@@ -163,13 +163,13 @@ const BestPractices = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Apply Best Practices</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Start implementing these proven strategies in your organization today.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-md py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/get-started">
               Start Implementation
               <ArrowRight className="ml-2 h-4 w-4" />

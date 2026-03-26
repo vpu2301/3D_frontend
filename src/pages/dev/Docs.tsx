@@ -62,7 +62,7 @@ const Docs = () => {
             
             <main className="flex-1 p-6">
               <div className="mb-6">
-                <h1 className="text-3xl font-light text-gray-900">Documentation</h1>
+                <h1 className="text-3xl font-bold text-gray-900">Documentation</h1>
                 <p className="text-gray-600">Everything you need to build with 3days.ai</p>
               </div>
 

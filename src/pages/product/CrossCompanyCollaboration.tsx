@@ -73,7 +73,7 @@ const CrossCompanyCollaboration = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-blue-50 to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -112,7 +112,7 @@ const CrossCompanyCollaboration = () => {
             {features.map((feature, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
@@ -138,7 +138,7 @@ const CrossCompanyCollaboration = () => {
             {useCases.map((useCase, index) => (
               <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
                 <div className="flex items-center mb-6">
-                  <div className="p-3 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 mr-4">
+                  <div className="p-3 rounded-2xl bg-[#111111] mr-4">
                     <useCase.icon className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900">{useCase.title}</h3>
@@ -215,23 +215,23 @@ const CrossCompanyCollaboration = () => {
       {/* Security Section */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white">
+          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8">
             <h3 className="text-3xl font-light mb-8 text-center">Enterprise-Grade Security</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
                 <Lock className="h-12 w-12 text-blue-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">End-to-End Encryption</h4>
-                <p className="text-gray-300">All communications between AI employees are encrypted with military-grade security</p>
+                <p className="text-black/60">All communications between AI employees are encrypted with military-grade security</p>
               </div>
               <div className="text-center">
                 <Shield className="h-12 w-12 text-green-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Permission Controls</h4>
-                <p className="text-gray-300">Granular permission systems ensure AI employees only access authorized data</p>
+                <p className="text-black/60">Granular permission systems ensure AI employees only access authorized data</p>
               </div>
               <div className="text-center">
                 <Clock className="h-12 w-12 text-purple-400 mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Audit Trails</h4>
-                <p className="text-gray-300">Complete audit logs of all cross-company interactions for compliance</p>
+                <p className="text-black/60">Complete audit logs of all cross-company interactions for compliance</p>
               </div>
             </div>
           </div>
@@ -239,13 +239,13 @@ const CrossCompanyCollaboration = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Start Collaborating Today</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Transform how your business works with partners through AI-powered collaboration.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/get-started">
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />

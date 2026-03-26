@@ -80,7 +80,7 @@ const AIFineTuning = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-purple-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f5ede3] via-white to-purple-50">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
@@ -90,7 +90,7 @@ const AIFineTuning = () => {
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-3xl font-light text-gray-900">AI Fine-Tuning</h1>
+                  <h1 className="text-3xl font-bold text-gray-900">AI Fine-Tuning</h1>
                   <p className="text-gray-600">Train your AI employees with custom data and knowledge</p>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -153,9 +153,9 @@ const AIFineTuning = () => {
                         <div>
                           <Label>Upload Training Files</Label>
                           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                            <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                            <Upload className="h-8 w-8 mx-auto text-black/50 mb-2" />
                             <p className="text-gray-600">Drag and drop files or click to browse</p>
-                            <p className="text-sm text-gray-400 mt-1">Supports PDF, TXT, CSV, DOCX</p>
+                            <p className="text-sm text-black/50 mt-1">Supports PDF, TXT, CSV, DOCX</p>
                           </div>
                         </div>
                       </CardContent>

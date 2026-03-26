@@ -40,7 +40,7 @@ const Features = () => {
       description: "Track engagement, measure performance, and get data-driven recommendations to increase your ROAS.",
       icon: BarChart3,
       features: ["Performance tracking", "ROAS optimization", "Smart recommendations", "A/B testing"],
-      color: "from-orange-500 to-orange-600"
+      color: "from-[#111111] to-[#222222]"
     }
   ];
 
@@ -96,7 +96,7 @@ const Features = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#181512]">
       <Header />
       
       <main className="pt-24">
@@ -227,19 +227,19 @@ const Features = () => {
           </section>
 
           {/* CTA Section */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">Ready to Automate Your Marketing?</h2>
-            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          <div className="bg-white rounded-2xl p-12 text-center border border-black/8">
+            <h2 className="text-3xl font-bold text-[#111111] mb-4">Ready to Automate Your Marketing?</h2>
+            <p className="text-xl text-black/60 mb-8 max-w-2xl mx-auto">
               Join the AI marketing revolution and turn 20 hours of weekly marketing work into minutes.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100" asChild>
+              <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full" asChild>
                 <Link to="/signup">
                   Start 14-Day Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600" asChild>
+              <Button size="lg" variant="outline" className="border-black/15 bg-white/70 text-[#111111] hover:bg-white rounded-full" asChild>
                 <Link to="/watch-demo">
                   Watch Demo
                 </Link>

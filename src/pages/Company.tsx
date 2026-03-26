@@ -99,14 +99,14 @@ const Company = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-16 bg-white">
+    <div className="min-h-screen pt-16 bg-white dark:bg-[#181512]">
       {/* Hero Section */}
       <section className="py-24 px-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-5xl mx-auto mb-20">
             <h1 className="text-6xl md:text-7xl font-light text-gray-900 mb-8 tracking-tight leading-tight">
               Building the Future of
-              <span className="block font-medium bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="block font-medium text-[#111111]">
                 Intelligent Work
               </span>
             </h1>
@@ -138,28 +138,28 @@ const Company = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-24 bg-gray-900 text-white px-4">
+      <section className="py-24 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-5xl font-light mb-8 tracking-tight">Our Mission</h2>
-              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+              <p className="text-xl text-black/60 mb-8 leading-relaxed">
                 Every day, millions of professionals lose hours to repetitive, manual tasks. 
                 We believe human creativity and intelligence should be spent on work that matters—
                 strategy, innovation, and meaningful connections.
               </p>
-              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+              <p className="text-xl text-black/60 mb-8 leading-relaxed">
                 Our AI-powered digital workers handle the routine so you can focus on the remarkable. 
                 We're not just building software; we're reshaping how work gets done.
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-2xl font-medium mb-2">Vision</h3>
-                  <p className="text-gray-400">A world where every professional has an AI workforce</p>
+                  <p className="text-black/50">A world where every professional has an AI workforce</p>
                 </div>
                 <div>
                   <h3 className="text-2xl font-medium mb-2">Impact</h3>
-                  <p className="text-gray-400">10M+ hours saved for our customers</p>
+                  <p className="text-black/50">10M+ hours saved for our customers</p>
                 </div>
               </div>
             </div>
@@ -169,7 +169,7 @@ const Company = () => {
                 alt="Team collaboration"
                 className="rounded-3xl shadow-2xl"
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-purple-500/20 rounded-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-[#222222]/8 rounded-3xl"></div>
             </div>
           </div>
         </div>
@@ -189,7 +189,7 @@ const Company = () => {
             {values.map((value, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                     <value.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">{value.title}</h3>
@@ -267,7 +267,7 @@ const Company = () => {
             {offices.map((office, index) => (
               <Card key={index} className="border-0 shadow-lg bg-white">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                     <Building className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">{office.city}</h3>
@@ -284,16 +284,16 @@ const Company = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4">
+      <section className="py-24 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Transform Your Business?</h2>
-          <p className="text-xl mb-12 opacity-90 font-light">
+          <p className="text-xl mb-12 text-black/60 font-light">
             Join thousands of companies already using 3days.ai to reclaim their time and boost productivity.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-white text-gray-900 hover:bg-gray-100"
+            <Button
+              size="lg"
+              className="bg-[#111111] text-white hover:bg-[#222222] rounded-full"
               asChild
             >
               <Link to="/get-started">
@@ -301,10 +301,10 @@ const Company = () => {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-white/30 text-white hover:bg-white/10"
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-black/15 bg-white/70 text-[#111111] hover:bg-white rounded-full"
               asChild
             >
               <Link to="/schedule-demo">Schedule Demo</Link>

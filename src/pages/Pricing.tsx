@@ -110,7 +110,7 @@ const Pricing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f5ede3] dark:bg-[#181512]">
       <Header />
       
       <main className="pt-24">
@@ -169,7 +169,7 @@ const Pricing = () => {
                     ))}
                   </ul>
                   <Button 
-                    className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-900 hover:bg-gray-800'}`}
+                    className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : 'bg-[#111111] hover:bg-[#222222] rounded-full'}`}
                     asChild
                   >
                     <Link to={plan.cta === 'Contact Sales' ? '/contact' : '/signup'}>
@@ -246,7 +246,7 @@ const Pricing = () => {
           </div>
 
           {/* CTA Section */}
-          <div className="text-center bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-white">
+          <div className="text-center bg-gradient-to-r from-[#111111] to-[#333333] rounded-3xl p-12 text-white">
             <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Marketing?</h2>
             <p className="text-xl mb-8 opacity-90">
               Join thousands of SMBs using AI to automate their marketing and drive growth.

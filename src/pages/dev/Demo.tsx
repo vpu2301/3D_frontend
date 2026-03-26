@@ -114,7 +114,7 @@ const Demo = () => {
       description: "Real-time monitoring and response optimization across all touchpoints",
       icon: BarChart3,
       duration: "2.5 minutes",
-      color: "bg-orange-500",
+      color: "bg-[#5c939f]",
       subSteps: [
         { id: "4.1", task: "Monitoring email engagement rates", status: "pending", integration: "SendGrid", duration: 35 },
         { id: "4.2", task: "Tracking LinkedIn message responses", status: "pending", integration: "LinkedIn", duration: 40 },
@@ -256,7 +256,7 @@ const Demo = () => {
             
             <main className="flex-1 p-6">
               <div className="mb-6">
-                <h1 className="text-3xl font-light text-gray-900 mb-2">Advanced AI Sales Automation Demo</h1>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Advanced AI Sales Automation Demo</h1>
                 <p className="text-gray-600">Watch Emma execute a complete end-to-end sales process with 29 integrations</p>
               </div>
 

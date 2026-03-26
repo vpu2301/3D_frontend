@@ -46,7 +46,7 @@ const Help = () => {
             
             <main className="flex-1 p-6">
               <div className="mb-6">
-                <h1 className="text-3xl font-light text-gray-900">Help & Support</h1>
+                <h1 className="text-3xl font-bold text-gray-900">Help & Support</h1>
                 <p className="text-gray-600">Get the help you need to make the most of 3days.ai</p>
               </div>
 
@@ -58,7 +58,7 @@ const Help = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-black/50" />
                       <Input
                         placeholder="Search for help articles, guides, and FAQ..."
                         className="pl-10"

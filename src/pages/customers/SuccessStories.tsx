@@ -33,7 +33,7 @@ const SuccessStories = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen dark:bg-[#181512]">
       <Header />
       
       {/* Hero Section */}
@@ -68,7 +68,7 @@ const SuccessStories = () => {
                 <div className="flex-1">
                   <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
                     <div className="flex items-center mb-6">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold mr-4">
+                      <div className="w-12 h-12 bg-[#111111] rounded-lg flex items-center justify-center text-white font-bold mr-4">
                         {story.logo}
                       </div>
                       <div>
@@ -116,12 +116,12 @@ const SuccessStories = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gray-900 py-20">
+      <section className="bg-[#f5ede3] py-20">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#111111] mb-6">
             Ready to Write Your Success Story?
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className="text-xl text-black/60 mb-8">
             Join hundreds of companies already transforming their operations with AI automation.
           </p>
           <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700" asChild>

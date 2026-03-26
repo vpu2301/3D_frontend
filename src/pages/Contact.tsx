@@ -21,7 +21,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#181512]">
       <Header />
       
       <main className="pt-24">
@@ -118,7 +118,7 @@ const Contact = () => {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3 mb-4">
-                    <MessageCircle className="h-6 w-6 text-orange-600" />
+                    <MessageCircle className="h-6 w-6 text-[#111111]" />
                     <h3 className="font-semibold">Live Chat</h3>
                   </div>
                   <p className="text-gray-600 mb-3">

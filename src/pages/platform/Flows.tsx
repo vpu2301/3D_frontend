@@ -114,7 +114,7 @@ const Flows = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-light text-gray-900 mb-2">Communication Flows</h1>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Communication Flows</h1>
                 <p className="text-gray-600">Infrastructure and protocols for cross-company agentic communication</p>
               </div>
               <Button className="bg-blue-600 hover:bg-blue-700">

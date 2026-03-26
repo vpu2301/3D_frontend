@@ -22,13 +22,13 @@ const Integrations = () => {
       icon: Zap,
       title: 'Real-time Sync',
       description: 'Bidirectional data synchronization ensures all your systems stay up-to-date automatically.',
-      color: 'from-purple-500 to-pink-500'
+      color: 'from-purple-500 to-[#222222]'
     },
     {
       icon: Database,
       title: 'Universal Data Hub',
       description: 'Centralize data from multiple sources into a unified view for better decision making.',
-      color: 'from-orange-500 to-red-500'
+      color: 'from-[#111111] to-[#222222]'
     },
     {
       icon: Cloud,
@@ -40,7 +40,7 @@ const Integrations = () => {
       icon: Code,
       title: 'Custom APIs',
       description: 'Build custom integrations with our RESTful API and comprehensive developer tools.',
-      color: 'from-violet-500 to-purple-500'
+      color: 'from-violet-500 to-[#222222]'
     }
   ];
 
@@ -67,22 +67,22 @@ const Integrations = () => {
       name: 'E-commerce',
       tools: ['Shopify', 'WooCommerce', 'Magento', 'BigCommerce'],
       count: '20+ tools',
-      color: 'bg-orange-100 text-orange-800'
+      color: 'bg-[#1b1b1b] text-orange-800'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-[#f5ede3] via-white to-purple-50 dark:from-[#181512] dark:via-[#1c1916] dark:to-[#1c1916]">
       <main className="pt-16 p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
-            <h1 className="text-3xl font-light text-gray-900">Integration Hub</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Integration Hub</h1>
             <p className="text-gray-600">Connect your entire tech stack in one unified ecosystem</p>
           </div>
 
           {/* Stats Overview */}
           <section className="mb-12">
-            <Card className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white border-0">
+            <Card className="bg-[#f5ede3] text-[#111111] border-0">
               <CardContent className="p-6">
                 <div className="grid grid-cols-4 gap-6 text-center">
                   <div>
@@ -164,7 +164,7 @@ const Integrations = () => {
 
           {/* Security & Compliance */}
           <section className="mb-12">
-            <Card className="bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white border-0">
+            <Card className="bg-[#f5ede3] text-[#111111] border-0">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-light mb-6 text-center">Enterprise-Grade Security</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -173,21 +173,21 @@ const Integrations = () => {
                       <Shield className="h-8 w-8 text-blue-400" />
                     </div>
                     <h4 className="text-lg font-medium mb-2">Data Protection</h4>
-                    <p className="text-gray-300 text-sm">End-to-end encryption and secure data transmission</p>
+                    <p className="text-black/60 text-sm">End-to-end encryption and secure data transmission</p>
                   </div>
                   <div className="text-center">
                     <div className="p-3 rounded-full bg-green-600/20 w-fit mx-auto mb-3">
                       <CheckCircle className="h-8 w-8 text-green-400" />
                     </div>
                     <h4 className="text-lg font-medium mb-2">Compliance Ready</h4>
-                    <p className="text-gray-300 text-sm">SOC 2, GDPR, and HIPAA compliant integrations</p>
+                    <p className="text-black/60 text-sm">SOC 2, GDPR, and HIPAA compliant integrations</p>
                   </div>
                   <div className="text-center">
                     <div className="p-3 rounded-full bg-purple-600/20 w-fit mx-auto mb-3">
                       <Users className="h-8 w-8 text-purple-400" />
                     </div>
                     <h4 className="text-lg font-medium mb-2">Access Control</h4>
-                    <p className="text-gray-300 text-sm">Role-based permissions and audit trails</p>
+                    <p className="text-black/60 text-sm">Role-based permissions and audit trails</p>
                   </div>
                 </div>
               </CardContent>
@@ -196,13 +196,13 @@ const Integrations = () => {
 
           {/* CTA Section */}
           <section className="text-center">
-            <Card className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white border-0">
+            <Card className="bg-[#f5ede3] text-[#111111] border-0">
               <CardContent className="p-8">
                 <h2 className="text-2xl font-light mb-4">Connect Everything</h2>
                 <p className="text-lg mb-6 opacity-90 font-light">
                   Start integrating your tools today and create seamless workflows across your entire tech stack.
                 </p>
-                <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full">
+                <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full">
                   Start Integrating
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

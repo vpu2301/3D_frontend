@@ -14,7 +14,7 @@ const About = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#181512]">
       <Header />
       
       <main className="pt-24">
@@ -96,7 +96,7 @@ const About = () => {
 
             <Card className="text-center">
               <CardHeader>
-                <Globe className="h-12 w-12 text-orange-600 mx-auto mb-4" />
+                <Globe className="h-12 w-12 text-[#111111] mx-auto mb-4" />
                 <CardTitle>Global Impact</CardTitle>
               </CardHeader>
               <CardContent>

@@ -43,7 +43,7 @@ const Api = () => {
             
             <main className="flex-1 p-6">
               <div className="mb-6">
-                <h1 className="text-3xl font-light text-gray-900">API Documentation</h1>
+                <h1 className="text-3xl font-bold text-gray-900">API Documentation</h1>
                 <p className="text-gray-600">Comprehensive guide to 3days.ai REST API</p>
               </div>
 

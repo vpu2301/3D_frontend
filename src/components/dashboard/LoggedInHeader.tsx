@@ -35,7 +35,7 @@ const LoggedInHeader = ({ userEmail }: LoggedInHeaderProps) => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b sticky top-0 z-50">
+    <header className="bg-[hsl(30,20%,98%)] shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
@@ -55,7 +55,7 @@ const LoggedInHeader = ({ userEmail }: LoggedInHeaderProps) => {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-2 hover:bg-gray-100">
+                <Button variant="ghost" className="flex items-center space-x-2 hover:bg-accent">
                   <Avatar className="h-8 w-8">
                     <AvatarFallback className="bg-blue-100 text-blue-600 text-sm">
                       {getInitials(userEmail)}

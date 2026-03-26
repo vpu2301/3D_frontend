@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 
 const DataEntry = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen dark:bg-[#181512]">
       <Header />
       
       {/* Hero Section */}

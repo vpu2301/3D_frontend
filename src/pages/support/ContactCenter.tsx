@@ -34,7 +34,7 @@ const ContactCenter = () => {
       availability: '24/7 Available',
       responseTime: 'Within 2 hours',
       action: 'Send Email',
-      color: 'from-purple-500 to-pink-500'
+      color: 'from-purple-500 to-[#222222]'
     }
   ];
 
@@ -67,7 +67,7 @@ const ContactCenter = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
@@ -228,18 +228,18 @@ const ContactCenter = () => {
       {/* 24/7 Support CTA */}
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white text-center">
-            <Headphones className="h-16 w-16 mx-auto mb-6 text-blue-400" />
+          <div className="bg-white rounded-3xl p-12 text-[#111111] text-center border border-black/8">
+            <Headphones className="h-16 w-16 mx-auto mb-6 text-[#111111]" />
             <h3 className="text-3xl font-light mb-6">24/7 Premium Support</h3>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-black/60 mb-8 max-w-2xl mx-auto">
               Get priority access to our expert support team with faster response times and dedicated assistance
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3">
+              <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3">
                 Upgrade to Premium
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 rounded-full py-3">
+              <Button size="lg" variant="outline" className="border-black/15 bg-white/70 text-[#111111] hover:bg-white rounded-full py-3">
                 Learn More
               </Button>
             </div>

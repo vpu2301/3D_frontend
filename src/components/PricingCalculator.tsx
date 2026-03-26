@@ -418,7 +418,7 @@ const PricingCalculator = () => {
   return (
     <Card className="w-full max-w-6xl mx-auto bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
       <CardHeader className="text-center pb-8">
-        <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <div className="w-16 h-16 bg-[#111111] rounded-2xl flex items-center justify-center mx-auto mb-6">
           <Calculator className="h-8 w-8 text-white" />
         </div>
         <CardTitle className="text-4xl font-light text-gray-900 mb-4">
@@ -471,7 +471,7 @@ const PricingCalculator = () => {
                               </div>
                             )}
                             {value !== 'personal' && (
-                              <div className="text-sm text-orange-600 font-medium">
+                              <div className="text-sm text-[#111111] font-medium">
                                 Higher computational cost
                               </div>
                             )}
@@ -734,15 +734,15 @@ const PricingCalculator = () => {
             </div>
 
             {shouldHidePricing() ? (
-              <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-8 rounded-2xl text-white text-center">
+              <div className="bg-white p-8 rounded-2xl text-[#111111] text-center border border-black/8">
                 <h4 className="text-2xl font-medium mb-4">Enterprise Pricing</h4>
-                <p className="text-gray-300 mb-6">
+                <p className="text-black/60 mb-6">
                   Custom pricing tailored to your organization's specific needs and scale.
                 </p>
-                <div className="text-lg text-gray-200 mb-6">
+                <div className="text-lg text-black/70 mb-6">
                   Get a personalized quote with:
                 </div>
-                <ul className="text-left text-gray-300 mb-8 space-y-2 max-w-md mx-auto">
+                <ul className="text-left text-black/60 mb-8 space-y-2 max-w-md mx-auto">
                   <li>• Custom volume discounts</li>
                   <li>• Dedicated infrastructure</li>
                   <li>• White-glove AI Employee service</li>
@@ -784,12 +784,12 @@ const PricingCalculator = () => {
 
             <div className="space-y-3 mt-8">
               {shouldShowContactSales() ? (
-                <Button className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
+                <Button className="w-full bg-[#111111] hover:bg-[#222222] text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
                   <Phone className="mr-2 h-4 w-4" />
                   Contact Sales for Enterprise Quote
                 </Button>
               ) : (
-                <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
+                <Button className="w-full bg-[#111111] hover:from-blue-600 hover:to-purple-600 text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
                   {pricing.isFree ? 'Start Free Trial' : 'Get This Quote'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

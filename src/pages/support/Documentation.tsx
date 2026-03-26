@@ -119,7 +119,7 @@ const Documentation = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       <Header />
       
       {/* Hero Section */}
@@ -134,7 +134,7 @@ const Documentation = () => {
           
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto mb-8">
-            <Search className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-4 top-4 h-5 w-5 text-black/50" />
             <Input 
               placeholder="Search documentation..." 
               className="pl-12 py-4 text-lg rounded-full border-2 border-gray-200 focus:border-blue-500"
@@ -155,7 +155,7 @@ const Documentation = () => {
             {quickLinks.map((link, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer">
                 <CardContent className="p-8">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mb-6">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mb-6">
                     <link.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-4">{link.title}</h3>
@@ -190,7 +190,7 @@ const Documentation = () => {
                   {section.articles.map((article, idx) => (
                     <div key={idx} className="flex items-center justify-between">
                       <span className="text-gray-700 hover:text-blue-600 cursor-pointer">{article}</span>
-                      <ArrowRight className="h-4 w-4 text-gray-400" />
+                      <ArrowRight className="h-4 w-4 text-black/50" />
                     </div>
                   ))}
                 </div>
@@ -233,14 +233,14 @@ const Documentation = () => {
       {/* API Reference CTA */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white text-center">
+          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8 text-center">
             <Code className="h-16 w-16 mx-auto mb-6 text-blue-400" />
             <h3 className="text-3xl font-light mb-6">Complete API Reference</h3>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-black/60 mb-8 max-w-2xl mx-auto">
               Detailed API documentation with examples, SDKs, and interactive testing
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3" asChild>
+              <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
                 <Link to="/platform/api">
                   View API Docs
                   <ArrowRight className="ml-2 h-4 w-4" />

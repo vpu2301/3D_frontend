@@ -46,7 +46,7 @@ const Analytics = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -59,7 +59,7 @@ const Analytics = () => {
               automation performance with comprehensive analytics and real-time reporting.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full" asChild>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/start-free-trial">Explore Analytics</Link>
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
@@ -98,7 +98,7 @@ const Analytics = () => {
             {features.map((feature, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
@@ -113,12 +113,12 @@ const Analytics = () => {
       {/* Dashboard Preview */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white">
+          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8">
             <h3 className="text-3xl font-light mb-8 text-center">Analytics in Action</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h4 className="text-xl font-medium mb-4">Real-time Monitoring</h4>
-                <ul className="space-y-3 text-gray-300">
+                <ul className="space-y-3 text-black/60">
                   <li>• Live performance metrics and KPIs</li>
                   <li>• Instant alerts for anomalies</li>
                   <li>• Resource utilization tracking</li>
@@ -127,7 +127,7 @@ const Analytics = () => {
               </div>
               <div>
                 <h4 className="text-xl font-medium mb-4">Advanced Reporting</h4>
-                <ul className="space-y-3 text-gray-300">
+                <ul className="space-y-3 text-black/60">
                   <li>• Customizable dashboard views</li>
                   <li>• Automated report generation</li>
                   <li>• Historical trend analysis</li>
@@ -140,13 +140,13 @@ const Analytics = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Start Analyzing Today</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Unlock the power of data-driven automation optimization.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Try Analytics Free
               <ArrowRight className="ml-2 h-4 w-4" />

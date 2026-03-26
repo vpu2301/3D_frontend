@@ -60,7 +60,7 @@ const AIAgentsPage = () => {
     { name: 'Lead Generation', count: 3, color: 'bg-blue-100 text-blue-800' },
     { name: 'Document Processing', count: 5, color: 'bg-green-100 text-green-800' },
     { name: 'Customer Support', count: 2, color: 'bg-purple-100 text-purple-800' },
-    { name: 'Analytics', count: 4, color: 'bg-orange-100 text-orange-800' }
+    { name: 'Analytics', count: 4, color: 'bg-[#1b1b1b] text-orange-800' }
   ];
 
   const filteredAgents = agents.filter(agent => {
@@ -138,7 +138,7 @@ const AIAgentsPage = () => {
           {/* Filters */}
           <div className="flex items-center gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-black/50" />
               <Input
                 placeholder="Search agents..."
                 value={searchTerm}
@@ -260,7 +260,7 @@ const AIAgentsPage = () => {
             </CardHeader>
             <CardContent>
               <div className="text-center py-12">
-                <TrendingUp className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <TrendingUp className="h-12 w-12 text-black/50 mx-auto mb-4" />
                 <p className="text-gray-500">Performance analytics will be displayed here</p>
               </div>
             </CardContent>

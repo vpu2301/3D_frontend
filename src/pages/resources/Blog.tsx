@@ -72,14 +72,14 @@ const Blog = () => {
   const categories = ['All', 'AI & Automation', 'Workflow Design', 'Business Strategy', 'Security', 'Case Studies', 'Getting Started'];
 
   return (
-    <div className="min-h-screen pt-16 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-16 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-4xl mx-auto mb-16">
             <h1 className="text-6xl md:text-7xl font-light text-gray-900 mb-8 tracking-tight leading-none">
               Insights &
-              <span className="block font-medium bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="block font-medium text-[#111111]">
                 Resources
               </span>
             </h1>
@@ -99,7 +99,7 @@ const Blog = () => {
               <Button
                 key={index}
                 variant={index === 0 ? "default" : "outline"}
-                className={index === 0 ? "bg-black hover:bg-gray-800 text-white" : "border-gray-300 text-gray-700 hover:bg-gray-50"}
+                className={index === 0 ? "bg-[#111111] hover:bg-[#222222] text-white" : "border-gray-300 text-gray-700 hover:bg-gray-50"}
               >
                 {category}
               </Button>
@@ -147,7 +147,7 @@ const Blog = () => {
                     {posts[0].readTime}
                   </div>
                 </div>
-                <Button className="bg-black hover:bg-gray-800 text-white w-fit">
+                <Button className="bg-[#111111] hover:bg-[#222222] text-white w-fit">
                   Read Article
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -204,7 +204,7 @@ const Blog = () => {
       </section>
 
       {/* Newsletter Signup */}
-      <section className="py-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Stay Updated</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
@@ -216,7 +216,7 @@ const Blog = () => {
               placeholder="Enter your email"
               className="flex-1 px-4 py-3 rounded-md text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-white/20"
             />
-            <Button className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3">
+            <Button className="bg-[#111111] text-white hover:bg-[#222222] px-8 py-3">
               Subscribe
             </Button>
           </div>

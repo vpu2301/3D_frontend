@@ -45,7 +45,7 @@ const ImplementationGuide = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -58,7 +58,7 @@ const ImplementationGuide = () => {
               in your organization, from initial assessment to full deployment.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-md" asChild>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-md" asChild>
                 <Link to="/get-started">Start Implementation</Link>
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
@@ -85,7 +85,7 @@ const ImplementationGuide = () => {
                 <CardContent className="p-8">
                   <div className="flex items-start space-x-6">
                     <div className="flex-shrink-0">
-                      <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500">
+                      <div className="p-4 rounded-2xl bg-[#111111]">
                         <phase.icon className="h-8 w-8 text-white" />
                       </div>
                     </div>
@@ -118,13 +118,13 @@ const ImplementationGuide = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Begin?</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Let our experts guide you through a successful implementation.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-md py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/schedule-demo">
               Schedule Implementation Call
               <ArrowRight className="ml-2 h-4 w-4" />

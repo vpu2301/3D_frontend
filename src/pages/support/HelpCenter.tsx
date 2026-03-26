@@ -20,7 +20,7 @@ const HelpCenter = () => {
       title: 'Video Tutorials',
       description: 'Step-by-step video guides for all features',
       articles: 8,
-      color: 'from-purple-500 to-pink-500'
+      color: 'from-purple-500 to-[#222222]'
     },
     {
       icon: FileText,
@@ -34,7 +34,7 @@ const HelpCenter = () => {
       title: 'FAQs',
       description: 'Frequently asked questions and answers',
       articles: 18,
-      color: 'from-orange-500 to-red-500'
+      color: 'from-[#111111] to-[#222222]'
     }
   ];
 
@@ -90,7 +90,7 @@ const HelpCenter = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       <Header />
       
       {/* Hero Section */}
@@ -105,7 +105,7 @@ const HelpCenter = () => {
           
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto mb-8">
-            <Search className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-4 top-4 h-5 w-5 text-black/50" />
             <Input 
               placeholder="Search for help articles, guides, and FAQs..." 
               className="pl-12 py-4 text-lg rounded-full border-2 border-gray-200 focus:border-blue-500"
@@ -181,7 +181,7 @@ const HelpCenter = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {supportOptions.map((option, index) => (
               <div key={index} className="bg-white p-8 rounded-3xl shadow-lg text-center">
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-6">
+                <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                   <option.icon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-medium text-gray-900 mb-4">{option.title}</h3>
@@ -197,13 +197,13 @@ const HelpCenter = () => {
       {/* Community Section */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white text-center">
+          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8 text-center">
             <Users className="h-16 w-16 mx-auto mb-6 text-blue-400" />
             <h3 className="text-3xl font-light mb-6">Join Our Community</h3>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-black/60 mb-8 max-w-2xl mx-auto">
               Connect with other users, share tips, and get help from the community
             </p>
-            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full py-3">
+            <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3">
               Join Community Forum
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

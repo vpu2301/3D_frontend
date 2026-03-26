@@ -103,7 +103,7 @@ const CaseStudies = () => {
     const gradients = {
       blue: "from-blue-500 to-cyan-500",
       emerald: "from-emerald-500 to-teal-500",
-      violet: "from-violet-500 to-purple-500",
+      violet: "from-violet-500 to-[#222222]",
       pink: "from-pink-500 to-rose-500",
       indigo: "from-indigo-500 to-blue-500"
     };
@@ -134,7 +134,7 @@ const CaseStudies = () => {
             </div>
             <h1 className="text-5xl md:text-7xl pricing-title mb-6 leading-tight">
               AI Workers
-              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="block text-[#111111]">
                 Delivering Results
               </span>
             </h1>
@@ -272,7 +272,7 @@ const CaseStudies = () => {
               <div className="text-gray-600 pricing-text">Maximum Speed Improvement</div>
             </div>
             <div className="text-center pricing-card p-6 hover-lift floating-shape animate-scale-in">
-              <div className="text-4xl font-bold text-orange-600 mb-2">96%</div>
+              <div className="text-4xl font-bold text-[#111111] mb-2">96%</div>
               <div className="text-gray-600 pricing-text">Client Satisfaction</div>
             </div>
           </div>
@@ -280,22 +280,21 @@ const CaseStudies = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="pricing-dark-section py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-600/20 via-transparent to-transparent"></div>
+      <section className="bg-[#f5ede3] py-20 relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative">
-          <h2 className="text-4xl md:text-5xl pricing-title text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#111111] mb-6">
             Ready to Deploy Your
-            <span className="block text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text">AI Workforce?</span>
+            <span className="block text-black/60">AI Workforce?</span>
           </h2>
-          <p className="text-xl pricing-text text-gray-300 mb-8 leading-relaxed">
-            Join these industry leaders and experience the transformative power of specialized AI workers 
+          <p className="text-xl text-black/60 mb-8 leading-relaxed">
+            Join these industry leaders and experience the transformative power of specialized AI workers
             designed for your specific business needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="pricing-button px-8 py-3 text-lg" asChild>
+            <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full px-8 py-3 text-lg" asChild>
               <Link to="/get-started">Deploy AI Workers <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-3 text-lg hover-lift" asChild>
+            <Button size="lg" variant="outline" className="border-black/15 bg-white/70 text-[#111111] hover:bg-white rounded-full px-8 py-3 text-lg" asChild>
               <Link to="/watch-demo">See Demo</Link>
             </Button>
           </div>

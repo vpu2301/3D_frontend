@@ -87,7 +87,7 @@ const Community = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -100,7 +100,7 @@ const Community = () => {
               and stay updated with the latest automation trends and best practices.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-md" asChild>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-md" asChild>
                 <Link to="/get-started">Join Community</Link>
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
@@ -124,10 +124,10 @@ const Community = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 w-fit mx-auto mb-6">
+                <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                   <stat.icon className="h-8 w-8 text-white" />
                 </div>
-                <div className="text-3xl font-light text-gray-900 mb-2">{stat.number}</div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
                 <div className="text-gray-600">{stat.label}</div>
               </div>
             ))}
@@ -218,13 +218,13 @@ const Community = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Join the Conversation</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Become part of our growing community and accelerate your automation journey.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-md py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/get-started">
               Join Forum
               <ArrowRight className="ml-2 h-4 w-4" />

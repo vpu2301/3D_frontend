@@ -40,7 +40,7 @@ const Maya = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -48,7 +48,7 @@ const Maya = () => {
             <div className="text-center lg:text-left">
               <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
                 Meet Maya: Your
-                <span className="block font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                <span className="block font-medium text-[#111111]">
                   AI Marketing Specialist
                 </span>
               </h1>
@@ -57,7 +57,7 @@ const Maya = () => {
                 content personalization, and performance analytics that drive real results.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8">
-                <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-md" asChild>
+                <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-md" asChild>
                   <Link to="/start-free-trial">Try Maya Free</Link>
                 </Button>
                 <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
@@ -122,7 +122,7 @@ const Maya = () => {
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-6">
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-500 mr-4">
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-pink-500 to-[#222222] mr-4">
                       <feature.icon className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-xl font-medium text-gray-900">{feature.title}</h3>
@@ -156,13 +156,13 @@ const Maya = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white px-4">
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Transform Marketing?</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Let Maya optimize your campaigns while you focus on strategy and creativity.
           </p>
-          <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-md py-3" asChild>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Try Maya Free
               <ArrowRight className="ml-2 h-4 w-4" />

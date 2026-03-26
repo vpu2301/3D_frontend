@@ -28,7 +28,7 @@ const Login = () => {
         
         // Set authentication state
         localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userEmail', 'admin@observio.ai');
+        localStorage.setItem('userEmail', 'admin@3days.ai');
         
         toast({
           title: "Welcome back!",
@@ -49,7 +49,7 @@ const Login = () => {
         
         toast({
           title: "Welcome back!",
-          description: "Successfully logged in to Observio.",
+          description: "Successfully logged in to 3Days.ai.",
         });
 
         console.log('Login: Redirecting to dashboard...');
@@ -74,32 +74,32 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#f5ede3] dark:bg-[#181512] flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         {/* Logo and Title */}
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center mb-6">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-              <Microscope className="w-6 h-6 text-white" />
+          <Link to="/" className="inline-flex items-center justify-center mb-6">
+            <div className="w-9 h-9 bg-[#111111] rounded-xl flex items-center justify-center mr-3">
+              <Microscope className="w-4.5 h-4.5 text-white" />
             </div>
-            <span className="text-2xl font-light text-gray-900">Observio</span>
+            <span className="text-xl font-semibold text-[#111111] tracking-tight">3Days.ai</span>
           </Link>
-          <h2 className="text-3xl font-light text-gray-900">Welcome back</h2>
-          <p className="text-gray-600 mt-2">Sign in to your research platform</p>
+          <h2 className="text-2xl font-bold text-[#111111] tracking-tight">Welcome back</h2>
+          <p className="text-black/50 mt-2 text-sm">Sign in to your platform</p>
         </div>
 
         {/* Login Card */}
-        <Card className="shadow-xl border-0">
+        <Card className="bg-white border-black/8 shadow-lg shadow-black/6 rounded-3xl">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-light">Sign in</CardTitle>
-            <CardDescription>
-              Enter your credentials to access your research tools
+            <CardTitle className="text-lg font-semibold text-[#111111]">Sign in</CardTitle>
+            <CardDescription className="text-black/50">
+              Enter your credentials to continue
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email or Username</Label>
+                <Label htmlFor="email" className="text-[#111111] text-sm font-medium">Email or Username</Label>
                 <Input
                   id="email"
                   type="text"
@@ -107,11 +107,11 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="h-11"
+                  className="h-10 bg-[#f9f6f2] border-black/10 text-[#111111] placeholder:text-black/35 rounded-xl"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-[#111111] text-sm font-medium">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -119,12 +119,12 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="h-11"
+                  className="h-10 bg-[#f9f6f2] border-black/10 text-[#111111] placeholder:text-black/35 rounded-xl"
                 />
               </div>
-              <Button 
-                type="submit" 
-                className="w-full h-11 bg-blue-600 hover:bg-blue-700"
+              <Button
+                type="submit"
+                className="w-full h-10 bg-[#111111] hover:bg-[#222222] text-white font-medium rounded-full border-0"
                 disabled={isLoading}
               >
                 {isLoading ? 'Signing in...' : 'Sign in'}
@@ -132,18 +132,18 @@ const Login = () => {
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-black/50">
                 Don't have an account?{' '}
-                <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
+                <Link to="/signup" className="text-[#111111] hover:text-black/70 font-medium underline underline-offset-2">
                   Start your free trial
                 </Link>
               </p>
             </div>
 
             {/* Admin Demo Info */}
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-800 font-medium mb-1">Demo Access</p>
-              <p className="text-xs text-blue-600">
+            <div className="mt-6 p-4 bg-[#f9f6f2] rounded-2xl border border-black/8">
+              <p className="text-sm text-[#111111] font-medium mb-1">Demo Access</p>
+              <p className="text-xs text-black/50">
                 Use "admin" / "admin" for admin dashboard access
               </p>
             </div>
@@ -152,8 +152,8 @@ const Login = () => {
 
         {/* Back to Home */}
         <div className="text-center">
-          <Link to="/" className="text-sm text-gray-600 hover:text-gray-900">
-            ← Back to Observio
+          <Link to="/" className="text-sm text-black/45 hover:text-black transition-colors">
+            ← Back to 3Days.ai
           </Link>
         </div>
       </div>

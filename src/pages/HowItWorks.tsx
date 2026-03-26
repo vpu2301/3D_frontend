@@ -28,7 +28,7 @@ const HowItWorks = () => {
       description: "Launch your AI employee and watch them handle tasks 24/7. Monitor performance and optimize as needed.",
       icon: Zap,
       features: ["Real-time monitoring", "Performance analytics", "Continuous learning"],
-      color: "from-purple-500 to-pink-500"
+      color: "from-purple-500 to-[#222222]"
     }
   ];
 
@@ -54,23 +54,23 @@ const HowItWorks = () => {
     {
       category: "HR & Operations",
       tasks: ["Screen resumes", "Schedule interviews", "Onboard new hires", "Process expense reports"],
-      color: "bg-orange-100 text-orange-800",
+      color: "bg-[#1b1b1b] text-orange-800",
       icon: Lightbulb
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-[#f5ede3] via-white to-purple-50 dark:from-[#181512] dark:via-[#1c1916] dark:to-[#1c1916]">
       <main className="pt-16 p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
-            <h1 className="text-3xl font-light text-gray-900">How It Works</h1>
+            <h1 className="text-3xl font-bold text-gray-900">How It Works</h1>
             <p className="text-gray-600">Transform your business operations in three simple steps</p>
           </div>
 
           {/* Demo Section */}
           <section className="mb-12">
-            <Card className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white border-0">
+            <Card className="bg-gradient-to-r from-blue-500 via-purple-500 to-[#222222] text-white border-0">
               <CardContent className="p-8 text-center">
                 <h2 className="text-2xl font-light mb-4">See It In Action</h2>
                 <p className="text-lg mb-6 opacity-90">
@@ -102,7 +102,7 @@ const HowItWorks = () => {
                         <step.icon className="h-8 w-8 text-white" />
                       </div>
                     </div>
-                    <div className="bg-gray-900 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mx-auto mb-2">
+                    <div className="bg-[#f5ede3] text-[#111111] rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mx-auto mb-2">
                       {step.step}
                     </div>
                     <CardTitle className="text-xl mb-2">{step.title}</CardTitle>
@@ -202,17 +202,17 @@ const HowItWorks = () => {
 
           {/* CTA Section */}
           <section className="text-center">
-            <Card className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white border-0">
+            <Card className="bg-white text-[#111111] border border-black/8">
               <CardContent className="p-8">
                 <h2 className="text-2xl font-light mb-4">Ready to Get Started?</h2>
-                <p className="text-lg mb-6 opacity-90 font-light">
+                <p className="text-lg text-black/60 mb-6 font-light">
                   Join thousands of companies that are already transforming their operations with AI employees.
                 </p>
                 <div className="space-x-4">
-                  <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full">
+                  <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full">
                     Start Free Trial
                   </Button>
-                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900 rounded-full">
+                  <Button size="lg" variant="outline" className="border-black/15 bg-white/70 text-[#111111] hover:bg-white rounded-full">
                     Schedule Demo
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>

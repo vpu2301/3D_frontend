@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
+import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -9,6 +10,7 @@ import Teams from './pages/Teams';
 import TeamDetail from './pages/TeamDetail';
 import AIAgents from './pages/AIAgents';
 import Workflows from './pages/Workflows';
+import CreateWorkflow from './pages/CreateWorkflow';
 import IntegrationsPage from './pages/IntegrationsPage';
 import Settings from './pages/Settings';
 import Billing from './pages/Billing';
@@ -37,6 +39,7 @@ import HowItWorks from './pages/HowItWorks';
 import WatchDemo from './pages/WatchDemo';
 import ScheduleDemo from './pages/ScheduleDemo';
 import Flows from './pages/platform/Flows';
+import ChannelsPage from './pages/ChannelsPage';
 
 // Solution pages
 import Sales from './pages/solutions/Sales';
@@ -112,6 +115,7 @@ function App() {
   console.log('=== END APP DEBUG ===');
   
   return (
+    <ThemeProvider>
     <Router>
       <div className="App">
         <Routes>
@@ -209,8 +213,10 @@ function App() {
           <Route path="/teams/:id" element={<ProtectedRoute><TeamDetail /></ProtectedRoute>} />
           <Route path="/ai-agents" element={<ProtectedRoute><AIAgents /></ProtectedRoute>} />
           <Route path="/workflows" element={<ProtectedRoute><Workflows /></ProtectedRoute>} />
+          <Route path="/workflows/create" element={<ProtectedRoute><CreateWorkflow /></ProtectedRoute>} />
           <Route path="/integrations" element={<ProtectedRoute><IntegrationsPage /></ProtectedRoute>} />
           <Route path="/flows" element={<ProtectedRoute><Flows /></ProtectedRoute>} />
+          <Route path="/channels" element={<ProtectedRoute><ChannelsPage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
           <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
@@ -226,6 +232,7 @@ function App() {
         <Toaster />
       </div>
     </Router>
+    </ThemeProvider>
   );
 }
 

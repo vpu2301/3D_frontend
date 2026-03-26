@@ -319,7 +319,7 @@ const AssistantProfile = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-indigo-50">
+    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />

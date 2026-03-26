@@ -77,7 +77,7 @@ const EmailManagement = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
       <Header />
       
       {/* Hero Section */}
@@ -95,7 +95,7 @@ const EmailManagement = () => {
               Transform your email workflow with AI-powered automation that sorts, prioritizes, and responds to emails intelligently
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full" asChild>
+              <Button size="lg" className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/get-started">Start Automating</Link>
               </Button>
               <Button size="lg" variant="outline" className="px-8 py-3 rounded-full" asChild>
@@ -165,7 +165,7 @@ const EmailManagement = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {capabilities.map((capability, index) => (
               <div key={index} className="bg-gray-50 p-6 rounded-3xl text-center">
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 w-fit mx-auto mb-6">
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-500 to-[#222222] w-fit mx-auto mb-6">
                   <capability.icon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-medium text-gray-900 mb-4">{capability.title}</h3>
@@ -183,7 +183,7 @@ const EmailManagement = () => {
           <p className="text-xl text-gray-600 mb-8">
             Start automating your email management and reclaim hours every day
           </p>
-          <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full" asChild>
+          <Button size="lg" className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
             <Link to="/get-started">
               Automate Email Management
               <ArrowRight className="ml-2 h-4 w-4" />
