@@ -1,18 +1,820 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle, XCircle, Clock, Bot, AlertCircle, FileText, DollarSign, Users, PlayCircle, BookOpen } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import {
+  CheckCircle, XCircle, Clock, Bot, AlertCircle, FileText, DollarSign,
+  Users, PlayCircle, BookOpen, ClipboardList, Activity, BookMarked,
+  Search, Filter, ArrowUpDown, MoreHorizontal, ChevronDown,
+  ChevronLeft, ChevronRight, Eye
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+type TabKey = 'approvals' | 'active' | 'journal';
+
+type JournalEntry = {
+  id: number;
+  title: string;
+  assistant: string;
+  description: string;
+  status: string;
+  category: string;
+  completedDate: Date;
+  duration: string;
+  icon: React.ElementType;
+  iconColor: string;
+  bgColor: string;
+};
+
+const JOURNAL_STATUS_STYLE: Record<string, string> = {
+  Completed: 'bg-green-100 text-green-700 border-green-200',
+  Failed:    'bg-red-100 text-red-700 border-red-200',
+  Cancelled: 'bg-gray-100 text-gray-500 border-gray-200',
+};
+
+const JOURNAL_CATEGORIES = ['All Categories', 'Support', 'Research', 'Finance', 'HR', 'Marketing', 'Operations'];
+const JOURNAL_STATUSES   = ['All', 'Completed', 'Failed', 'Cancelled'];
+
+const JournalTable = ({
+  journals,
+  formatTimeAgo,
+}: {
+  journals: JournalEntry[];
+  formatTimeAgo: (d: Date) => string;
+}) => {
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('All Categories');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [sortField, setSortField] = useState<keyof JournalEntry>('completedDate');
+  const [sortAsc, setSortAsc] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
+  const filtered = journals
+    .filter(j => {
+      const q = search.toLowerCase();
+      const matchSearch = !q || j.title.toLowerCase().includes(q) || j.assistant.toLowerCase().includes(q) || j.description.toLowerCase().includes(q);
+      const matchCat    = categoryFilter === 'All Categories' || j.category === categoryFilter;
+      const matchStatus = statusFilter === 'All' || j.status === statusFilter;
+      return matchSearch && matchCat && matchStatus;
+    })
+    .sort((a, b) => {
+      const av = String(a[sortField] ?? '').toLowerCase();
+      const bv = String(b[sortField] ?? '').toLowerCase();
+      return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+    });
+
+  const totalPages   = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage     = Math.min(page, totalPages);
+  const paged        = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
+  const toggleSort = (field: keyof JournalEntry) => {
+    if (sortField === field) setSortAsc(a => !a);
+    else { setSortField(field); setSortAsc(true); }
+    setPage(1);
+  };
+
+  const SortIcon = ({ field }: { field: keyof JournalEntry }) => (
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+  );
+
+  return (
+    <div className="space-y-4">
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 min-w-[180px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Input
+            placeholder="Search journal…"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setPage(1); }}
+            className="pl-9 bg-white border-gray-200"
+          />
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[140px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+              <span className="flex items-center gap-1.5">
+                <BookOpen className="h-3.5 w-3.5 text-gray-400" />
+                {categoryFilter === 'All Categories' ? 'Category' : categoryFilter}
+              </span>
+              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-44">
+            {JOURNAL_CATEGORIES.map(c => (
+              <DropdownMenuItem key={c} onClick={() => { setCategoryFilter(c); setPage(1); }} className={cn(categoryFilter === c && 'font-medium')}>
+                {c}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+              <span className="flex items-center gap-1.5">
+                <Filter className="h-3.5 w-3.5 text-gray-400" />
+                {statusFilter === 'All' ? 'Status' : statusFilter}
+              </span>
+              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            {JOURNAL_STATUSES.map(s => (
+              <DropdownMenuItem key={s} onClick={() => { setStatusFilter(s); setPage(1); }} className={cn(statusFilter === s && 'font-medium')}>
+                {s === 'All' ? 'All Statuses' : s}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Table */}
+      <Card className="bg-white border-gray-200/60 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100 bg-gray-50/60">
+                <th
+                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900"
+                  onClick={() => toggleSort('title')}
+                >
+                  Task <SortIcon field="title" />
+                </th>
+                <th
+                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900"
+                  onClick={() => toggleSort('status')}
+                >
+                  Status <SortIcon field="status" />
+                </th>
+                <th
+                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900"
+                  onClick={() => toggleSort('category')}
+                >
+                  Category <SortIcon field="category" />
+                </th>
+                <th
+                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell"
+                  onClick={() => toggleSort('assistant')}
+                >
+                  Assistant <SortIcon field="assistant" />
+                </th>
+                <th
+                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell"
+                  onClick={() => toggleSort('completedDate')}
+                >
+                  Completed <SortIcon field="completedDate" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Duration</th>
+                <th className="w-10 px-4 py-3" />
+              </tr>
+            </thead>
+            <tbody>
+              {paged.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-12 text-center text-gray-400 text-sm">
+                    No journal entries match your filters.
+                  </td>
+                </tr>
+              ) : (
+                paged.map(task => (
+                  <tr key={task.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-lg bg-gradient-to-br ${task.bgColor} flex-shrink-0`}>
+                          <task.icon className={`h-4 w-4 ${task.iconColor}`} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium text-gray-900 truncate">{task.title}</p>
+                          <p className="text-xs text-gray-500 truncate">{task.description}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', JOURNAL_STATUS_STYLE[task.status] ?? 'bg-gray-100 text-gray-500 border-gray-200')}>
+                        {task.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-gray-700">{task.category}</td>
+                    <td className="px-4 py-3 hidden md:table-cell">
+                      <span className="flex items-center gap-1.5 text-gray-600 text-xs">
+                        <Bot className="h-3.5 w-3.5 text-gray-400" />
+                        {task.assistant}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 hidden lg:table-cell">
+                      <span className="text-xs text-gray-500 flex items-center gap-1">
+                        <Clock className="h-3 w-3 text-gray-400" />
+                        {formatTimeAgo(task.completedDate)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 hidden lg:table-cell text-xs text-gray-500">{task.duration}</td>
+                    <td className="px-4 py-3">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Eye className="h-4 w-4 mr-2" />View Report
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <FileText className="h-4 w-4 mr-2" />Export
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer */}
+        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+          <div className="flex items-center gap-3">
+            <span>
+              {filtered.length > 0
+                ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} entries`
+                : '0 entries'}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-gray-400">Rows:</span>
+              <select
+                value={pageSize}
+                onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
+                className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
+              >
+                {[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {(categoryFilter !== 'All Categories' || statusFilter !== 'All' || search) && (
+              <button
+                className="text-gray-500 hover:text-gray-900 underline underline-offset-2"
+                onClick={() => { setSearch(''); setCategoryFilter('All Categories'); setStatusFilter('All'); setPage(1); }}
+              >
+                Clear filters
+              </button>
+            )}
+            {totalPages > 1 && (
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline" size="icon"
+                  className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700"
+                  disabled={safePage === 1}
+                  onClick={() => setPage(p => p - 1)}
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <Button
+                    key={p}
+                    variant={p === safePage ? 'default' : 'outline'}
+                    size="icon"
+                    className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')}
+                    onClick={() => setPage(p)}
+                  >
+                    {p}
+                  </Button>
+                ))}
+                <Button
+                  variant="outline" size="icon"
+                  className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700"
+                  disabled={safePage === totalPages}
+                  onClick={() => setPage(p => p + 1)}
+                >
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+type ActiveTask = {
+  id: number;
+  title: string;
+  assistant: string;
+  description: string;
+  priority: string;
+  category: string;
+  progress: number;
+  assignedDate: Date;
+  icon: React.ElementType;
+  iconColor: string;
+  bgColor: string;
+};
+
+type PendingTask = {
+  id: number;
+  title: string;
+  assistant: string;
+  description: string;
+  priority: string;
+  category: string;
+  timestamp: Date;
+  icon: React.ElementType;
+  iconColor: string;
+  bgColor: string;
+};
+
+const PRIORITY_STYLE: Record<string, string> = {
+  High:   'bg-red-100 text-red-700 border-red-200',
+  Medium: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+  Low:    'bg-green-100 text-green-700 border-green-200',
+};
+
+const TASK_CATEGORIES = ['All Categories', 'Finance', 'HR', 'Marketing', 'Support', 'Research', 'Operations'];
+const PRIORITIES      = ['All', 'High', 'Medium', 'Low'];
+
+const ActiveTasksTable = ({
+  tasks,
+  formatTimeAgo,
+}: {
+  tasks: ActiveTask[];
+  formatTimeAgo: (d: Date) => string;
+}) => {
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('All Categories');
+  const [priorityFilter, setPriorityFilter] = useState('All');
+  const [sortField, setSortField] = useState<keyof ActiveTask>('assignedDate');
+  const [sortAsc, setSortAsc] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
+  const filtered = tasks
+    .filter(t => {
+      const q = search.toLowerCase();
+      const matchSearch = !q || t.title.toLowerCase().includes(q) || t.assistant.toLowerCase().includes(q) || t.description.toLowerCase().includes(q);
+      const matchCat  = categoryFilter === 'All Categories' || t.category === categoryFilter;
+      const matchPri  = priorityFilter === 'All' || t.priority === priorityFilter;
+      return matchSearch && matchCat && matchPri;
+    })
+    .sort((a, b) => {
+      const av = String(a[sortField] ?? '').toLowerCase();
+      const bv = String(b[sortField] ?? '').toLowerCase();
+      return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+    });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage   = Math.min(page, totalPages);
+  const paged      = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
+  const toggleSort = (field: keyof ActiveTask) => {
+    if (sortField === field) setSortAsc(a => !a);
+    else { setSortField(field); setSortAsc(true); }
+    setPage(1);
+  };
+
+  const SortIcon = ({ field }: { field: keyof ActiveTask }) => (
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 min-w-[180px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Input
+            placeholder="Search tasks…"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setPage(1); }}
+            className="pl-9 bg-white border-gray-200"
+          />
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[140px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+              <span className="flex items-center gap-1.5">
+                <Filter className="h-3.5 w-3.5 text-gray-400" />
+                {categoryFilter === 'All Categories' ? 'Category' : categoryFilter}
+              </span>
+              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-44">
+            {TASK_CATEGORIES.map(c => (
+              <DropdownMenuItem key={c} onClick={() => { setCategoryFilter(c); setPage(1); }} className={cn(categoryFilter === c && 'font-medium')}>
+                {c}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+              <span className="flex items-center gap-1.5">
+                <Filter className="h-3.5 w-3.5 text-gray-400" />
+                {priorityFilter === 'All' ? 'Priority' : priorityFilter}
+              </span>
+              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            {PRIORITIES.map(p => (
+              <DropdownMenuItem key={p} onClick={() => { setPriorityFilter(p); setPage(1); }} className={cn(priorityFilter === p && 'font-medium')}>
+                {p === 'All' ? 'All Priorities' : p}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <Card className="bg-white border-gray-200/60 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100 bg-gray-50/60">
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('title')}>
+                  Task <SortIcon field="title" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('priority')}>
+                  Priority <SortIcon field="priority" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('category')}>
+                  Category <SortIcon field="category" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('assistant')}>
+                  Assistant <SortIcon field="assistant" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Progress</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('assignedDate')}>
+                  Started <SortIcon field="assignedDate" />
+                </th>
+                <th className="w-10 px-4 py-3" />
+              </tr>
+            </thead>
+            <tbody>
+              {paged.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-12 text-center text-gray-400 text-sm">
+                    No active tasks match your filters.
+                  </td>
+                </tr>
+              ) : (
+                paged.map(task => (
+                  <tr key={task.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-lg bg-gradient-to-br ${task.bgColor} flex-shrink-0`}>
+                          <task.icon className={`h-4 w-4 ${task.iconColor}`} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium text-gray-900 truncate">{task.title}</p>
+                          <p className="text-xs text-gray-500 truncate">{task.description}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', PRIORITY_STYLE[task.priority] ?? 'bg-gray-100 text-gray-500 border-gray-200')}>
+                        {task.priority}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-gray-700">{task.category}</td>
+                    <td className="px-4 py-3 hidden md:table-cell">
+                      <span className="flex items-center gap-1.5 text-gray-600 text-xs">
+                        <Bot className="h-3.5 w-3.5 text-gray-400" />
+                        {task.assistant}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 hidden lg:table-cell">
+                      <div className="flex items-center gap-2 min-w-[100px]">
+                        <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                          <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${task.progress}%` }} />
+                        </div>
+                        <span className="text-xs text-gray-500 whitespace-nowrap">{task.progress}%</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 hidden lg:table-cell">
+                      <span className="text-xs text-gray-500 flex items-center gap-1">
+                        <Clock className="h-3 w-3 text-gray-400" />
+                        {formatTimeAgo(task.assignedDate)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <PlayCircle className="h-4 w-4 mr-2" />View Progress
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Eye className="h-4 w-4 mr-2" />View Details
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+          <div className="flex items-center gap-3">
+            <span>
+              {filtered.length > 0
+                ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} tasks`
+                : '0 tasks'}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-gray-400">Rows:</span>
+              <select
+                value={pageSize}
+                onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
+                className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
+              >
+                {[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {(categoryFilter !== 'All Categories' || priorityFilter !== 'All' || search) && (
+              <button
+                className="text-gray-500 hover:text-gray-900 underline underline-offset-2"
+                onClick={() => { setSearch(''); setCategoryFilter('All Categories'); setPriorityFilter('All'); setPage(1); }}
+              >
+                Clear filters
+              </button>
+            )}
+            {totalPages > 1 && (
+              <div className="flex items-center gap-1">
+                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
+                    {p}
+                  </Button>
+                ))}
+                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+const ApprovalsTable = ({
+  tasks,
+  formatTimeAgo,
+  onApprove,
+  onReject,
+}: {
+  tasks: PendingTask[];
+  formatTimeAgo: (d: Date) => string;
+  onApprove: (id: number) => void;
+  onReject: (id: number) => void;
+}) => {
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('All Categories');
+  const [priorityFilter, setPriorityFilter] = useState('All');
+  const [sortField, setSortField] = useState<keyof PendingTask>('timestamp');
+  const [sortAsc, setSortAsc] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
+  const filtered = tasks
+    .filter(t => {
+      const q = search.toLowerCase();
+      const matchSearch = !q || t.title.toLowerCase().includes(q) || t.assistant.toLowerCase().includes(q) || t.description.toLowerCase().includes(q);
+      const matchCat  = categoryFilter === 'All Categories' || t.category === categoryFilter;
+      const matchPri  = priorityFilter === 'All' || t.priority === priorityFilter;
+      return matchSearch && matchCat && matchPri;
+    })
+    .sort((a, b) => {
+      const av = String(a[sortField] ?? '').toLowerCase();
+      const bv = String(b[sortField] ?? '').toLowerCase();
+      return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+    });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage   = Math.min(page, totalPages);
+  const paged      = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
+  const toggleSort = (field: keyof PendingTask) => {
+    if (sortField === field) setSortAsc(a => !a);
+    else { setSortField(field); setSortAsc(true); }
+    setPage(1);
+  };
+
+  const SortIcon = ({ field }: { field: keyof PendingTask }) => (
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 min-w-[180px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Input
+            placeholder="Search approvals…"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setPage(1); }}
+            className="pl-9 bg-white border-gray-200"
+          />
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[140px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+              <span className="flex items-center gap-1.5">
+                <Filter className="h-3.5 w-3.5 text-gray-400" />
+                {categoryFilter === 'All Categories' ? 'Category' : categoryFilter}
+              </span>
+              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-44">
+            {TASK_CATEGORIES.map(c => (
+              <DropdownMenuItem key={c} onClick={() => { setCategoryFilter(c); setPage(1); }} className={cn(categoryFilter === c && 'font-medium')}>
+                {c}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+              <span className="flex items-center gap-1.5">
+                <Filter className="h-3.5 w-3.5 text-gray-400" />
+                {priorityFilter === 'All' ? 'Priority' : priorityFilter}
+              </span>
+              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            {PRIORITIES.map(p => (
+              <DropdownMenuItem key={p} onClick={() => { setPriorityFilter(p); setPage(1); }} className={cn(priorityFilter === p && 'font-medium')}>
+                {p === 'All' ? 'All Priorities' : p}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <Card className="bg-white border-gray-200/60 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100 bg-gray-50/60">
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('title')}>
+                  Task <SortIcon field="title" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('priority')}>
+                  Priority <SortIcon field="priority" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('category')}>
+                  Category <SortIcon field="category" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('assistant')}>
+                  Assistant <SortIcon field="assistant" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('timestamp')}>
+                  Received <SortIcon field="timestamp" />
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paged.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">
+                    No pending approvals match your filters.
+                  </td>
+                </tr>
+              ) : (
+                paged.map(task => (
+                  <tr key={task.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-lg bg-gradient-to-br ${task.bgColor} flex-shrink-0`}>
+                          <task.icon className={`h-4 w-4 ${task.iconColor}`} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium text-gray-900 truncate">{task.title}</p>
+                          <p className="text-xs text-gray-500 truncate">{task.description}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', PRIORITY_STYLE[task.priority] ?? 'bg-gray-100 text-gray-500 border-gray-200')}>
+                        {task.priority}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-gray-700">{task.category}</td>
+                    <td className="px-4 py-3 hidden md:table-cell">
+                      <span className="flex items-center gap-1.5 text-gray-600 text-xs">
+                        <Bot className="h-3.5 w-3.5 text-gray-400" />
+                        {task.assistant}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 hidden lg:table-cell">
+                      <span className="text-xs text-gray-500 flex items-center gap-1">
+                        <Clock className="h-3 w-3 text-gray-400" />
+                        {formatTimeAgo(task.timestamp)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <Button onClick={() => onApprove(task.id)} size="sm" className="bg-green-600 hover:bg-green-700 text-white h-7 px-2.5 text-xs">
+                          <CheckCircle className="h-3.5 w-3.5 mr-1" />Approve
+                        </Button>
+                        <Button onClick={() => onReject(task.id)} variant="outline" size="sm" className="border-red-200 text-red-600 hover:bg-red-50 h-7 px-2.5 text-xs">
+                          <XCircle className="h-3.5 w-3.5 mr-1" />Reject
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+          <div className="flex items-center gap-3">
+            <span>
+              {filtered.length > 0
+                ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} approvals`
+                : '0 approvals'}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-gray-400">Rows:</span>
+              <select
+                value={pageSize}
+                onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
+                className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
+              >
+                {[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {(categoryFilter !== 'All Categories' || priorityFilter !== 'All' || search) && (
+              <button
+                className="text-gray-500 hover:text-gray-900 underline underline-offset-2"
+                onClick={() => { setSearch(''); setCategoryFilter('All Categories'); setPriorityFilter('All'); setPage(1); }}
+              >
+                Clear filters
+              </button>
+            )}
+            {totalPages > 1 && (
+              <div className="flex items-center gap-1">
+                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
+                    {p}
+                  </Button>
+                ))}
+                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
 
 const Tasks = () => {
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState('');
+  const [activeTab, setActiveTab] = useState<TabKey>('approvals');
   const [pendingTasks, setPendingTasks] = useState([
     {
       id: 1,
@@ -100,15 +902,10 @@ const Tasks = () => {
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
-    
+
     if (isAuthenticated !== 'true') {
       navigate('/login');
       return;
-    }
-    
-    if (email) {
-      setUserEmail(email);
     }
   }, [navigate]);
 
@@ -118,15 +915,6 @@ const Tasks = () => {
 
   const handleReject = (taskId: number) => {
     setPendingTasks(prev => prev.filter(task => task.id !== taskId));
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'High': return 'bg-red-100 text-red-800';
-      case 'Medium': return 'bg-yellow-100 text-yellow-800';
-      case 'Low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
   };
 
   const formatTimeAgo = (timestamp: Date) => {
@@ -147,12 +935,10 @@ const Tasks = () => {
         <div className="flex w-full flex-1">
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
-            <LoggedInHeader userEmail={userEmail} />
-            
             <main className="flex-1 p-6 pb-20">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-3xl font-light text-gray-900">Tasks</h1>
+                  <h1 className="text-3xl font-bold text-gray-900">Tasks</h1>
                   <p className="text-gray-600">Manage tasks, approvals, and AI assistant activities</p>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -166,189 +952,48 @@ const Tasks = () => {
                 </div>
               </div>
 
-              <Tabs defaultValue="approvals" className="space-y-6">
-                <TabsList>
-                  <TabsTrigger value="approvals">Approvals ({pendingTasks.length})</TabsTrigger>
-                  <TabsTrigger value="active">Active Tasks ({activeTasks.length})</TabsTrigger>
-                  <TabsTrigger value="journal">Task Journal ({taskJournals.length})</TabsTrigger>
-                </TabsList>
+              {/* Tab nav */}
+              <div className="flex border-b border-gray-200 mb-6">
+                {([
+                  { key: 'approvals' as TabKey, label: `Approvals (${pendingTasks.length})`, icon: ClipboardList },
+                  { key: 'active' as TabKey,    label: `Active Tasks (${activeTasks.length})`, icon: Activity },
+                  { key: 'journal' as TabKey,   label: `Task Journal (${taskJournals.length})`, icon: BookMarked },
+                ] as const).map(({ key, label, icon: Icon }) => (
+                  <button
+                    key={key}
+                    onClick={() => setActiveTab(key)}
+                    className={cn(
+                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
+                      activeTab === key
+                        ? 'border-gray-900 text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </button>
+                ))}
+              </div>
 
-                <TabsContent value="approvals">
-                  {pendingTasks.length === 0 ? (
-                    <div className="text-center py-12">
-                      <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">All caught up!</h3>
-                      <p className="text-gray-600">No pending approvals at the moment</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {pendingTasks.map((task) => (
-                        <Card key={task.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-                          <CardHeader className="pb-3">
-                            <CardTitle className="flex items-center justify-between text-lg">
-                              <div className="flex items-center space-x-3">
-                                <div className={`p-3 rounded-lg bg-gradient-to-br ${task.bgColor}`}>
-                                  <task.icon className={`h-5 w-5 ${task.iconColor}`} />
-                                </div>
-                                <div>
-                                  <span className="font-medium text-gray-900">{task.title}</span>
-                                  <div className="flex items-center space-x-2 mt-1">
-                                    <Badge className={getPriorityColor(task.priority)} variant="secondary">
-                                      {task.priority}
-                                    </Badge>
-                                    <Badge variant="outline" className="text-xs">
-                                      {task.category}
-                                    </Badge>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="flex items-center space-x-1 text-sm text-gray-500 mb-2">
-                                  <Bot className="h-3 w-3" />
-                                  <span>{task.assistant}</span>
-                                </div>
-                                <div className="flex items-center space-x-1 text-xs text-gray-400">
-                                  <Clock className="h-3 w-3" />
-                                  <span>{formatTimeAgo(task.timestamp)}</span>
-                                </div>
-                              </div>
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent className="pt-0">
-                            <p className="text-gray-700 mb-4">{task.description}</p>
-                            <div className="flex space-x-3">
-                              <Button 
-                                onClick={() => handleApprove(task.id)}
-                                className="bg-green-600 hover:bg-green-700 text-white"
-                                size="sm"
-                              >
-                                <CheckCircle className="h-4 w-4 mr-2" />
-                                Approve
-                              </Button>
-                              <Button 
-                                onClick={() => handleReject(task.id)}
-                                variant="outline"
-                                className="border-red-200 text-red-600 hover:bg-red-50"
-                                size="sm"
-                              >
-                                <XCircle className="h-4 w-4 mr-2" />
-                                Reject
-                              </Button>
-                              <Button variant="ghost" size="sm">
-                                View Details
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </TabsContent>
-
-                <TabsContent value="active">
-                  <div className="space-y-4">
-                    {activeTasks.map((task) => (
-                      <Card key={task.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="flex items-center justify-between text-lg">
-                            <div className="flex items-center space-x-3">
-                              <div className={`p-3 rounded-lg bg-gradient-to-br ${task.bgColor}`}>
-                                <task.icon className={`h-5 w-5 ${task.iconColor}`} />
-                              </div>
-                              <div>
-                                <span className="font-medium text-gray-900">{task.title}</span>
-                                <div className="flex items-center space-x-2 mt-1">
-                                  <Badge className={getPriorityColor(task.priority)} variant="secondary">
-                                    {task.priority}
-                                  </Badge>
-                                  <Badge variant="outline" className="text-xs">
-                                    {task.category}
-                                  </Badge>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <div className="flex items-center space-x-1 text-sm text-gray-500 mb-2">
-                                <Bot className="h-3 w-3" />
-                                <span>{task.assistant}</span>
-                              </div>
-                              <div className="text-sm text-gray-600">{task.progress}% complete</div>
-                            </div>
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <p className="text-gray-700 mb-4">{task.description}</p>
-                          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                            <div 
-                              className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                              style={{ width: `${task.progress}%` }}
-                            ></div>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <div className="text-sm text-gray-500">
-                              Started {formatTimeAgo(task.assignedDate)}
-                            </div>
-                            <Button variant="outline" size="sm">
-                              <PlayCircle className="h-4 w-4 mr-2" />
-                              View Progress
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+              {activeTab === 'approvals' && (
+                pendingTasks.length === 0 ? (
+                  <div className="text-center py-12">
+                    <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">All caught up!</h3>
+                    <p className="text-gray-600">No pending approvals at the moment</p>
                   </div>
-                </TabsContent>
+                ) : (
+                  <ApprovalsTable tasks={pendingTasks} formatTimeAgo={formatTimeAgo} onApprove={handleApprove} onReject={handleReject} />
+                )
+              )}
 
-                <TabsContent value="journal">
-                  <div className="space-y-4">
-                    {taskJournals.map((task) => (
-                      <Card key={task.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="flex items-center justify-between text-lg">
-                            <div className="flex items-center space-x-3">
-                              <div className={`p-3 rounded-lg bg-gradient-to-br ${task.bgColor}`}>
-                                <task.icon className={`h-5 w-5 ${task.iconColor}`} />
-                              </div>
-                              <div>
-                                <span className="font-medium text-gray-900">{task.title}</span>
-                                <div className="flex items-center space-x-2 mt-1">
-                                  <Badge variant="outline" className="text-green-700 bg-green-50">
-                                    {task.status}
-                                  </Badge>
-                                  <Badge variant="outline" className="text-xs">
-                                    {task.category}
-                                  </Badge>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <div className="flex items-center space-x-1 text-sm text-gray-500 mb-2">
-                                <Bot className="h-3 w-3" />
-                                <span>{task.assistant}</span>
-                              </div>
-                              <div className="text-xs text-gray-400">
-                                Completed {formatTimeAgo(task.completedDate)}
-                              </div>
-                            </div>
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <p className="text-gray-700 mb-4">{task.description}</p>
-                          <div className="flex justify-between items-center">
-                            <div className="text-sm text-gray-500">
-                              Duration: {task.duration}
-                            </div>
-                            <Button variant="ghost" size="sm">
-                              <FileText className="h-4 w-4 mr-2" />
-                              View Report
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </TabsContent>
-              </Tabs>
+              {activeTab === 'active' && (
+                <ActiveTasksTable tasks={activeTasks} formatTimeAgo={formatTimeAgo} />
+              )}
+
+              {activeTab === 'journal' && (
+                <JournalTable journals={taskJournals} formatTimeAgo={formatTimeAgo} />
+              )}
             </main>
           </SidebarInset>
         </div>

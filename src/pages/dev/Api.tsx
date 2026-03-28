@@ -3,26 +3,18 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Code, Key, Shield, Zap } from 'lucide-react';
 
 const Api = () => {
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState('');
-
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
-    
+
     if (isAuthenticated !== 'true') {
       navigate('/login');
       return;
-    }
-    
-    if (email) {
-      setUserEmail(email);
     }
   }, [navigate]);
 
@@ -39,8 +31,6 @@ const Api = () => {
         <div className="flex w-full flex-1">
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
-            <LoggedInHeader userEmail={userEmail} />
-            
             <main className="flex-1 p-6">
               <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-900">API Documentation</h1>

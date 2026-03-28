@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, Mic, MicOff, Bot, Zap, User, Clock, Calendar, Paperclip, X, FileText, Image } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+import {
+  Send, Mic, MicOff, Bot, User,
+  Paperclip, X, FileText, Image, Plus, MessageSquare, Hash,
+  Zap, Clock, Calendar
+} from 'lucide-react';
 
 interface ChatMessage {
   id: number;
@@ -31,7 +31,7 @@ interface ChatHistory {
 
 const Chat = () => {
   console.log('=== Chat component starting to render ===');
-  
+
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isListening, setIsListening] = useState(false);
@@ -42,32 +42,32 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Get user email from localStorage (should be available since this is a protected route)
   const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
 
   const fastCommands = [
-    { icon: Zap, label: '@Emma', description: 'Sales Assistant', color: 'bg-pink-100' },
-    { icon: User, label: '@Aria', description: 'Support Helper', color: 'bg-blue-100' },
-    { icon: Clock, label: '@Felix', description: 'Finance Expert', color: 'bg-green-100' },
-    { icon: Calendar, label: '@Maya', description: 'Marketing Pro', color: 'bg-purple-100' },
+    { icon: Zap, label: '@Emma', description: 'Sales Assistant', color: '#fce7f3' },
+    { icon: User, label: '@Aria', description: 'Support Helper', color: '#dbeafe' },
+    { icon: Clock, label: '@Felix', description: 'Finance Expert', color: '#dcfce7' },
+    { icon: Calendar, label: '@Maya', description: 'Marketing Pro', color: '#ede9fe' },
   ];
+
+  const hasStarted = messages.some(m => m.sender === 'user');
 
   useEffect(() => {
     console.log('=== Chat useEffect running ===');
-    
-    // Initialize with welcome message
+
     const welcomeMessage = {
       id: 1,
       text: "Hello! Welcome to 3days.ai. I'm your AI assistant. Try asking me to help you with tasks like 'Create a marketing plan for my new product' or 'Analyze my sales data'. How can I help you today?",
       sender: 'assistant' as const,
       timestamp: new Date()
     };
-    
+
     console.log('Setting welcome message:', welcomeMessage);
     setMessages([welcomeMessage]);
 
-    // Sample chat history
     const sampleHistory: ChatHistory[] = [
       {
         id: 'chat-1',
@@ -84,16 +84,27 @@ const Chat = () => {
         messageCount: 8
       }
     ];
-    
+
     console.log('Setting chat history:', sampleHistory);
     setChatHistory(sampleHistory);
     setIsLoading(false);
     console.log('=== Chat initialization complete ===');
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    if (hasStarted) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, hasStarted]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     setIsTyping(e.target.value.length > 0);
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+    }
   };
 
   const handleFileAttach = () => {
@@ -132,6 +143,9 @@ const Chat = () => {
     setAttachments([]);
     setIsTyping(false);
 
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -139,7 +153,7 @@ const Chat = () => {
     setTimeout(() => {
       const response: ChatMessage = {
         id: messages.length + 2,
-        text: attachments.length > 0 
+        text: attachments.length > 0
           ? `I can see you've shared ${attachments.length} file(s). I'll analyze them and help you with: "${message || 'the attached files'}". Here's a task I can create for you: "Process and analyze uploaded documents for insights and recommendations."`
           : `I understand you're asking about: "${message}". Let me create a task for this: "AI Employee will handle: ${message}". I'll assign this to the most suitable AI assistant and get started right away!`,
         sender: 'assistant',
@@ -153,8 +167,8 @@ const Chat = () => {
     setIsListening(!isListening);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -163,6 +177,7 @@ const Chat = () => {
   const handleFastCommand = (command: string) => {
     setMessage(command + ' ');
     setIsTyping(true);
+    textareaRef.current?.focus();
   };
 
   const selectChatHistory = (chatId: string) => {
@@ -192,239 +207,373 @@ const Chat = () => {
     return FileText;
   };
 
-  console.log('=== Chat render state ===', { 
-    messagesCount: messages.length, 
-    currentChatId,
-    isLoading
-  });
+  const formatTime = (date: Date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  console.log('=== Chat render state ===', { messagesCount: messages.length, currentChatId, isLoading });
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[hsl(30,25%,97%)]">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading chat...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-2 border-gray-200 border-t-gray-600 mx-auto mb-4"></div>
+          <p className="text-sm text-gray-500">Loading chat...</p>
         </div>
       </div>
     );
   }
 
+  // --- Shared: Agent pills ---
+  const AgentPills = ({ small = false }: { small?: boolean }) => (
+    <div className="flex flex-wrap gap-1.5">
+      {fastCommands.map((command, index) => (
+        <button
+          key={index}
+          onClick={() => handleFastCommand(command.label)}
+          className={`flex items-center gap-1 rounded-full font-medium text-gray-600 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-150 ${
+            small ? 'px-2 py-0.5 text-xs' : 'px-3 py-1.5 text-xs shadow-sm'
+          }`}
+          style={{ backgroundColor: command.color + (small ? '60' : '80') }}
+        >
+          <Hash className={`opacity-50 ${small ? 'h-2.5 w-2.5' : 'h-3 w-3'}`} />
+          <span>{command.label.replace('@', '')}</span>
+          {!small && (
+            <>
+              <span className="text-gray-400">·</span>
+              <span className="text-gray-500 font-normal">{command.description}</span>
+            </>
+          )}
+        </button>
+      ))}
+    </div>
+  );
+
+  // --- Shared: Input box ---
+  const InputBox = ({ compact = false, actionsBelow = false }: { compact?: boolean; actionsBelow?: boolean }) => (
+    <div className={compact ? '' : 'w-full max-w-2xl mx-auto'}>
+      {attachments.length > 0 && (
+        <div className="mb-2 flex flex-wrap gap-2 px-1">
+          {attachments.map((file, index) => {
+            const FileIcon = getFileIcon(file.type);
+            return (
+              <div key={index} className="flex items-center gap-1.5 bg-gray-100 px-2.5 py-1.5 rounded-lg border border-gray-200">
+                <FileIcon className="h-3.5 w-3.5 text-gray-500" />
+                <span className="text-xs text-gray-700 truncate max-w-28">{file.name}</span>
+                <button onClick={() => removeAttachment(index)} className="text-gray-400 hover:text-gray-600 ml-0.5">
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <div className={`relative bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 focus-within:border-gray-300 focus-within:shadow-md`}>
+        <textarea
+          ref={textareaRef}
+          value={message}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyPress}
+          placeholder="Message AI assistant... (Shift+Enter for new line)"
+          rows={1}
+          className={`w-full resize-none bg-transparent text-sm text-gray-800 placeholder-gray-400 px-4 focus:outline-none leading-relaxed ${
+            actionsBelow ? 'pt-3 pb-3' : 'pt-3.5 pb-12'
+          }`}
+          style={{ minHeight: '52px', maxHeight: '200px' }}
+        />
+        {!actionsBelow && (
+          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+            <button
+              onClick={handleFileAttach}
+              className="flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+            >
+              <Paperclip className="h-4 w-4" />
+            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={handleVoiceToggle}
+                className={`flex items-center justify-center h-7 w-7 rounded-lg transition-colors ${
+                  isListening
+                    ? 'bg-red-100 text-red-500 hover:bg-red-200'
+                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              </button>
+              <button
+                onClick={handleSendMessage}
+                disabled={!message.trim() && attachments.length === 0}
+                className={`flex items-center justify-center h-7 w-7 rounded-lg transition-all duration-150 ${
+                  message.trim() || attachments.length > 0
+                    ? 'bg-gray-900 text-white hover:bg-gray-700 shadow-sm'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                <Send className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {actionsBelow && (
+        <div className="flex items-center justify-between mt-2 px-0.5">
+          <button
+            onClick={handleFileAttach}
+            className="flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            <Paperclip className="h-4 w-4" />
+          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={handleVoiceToggle}
+              className={`flex items-center justify-center h-7 w-7 rounded-lg transition-colors ${
+                isListening
+                  ? 'bg-red-100 text-red-500 hover:bg-red-200'
+                  : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+            </button>
+            <button
+              onClick={handleSendMessage}
+              disabled={!message.trim() && attachments.length === 0}
+              className={`flex items-center gap-1.5 px-3 h-7 rounded-lg text-xs font-medium transition-all duration-150 ${
+                message.trim() || attachments.length > 0
+                  ? 'bg-gray-900 text-white hover:bg-gray-700 shadow-sm'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              }`}
+            >
+              <Send className="h-3 w-3" />
+              <span>Send</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!actionsBelow && (
+        <p className="text-center text-xs text-gray-400 mt-2">
+          AI can make mistakes. Consider checking important information.
+        </p>
+      )}
+    </div>
+  );
+
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-[hsl(30,25%,97%)]">
+      <div className="min-h-screen flex w-full bg-white">
         <AppSidebar />
-        <SidebarInset className="flex-1">
-          <LoggedInHeader userEmail={userEmail} />
-          
-          <main className="flex-1 flex">
-            {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col relative">
-              <div className="p-6 border-b border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100">
-                      <Bot className="h-8 w-8 text-blue-600" />
+        <SidebarInset className="flex-1 flex flex-row min-h-0">
+
+          {/* ── Main Chat Column ── */}
+          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+            {!hasStarted ? (
+              /* ── EMPTY STATE: centered layout ── */
+              <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 overflow-y-auto">
+                <div className="w-full max-w-2xl flex flex-col items-center gap-8">
+
+                  {/* Branding */}
+                  <div className="text-center">
+                    <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-[#bdd8ec] mb-5">
+                      <Bot className="h-7 w-7 text-gray-700" />
                     </div>
-                    <div>
-                      <h1 className="text-3xl font-light text-gray-800">AI Chat</h1>
-                      <p className="text-gray-500">Chat with your AI assistants</p>
-                    </div>
+                    <h1 className="text-2xl font-semibold text-gray-900 mb-1.5">How can I help you today?</h1>
+                    <p className="text-gray-500 text-sm">Chat with your AI employees or ask anything</p>
                   </div>
-                  <Button onClick={startNewChat} variant="outline" size="sm">
-                    New Chat
-                  </Button>
+
+                  {/* Suggestion cards */}
+                  <div className="grid grid-cols-2 gap-3 w-full">
+                    {[
+                      { title: 'Create a marketing plan', sub: 'for my new product launch' },
+                      { title: 'Analyze sales data', sub: 'and generate a summary report' },
+                      { title: 'Draft a project timeline', sub: 'with milestones and deliverables' },
+                      { title: 'Prepare a budget overview', sub: 'for Q2 planning session' },
+                    ].map((s, i) => (
+                      <button
+                        key={i}
+                        onClick={() => { setMessage(s.title + ' ' + s.sub); setIsTyping(true); textareaRef.current?.focus(); }}
+                        className="text-left p-4 rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-150 group"
+                      >
+                        <p className="text-sm font-medium text-gray-800 mb-0.5 group-hover:text-gray-900">{s.title}</p>
+                        <p className="text-xs text-gray-400">{s.sub}</p>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Agent @ pills */}
+                  <div className="w-full">
+                    <p className="text-xs text-gray-400 mb-2.5 font-medium uppercase tracking-wide">Available agents</p>
+                    <AgentPills />
+                  </div>
+
+                  {/* Centered input */}
+                  <div className="w-full">
+                    <InputBox />
+                  </div>
                 </div>
               </div>
+            ) : (
+              /* ── ACTIVE CHAT STATE ── */
+              <>
+                {/* Slim header */}
+                <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 shrink-0">
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-[#bdd8ec]">
+                      <Bot className="h-4 w-4 text-gray-700" />
+                    </div>
+                    <span className="text-sm font-medium text-gray-800">AI Chat</span>
+                  </div>
+                  <button
+                    onClick={startNewChat}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    New chat
+                  </button>
+                </div>
 
-              {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto pb-40">
-                <div className="p-6">
-                  <div className="max-w-4xl mx-auto space-y-4">
+                {/* Messages area */}
+                <div className="flex-1 overflow-y-auto">
+                  <div className="max-w-3xl mx-auto py-8 px-4 space-y-6">
                     {messages.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
-                            msg.sender === 'user'
-                              ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white'
-                              : 'bg-white border border-gray-100 text-gray-800'
-                          }`}
-                        >
-                          {msg.text && <p className="text-sm">{msg.text}</p>}
+                      <div key={msg.id} className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                        {/* Avatar */}
+                        <div className={`shrink-0 flex items-start pt-0.5 ${msg.sender === 'user' ? 'ml-2' : 'mr-2'}`}>
+                          {msg.sender === 'assistant' ? (
+                            <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-[#bdd8ec]">
+                              <Bot className="h-4 w-4 text-gray-700" />
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-center h-7 w-7 rounded-full bg-gray-800">
+                              <User className="h-3.5 w-3.5 text-white" />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Bubble */}
+                        <div className={`flex flex-col max-w-[75%] ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
+                          {msg.sender === 'assistant' ? (
+                            <div className="text-sm text-gray-800 leading-relaxed">
+                              {msg.text}
+                            </div>
+                          ) : (
+                            <div className="bg-gray-900 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-sm leading-relaxed">
+                              {msg.text}
+                            </div>
+                          )}
+
                           {msg.attachments && msg.attachments.length > 0 && (
-                            <div className="mt-2 space-y-2">
-                              {msg.attachments.map((attachment, index) => {
-                                const FileIcon = getFileIcon(attachment.type);
+                            <div className="mt-2 flex flex-col gap-1.5">
+                              {msg.attachments.map((att, i) => {
+                                const FileIcon = getFileIcon(att.type);
                                 return (
-                                  <div key={index} className="flex items-center space-x-2 p-2 bg-black/10 rounded-lg">
-                                    <FileIcon className="h-4 w-4" />
-                                    <span className="text-xs truncate">{attachment.name}</span>
+                                  <div key={i} className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg border border-gray-200">
+                                    <FileIcon className="h-3.5 w-3.5 text-gray-500" />
+                                    <span className="text-xs text-gray-700 truncate max-w-48">{att.name}</span>
                                   </div>
                                 );
                               })}
                             </div>
                           )}
-                          <p className={`text-xs mt-2 ${msg.sender === 'user' ? 'text-blue-100' : 'text-gray-400'}`}>
-                            {msg.timestamp.toLocaleTimeString()}
-                          </p>
+
+                          <span className="text-xs text-gray-400 mt-1 px-1">{formatTime(msg.timestamp)}</span>
                         </div>
                       </div>
                     ))}
                     <div ref={messagesEndRef} />
                   </div>
                 </div>
-              </div>
 
-              {/* Fixed Input Area */}
-              <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-100 p-6">
-                <div className="max-w-4xl mx-auto">
-                  {/* Attachments Preview */}
-                  {attachments.length > 0 && (
-                    <div className="mb-4 flex flex-wrap gap-2">
-                      {attachments.map((file, index) => {
-                        const FileIcon = getFileIcon(file.type);
-                        return (
-                          <div key={index} className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg">
-                            <FileIcon className="h-4 w-4 text-gray-600" />
-                            <span className="text-sm text-gray-700 truncate max-w-32">{file.name}</span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removeAttachment(index)}
-                              className="h-auto p-1"
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        );
-                      })}
+                {/* Bottom input bar */}
+                <div className="shrink-0 bg-white border-t border-gray-100 px-4 pt-3 pb-4">
+                  <div className="max-w-3xl mx-auto">
+                    {/* Agent pills — always above input */}
+                    <div className="mb-2">
+                      <AgentPills small />
                     </div>
-                  )}
-
-                  {/* Fast Commands */}
-                  {!isTyping && attachments.length === 0 && (
-                    <div className="mb-4 flex flex-wrap gap-2">
-                      {fastCommands.map((command, index) => (
-                        <Button
-                          key={index}
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleFastCommand(command.label)}
-                          className={`${command.color} text-gray-700 hover:scale-105 transition-all duration-200 border border-gray-200/50`}
-                        >
-                          <command.icon className="h-3 w-3 mr-2" />
-                          <span className="text-xs font-medium">{command.label}</span>
-                          <span className="text-xs text-gray-500 ml-1">- {command.description}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Input Field */}
-                  <div className={`relative transition-all duration-300 ${isTyping || attachments.length > 0 ? 'max-w-2xl mx-auto' : 'max-w-3xl'}`}>
-                    <Card className="bg-white/90 border-gray-200/50 shadow-lg">
-                      <div className="relative p-2">
-                        <Input
-                          value={message}
-                          onChange={handleInputChange}
-                          onKeyPress={handleKeyPress}
-                          placeholder="Try: 'Create a marketing plan for my startup' or 'Help me organize my project tasks'..."
-                          className="border-0 bg-transparent text-base pr-20 focus-visible:ring-0 focus-visible:ring-offset-0"
-                        />
-                        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                          <Button
-                            onClick={handleFileAttach}
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
-                          >
-                            <Paperclip className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            onClick={handleVoiceToggle}
-                            variant="ghost"
-                            size="icon"
-                            className={`h-8 w-8 rounded-full transition-all duration-200 ${
-                              isListening 
-                                ? "bg-red-100 text-red-600 hover:bg-red-200" 
-                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                            }`}
-                          >
-                            {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                          </Button>
-                          <Button 
-                            onClick={handleSendMessage} 
-                            size="icon" 
-                            className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-all duration-200"
-                          >
-                            <Send className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
+                    <InputBox compact actionsBelow />
                   </div>
                 </div>
+              </>
+            )}
+          </div>
+
+          {/* ── History Sidebar ── */}
+          <div className="w-64 shrink-0 border-l border-gray-100 flex flex-col bg-gray-50/50 h-full">
+            <div className="px-4 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">History</span>
               </div>
+              <button
+                onClick={startNewChat}
+                className="flex items-center justify-center h-6 w-6 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-200 transition-colors"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </button>
             </div>
 
-            {/* Chat History Sidebar */}
-            <div className="w-80 bg-white border-l border-gray-100 flex flex-col">
-              <div className="p-4 border-b border-gray-100">
-                <h3 className="font-medium text-gray-900">Chat History</h3>
-              </div>
-              <ScrollArea className="flex-1">
-                <div className="p-4 space-y-2">
-                  <div
-                    onClick={() => selectChatHistory('current')}
-                    className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                      currentChatId === 'current' 
-                        ? 'bg-blue-50 border border-blue-200' 
-                        : 'hover:bg-gray-50 border border-transparent'
+            <ScrollArea className="flex-1">
+              <div className="p-3 space-y-1">
+                {/* Today section */}
+                <p className="text-xs font-medium text-gray-400 px-2 py-1.5 uppercase tracking-wide">Today</p>
+
+                <button
+                  onClick={() => selectChatHistory('current')}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors group ${
+                    currentChatId === 'current'
+                      ? 'bg-white border border-gray-200 shadow-sm'
+                      : 'hover:bg-white/70'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <div className="h-1.5 w-1.5 rounded-full bg-green-500 shrink-0"></div>
+                    <span className={`text-sm truncate ${currentChatId === 'current' ? 'font-medium text-gray-900' : 'text-gray-700'}`}>
+                      Current Chat
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-400 truncate pl-3.5">Active conversation</p>
+                </button>
+
+                {/* Older section */}
+                {chatHistory.length > 0 && (
+                  <p className="text-xs font-medium text-gray-400 px-2 py-1.5 uppercase tracking-wide mt-2">Earlier</p>
+                )}
+
+                {chatHistory.map((chat) => (
+                  <button
+                    key={chat.id}
+                    onClick={() => selectChatHistory(chat.id)}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors ${
+                      currentChatId === chat.id
+                        ? 'bg-white border border-gray-200 shadow-sm'
+                        : 'hover:bg-white/70'
                     }`}
                   >
-                    <div className="flex items-center space-x-2 mb-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="font-medium text-sm">Current Chat</span>
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className={`text-sm truncate ${currentChatId === chat.id ? 'font-medium text-gray-900' : 'text-gray-700'}`}>
+                        {chat.title}
+                      </span>
+                      <span className="text-xs text-gray-300 shrink-0 ml-2">{chat.messageCount}</span>
                     </div>
-                    <p className="text-xs text-gray-600 truncate">Active conversation</p>
-                    <p className="text-xs text-gray-400 mt-1">Now</p>
-                  </div>
-                  {chatHistory.map((chat) => (
-                    <div
-                      key={chat.id}
-                      onClick={() => selectChatHistory(chat.id)}
-                      className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                        currentChatId === chat.id 
-                          ? 'bg-blue-50 border border-blue-200' 
-                          : 'hover:bg-gray-50 border border-transparent'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-medium text-sm truncate">{chat.title}</span>
-                        <span className="text-xs text-gray-400">{chat.messageCount}</span>
-                      </div>
-                      <p className="text-xs text-gray-600 truncate">{chat.lastMessage}</p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {chat.timestamp.toLocaleDateString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
+                    <p className="text-xs text-gray-400 truncate">{chat.lastMessage}</p>
+                    <p className="text-xs text-gray-300 mt-0.5">
+                      {chat.timestamp.toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
 
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              className="hidden"
-              onChange={handleFileSelect}
-              accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx"
-            />
-          </main>
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            className="hidden"
+            onChange={handleFileSelect}
+            accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx"
+          />
         </SidebarInset>
       </div>
     </SidebarProvider>

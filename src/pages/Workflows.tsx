@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,8 +10,11 @@ import {
   Workflow, Plus, Activity, Clock, Settings, Play, Pause,
   UserPlus, FileText, TrendingUp, CheckSquare, UserMinus,
   Headphones, BarChart2, Bug, CreditCard, Target, FileCheck,
-  Share2, ChevronRight,
+  Share2, ChevronRight, LayoutTemplate,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+type TabKey = 'templates' | 'my-workflows';
 
 const TEMPLATES = [
   {
@@ -151,20 +153,15 @@ const TEMPLATES = [
 
 const Workflows = () => {
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState('');
+  const [activeTab, setActiveTab] = useState<TabKey>('templates');
   const [showAllTemplates, setShowAllTemplates] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
 
     if (isAuthenticated !== 'true') {
       navigate('/login');
       return;
-    }
-
-    if (email) {
-      setUserEmail(email);
     }
   }, [navigate]);
 
@@ -219,13 +216,11 @@ const Workflows = () => {
         <div className="flex w-full flex-1">
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
-            <LoggedInHeader userEmail={userEmail} />
-
-            <main className="flex-1 p-6 space-y-8 overflow-y-auto">
+            <main className="flex-1 p-6 overflow-y-auto">
               {/* Header */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-3xl font-light text-gray-900">Workflows</h1>
+                  <h1 className="text-3xl font-bold text-gray-900">Workflows</h1>
                   <p className="text-gray-600">Automated business process workflows</p>
                 </div>
                 <Button
@@ -237,61 +232,81 @@ const Workflows = () => {
                 </Button>
               </div>
 
-              {/* Templates section */}
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-lg font-medium text-gray-900">Templates</h2>
-                    <p className="text-sm text-gray-500">Start from a pre-built workflow — open it in the canvas and customize or publish</p>
-                  </div>
+              {/* Tab nav */}
+              <div className="flex border-b border-gray-200 mb-6">
+                {([
+                  { key: 'templates' as TabKey,    label: 'Templates',    icon: LayoutTemplate },
+                  { key: 'my-workflows' as TabKey, label: 'My Workflows', icon: Workflow },
+                ] as const).map(({ key, label, icon: Icon }) => (
                   <button
-                    onClick={() => setShowAllTemplates(v => !v)}
-                    className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700 font-medium transition-colors"
+                    key={key}
+                    onClick={() => setActiveTab(key)}
+                    className={cn(
+                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
+                      activeTab === key
+                        ? 'border-gray-900 text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    )}
                   >
-                    {showAllTemplates ? 'Show less' : `View all ${TEMPLATES.length}`}
-                    <ChevronRight className={`h-4 w-4 transition-transform ${showAllTemplates ? 'rotate-90' : ''}`} />
+                    <Icon className="h-4 w-4" />
+                    {label}
                   </button>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {visibleTemplates.map((tpl) => {
-                    const Icon = tpl.icon;
-                    return (
-                      <div
-                        key={tpl.id}
-                        className="group bg-white border border-gray-200/70 rounded-xl p-4 hover:shadow-md hover:border-green-200 transition-all duration-200 cursor-pointer"
-                        onClick={() => navigate('/workflows/create', { state: { templateId: tpl.id } })}
-                      >
-                        <div className="flex items-start gap-3 mb-3">
-                          <div className={`p-2 rounded-lg bg-gradient-to-br ${tpl.iconBg} flex-shrink-0`}>
-                            <Icon className={`h-4 w-4 ${tpl.iconColor}`} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <h3 className="text-sm font-medium text-gray-900 leading-tight">{tpl.name}</h3>
-                              <Badge className={`text-[10px] px-1.5 py-0 font-normal ${tpl.categoryColor} border-0`}>
-                                {tpl.category}
-                              </Badge>
-                            </div>
-                            <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">{tpl.description}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <span className="text-[11px] text-gray-400">{tpl.nodes} nodes</span>
-                          <span className="text-xs text-green-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                            Use template <ChevronRight className="h-3 w-3" />
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                ))}
               </div>
 
-              {/* My Workflows section */}
-              <div>
-                <h2 className="text-lg font-medium text-gray-900 mb-4">My Workflows</h2>
+              {/* Templates tab */}
+              {activeTab === 'templates' && (
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-sm text-gray-500">Start from a pre-built workflow — open it in the canvas and customize or publish</p>
+                    <button
+                      onClick={() => setShowAllTemplates(v => !v)}
+                      className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700 font-medium transition-colors"
+                    >
+                      {showAllTemplates ? 'Show less' : `View all ${TEMPLATES.length}`}
+                      <ChevronRight className={`h-4 w-4 transition-transform ${showAllTemplates ? 'rotate-90' : ''}`} />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {visibleTemplates.map((tpl) => {
+                      const Icon = tpl.icon;
+                      return (
+                        <div
+                          key={tpl.id}
+                          className="group bg-white border border-gray-200/70 rounded-xl p-4 hover:shadow-md hover:border-green-200 transition-all duration-200 cursor-pointer"
+                          onClick={() => navigate('/workflows/create', { state: { templateId: tpl.id } })}
+                        >
+                          <div className="flex items-start gap-3 mb-3">
+                            <div className={`p-2 rounded-lg bg-gradient-to-br ${tpl.iconBg} flex-shrink-0`}>
+                              <Icon className={`h-4 w-4 ${tpl.iconColor}`} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h3 className="text-sm font-medium text-gray-900 leading-tight">{tpl.name}</h3>
+                                <Badge className={`text-[10px] px-1.5 py-0 font-normal ${tpl.categoryColor} border-0`}>
+                                  {tpl.category}
+                                </Badge>
+                              </div>
+                              <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">{tpl.description}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-gray-400">{tpl.nodes} nodes</span>
+                            <span className="text-xs text-green-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                              Use template <ChevronRight className="h-3 w-3" />
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* My Workflows tab */}
+              {activeTab === 'my-workflows' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {workflows.map((workflow) => (
                     <Card key={workflow.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
@@ -367,7 +382,7 @@ const Workflows = () => {
                     </Card>
                   ))}
                 </div>
-              </div>
+              )}
             </main>
           </SidebarInset>
         </div>

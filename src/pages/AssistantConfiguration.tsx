@@ -1,9 +1,8 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,10 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Bot, 
-  Settings, 
+import {
+  Bot,
+  Settings,
   ArrowLeft,
   Save,
   RefreshCw,
@@ -22,18 +20,29 @@ import {
   Zap,
   Users,
   DollarSign,
-  Clock,
-  AlertCircle
+  AlertCircle,
+  Lock,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+
+type ConfigTab = 'general' | 'capabilities' | 'autonomy' | 'integrations' | 'security';
+
+const CONFIG_TABS: { key: ConfigTab; label: string; icon: React.ElementType }[] = [
+  { key: 'general',      label: 'General',      icon: Settings },
+  { key: 'capabilities', label: 'Capabilities', icon: Zap      },
+  { key: 'autonomy',     label: 'Autonomy',     icon: Shield   },
+  { key: 'integrations', label: 'Integrations', icon: Users    },
+  { key: 'security',     label: 'Security',     icon: Lock     },
+];
 
 const AssistantConfiguration = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState('');
   const [assistant, setAssistant] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<ConfigTab>('general');
   const { toast } = useToast();
 
   // Form state
@@ -66,10 +75,6 @@ const AssistantConfiguration = () => {
         console.log('Not authenticated, redirecting to login');
         navigate('/login');
         return false;
-      }
-      
-      if (email) {
-        setUserEmail(email);
       }
       
       return true;
@@ -173,8 +178,6 @@ const AssistantConfiguration = () => {
         <div className="flex w-full flex-1">
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
-            <LoggedInHeader userEmail={userEmail} />
-            
             <main className="flex-1 p-6">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
@@ -192,7 +195,7 @@ const AssistantConfiguration = () => {
                     <Settings className={`h-8 w-8 ${assistant.iconColor || 'text-blue-600'}`} />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-light text-gray-900">Configure {assistant.name}</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">Configure {assistant.name}</h1>
                     <p className="text-gray-600">Customize behavior, permissions, and capabilities</p>
                   </div>
                 </div>
@@ -212,18 +215,29 @@ const AssistantConfiguration = () => {
                 </div>
               </div>
 
-              {/* Configuration Tabs */}
-              <Tabs defaultValue="general" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-5">
-                  <TabsTrigger value="general">General</TabsTrigger>
-                  <TabsTrigger value="capabilities">Capabilities</TabsTrigger>
-                  <TabsTrigger value="autonomy">Autonomy</TabsTrigger>
-                  <TabsTrigger value="integrations">Integrations</TabsTrigger>
-                  <TabsTrigger value="security">Security</TabsTrigger>
-                </TabsList>
+              {/* Tab nav */}
+              <div className="flex border-b border-gray-200 mb-6">
+                {CONFIG_TABS.map(({ key, label, icon: Icon }) => (
+                  <button
+                    key={key}
+                    onClick={() => setActiveTab(key)}
+                    className={cn(
+                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors whitespace-nowrap',
+                      activeTab === key
+                        ? 'border-gray-900 text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </button>
+                ))}
+              </div>
 
-                <TabsContent value="general" className="space-y-6">
-                  <Card>
+              {/* Tab content */}
+              {activeTab === 'general' && (
+                <div className="space-y-6">
+                  <Card className="bg-white border-gray-200/60">
                     <CardHeader>
                       <CardTitle className="flex items-center">
                         <Bot className="h-5 w-5 mr-2" />
@@ -234,16 +248,16 @@ const AssistantConfiguration = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="name">Assistant Name</Label>
-                          <Input 
-                            id="name" 
+                          <Input
+                            id="name"
                             value={config.name}
                             onChange={(e) => setConfig({...config, name: e.target.value})}
                           />
                         </div>
                         <div>
                           <Label htmlFor="type">Type</Label>
-                          <Input 
-                            id="type" 
+                          <Input
+                            id="type"
                             value={config.type}
                             onChange={(e) => setConfig({...config, type: e.target.value})}
                           />
@@ -251,8 +265,8 @@ const AssistantConfiguration = () => {
                       </div>
                       <div>
                         <Label htmlFor="description">Description</Label>
-                        <Textarea 
-                          id="description" 
+                        <Textarea
+                          id="description"
                           value={config.description}
                           onChange={(e) => setConfig({...config, description: e.target.value})}
                           placeholder="Describe what this assistant does..."
@@ -261,16 +275,16 @@ const AssistantConfiguration = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="department">Department</Label>
-                          <Input 
-                            id="department" 
+                          <Input
+                            id="department"
                             value={config.department}
                             onChange={(e) => setConfig({...config, department: e.target.value})}
                           />
                         </div>
                         <div>
                           <Label htmlFor="workingHours">Working Hours</Label>
-                          <Input 
-                            id="workingHours" 
+                          <Input
+                            id="workingHours"
                             value={config.workingHours}
                             onChange={(e) => setConfig({...config, workingHours: e.target.value})}
                           />
@@ -281,17 +295,19 @@ const AssistantConfiguration = () => {
                           <Label>Active Status</Label>
                           <p className="text-sm text-gray-600">Enable or disable this assistant</p>
                         </div>
-                        <Switch 
+                        <Switch
                           checked={config.isActive}
                           onCheckedChange={(checked) => setConfig({...config, isActive: checked})}
                         />
                       </div>
                     </CardContent>
                   </Card>
-                </TabsContent>
+                </div>
+              )}
 
-                <TabsContent value="capabilities" className="space-y-6">
-                  <Card>
+              {activeTab === 'capabilities' && (
+                <div className="space-y-6">
+                  <Card className="bg-white border-gray-200/60">
                     <CardHeader>
                       <CardTitle className="flex items-center">
                         <Zap className="h-5 w-5 mr-2" />
@@ -303,9 +319,9 @@ const AssistantConfiguration = () => {
                         {config.capabilities.map((capability, index) => (
                           <div key={index} className="p-4 bg-blue-50 rounded-lg text-center">
                             <p className="font-medium text-blue-900">{capability}</p>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               className="mt-2 text-red-600 hover:text-red-700"
                               onClick={() => {
                                 const newCapabilities = config.capabilities.filter((_, i) => i !== index);
@@ -324,11 +340,13 @@ const AssistantConfiguration = () => {
                       </div>
                     </CardContent>
                   </Card>
-                </TabsContent>
+                </div>
+              )}
 
-                <TabsContent value="autonomy" className="space-y-6">
+              {activeTab === 'autonomy' && (
+                <div className="space-y-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <Card>
+                    <Card className="bg-white border-gray-200/60">
                       <CardHeader>
                         <CardTitle className="flex items-center text-green-700">
                           <Shield className="h-5 w-5 mr-2" />
@@ -339,8 +357,8 @@ const AssistantConfiguration = () => {
                         {config.canMakeDecisions.map((decision, index) => (
                           <div key={index} className="p-3 bg-green-50 rounded-lg flex justify-between items-center">
                             <p className="text-green-800 font-medium">{decision}</p>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => {
                                 const newDecisions = config.canMakeDecisions.filter((_, i) => i !== index);
@@ -354,7 +372,7 @@ const AssistantConfiguration = () => {
                       </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="bg-white border-gray-200/60">
                       <CardHeader>
                         <CardTitle className="flex items-center text-orange-700">
                           <AlertCircle className="h-5 w-5 mr-2" />
@@ -365,8 +383,8 @@ const AssistantConfiguration = () => {
                         {config.approvalRequired.map((approval, index) => (
                           <div key={index} className="p-3 bg-orange-50 rounded-lg flex justify-between items-center">
                             <p className="text-orange-800 font-medium">{approval}</p>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => {
                                 const newApprovals = config.approvalRequired.filter((_, i) => i !== index);
@@ -381,7 +399,7 @@ const AssistantConfiguration = () => {
                     </Card>
                   </div>
 
-                  <Card>
+                  <Card className="bg-white border-gray-200/60">
                     <CardHeader>
                       <CardTitle className="flex items-center">
                         <DollarSign className="h-5 w-5 mr-2" />
@@ -391,8 +409,8 @@ const AssistantConfiguration = () => {
                     <CardContent className="space-y-4">
                       <div>
                         <Label htmlFor="budgetLimit">Maximum Budget Authority ($)</Label>
-                        <Input 
-                          id="budgetLimit" 
+                        <Input
+                          id="budgetLimit"
                           type="number"
                           value={config.maxBudgetLimit}
                           onChange={(e) => setConfig({...config, maxBudgetLimit: parseInt(e.target.value)})}
@@ -403,17 +421,19 @@ const AssistantConfiguration = () => {
                           <Label>Require Approval for Actions</Label>
                           <p className="text-sm text-gray-600">All actions need human approval</p>
                         </div>
-                        <Switch 
+                        <Switch
                           checked={config.requiresApproval}
                           onCheckedChange={(checked) => setConfig({...config, requiresApproval: checked})}
                         />
                       </div>
                     </CardContent>
                   </Card>
-                </TabsContent>
+                </div>
+              )}
 
-                <TabsContent value="integrations" className="space-y-6">
-                  <Card>
+              {activeTab === 'integrations' && (
+                <div className="space-y-6">
+                  <Card className="bg-white border-gray-200/60">
                     <CardHeader>
                       <CardTitle className="flex items-center">
                         <Users className="h-5 w-5 mr-2" />
@@ -423,7 +443,7 @@ const AssistantConfiguration = () => {
                     <CardContent>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {config.integrations.map((integration, index) => (
-                          <div key={index} className="p-4 border rounded-lg text-center hover:bg-gray-50 transition-colors">
+                          <div key={index} className="p-4 border border-gray-200 rounded-lg text-center hover:bg-gray-50 transition-colors">
                             <p className="font-medium">{integration}</p>
                             <Badge variant="default" className="mt-2">Connected</Badge>
                           </div>
@@ -436,21 +456,23 @@ const AssistantConfiguration = () => {
                       </div>
                     </CardContent>
                   </Card>
-                </TabsContent>
+                </div>
+              )}
 
-                <TabsContent value="security" className="space-y-6">
-                  <Card>
+              {activeTab === 'security' && (
+                <div className="space-y-6">
+                  <Card className="bg-white border-gray-200/60">
                     <CardHeader>
                       <CardTitle className="flex items-center">
-                        <Shield className="h-5 w-5 mr-2" />
+                        <Lock className="h-5 w-5 mr-2" />
                         Security Settings
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div>
                         <Label htmlFor="confidentiality">Confidentiality Level</Label>
-                        <select 
-                          id="confidentiality" 
+                        <select
+                          id="confidentiality"
                           className="w-full h-10 px-3 rounded-md border border-input bg-background mt-2"
                           value={config.confidentialityLevel}
                           onChange={(e) => setConfig({...config, confidentialityLevel: e.target.value})}
@@ -463,8 +485,8 @@ const AssistantConfiguration = () => {
                       </div>
                       <div>
                         <Label htmlFor="scope">Access Scope</Label>
-                        <select 
-                          id="scope" 
+                        <select
+                          id="scope"
                           className="w-full h-10 px-3 rounded-md border border-input bg-background mt-2"
                           value={config.scope}
                           onChange={(e) => setConfig({...config, scope: e.target.value})}
@@ -477,8 +499,8 @@ const AssistantConfiguration = () => {
                       </div>
                     </CardContent>
                   </Card>
-                </TabsContent>
-              </Tabs>
+                </div>
+              )}
             </main>
           </SidebarInset>
         </div>
