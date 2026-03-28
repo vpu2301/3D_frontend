@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -226,19 +225,16 @@ function MetricTile({
 
 const ChannelsPage = () => {
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState('');
   const [channels, setChannels] = useState<Channel[]>(INITIAL_CHANNELS);
   const [selectedId, setSelectedId] = useState<string>('whatsapp');
   const [showAddWorker, setShowAddWorker] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
     if (isAuthenticated !== 'true') {
       navigate('/login');
       return;
     }
-    if (email) setUserEmail(email);
   }, [navigate]);
 
   const selected = channels.find((c) => c.id === selectedId)!;
@@ -285,8 +281,6 @@ const ChannelsPage = () => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <LoggedInHeader userEmail={userEmail} />
-
         <div className="flex flex-col h-[calc(100vh-64px)]">
           {/* ── Page header ── */}
           <div className="border-b bg-white px-6 py-4">
