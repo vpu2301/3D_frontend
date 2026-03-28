@@ -38,7 +38,6 @@ import Careers from './pages/Careers';
 import HowItWorks from './pages/HowItWorks';
 import WatchDemo from './pages/WatchDemo';
 import ScheduleDemo from './pages/ScheduleDemo';
-import Flows from './pages/platform/Flows';
 import ChannelsPage from './pages/ChannelsPage';
 
 // Solution pages
@@ -215,7 +214,6 @@ function App() {
           <Route path="/workflows" element={<ProtectedRoute><Workflows /></ProtectedRoute>} />
           <Route path="/workflows/create" element={<ProtectedRoute><CreateWorkflow /></ProtectedRoute>} />
           <Route path="/integrations" element={<ProtectedRoute><IntegrationsPage /></ProtectedRoute>} />
-          <Route path="/flows" element={<ProtectedRoute><Flows /></ProtectedRoute>} />
           <Route path="/channels" element={<ProtectedRoute><ChannelsPage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />

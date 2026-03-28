@@ -3,45 +3,50 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import CommunicationSettings from '@/components/dashboard/CommunicationSettings';
 import OwnerInfo from '@/components/dashboard/OwnerInfo';
 import AIEmployeeConnections from '@/components/dashboard/AIEmployeeConnections';
 import EnhancedActivityLog from '@/components/dashboard/EnhancedActivityLog';
-import { 
-  Bot, 
-  Settings, 
-  Activity, 
-  MessageCircle, 
-  Clock, 
-  Shield, 
-  Users, 
-  Zap, 
+import { cn } from '@/lib/utils';
+import {
+  Bot,
+  Settings,
+  Activity,
+  Clock,
+  Zap,
   TrendingUp,
   CheckCircle,
   AlertCircle,
-  Calendar,
   DollarSign,
   Target,
   BarChart3,
-  Workflow,
   ArrowLeft,
   Network,
-  UserCheck
 } from 'lucide-react';
+
+type ProfileTab = 'overview' | 'owner' | 'connections' | 'capabilities' | 'autonomy' | 'communication' | 'activity';
+
+const PROFILE_TABS: { key: ProfileTab; label: string }[] = [
+  { key: 'overview',      label: 'Overview'       },
+  { key: 'owner',         label: 'Owner'          },
+  { key: 'connections',   label: 'Connections'    },
+  { key: 'capabilities',  label: 'Capabilities'   },
+  { key: 'autonomy',      label: 'Autonomy'       },
+  { key: 'communication', label: 'Communication'  },
+  { key: 'activity',      label: 'Activity'       },
+];
 
 const AssistantProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState('');
   const [assistant, setAssistant] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
 
   useEffect(() => {
     const checkAuth = () => {
@@ -54,10 +59,6 @@ const AssistantProfile = () => {
         console.log('Not authenticated, redirecting to login');
         navigate('/login');
         return false;
-      }
-      
-      if (email) {
-        setUserEmail(email);
       }
       
       return true;
@@ -293,9 +294,9 @@ const AssistantProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[hsl(30,25%,97%)]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
           <p className="mt-2 text-sm text-gray-600">Loading assistant...</p>
         </div>
       </div>
@@ -304,14 +305,14 @@ const AssistantProfile = () => {
 
   if (!assistant) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[hsl(30,25%,97%)]">
         <div className="text-center">
           <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">Assistant not found</h3>
           <p className="text-gray-600 mb-4">The assistant with ID "{id}" could not be found.</p>
           <Button onClick={() => navigate('/ai-employees')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to AI Employees
+            Back to AI Workers
           </Button>
         </div>
       </div>
@@ -324,8 +325,6 @@ const AssistantProfile = () => {
         <div className="flex w-full flex-1">
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
-            <LoggedInHeader userEmail={userEmail} />
-            
             <main className="flex-1 p-6">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
@@ -374,7 +373,7 @@ const AssistantProfile = () => {
 
               {/* Quick Stats */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <Card>
+                <Card className="bg-white/80 border-gray-200/50">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
@@ -387,7 +386,7 @@ const AssistantProfile = () => {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="bg-white/80 border-gray-200/50">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
@@ -399,7 +398,7 @@ const AssistantProfile = () => {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="bg-white/80 border-gray-200/50">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
@@ -411,7 +410,7 @@ const AssistantProfile = () => {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="bg-white/80 border-gray-200/50">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
@@ -424,22 +423,29 @@ const AssistantProfile = () => {
                 </Card>
               </div>
 
-              {/* Main Content Tabs */}
-              <Tabs defaultValue="overview" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-7">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="owner">Owner</TabsTrigger>
-                  <TabsTrigger value="connections">Connections</TabsTrigger>
-                  <TabsTrigger value="capabilities">Capabilities</TabsTrigger>
-                  <TabsTrigger value="autonomy">Autonomy</TabsTrigger>
-                  <TabsTrigger value="communication">Communication</TabsTrigger>
-                  <TabsTrigger value="activity">Activity</TabsTrigger>
-                </TabsList>
+              {/* Horizontal tab nav */}
+              <div className="flex border-b border-gray-200 mb-6 overflow-x-auto">
+                {PROFILE_TABS.map(({ key, label }) => (
+                  <button
+                    key={key}
+                    onClick={() => setActiveTab(key)}
+                    className={cn(
+                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors whitespace-nowrap',
+                      activeTab === key
+                        ? 'border-gray-900 text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    )}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
 
-                <TabsContent value="overview" className="space-y-6">
+              {/* Tab content */}
+              {activeTab === 'overview' && (
+                <div className="space-y-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Performance Metrics */}
-                    <Card>
+                    <Card className="bg-white/80 border-gray-200/50">
                       <CardHeader>
                         <CardTitle className="flex items-center">
                           <BarChart3 className="h-5 w-5 mr-2" />
@@ -466,8 +472,7 @@ const AssistantProfile = () => {
                       </CardContent>
                     </Card>
 
-                    {/* Configuration Summary */}
-                    <Card>
+                    <Card className="bg-white/80 border-gray-200/50">
                       <CardHeader>
                         <CardTitle className="flex items-center">
                           <Settings className="h-5 w-5 mr-2" />
@@ -495,127 +500,139 @@ const AssistantProfile = () => {
                     </Card>
                   </div>
 
-                  {/* Recent Activity */}
-                  <Card>
-                    <CardHeader>
+                  <Card className="bg-white/80 border-gray-200/50 overflow-hidden">
+                    <CardHeader className="pb-0">
                       <CardTitle className="flex items-center">
                         <Activity className="h-5 w-5 mr-2" />
                         Recent Activity
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {assistant.recentActivities.map((activity: any, index: number) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center space-x-3">
-                              {activity.status === 'completed' ? (
-                                <CheckCircle className="h-5 w-5 text-green-600" />
-                              ) : (
-                                <AlertCircle className="h-5 w-5 text-orange-600" />
-                              )}
-                              <div>
-                                <p className="font-medium text-sm">{activity.action}</p>
-                                <p className="text-xs text-gray-600">{activity.time}</p>
-                              </div>
-                            </div>
-                            <Badge 
-                              variant={activity.status === 'completed' ? 'default' : 'secondary'}
-                              className={activity.status === 'completed' ? 'bg-green-500' : 'bg-orange-500'}
-                            >
-                              {activity.status.replace('_', ' ')}
-                            </Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-gray-100 bg-gray-50/60">
+                            <th className="text-left px-4 py-2.5 font-medium text-gray-600">Action</th>
+                            <th className="text-left px-4 py-2.5 font-medium text-gray-600 hidden sm:table-cell">Time</th>
+                            <th className="text-left px-4 py-2.5 font-medium text-gray-600">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {assistant.recentActivities.map((activity: any, index: number) => (
+                            <tr key={index} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                              <td className="px-4 py-3">
+                                <div className="flex items-center gap-2">
+                                  <div className="p-1.5 rounded bg-gray-100 flex-shrink-0">
+                                    {activity.status === 'completed'
+                                      ? <CheckCircle className="h-3.5 w-3.5 text-green-600" />
+                                      : <AlertCircle className="h-3.5 w-3.5 text-orange-600" />}
+                                  </div>
+                                  <span className="font-medium text-gray-900 text-sm">{activity.action}</span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 hidden sm:table-cell text-gray-500 text-xs">{activity.time}</td>
+                              <td className="px-4 py-3">
+                                <span className={cn(
+                                  'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border',
+                                  activity.status === 'completed'
+                                    ? 'bg-green-100 text-green-700 border-green-200'
+                                    : 'bg-orange-100 text-orange-700 border-orange-200'
+                                )}>
+                                  {activity.status.replace('_', ' ')}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </Card>
-                </TabsContent>
+                </div>
+              )}
 
-                <TabsContent value="owner" className="space-y-6">
-                  <OwnerInfo owner={assistant.owner} />
-                </TabsContent>
+              {activeTab === 'owner' && (
+                <OwnerInfo owner={assistant.owner} />
+              )}
 
-                <TabsContent value="connections" className="space-y-6">
-                  <AIEmployeeConnections connections={assistant.connections} />
-                </TabsContent>
+              {activeTab === 'connections' && (
+                <AIEmployeeConnections connections={assistant.connections} />
+              )}
 
-                <TabsContent value="capabilities" className="space-y-6">
-                  <Card>
+              {activeTab === 'capabilities' && (
+                <Card className="bg-white/80 border-gray-200/50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Zap className="h-5 w-5 mr-2" />
+                      Assistant Capabilities
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {assistant.capabilities.map((capability: string, index: number) => (
+                        <div key={index} className="p-4 bg-gray-50 rounded-lg text-center border border-gray-200/60">
+                          <p className="font-medium text-gray-900">{capability}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {activeTab === 'autonomy' && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card className="bg-white/80 border-gray-200/50">
                     <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Zap className="h-5 w-5 mr-2" />
-                        Assistant Capabilities
+                      <CardTitle className="flex items-center text-green-700">
+                        <CheckCircle className="h-5 w-5 mr-2" />
+                        Can Make Decisions For
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {assistant.capabilities.map((capability: string, index: number) => (
-                          <div key={index} className="p-4 bg-blue-50 rounded-lg text-center">
-                            <p className="font-medium text-blue-900">{capability}</p>
+                      <div className="space-y-3">
+                        {assistant.canMakeDecisions.map((decision: string, index: number) => (
+                          <div key={index} className="p-3 bg-green-50 rounded-lg border border-green-100">
+                            <p className="text-green-800 font-medium">{decision}</p>
                           </div>
                         ))}
                       </div>
                     </CardContent>
                   </Card>
-                </TabsContent>
 
-                <TabsContent value="autonomy" className="space-y-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center text-green-700">
-                          <CheckCircle className="h-5 w-5 mr-2" />
-                          Can Make Decisions For
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          {assistant.canMakeDecisions.map((decision: string, index: number) => (
-                            <div key={index} className="p-3 bg-green-50 rounded-lg">
-                              <p className="text-green-800 font-medium">{decision}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
+                  <Card className="bg-white/80 border-gray-200/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center text-orange-700">
+                        <AlertCircle className="h-5 w-5 mr-2" />
+                        Requires Approval For
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {assistant.approvalRequired.map((approval: string, index: number) => (
+                          <div key={index} className="p-3 bg-orange-50 rounded-lg border border-orange-100">
+                            <p className="text-orange-800 font-medium">{approval}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
 
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center text-orange-700">
-                          <AlertCircle className="h-5 w-5 mr-2" />
-                          Requires Approval For
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          {assistant.approvalRequired.map((approval: string, index: number) => (
-                            <div key={index} className="p-3 bg-orange-50 rounded-lg">
-                              <p className="text-orange-800 font-medium">{approval}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
+              {activeTab === 'communication' && (
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <Network className="h-6 w-6 text-gray-700" />
+                    <h3 className="text-xl font-medium text-gray-900">Communication Settings for {assistant.name}</h3>
                   </div>
-                </TabsContent>
+                  <p className="text-gray-600 mb-6">
+                    Configure how {assistant.name} communicates with other AI employees and external networks.
+                  </p>
+                  <CommunicationSettings />
+                </div>
+              )}
 
-                <TabsContent value="communication" className="space-y-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2 mb-4">
-                      <Network className="h-6 w-6 text-blue-600" />
-                      <h3 className="text-xl font-medium text-gray-900">Communication Settings for {assistant.name}</h3>
-                    </div>
-                    <p className="text-gray-600 mb-6">
-                      Configure how {assistant.name} communicates with other AI employees and external networks.
-                    </p>
-                    <CommunicationSettings />
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="activity" className="space-y-6">
-                  <EnhancedActivityLog activities={assistant.enhancedActivities} />
-                </TabsContent>
-              </Tabs>
+              {activeTab === 'activity' && (
+                <EnhancedActivityLog activities={assistant.enhancedActivities} />
+              )}
             </main>
           </SidebarInset>
         </div>

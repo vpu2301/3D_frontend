@@ -13,7 +13,6 @@ import {
 import '@xyflow/react/dist/style.css';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -1223,15 +1222,12 @@ const CreateWorkflow = () => {
   const templateId = (location.state as { templateId?: string } | null)?.templateId;
   const tpl = templateId ? WORKFLOW_TEMPLATES[templateId] : undefined;
 
-  const [userEmail, setUserEmail] = useState('');
   const [name, setName] = useState(tpl?.name ?? '');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
     if (isAuthenticated !== 'true') { navigate('/login'); return; }
-    if (email) setUserEmail(email);
   }, [navigate]);
 
   const handleSave = () => {
@@ -1245,8 +1241,6 @@ const CreateWorkflow = () => {
         <div className="flex w-full flex-1 overflow-hidden" style={{ height: '100vh' }}>
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col overflow-hidden">
-            <LoggedInHeader userEmail={userEmail} />
-
             <main className="flex-1 flex flex-col overflow-hidden">
               {/* Top bar */}
               <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-100 bg-white flex-shrink-0">

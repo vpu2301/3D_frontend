@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +15,6 @@ import { Brain, Upload, Database, Settings, Bot, FileText, Plus, Trash2 } from '
 
 const AIFineTuning = () => {
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [trainingData, setTrainingData] = useState('');
   const [categories, setCategories] = useState(['General', 'Customer Service', 'Sales', 'Technical']);
@@ -36,15 +34,10 @@ const AIFineTuning = () => {
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
-    
+
     if (isAuthenticated !== 'true') {
       navigate('/login');
       return;
-    }
-    
-    if (email) {
-      setUserEmail(email);
     }
   }, [navigate]);
 
@@ -85,8 +78,6 @@ const AIFineTuning = () => {
         <div className="flex w-full flex-1">
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
-            <LoggedInHeader userEmail={userEmail} />
-            
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>

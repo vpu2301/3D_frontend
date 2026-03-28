@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,8 +12,6 @@ import { Users, Crown, Bot, Settings, Mail, Plus, UserPlus, Activity } from 'luc
 const TeamDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [userEmail, setUserEmail] = useState('');
-
   // Mock team data focused on hybrid human-AI teams
   const team = {
     id: parseInt(id || '1'),
@@ -45,15 +42,10 @@ const TeamDetail = () => {
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
-    
+
     if (isAuthenticated !== 'true') {
       navigate('/login');
       return;
-    }
-    
-    if (email) {
-      setUserEmail(email);
     }
   }, [navigate]);
 
@@ -63,8 +55,6 @@ const TeamDetail = () => {
         <div className="flex w-full flex-1">
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
-            <LoggedInHeader userEmail={userEmail} />
-            
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
