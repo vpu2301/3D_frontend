@@ -373,7 +373,7 @@ const AIAgents = () => {
   }, [navigate]);
 
   const TABS: { key: TabKey; label: string; icon: React.ElementType }[] = [
-    { key: 'groups',   label: 'Worker Groups',   icon: Bot },
+    { key: 'groups',   label: 'Teams',   icon: Bot },
     { key: 'activity', label: 'Recent Activity', icon: Activity },
   ];
 
@@ -387,7 +387,7 @@ const AIAgents = () => {
 
               {/* Page header */}
               <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">Worker Groups</h1>
+                <h1 className="text-3xl font-bold text-gray-900">Teams</h1>
                 <p className="text-gray-600">Autonomous AI agents for task automation</p>
               </div>
 

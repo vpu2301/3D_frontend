@@ -9,25 +9,92 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import {
-  Users, Plus, Bot, Crown, Settings, Eye, UserPlus, Upload,
+  UserPlus, Upload,
   Search, ChevronDown, MoreHorizontal, Mail, Phone, Building2,
-  Filter, ArrowUpDown, Trash2, Pencil, CheckSquare,
-  ChevronLeft, ChevronRight
+  Filter, ArrowUpDown, Trash2, Pencil, CheckSquare, Eye,
+  ChevronLeft, ChevronRight, Users, Bot, Crown, Settings, Plus
 } from 'lucide-react';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import CreateTeamDialog from '@/components/CreateTeamDialog';
 import AddEmployeeDialog, { type Employee } from '@/components/AddEmployeeDialog';
 import ImportEmployeesDialog from '@/components/ImportEmployeesDialog';
+import CreateTeamDialog from '@/components/CreateTeamDialog';
 import { cn } from '@/lib/utils';
+
+/* ──────────────────────────────────────────────
+   Tab type
+────────────────────────────────────────────── */
+type TeamsPageTab = 'teams' | 'employees';
+
+const TEAMS_PAGE_SIZE = 6;
+
+/* ──────────────────────────────────────────────
+   Teams tab (cards grid)
+────────────────────────────────────────────── */
+const TeamsTabContent = ({ onShowCreate }: { onShowCreate: () => void }) => {
+  const navigate = useNavigate();
+  const [teamsPage, setTeamsPage] = useState(1);
+  const [teams] = useState([
+    { id: 1, name: 'Sales Hybrid Team',    humanMembers: 5, aiWorkers: 3, leader: 'John Doe',     iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-amber-100',  description: 'Human sales reps working alongside AI assistants' },
+    { id: 2, name: 'Marketing Automation', humanMembers: 3, aiWorkers: 4, leader: 'Jane Smith',   iconColor: 'text-pink-600',   bgColor: 'from-pink-100 to-fuchsia-100', description: 'Content creation and campaign management team' },
+    { id: 3, name: 'Operations Support',   humanMembers: 6, aiWorkers: 8, leader: 'Mike Johnson', iconColor: 'text-blue-600',   bgColor: 'from-blue-100 to-indigo-100',  description: 'Process automation and workflow optimization' },
+    { id: 4, name: 'Customer Success',     humanMembers: 4, aiWorkers: 2, leader: 'Sarah Wilson', iconColor: 'text-green-600',  bgColor: 'from-green-100 to-teal-100',   description: '24/7 customer support with AI escalation' },
+  ]);
+
+  const handleViewTeam = (id: number) => navigate(`/teams/${id}`);
+  const totalTeamsPages = Math.max(1, Math.ceil(teams.length / TEAMS_PAGE_SIZE));
+  const pagedTeams = teams.slice((teamsPage - 1) * TEAMS_PAGE_SIZE, teamsPage * TEAMS_PAGE_SIZE);
+
+  return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {pagedTeams.map(team => (
+          <Card key={team.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-2">
+                  <div className={`p-2 rounded-lg bg-gradient-to-br ${team.bgColor}`}><Users className={`h-4 w-4 ${team.iconColor}`} /></div>
+                  <div><span className="font-medium">{team.name}</span><p className="text-xs text-gray-500 font-normal mt-1">{team.description}</p></div>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8" onClick={() => handleViewTeam(team.id)}><Eye className="h-4 w-4" /></Button>
+                  <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8"><Settings className="h-4 w-4" /></Button>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2"><div className="p-1 rounded bg-gray-100"><Crown className="h-3 w-3 text-amber-600" /></div><span className="text-sm text-gray-700">Leader: {team.leader}</span></div>
+                <div className="flex items-center space-x-2"><div className="p-1 rounded bg-gray-100"><Users className="h-3 w-3 text-blue-600" /></div><span className="text-sm text-gray-700">Human Workers: {team.humanMembers}</span></div>
+                <div className="flex items-center space-x-2"><div className="p-1 rounded bg-gray-100"><Bot className="h-3 w-3 text-green-600" /></div><span className="text-sm text-gray-700">AI Workers: {team.aiWorkers}</span></div>
+                <div className="flex space-x-2">
+                  <Button variant="outline" size="sm" className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200" onClick={() => handleViewTeam(team.id)}><Eye className="h-3 w-3 mr-1" />View Team</Button>
+                  <Button variant="outline" size="sm" className="text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"><UserPlus className="h-3 w-3" /></Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      {totalTeamsPages > 1 && (
+        <div className="flex items-center justify-between mt-6 text-sm text-gray-500">
+          <span>Showing {(teamsPage - 1) * TEAMS_PAGE_SIZE + 1}–{Math.min(teamsPage * TEAMS_PAGE_SIZE, teams.length)} of {teams.length} teams</span>
+          <div className="flex items-center gap-1">
+            <Button variant="outline" size="icon" className="h-8 w-8 border-gray-200" disabled={teamsPage === 1} onClick={() => setTeamsPage(p => p - 1)}><ChevronLeft className="h-4 w-4" /></Button>
+            {Array.from({ length: totalTeamsPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === teamsPage ? 'default' : 'outline'} size="icon" className={cn('h-8 w-8', p !== teamsPage && 'border-gray-200 text-gray-600')} onClick={() => setTeamsPage(p)}>{p}</Button>)}
+            <Button variant="outline" size="icon" className="h-8 w-8 border-gray-200" disabled={teamsPage === totalTeamsPages} onClick={() => setTeamsPage(p => p + 1)}><ChevronRight className="h-4 w-4" /></Button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
 
 /* ──────────────────────────────────────────────
    Types & static data
 ────────────────────────────────────────────── */
-
-type TabKey = 'teams' | 'employees';
 
 const INITIAL_EMPLOYEES: Employee[] = [
   { id: 1,  name: 'Sarah Johnson',    email: 'sarah.j@company.com',    phone: '+1 555-0101', role: 'Sales Manager',          department: 'Sales',            status: 'Active',   joinDate: '2022-03-15' },
@@ -56,7 +123,7 @@ const STATUSES: Array<Employee['status'] | 'All'> = ['All', 'Active', 'Inactive'
    Employees tab
 ────────────────────────────────────────────── */
 
-const EmployeesTab = () => {
+const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: boolean; setShowAddDialog: (v: boolean) => void }) => {
   const [employees, setEmployees] = useState<Employee[]>(INITIAL_EMPLOYEES);
   const [search, setSearch] = useState('');
   const [deptFilter, setDeptFilter] = useState('All Departments');
@@ -64,7 +131,6 @@ const EmployeesTab = () => {
   const [sortField, setSortField] = useState<keyof Employee>('name');
   const [sortAsc, setSortAsc] = useState(true);
   const [selected, setSelected] = useState<Set<number>>(new Set());
-  const [showAddDialog, setShowAddDialog] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [empPage, setEmpPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
@@ -225,15 +291,6 @@ const EmployeesTab = () => {
           Import
         </Button>
 
-        {/* Add employee */}
-        <Button
-          size="sm"
-          onClick={() => setShowAddDialog(true)}
-          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
-        >
-          <UserPlus className="h-3.5 w-3.5 mr-1.5" />
-          Add Employee
-        </Button>
       </div>
 
       {/* Table */}
@@ -451,152 +508,12 @@ const EmployeesTab = () => {
 };
 
 /* ──────────────────────────────────────────────
-   Teams tab (original content)
-────────────────────────────────────────────── */
-
-const TEAMS_PAGE_SIZE = 6;
-
-const TeamsTab = () => {
-  const navigate = useNavigate();
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [teamsPage, setTeamsPage] = useState(1);
-  const [teams, setTeams] = useState([
-    { id: 1, name: 'Sales Hybrid Team',     humanMembers: 5, aiWorkers: 3, leader: 'John Doe',      iconColor: 'text-orange-600', bgColor: 'from-orange-100 to-amber-100',   description: 'Human sales reps working alongside AI assistants' },
-    { id: 2, name: 'Marketing Automation',  humanMembers: 3, aiWorkers: 4, leader: 'Jane Smith',    iconColor: 'text-pink-600',   bgColor: 'from-pink-100 to-fuchsia-100',  description: 'Content creation and campaign management team' },
-    { id: 3, name: 'Operations Support',    humanMembers: 6, aiWorkers: 8, leader: 'Mike Johnson',  iconColor: 'text-blue-600',   bgColor: 'from-blue-100 to-indigo-100',   description: 'Process automation and workflow optimization' },
-    { id: 4, name: 'Customer Success',      humanMembers: 4, aiWorkers: 2, leader: 'Sarah Wilson',  iconColor: 'text-green-600',  bgColor: 'from-green-100 to-teal-100',    description: '24/7 customer support with AI escalation' },
-  ]);
-
-  const handleTeamCreated = (newTeam: any) => { setTeams(prev => [...prev, newTeam]); setTeamsPage(1); };
-  const handleViewTeam = (id: number) => navigate(`/teams/${id}`);
-
-  const totalTeamsPages = Math.max(1, Math.ceil(teams.length / TEAMS_PAGE_SIZE));
-  const pagedTeams = teams.slice((teamsPage - 1) * TEAMS_PAGE_SIZE, teamsPage * TEAMS_PAGE_SIZE);
-
-  return (
-    <>
-      <div className="flex justify-end mb-5">
-        <Button
-          onClick={() => setShowCreateDialog(true)}
-          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Create Team
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pagedTeams.map(team => (
-          <Card key={team.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-2">
-                  <div className={`p-2 rounded-lg bg-gradient-to-br ${team.bgColor}`}>
-                    <Users className={`h-4 w-4 ${team.iconColor}`} />
-                  </div>
-                  <div>
-                    <span className="font-medium">{team.name}</span>
-                    <p className="text-xs text-gray-500 font-normal mt-1">{team.description}</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8" onClick={() => handleViewTeam(team.id)}>
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8">
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <div className="p-1 rounded bg-gray-100"><Crown className="h-3 w-3 text-amber-600" /></div>
-                  <span className="text-sm text-gray-700">Leader: {team.leader}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="p-1 rounded bg-gray-100"><Users className="h-3 w-3 text-blue-600" /></div>
-                  <span className="text-sm text-gray-700">Human Workers: {team.humanMembers}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="p-1 rounded bg-gray-100"><Bot className="h-3 w-3 text-green-600" /></div>
-                  <span className="text-sm text-gray-700">AI Workers: {team.aiWorkers}</span>
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
-                    onClick={() => handleViewTeam(team.id)}
-                  >
-                    <Eye className="h-3 w-3 mr-1" />View Team
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-xs bg-gray-50 hover:bg-gray-100 border-gray-200">
-                    <UserPlus className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {totalTeamsPages > 1 && (
-        <div className="flex items-center justify-between mt-6 text-sm text-gray-500">
-          <span>
-            Showing {(teamsPage - 1) * TEAMS_PAGE_SIZE + 1}–{Math.min(teamsPage * TEAMS_PAGE_SIZE, teams.length)} of {teams.length} teams
-          </span>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 border-gray-200"
-              disabled={teamsPage === 1}
-              onClick={() => setTeamsPage(p => p - 1)}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            {Array.from({ length: totalTeamsPages }, (_, i) => i + 1).map(p => (
-              <Button
-                key={p}
-                variant={p === teamsPage ? 'default' : 'outline'}
-                size="icon"
-                className={cn('h-8 w-8', p !== teamsPage && 'border-gray-200 text-gray-600')}
-                onClick={() => setTeamsPage(p)}
-              >
-                {p}
-              </Button>
-            ))}
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 border-gray-200"
-              disabled={teamsPage === totalTeamsPages}
-              onClick={() => setTeamsPage(p => p + 1)}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
-
-      <CreateTeamDialog
-        open={showCreateDialog}
-        onOpenChange={setShowCreateDialog}
-        onTeamCreated={handleTeamCreated}
-      />
-    </>
-  );
-};
-
-/* ──────────────────────────────────────────────
    Page
 ────────────────────────────────────────────── */
 
 const Teams = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<TabKey>('teams');
+  const [showCreateTeamDialog, setShowCreateTeamDialog] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
@@ -610,37 +527,18 @@ const Teams = () => {
           <AppSidebar />
           <SidebarInset className="flex-1 flex flex-col">
             <main className="flex-1 p-6">
-              {/* Page header */}
-              <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">Human Teams</h1>
-                <p className="text-gray-600">Manage hybrid teams of human workers and AI assistants</p>
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900">Teams</h1>
+                  <p className="text-gray-600">Manage hybrid teams of human workers and AI assistants</p>
+                </div>
+                <Button size="icon" onClick={() => setShowCreateTeamDialog(true)} className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 h-9 w-9">
+                  <Plus className="h-4 w-4" />
+                </Button>
               </div>
 
-              {/* Horizontal tab nav */}
-              <div className="flex border-b border-gray-200 mb-6">
-                {([
-                  { key: 'teams' as TabKey,     label: 'Teams',     icon: Users },
-                  { key: 'employees' as TabKey, label: 'Employees', icon: UserPlus },
-                ] as const).map(({ key, label, icon: Icon }) => (
-                  <button
-                    key={key}
-                    onClick={() => setActiveTab(key)}
-                    className={cn(
-                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
-                      activeTab === key
-                        ? 'border-gray-900 text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Tab content */}
-              {activeTab === 'teams'     && <TeamsTab />}
-              {activeTab === 'employees' && <EmployeesTab />}
+              <TeamsTabContent onShowCreate={() => setShowCreateTeamDialog(true)} />
+              <CreateTeamDialog open={showCreateTeamDialog} onOpenChange={setShowCreateTeamDialog} onTeamCreated={() => {}} />
             </main>
           </SidebarInset>
         </div>

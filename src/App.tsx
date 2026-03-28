@@ -9,6 +9,8 @@ import AIEmployees from './pages/AIEmployees';
 import Teams from './pages/Teams';
 import TeamDetail from './pages/TeamDetail';
 import AIAgents from './pages/AIAgents';
+import Staff from './pages/Staff';
+import CreateAIWorker from './pages/CreateAIWorker';
 import Workflows from './pages/Workflows';
 import CreateWorkflow from './pages/CreateWorkflow';
 import IntegrationsPage from './pages/IntegrationsPage';
@@ -205,6 +207,8 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
           <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+          <Route path="/staff" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
+          <Route path="/staff/create-ai-worker" element={<ProtectedRoute><CreateAIWorker /></ProtectedRoute>} />
           <Route path="/ai-employees" element={<ProtectedRoute><AIEmployees /></ProtectedRoute>} />
           <Route path="/ai-assistants/:id" element={<ProtectedRoute><AssistantProfile /></ProtectedRoute>} />
           <Route path="/ai-assistants/:id/configure" element={<ProtectedRoute><AssistantConfiguration /></ProtectedRoute>} />

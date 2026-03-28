@@ -18,8 +18,6 @@ import {
   LayoutDashboard,
   MessageCircle,
   Users,
-  UserCheck,
-  Bot,
   Workflow,
   Puzzle,
   Settings,
@@ -32,6 +30,8 @@ import {
   Globe,
   Check,
   Zap,
+  Bell,
+  CheckCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -63,19 +63,9 @@ const navigationItems = [
     icon: ClipboardCheck,
   },
   {
-    title: "AI Workers",
-    url: "/ai-employees",
-    icon: Bot,
-  },
-  {
-    title: "Human Teams",
-    url: "/teams",
+    title: "Staff",
+    url: "/staff",
     icon: Users,
-  },
-  {
-    title: "Worker Groups",
-    url: "/ai-agents",
-    icon: UserCheck,
   },
   {
     title: "Workflows",
@@ -110,6 +100,19 @@ export function AppSidebar() {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
 
   const userEmail = localStorage.getItem('userEmail') || '';
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, title: 'Aria completed task',       body: 'Qualified 12 inbound leads from CRM',       time: '2m ago',  read: false },
+    { id: 2, title: 'Atlas escalated a ticket',  body: 'VIP ticket #9023 needs your attention',      time: '18m ago', read: false },
+    { id: 3, title: 'New team member added',     body: 'Lisa Chen joined Sales Hybrid Team',         time: '1h ago',  read: false },
+    { id: 4, title: 'Workflow completed',        body: 'Monthly invoice reconciliation finished',    time: '3h ago',  read: true  },
+    { id: 5, title: 'Maya finished campaign',    body: 'Social media content brief is ready',        time: '5h ago',  read: true  },
+  ]);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  const markRead = (id: number) => setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
 
   const getInitials = (email: string) => email.slice(0, 2).toUpperCase();
 
@@ -165,7 +168,7 @@ export function AppSidebar() {
       </SidebarContent>
       
       <SidebarFooter className="p-3 border-t">
-        <div className="flex items-center">
+        <div className="flex items-center gap-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className={`flex items-center gap-2 hover:bg-accent px-2 ${state === "collapsed" ? "justify-center w-full" : ""}`}>
@@ -243,6 +246,57 @@ export function AppSidebar() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {state === "expanded" && (
+            <DropdownMenu open={notifOpen} onOpenChange={setNotifOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative h-8 w-8 hover:bg-accent flex-shrink-0">
+                  <Bell className="h-4 w-4 text-gray-600" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="top" align="end" className="w-80 bg-white border shadow-lg p-0" onCloseAutoFocus={e => e.preventDefault()}>
+                <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-4 w-4 text-gray-600" />
+                    <span className="text-sm font-semibold text-gray-900">Notifications</span>
+                    {unreadCount > 0 && (
+                      <span className="bg-red-100 text-red-600 text-xs font-medium px-1.5 py-0.5 rounded-full">{unreadCount}</span>
+                    )}
+                  </div>
+                  {unreadCount > 0 && (
+                    <button onClick={markAllRead} className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-medium">
+                      <CheckCheck className="h-3.5 w-3.5" />Mark all read
+                    </button>
+                  )}
+                </div>
+                <div className="max-h-72 overflow-y-auto">
+                  {notifications.length === 0 ? (
+                    <p className="text-sm text-gray-400 text-center py-8">No notifications</p>
+                  ) : (
+                    notifications.map(n => (
+                      <button
+                        key={n.id}
+                        onClick={() => markRead(n.id)}
+                        className={`w-full text-left px-4 py-3 border-b border-gray-50 last:border-b-0 hover:bg-gray-50 transition-colors ${!n.read ? 'bg-blue-50/40' : ''}`}
+                      >
+                        <div className="flex items-start gap-2">
+                          <div className={`mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${!n.read ? 'bg-blue-500' : 'bg-transparent'}`} />
+                          <div className="min-w-0 flex-1">
+                            <p className={`text-xs font-medium truncate ${!n.read ? 'text-gray-900' : 'text-gray-600'}`}>{n.title}</p>
+                            <p className="text-xs text-gray-500 truncate mt-0.5">{n.body}</p>
+                          </div>
+                          <span className="text-xs text-gray-400 flex-shrink-0 mt-0.5">{n.time}</span>
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </SidebarFooter>
     </Sidebar>
