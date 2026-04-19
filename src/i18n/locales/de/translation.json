@@ -42,6 +42,12 @@
     "browseAll": "alle durchsuchen",
     "viewAllIntegrations": "Alle Integrationen anzeigen →",
     "integrationCategories": "100+ Integrationskategorien",
+    "skillsHub": "Skills-Hub",
+    "skillsHubDesc": "Entdecken Sie vorgefertigte Skills zur Erweiterung Ihrer Integrationen",
+    "skillsHubCta": "Entdecken →",
+    "talkToSales": "Vertrieb kontaktieren",
+    "talkToSalesDesc": "Individuelle Demo für Ihr Team erhalten",
+    "talkToSalesCta": "Kontakt aufnehmen →",
     "aiCopilot": "KI-Copilot",
     "aiCopilotDesc": "Persönliche KI für jeden Mitarbeiter",
     "workflowAutomation": "Workflow-Automatisierung",
@@ -171,10 +177,6 @@
     "testimonial3Role": "CEO, Streamline AI",
     "integrationsLabel": "Verbindet sich mit den Tools, die Ihr Team bereits nutzt",
     "integrationsMore": "+200 weitere",
-    "ctaHeadline1": "Bereit, sich",
-    "ctaHeadline2": "2 Tage pro Woche zurückzuholen?",
-    "ctaSubheadline": "Schließen Sie sich Hunderten von Teams an, die ihre Arbeitswoche in fokussierte, hochproduktive Zeit verwandelt haben — ohne Burnout.",
-    "ctaTrial": "14-tägige kostenlose Testversion · Keine Kreditkarte · Jederzeit kündbar",
     "footerPricing": "Preise",
     "footerAbout": "Über uns",
     "footerContact": "Kontakt",
@@ -1086,6 +1088,35 @@
       "ctaSubtitle": "Wir fügen ständig neue Integrationen hinzu. Fordern Sie Ihres an und unser Team wird es priorisieren.",
       "ctaBtn": "Integration anfragen",
       "ctaBtn2": "Alle Integrationen durchsuchen"
+    }
+  },
+  "cookies": {
+    "bannerTitle": "Ihre Privatsphäre ist uns wichtig",
+    "bannerBody": "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern, den Website-Traffic zu analysieren und Inhalte zu personalisieren. Sie können Ihre Einstellungen jederzeit verwalten.",
+    "settingsTitle": "Cookie-Einstellungen",
+    "settingsBody": "Wählen Sie, welche Kategorien von Cookies Sie zulassen. Notwendige Cookies können nicht deaktiviert werden, da sie für den Betrieb der Website erforderlich sind.",
+    "acceptAll": "Alle akzeptieren",
+    "rejectAll": "Alle ablehnen",
+    "customize": "Anpassen",
+    "savePreferences": "Einstellungen speichern",
+    "alwaysActive": "Immer aktiv",
+    "categories": {
+      "necessary": {
+        "name": "Unbedingt erforderlich",
+        "description": "Wesentlich für Kernfunktionen wie Authentifizierung, Sicherheit und das Speichern Ihrer Einstellungen. Ohne diese kann die Website nicht ordnungsgemäß funktionieren."
+      },
+      "functional": {
+        "name": "Funktional",
+        "description": "Ermöglichen erweiterte Funktionen und Personalisierung, wie Spracheinstellungen und Live-Chat. Deaktivierung kann Ihre Erfahrung beeinträchtigen."
+      },
+      "analytics": {
+        "name": "Analyse",
+        "description": "Helfen uns zu verstehen, wie Besucher mit der Website interagieren, indem anonyme Nutzungsdaten gesammelt werden, um Leistung und Inhalte zu verbessern."
+      },
+      "marketing": {
+        "name": "Marketing",
+        "description": "Werden verwendet, um relevante Werbung auszuliefern und die Wirksamkeit von Marketingkampagnen über Websites hinweg zu messen."
+      }
     }
   }
 }

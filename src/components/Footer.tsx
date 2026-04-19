@@ -1,10 +1,11 @@
 
 import { Link } from 'react-router-dom';
-import { Bot, Twitter, Linkedin, Github, Mail, ArrowRight } from 'lucide-react';
+import { Bot, Twitter, Linkedin, Github, Mail, ArrowRight, Apple, Smartphone } from 'lucide-react';
+import { openCookieSettings } from './CookieConsent';
 
 const Footer = () => {
   return (
-    <footer className="bg-[#141413] dark:bg-[#0d0b09] text-white">
+    <footer className="bg-[#1a1916] dark:bg-[#1a1916] text-white">
       <div className="max-w-6xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
           {/* Logo and Description */}
@@ -32,6 +33,36 @@ const Footer = () => {
               <a href="#" aria-label="Email" className="text-white/25 hover:text-white/65 transition-colors">
                 <Mail className="w-4 h-4" />
               </a>
+            </div>
+
+            <div className="mt-8">
+              <h3 className="text-white/55 text-[10px] font-semibold uppercase tracking-widest mb-3">Get the app</h3>
+              <div className="flex flex-col sm:flex-row gap-2 max-w-xs">
+                <a
+                  href="#"
+                  aria-label="Download on the App Store"
+                  className="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                  style={{ borderRadius: '4px' }}
+                >
+                  <Apple className="w-5 h-5 text-white/80" />
+                  <div className="text-left leading-tight">
+                    <div className="text-white/45 text-[9px] uppercase tracking-wider">Download on</div>
+                    <div className="text-white/85 text-xs font-medium">App Store</div>
+                  </div>
+                </a>
+                <a
+                  href="#"
+                  aria-label="Get it on Google Play"
+                  className="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                  style={{ borderRadius: '4px' }}
+                >
+                  <Smartphone className="w-5 h-5 text-white/80" />
+                  <div className="text-left leading-tight">
+                    <div className="text-white/45 text-[9px] uppercase tracking-wider">Get it on</div>
+                    <div className="text-white/85 text-xs font-medium">Google Play</div>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -106,7 +137,13 @@ const Footer = () => {
           <div className="flex gap-6">
             <a href="#" className="text-white/22 hover:text-white/50 text-sm transition-colors">Privacy Policy</a>
             <a href="#" className="text-white/22 hover:text-white/50 text-sm transition-colors">Terms of Service</a>
-            <a href="#" className="text-white/22 hover:text-white/50 text-sm transition-colors">Cookie Policy</a>
+            <button
+              type="button"
+              onClick={openCookieSettings}
+              className="text-white/22 hover:text-white/50 text-sm transition-colors"
+            >
+              Cookie Settings
+            </button>
           </div>
         </div>
       </div>

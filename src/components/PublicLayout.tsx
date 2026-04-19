@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import DotsBackground from './DotsBackground';
+import CookieConsent from './CookieConsent';
 
 const PublicLayout = () => (
   <>
@@ -11,6 +12,7 @@ const PublicLayout = () => (
       <Outlet />
       <Footer />
     </div>
+    <CookieConsent />
   </>
 );
 

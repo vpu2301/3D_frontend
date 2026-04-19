@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Bot, Zap, BarChart3, Shield, Users, Building2, Workflow, Brain, BookOpen, HelpCircle, MessageCircle, ShoppingCart, CreditCard, Globe, ClipboardList, Headphones, TrendingUp } from 'lucide-react';
+import { Menu, X, ChevronDown, Bot, Zap, BarChart3, Shield, Users, Building2, Workflow, Brain, BookOpen, HelpCircle, MessageCircle, ShoppingCart, CreditCard, Globe, ClipboardList, Headphones, TrendingUp, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ThemeSelector from './ThemeSelector';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -135,7 +135,7 @@ const Header = () => {
     }
   ];
 
-  const renderMegaMenu = (items: any[], isOpen: boolean, wide?: boolean) => {
+  const renderMegaMenu = (items: any[], isOpen: boolean, wide?: boolean, talkToSales?: boolean) => {
     if (!isOpen) return null;
     const cols = wide ? 'grid-cols-4' : 'grid-cols-2';
     const minW = wide ? 'min-w-[1080px]' : 'min-w-[740px]';
@@ -187,6 +187,51 @@ const Header = () => {
             </div>
           ))}
         </div>
+        {wide && (
+          <Link
+            to="/skills-hub"
+            onClick={() => setActiveDropdown(null)}
+            className="flex items-center justify-between gap-4 px-8 py-3 bg-[#1e4a7a]/[0.06] hover:bg-[#1e4a7a]/[0.11] transition-colors dark:bg-[#7ab3dc]/[0.08] dark:hover:bg-[#7ab3dc]/[0.14]"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Sparkles className="w-4 h-4 flex-shrink-0 text-[#1e4a7a] dark:text-[#7ab3dc]" />
+              <span className="text-[13px] font-semibold text-[#1e4a7a] dark:text-[#7ab3dc]">
+                {t('nav.skillsHub')}
+              </span>
+              <span className="text-[12px] text-[#1e4a7a]/70 truncate dark:text-[#7ab3dc]/70">
+                — {t('nav.skillsHubDesc')}
+              </span>
+            </div>
+            <span className="text-[12px] font-medium text-[#1e4a7a] flex-shrink-0 dark:text-[#7ab3dc]">
+              {t('nav.skillsHubCta')}
+            </span>
+          </Link>
+        )}
+        {talkToSales && (
+          <Link
+            to="/contact"
+            onClick={() => setActiveDropdown(null)}
+            className="group relative flex items-center justify-between gap-4 px-8 py-3 bg-gradient-to-r from-[#f59e0b]/[0.10] via-[#ec4899]/[0.10] to-[#1e4a7a]/[0.12] hover:from-[#f59e0b]/[0.18] hover:via-[#ec4899]/[0.18] hover:to-[#1e4a7a]/[0.20] transition-all dark:from-[#f59e0b]/[0.14] dark:via-[#ec4899]/[0.14] dark:to-[#7ab3dc]/[0.16] dark:hover:from-[#f59e0b]/[0.22] dark:hover:via-[#ec4899]/[0.22] dark:hover:to-[#7ab3dc]/[0.24]"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span
+                className="flex w-6 h-6 items-center justify-center flex-shrink-0 bg-gradient-to-br from-[#f59e0b] via-[#ec4899] to-[#1e4a7a] dark:to-[#7ab3dc]"
+                style={{ borderRadius: '7px' }}
+              >
+                <Headphones className="w-3.5 h-3.5 text-white" />
+              </span>
+              <span className="text-[13px] font-semibold bg-gradient-to-r from-[#b45309] via-[#be185d] to-[#1e4a7a] bg-clip-text text-transparent dark:from-[#f59e0b] dark:via-[#ec4899] dark:to-[#7ab3dc]">
+                {t('nav.talkToSales')}
+              </span>
+              <span className="text-[12px] text-black/55 truncate dark:text-white/55">
+                — {t('nav.talkToSalesDesc')}
+              </span>
+            </div>
+            <span className="text-[12px] font-medium text-[#be185d] flex-shrink-0 group-hover:text-[#9d174d] dark:text-[#ec4899] dark:group-hover:text-[#f472b6]">
+              {t('nav.talkToSalesCta')}
+            </span>
+          </Link>
+        )}
       </div>
     );
   };
@@ -211,11 +256,11 @@ const Header = () => {
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-0.5">
             {[
-              { label: t('nav.product'), key: 'product', items: productItems, wide: false },
-              { label: t('nav.solutions'), key: 'solutions', items: solutionsItems, wide: false },
-              { label: t('nav.integrations'), key: 'integrations', items: integrationsItems, wide: true },
-              { label: t('nav.resources'), key: 'resources', items: resourcesItems, wide: false },
-            ].map(({ label, key, items, wide }) => (
+              { label: t('nav.product'), key: 'product', items: productItems, wide: false, talkToSales: true },
+              { label: t('nav.solutions'), key: 'solutions', items: solutionsItems, wide: false, talkToSales: true },
+              { label: t('nav.integrations'), key: 'integrations', items: integrationsItems, wide: true, talkToSales: false },
+              { label: t('nav.resources'), key: 'resources', items: resourcesItems, wide: false, talkToSales: false },
+            ].map(({ label, key, items, wide, talkToSales }) => (
               <div
                 key={key}
                 className="relative"
@@ -232,7 +277,7 @@ const Header = () => {
                   {label}
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === key ? 'rotate-180' : ''}`} />
                 </button>
-                {renderMegaMenu(items, activeDropdown === key, wide)}
+                {renderMegaMenu(items, activeDropdown === key, wide, talkToSales)}
               </div>
             ))}
             <Link

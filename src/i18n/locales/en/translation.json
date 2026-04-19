@@ -42,6 +42,12 @@
     "browseAll": "browse all",
     "viewAllIntegrations": "View all integrations →",
     "integrationCategories": "100+ integration categories",
+    "skillsHub": "Skills hub",
+    "skillsHubDesc": "Discover prebuilt skills to extend your integrations",
+    "skillsHubCta": "Explore →",
+    "talkToSales": "Talk to sales",
+    "talkToSalesDesc": "Get a tailored walkthrough for your team",
+    "talkToSalesCta": "Contact us →",
     "aiCopilot": "AI Copilot",
     "aiCopilotDesc": "Personal AI for every employee",
     "workflowAutomation": "Workflow Automation",
@@ -171,10 +177,6 @@
     "testimonial3Role": "CEO, Streamline AI",
     "integrationsLabel": "Connects with the tools your team already uses",
     "integrationsMore": "+200 more",
-    "ctaHeadline1": "Ready to reclaim",
-    "ctaHeadline2": "2 days every week?",
-    "ctaSubheadline": "Join hundreds of teams who turned their workweek into focused, high-output time — without burning out.",
-    "ctaTrial": "14-day free trial · No credit card · Cancel anytime",
     "footerPricing": "Pricing",
     "footerAbout": "About",
     "footerContact": "Contact",
@@ -1086,6 +1088,35 @@
       "ctaSubtitle": "We're constantly adding new integrations. Request yours and our team will prioritize it.",
       "ctaBtn": "Request Integration",
       "ctaBtn2": "Browse All Integrations"
+    }
+  },
+  "cookies": {
+    "bannerTitle": "We value your privacy",
+    "bannerBody": "We use cookies to enhance your experience, analyze site traffic, and personalize content. You can manage your preferences anytime.",
+    "settingsTitle": "Cookie preferences",
+    "settingsBody": "Choose which categories of cookies you allow. Necessary cookies cannot be disabled as they are required for the site to function.",
+    "acceptAll": "Accept all",
+    "rejectAll": "Reject all",
+    "customize": "Customize",
+    "savePreferences": "Save preferences",
+    "alwaysActive": "Always on",
+    "categories": {
+      "necessary": {
+        "name": "Strictly necessary",
+        "description": "Essential for core functionality such as authentication, security, and remembering your preferences. The site cannot work properly without them."
+      },
+      "functional": {
+        "name": "Functional",
+        "description": "Enable enhanced functionality and personalization, such as language preferences and live chat. Disabling these may degrade your experience."
+      },
+      "analytics": {
+        "name": "Analytics",
+        "description": "Help us understand how visitors interact with the site by collecting anonymous usage data so we can improve performance and content."
+      },
+      "marketing": {
+        "name": "Marketing",
+        "description": "Used to deliver relevant advertising and measure the effectiveness of marketing campaigns across sites."
+      }
     }
   }
 }

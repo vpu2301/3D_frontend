@@ -263,50 +263,28 @@ const Home = () => {
       {/* Integrations strip */}
       <section className="py-16 border-t border-[#141413]/10 dark:border-white/10 bg-[#f5f3ee] dark:bg-[#1c1916]">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <p className="text-[#30302e]/38 dark:text-white/38 text-xs uppercase tracking-widest font-semibold mb-8">{t('home.integrationsLabel')}</p>
-          <div className="flex flex-wrap items-center gap-2">
-            {tools.map((tool) => (
-              <div
-                key={tool}
-                className="px-5 py-2 border border-[#141413]/15 dark:border-white/15 bg-[#e8e6dc] dark:bg-[#181512] text-[#141413]/55 dark:text-white/55 text-sm font-medium hover:text-[#141413] dark:hover:text-white hover:border-[#141413]/30 dark:hover:border-white/30 hover:bg-white dark:hover:bg-[#252220] transition-all duration-200"
-                style={{ borderRadius: '4px' }}
-              >
-                {tool}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+            <div className="flex-1">
+              <p className="text-[#30302e]/38 dark:text-white/38 text-xs uppercase tracking-widest font-semibold mb-8">{t('home.integrationsLabel')}</p>
+              <div className="flex flex-wrap items-center gap-2">
+                {tools.map((tool) => (
+                  <div
+                    key={tool}
+                    className="px-5 py-2 border border-[#141413]/15 dark:border-white/15 bg-[#e8e6dc] dark:bg-[#181512] text-[#141413]/55 dark:text-white/55 text-sm font-medium hover:text-[#141413] dark:hover:text-white hover:border-[#141413]/30 dark:hover:border-white/30 hover:bg-white dark:hover:bg-[#252220] transition-all duration-200"
+                    style={{ borderRadius: '4px' }}
+                  >
+                    {tool}
+                  </div>
+                ))}
+                <div className="text-[#30302e]/38 dark:text-white/38 text-sm px-3">{t('home.integrationsMore')}</div>
               </div>
-            ))}
-            <div className="text-[#30302e]/38 dark:text-white/38 text-sm px-3">{t('home.integrationsMore')}</div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-36 relative overflow-hidden bg-[#141413] dark:bg-[#0f0d0b]">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#d97757]/6 blur-[140px] pointer-events-none" />
-
-        <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight tracking-tight">
-              {t('home.ctaHeadline1')}
-              <br />
-              {t('home.ctaHeadline2')}
-            </h2>
-            <p className="text-white/45 text-lg mb-12 leading-relaxed max-w-md">
-              {t('home.ctaSubheadline')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link to="/signup">
-                <button className="group inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-[#f5f3ee] text-[#141413] text-sm font-medium transition-all duration-200" style={{ borderRadius: '4px' }}>
-                  {t('common.startForFree')}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              </Link>
-              <Link to="/schedule-demo">
-                <button className="inline-flex items-center gap-2 px-8 py-4 border border-white/15 hover:border-white/30 text-white text-sm font-medium transition-all duration-200 hover:bg-white/6" style={{ borderRadius: '4px' }}>
-                  {t('common.bookDemo')}
-                </button>
-              </Link>
             </div>
-            <p className="text-white/22 text-xs mt-8 tracking-wide">{t('home.ctaTrial')}</p>
+            <Link to="/schedule-demo" className="flex-shrink-0">
+              <button className="group inline-flex items-center gap-2 px-7 py-3.5 bg-[#141413] dark:bg-[#ede8e3] hover:bg-[#2a2a28] dark:hover:bg-white text-white dark:text-[#141413] text-sm font-medium transition-all duration-200" style={{ borderRadius: '4px' }}>
+                {t('common.bookDemo')}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </Link>
           </div>
         </div>
       </section>
