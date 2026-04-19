@@ -39,7 +39,7 @@ const Automation = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white">
+    <div className="min-h-screen pt-20 bg-white">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">

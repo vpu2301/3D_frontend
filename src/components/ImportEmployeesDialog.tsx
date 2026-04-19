@@ -357,7 +357,7 @@ const PreviewImport = ({ onImport, importing, progress }: { onImport: () => void
       {!importing && (
         <Button
           onClick={onImport}
-          className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+          className="w-full bg-gray-900 hover:bg-gray-800 text-white"
         >
           <Users className="h-4 w-4 mr-2" />
           Import {PREVIEW_EMPLOYEES.length} Employees

@@ -127,7 +127,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="border-r" collapsible="icon">
+    <Sidebar className="border-r [&>[data-sidebar=sidebar]]:bg-white" collapsible="icon">
       <SidebarHeader className="p-4">
         <div 
           className="flex items-center space-x-2 cursor-pointer hover:bg-accent rounded-lg p-2 -m-2 transition-colors"

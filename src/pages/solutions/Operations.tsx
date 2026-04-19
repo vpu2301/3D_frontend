@@ -1,120 +1,125 @@
 
-import { useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowRight, Cog, BarChart3, Clock, Shield, TrendingUp, Database, Users, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Cog, BarChart3, Clock, Shield } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Operations = () => {
-  useEffect(() => {
-    console.log('Operations: Component mounted and rendering');
-    console.log('Operations: Current location:', window.location.pathname);
-  }, []);
+  const { t } = useTranslation();
+
+  const features = [
+    { icon: Cog, title: t('solutions.operations.f1Title'), description: t('solutions.operations.f1Desc') },
+    { icon: BarChart3, title: t('solutions.operations.f2Title'), description: t('solutions.operations.f2Desc') },
+    { icon: Clock, title: t('solutions.operations.f3Title'), description: t('solutions.operations.f3Desc') },
+    { icon: Shield, title: t('solutions.operations.f4Title'), description: t('solutions.operations.f4Desc') },
+    { icon: Database, title: t('solutions.operations.f5Title'), description: t('solutions.operations.f5Desc') },
+    { icon: TrendingUp, title: t('solutions.operations.f6Title'), description: t('solutions.operations.f6Desc') },
+  ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#181512]">
-      <Header />
-      
-      <main className="pt-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Operational Excellence with AI
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight dark:text-white">
+              {t('solutions.operations.heroTitle')}
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Streamline your operations with intelligent automation. Optimize workflows, 
-              reduce costs, and improve efficiency with AI-powered operational assistants.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed dark:text-gray-300">
+              {t('solutions.operations.heroSubtitle')}
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            <Card className="shadow-lg">
-              <CardHeader>
-                <Cog className="h-8 w-8 text-blue-600 mb-2" />
-                <CardTitle>Process Automation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Automate repetitive tasks and complex workflows to improve efficiency and reduce human error.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <BarChart3 className="h-8 w-8 text-green-600 mb-2" />
-                <CardTitle>Performance Analytics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Real-time operational metrics and AI-driven insights to optimize business performance.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <Clock className="h-8 w-8 text-purple-600 mb-2" />
-                <CardTitle>Resource Planning</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Intelligent resource allocation and capacity planning based on predictive analytics.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <Shield className="h-8 w-8 text-[#111111] mb-2" />
-                <CardTitle>Quality Control</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Automated quality assurance and compliance monitoring with AI-powered inspection systems.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <Cog className="h-8 w-8 text-red-600 mb-2" />
-                <CardTitle>Supply Chain Optimization</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  AI-driven supply chain management for inventory optimization and demand forecasting.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <BarChart3 className="h-8 w-8 text-indigo-600 mb-2" />
-                <CardTitle>Cost Optimization</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Identify cost-saving opportunities and optimize operational expenses with AI insights.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
-              <Link to="/signup">
-                Optimize Your Operations
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+                <Link to="/start-free-trial">{t('solutions.operations.heroCta')}</Link>
+              </Button>
+              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
+                <Link to="/watch-demo">{t('solutions.watchDemo')}</Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </main>
-      
-      <Footer />
+      </section>
+
+      <section className="py-20 px-4 bg-white dark:bg-[#1c1916]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('solutions.operations.featuresTitle')}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-gray-300">{t('solutions.operations.featuresSubtitle')}</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card key={index} className="bg-white border-gray-200/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-2 dark:bg-[#222018] dark:border-white/10">
+                <CardContent className="p-8 text-center">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
+                    <feature.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-medium text-gray-900 mb-4 dark:text-white">{feature.title}</h3>
+                  <p className="text-gray-600 leading-relaxed dark:text-gray-300">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-gray-50 dark:bg-[#181512]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('solutions.operations.statsTitle')}</h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { value: t('solutions.operations.s1Value'), label: t('solutions.operations.s1Label'), color: 'text-blue-600' },
+              { value: t('solutions.operations.s2Value'), label: t('solutions.operations.s2Label'), color: 'text-green-600' },
+              { value: t('solutions.operations.s3Value'), label: t('solutions.operations.s3Label'), color: 'text-purple-600' },
+              { value: t('solutions.operations.s4Value'), label: t('solutions.operations.s4Label'), color: 'text-[#111111] dark:text-white' },
+            ].map((stat, i) => (
+              <div key={i} className="text-center">
+                <div className={`text-4xl font-light mb-2 ${stat.color}`}>{stat.value}</div>
+                <div className="text-gray-600 dark:text-gray-300">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-white dark:bg-[#1c1916]">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8 dark:bg-[#222018] dark:border-white/10">
+            <h3 className="text-3xl font-light mb-8 text-center dark:text-white">{t('solutions.operations.enterpriseTitle')}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <Users className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+                <h4 className="text-xl font-medium mb-2 dark:text-white">{t('solutions.operations.e1Title')}</h4>
+                <p className="text-black/60 dark:text-white/60">{t('solutions.operations.e1Desc')}</p>
+              </div>
+              <div className="text-center">
+                <Zap className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
+                <h4 className="text-xl font-medium mb-2 dark:text-white">{t('solutions.operations.e2Title')}</h4>
+                <p className="text-black/60 dark:text-white/60">{t('solutions.operations.e2Desc')}</p>
+              </div>
+              <div className="text-center">
+                <Shield className="h-12 w-12 text-green-400 mx-auto mb-4" />
+                <h4 className="text-xl font-medium mb-2 dark:text-white">{t('solutions.operations.e3Title')}</h4>
+                <p className="text-black/60 dark:text-white/60">{t('solutions.operations.e3Desc')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-5xl font-light mb-8 tracking-tight">{t('solutions.operations.ctaTitle')}</h2>
+          <p className="text-xl mb-12 opacity-90 font-light">{t('solutions.operations.ctaSubtitle')}</p>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
+            <Link to="/start-free-trial">
+              {t('common.getStarted')}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
     </div>
   );
 };
