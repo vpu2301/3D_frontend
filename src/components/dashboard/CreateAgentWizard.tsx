@@ -145,8 +145,8 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
         return (
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-3">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center mx-auto shadow-lg">
-                <Bot className="h-10 w-10 text-white" />
+              <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center mx-auto">
+                <Bot className="h-8 w-8 text-gray-700" />
               </div>
               <h2 className="text-3xl font-bold text-foreground">Name your Agent</h2>
               <p className="text-muted-foreground text-lg max-w-md mx-auto">Give your AI agent a name and describe what it will do</p>
@@ -181,8 +181,8 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
         return (
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-3">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mx-auto shadow-lg">
-                <MessageSquare className="h-10 w-10 text-white" />
+              <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center mx-auto">
+                <MessageSquare className="h-8 w-8 text-gray-700" />
               </div>
               <h2 className="text-3xl font-bold text-foreground">Communication Channels</h2>
               <p className="text-muted-foreground text-lg">Where should your agent be available?</p>
@@ -194,19 +194,19 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
                   onClick={() => toggleArrayItem('channels', ch.id)}
                   className={`flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left ${
                     config.channels.includes(ch.id)
-                      ? 'border-primary bg-primary/5 shadow-md'
-                      : 'border-border hover:border-muted-foreground/30 hover:bg-muted/50'
+                      ? 'border-gray-900 bg-gray-50 shadow-sm'
+                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
-                  <div className={`p-3 rounded-lg ${config.channels.includes(ch.id) ? 'bg-primary/10' : 'bg-muted'}`}>
-                    <ch.icon className={`h-5 w-5 ${config.channels.includes(ch.id) ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <div className={`p-3 rounded-lg ${config.channels.includes(ch.id) ? 'bg-gray-200' : 'bg-gray-100'}`}>
+                    <ch.icon className={`h-5 w-5 ${config.channels.includes(ch.id) ? 'text-gray-900' : 'text-gray-500'}`} />
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-foreground">{ch.label}</p>
                     <p className="text-sm text-muted-foreground">{ch.description}</p>
                   </div>
                   {config.channels.includes(ch.id) && (
-                    <Check className="h-5 w-5 text-primary" />
+                    <Check className="h-5 w-5 text-gray-900" />
                   )}
                 </button>
               ))}
@@ -218,8 +218,8 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
         return (
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-3">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mx-auto shadow-lg">
-                <Shield className="h-10 w-10 text-white" />
+              <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center mx-auto">
+                <Shield className="h-8 w-8 text-gray-700" />
               </div>
               <h2 className="text-3xl font-bold text-foreground">Scope & Assignments</h2>
               <p className="text-muted-foreground text-lg">Set permissions and assign to people or teams</p>
@@ -231,7 +231,7 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
                   <label
                     key={p.id}
                     className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                      config.permissions.includes(p.id) ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'
+                      config.permissions.includes(p.id) ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:bg-gray-50'
                     }`}
                   >
                     <Checkbox
@@ -253,7 +253,7 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
                     key={e.id}
                     onClick={() => toggleArrayItem('assignees', e.id)}
                     className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all text-left ${
-                      config.assignees.includes(e.id) ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'
+                      config.assignees.includes(e.id) ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:bg-gray-50'
                     }`}
                   >
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
@@ -265,7 +265,7 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
                       <p className="font-medium text-foreground text-sm">{e.label}</p>
                       <p className="text-xs text-muted-foreground capitalize">{e.type}</p>
                     </div>
-                    {config.assignees.includes(e.id) && <Check className="h-4 w-4 text-primary" />}
+                    {config.assignees.includes(e.id) && <Check className="h-4 w-4 text-gray-900" />}
                   </button>
                 ))}
               </div>
@@ -277,8 +277,8 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
         return (
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-3">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center mx-auto shadow-lg">
-                <Plug className="h-10 w-10 text-white" />
+              <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center mx-auto">
+                <Plug className="h-8 w-8 text-gray-700" />
               </div>
               <h2 className="text-3xl font-bold text-foreground">Integrations</h2>
               <p className="text-muted-foreground text-lg">Connect your agent to external tools and services</p>
@@ -297,8 +297,8 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
                           onClick={() => toggleArrayItem('integrations', int.id)}
                           className={`p-3 rounded-lg border-2 text-sm font-medium transition-all ${
                             config.integrations.includes(int.id)
-                              ? 'border-primary bg-primary/5 text-primary'
-                              : 'border-border text-foreground hover:border-muted-foreground/30 hover:bg-muted/50'
+                              ? 'border-gray-900 bg-gray-50 text-gray-900'
+                              : 'border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         >
                           {int.label}
@@ -317,8 +317,8 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
         return (
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-3">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mx-auto shadow-lg">
-                <DollarSign className="h-10 w-10 text-white" />
+              <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center mx-auto">
+                <DollarSign className="h-8 w-8 text-gray-700" />
               </div>
               <h2 className="text-3xl font-bold text-foreground">Daily Budget</h2>
               <p className="text-muted-foreground text-lg">Set a spending limit for your agent's daily operations</p>
@@ -347,8 +347,8 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
                     onClick={() => setConfig({ ...config, dailyBudget: v })}
                     className={`p-3 rounded-lg border-2 font-semibold transition-all ${
                       config.dailyBudget === v
-                        ? 'border-primary bg-primary/5 text-primary'
-                        : 'border-border text-foreground hover:bg-muted/50'
+                        ? 'border-gray-900 bg-gray-50 text-gray-900'
+                        : 'border-gray-200 text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     ${v}/day
@@ -366,8 +366,8 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
         return (
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-3">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center mx-auto shadow-lg">
-                <Brain className="h-10 w-10 text-white" />
+              <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center mx-auto">
+                <Brain className="h-8 w-8 text-gray-700" />
               </div>
               <h2 className="text-3xl font-bold text-foreground">Level of Autonomy</h2>
               <p className="text-muted-foreground text-lg">How much independence should this agent have?</p>
@@ -402,15 +402,15 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
                     key={opt.value}
                     className={`flex items-start gap-4 p-5 rounded-xl border-2 cursor-pointer transition-all ${
                       config.autonomyLevel === opt.value
-                        ? 'border-primary bg-primary/5 shadow-md'
-                        : 'border-border hover:border-muted-foreground/30 hover:bg-muted/50'
+                        ? 'border-gray-900 bg-gray-50 shadow-sm'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                     }`}
                   >
                     <RadioGroupItem value={opt.value} className="mt-1" />
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <p className="font-semibold text-foreground text-lg">{opt.label}</p>
-                        <div className={`h-2 w-2 rounded-full bg-gradient-to-r ${opt.color}`} />
+                        <div className="h-2 w-2 rounded-full bg-gray-400" />
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">{opt.desc}</p>
                     </div>
@@ -429,9 +429,9 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
   return (
     <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex flex-col">
       {/* Progress bar */}
-      <div className="w-full h-1 bg-muted">
+      <div className="w-full h-1 bg-gray-100">
         <div
-          className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 transition-all duration-500"
+          className="h-full bg-gray-900 transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -439,7 +439,7 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
       {/* Top bar */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-border">
         <div className="flex items-center gap-3">
-          <Sparkles className="h-5 w-5 text-primary" />
+          <Sparkles className="h-5 w-5 text-gray-700" />
           <span className="font-semibold text-foreground">Create Agent</span>
           <span className="text-sm text-muted-foreground">Step {currentStep + 1} of {STEPS.length}</span>
         </div>
@@ -449,10 +449,10 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
               key={s.id}
               className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                 i < currentStep
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-gray-900 text-white'
                   : i === currentStep
-                  ? 'bg-primary/20 text-primary border-2 border-primary'
-                  : 'bg-muted text-muted-foreground'
+                  ? 'bg-gray-900/10 text-gray-900 border-2 border-gray-900'
+                  : 'bg-gray-100 text-gray-400'
               }`}
             >
               {i < currentStep ? <Check className="h-4 w-4" /> : i + 1}
@@ -483,7 +483,7 @@ const CreateAgentWizard = ({ open, onClose, onComplete }: CreateAgentWizardProps
         <Button
           onClick={handleNext}
           disabled={!canProceed()}
-          className="gap-2 bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600 text-white px-8"
+          className="gap-2 bg-gray-900 hover:bg-gray-800 text-white px-8"
         >
           {currentStep === STEPS.length - 1 ? (
             <>

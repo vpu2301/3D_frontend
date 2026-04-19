@@ -139,7 +139,7 @@ const AddEmployeeDialog = ({ open, onOpenChange, onEmployeeAdded }: AddEmployeeD
           <Button
             disabled={!isValid}
             onClick={handleSubmit}
-            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+            className="bg-gray-900 hover:bg-gray-800 text-white"
           >
             <UserPlus className="h-4 w-4 mr-2" />
             Add Employee

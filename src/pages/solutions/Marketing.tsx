@@ -1,120 +1,125 @@
 
-import { useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowRight, Megaphone, Target, BarChart3, Users, Zap, TrendingUp, Shield, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Megaphone, Target, BarChart3, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Marketing = () => {
-  useEffect(() => {
-    console.log('Marketing: Component mounted and rendering');
-    console.log('Marketing: Current location:', window.location.pathname);
-  }, []);
+  const { t } = useTranslation();
+
+  const features = [
+    { icon: Megaphone, title: t('solutions.marketing.f1Title'), description: t('solutions.marketing.f1Desc') },
+    { icon: Target, title: t('solutions.marketing.f2Title'), description: t('solutions.marketing.f2Desc') },
+    { icon: BarChart3, title: t('solutions.marketing.f3Title'), description: t('solutions.marketing.f3Desc') },
+    { icon: Users, title: t('solutions.marketing.f4Title'), description: t('solutions.marketing.f4Desc') },
+    { icon: Zap, title: t('solutions.marketing.f5Title'), description: t('solutions.marketing.f5Desc') },
+    { icon: TrendingUp, title: t('solutions.marketing.f6Title'), description: t('solutions.marketing.f6Desc') },
+  ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#181512]">
-      <Header />
-      
-      <main className="pt-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              AI-Driven Marketing Solutions
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight dark:text-white">
+              {t('solutions.marketing.heroTitle')}
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Revolutionize your marketing strategy with intelligent automation. Create personalized campaigns, 
-              optimize content, and drive better ROI with AI-powered marketing assistants.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed dark:text-gray-300">
+              {t('solutions.marketing.heroSubtitle')}
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            <Card className="shadow-lg">
-              <CardHeader>
-                <Megaphone className="h-8 w-8 text-blue-600 mb-2" />
-                <CardTitle>Content Creation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Generate high-quality marketing content, social media posts, and email campaigns automatically.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <Target className="h-8 w-8 text-green-600 mb-2" />
-                <CardTitle>Audience Targeting</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  AI-powered audience segmentation and targeting for maximum campaign effectiveness.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <BarChart3 className="h-8 w-8 text-purple-600 mb-2" />
-                <CardTitle>Campaign Analytics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Real-time campaign performance tracking with AI-driven insights and optimization recommendations.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <Users className="h-8 w-8 text-[#111111] mb-2" />
-                <CardTitle>Lead Nurturing</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Automated lead nurturing sequences that adapt based on customer behavior and engagement.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <Target className="h-8 w-8 text-red-600 mb-2" />
-                <CardTitle>A/B Testing</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Intelligent A/B testing that automatically optimizes campaigns for better performance.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <BarChart3 className="h-8 w-8 text-indigo-600 mb-2" />
-                <CardTitle>ROI Optimization</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Maximize marketing ROI with AI-driven budget allocation and channel optimization.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
-              <Link to="/signup">
-                Transform Your Marketing
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+                <Link to="/start-free-trial">{t('solutions.marketing.heroCta')}</Link>
+              </Button>
+              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
+                <Link to="/watch-demo">{t('solutions.watchDemo')}</Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </main>
-      
-      <Footer />
+      </section>
+
+      <section className="py-20 px-4 bg-white dark:bg-[#1c1916]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('solutions.marketing.featuresTitle')}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-gray-300">{t('solutions.marketing.featuresSubtitle')}</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card key={index} className="bg-white border-gray-200/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-2 dark:bg-[#222018] dark:border-white/10">
+                <CardContent className="p-8 text-center">
+                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
+                    <feature.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-medium text-gray-900 mb-4 dark:text-white">{feature.title}</h3>
+                  <p className="text-gray-600 leading-relaxed dark:text-gray-300">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-gray-50 dark:bg-[#181512]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('solutions.marketing.statsTitle')}</h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { value: t('solutions.marketing.s1Value'), label: t('solutions.marketing.s1Label'), color: 'text-pink-600' },
+              { value: t('solutions.marketing.s2Value'), label: t('solutions.marketing.s2Label'), color: 'text-blue-600' },
+              { value: t('solutions.marketing.s3Value'), label: t('solutions.marketing.s3Label'), color: 'text-green-600' },
+              { value: t('solutions.marketing.s4Value'), label: t('solutions.marketing.s4Label'), color: 'text-[#111111] dark:text-white' },
+            ].map((stat, i) => (
+              <div key={i} className="text-center">
+                <div className={`text-4xl font-light mb-2 ${stat.color}`}>{stat.value}</div>
+                <div className="text-gray-600 dark:text-gray-300">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-white dark:bg-[#1c1916]">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8 dark:bg-[#222018] dark:border-white/10">
+            <h3 className="text-3xl font-light mb-8 text-center dark:text-white">{t('solutions.marketing.enterpriseTitle')}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <Globe className="h-12 w-12 text-pink-400 mx-auto mb-4" />
+                <h4 className="text-xl font-medium mb-2 dark:text-white">{t('solutions.marketing.e1Title')}</h4>
+                <p className="text-black/60 dark:text-white/60">{t('solutions.marketing.e1Desc')}</p>
+              </div>
+              <div className="text-center">
+                <BarChart3 className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+                <h4 className="text-xl font-medium mb-2 dark:text-white">{t('solutions.marketing.e2Title')}</h4>
+                <p className="text-black/60 dark:text-white/60">{t('solutions.marketing.e2Desc')}</p>
+              </div>
+              <div className="text-center">
+                <Shield className="h-12 w-12 text-green-400 mx-auto mb-4" />
+                <h4 className="text-xl font-medium mb-2 dark:text-white">{t('solutions.marketing.e3Title')}</h4>
+                <p className="text-black/60 dark:text-white/60">{t('solutions.marketing.e3Desc')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-5xl font-light mb-8 tracking-tight">{t('solutions.marketing.ctaTitle')}</h2>
+          <p className="text-xl mb-12 opacity-90 font-light">{t('solutions.marketing.ctaSubtitle')}</p>
+          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
+            <Link to="/start-free-trial">
+              {t('common.getStarted')}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
     </div>
   );
 };

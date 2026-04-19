@@ -761,7 +761,7 @@ const IntegrationsPage = () => {
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col">
+          <SidebarInset className="flex-1 flex flex-col bg-white">
             <main className="flex-1 p-6">
               {/* Page header */}
               <div className="flex items-center justify-between mb-6">

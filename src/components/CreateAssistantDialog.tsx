@@ -234,8 +234,8 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
           {/* Header */}
           <DialogHeader className="px-6 py-4 border-b bg-gray-50 flex-shrink-0">
             <DialogTitle className="flex items-center space-x-3 text-xl">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
-                <Sparkles className="h-6 w-6 text-blue-600" />
+              <div className="p-2 rounded-lg bg-gray-100">
+                <Sparkles className="h-6 w-6 text-gray-700" />
               </div>
               <span>Create New AI Assistant</span>
             </DialogTitle>
@@ -248,9 +248,9 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                 <div key={step.number} className="flex items-center">
                   <div className="flex flex-col items-center">
                     <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${
-                      currentStep >= step.number 
-                        ? 'bg-blue-600 border-blue-600 text-white' 
-                        : 'border-gray-300 text-gray-400 bg-white'
+                      currentStep >= step.number
+                        ? 'bg-gray-900 border-gray-900 text-white'
+                        : 'border-gray-200 text-gray-400 bg-white'
                     }`}>
                       {currentStep > step.number ? (
                         <Check className="h-5 w-5" />
@@ -264,7 +264,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                   </div>
                   {index < steps.length - 1 && (
                     <div className={`w-12 h-0.5 mx-2 ${
-                      currentStep > step.number ? 'bg-blue-600' : 'bg-gray-300'
+                      currentStep > step.number ? 'bg-gray-900' : 'bg-gray-200'
                     }`} />
                   )}
                 </div>
@@ -324,7 +324,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                               key={type.value}
                               className={`cursor-pointer transition-all hover:shadow-md ${
                                 assistantData.type === type.value 
-                                  ? 'border-blue-500 bg-blue-50 shadow-md' 
+                                  ? 'border-gray-900 bg-gray-50 shadow-sm'
                                   : 'hover:border-gray-300'
                               }`}
                               onClick={() => setAssistantData(prev => ({ ...prev, type: type.value }))}
@@ -379,7 +379,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                           <Card 
                             className={`cursor-pointer transition-all hover:shadow-md ${
                               assistantData.scope === 'personal' 
-                                ? 'border-blue-500 bg-blue-50 shadow-md' 
+                                ? 'border-gray-900 bg-gray-50 shadow-sm'
                                 : 'hover:border-gray-300'
                             }`}
                             onClick={() => setAssistantData(prev => ({ ...prev, scope: 'personal' }))}
@@ -393,7 +393,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                           <Card 
                             className={`cursor-pointer transition-all hover:shadow-md ${
                               assistantData.scope === 'team' 
-                                ? 'border-blue-500 bg-blue-50 shadow-md' 
+                                ? 'border-gray-900 bg-gray-50 shadow-sm'
                                 : 'hover:border-gray-300'
                             }`}
                             onClick={() => setAssistantData(prev => ({ ...prev, scope: 'team' }))}
@@ -422,7 +422,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                           key={capability}
                           className={`cursor-pointer transition-all hover:shadow-md ${
                             assistantData.capabilities.includes(capability)
-                              ? 'border-blue-500 bg-blue-50 shadow-md' 
+                              ? 'border-gray-900 bg-gray-50 shadow-sm'
                               : 'hover:border-gray-300'
                           }`}
                           onClick={() => handleCapabilityToggle(capability)}
@@ -430,7 +430,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                           <CardContent className="p-4 text-center">
                             <p className="text-sm font-medium">{capability}</p>
                             {assistantData.capabilities.includes(capability) && (
-                              <Check className="h-4 w-4 text-blue-600 mx-auto mt-2" />
+                              <Check className="h-4 w-4 text-gray-900 mx-auto mt-2" />
                             )}
                           </CardContent>
                         </Card>
@@ -455,7 +455,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                               key={level.value}
                               className={`cursor-pointer transition-all hover:shadow-md ${
                                 assistantData.autonomyLevel === level.value
-                                  ? 'border-blue-500 bg-blue-50 shadow-md' 
+                                  ? 'border-gray-900 bg-gray-50 shadow-sm'
                                   : 'hover:border-gray-300'
                               }`}
                               onClick={() => setAssistantData(prev => ({ ...prev, autonomyLevel: level.value }))}
@@ -517,7 +517,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                           key={integration}
                           className={`cursor-pointer transition-all hover:shadow-md ${
                             assistantData.integrations.includes(integration)
-                              ? 'border-blue-500 bg-blue-50 shadow-md' 
+                              ? 'border-gray-900 bg-gray-50 shadow-sm'
                               : 'hover:border-gray-300'
                           }`}
                           onClick={() => handleIntegrationToggle(integration)}
@@ -525,7 +525,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                           <CardContent className="p-4 text-center">
                             <p className="text-sm font-medium">{integration}</p>
                             {assistantData.integrations.includes(integration) && (
-                              <Check className="h-4 w-4 text-blue-600 mx-auto mt-2" />
+                              <Check className="h-4 w-4 text-gray-900 mx-auto mt-2" />
                             )}
                           </CardContent>
                         </Card>
@@ -550,7 +550,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                               key={decision}
                               className={`cursor-pointer transition-all hover:shadow-md ${
                                 assistantData.canMakeDecisions.includes(decision)
-                                  ? 'border-green-500 bg-green-50 shadow-md' 
+                                  ? 'border-gray-900 bg-gray-50 shadow-sm'
                                   : 'hover:border-gray-300'
                               }`}
                               onClick={() => handleDecisionToggle(decision)}
@@ -574,7 +574,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                               key={approval}
                               className={`cursor-pointer transition-all hover:shadow-md ${
                                 assistantData.approvalRequired.includes(approval)
-                                  ? 'border-orange-500 bg-orange-50 shadow-md' 
+                                  ? 'border-gray-900 bg-gray-50 shadow-sm' 
                                   : 'hover:border-gray-300'
                               }`}
                               onClick={() => handleApprovalToggle(approval)}
@@ -582,7 +582,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                               <CardContent className="p-4">
                                 <p className="text-sm font-medium">{approval}</p>
                                 {assistantData.approvalRequired.includes(approval) && (
-                                  <Check className="h-4 w-4 text-orange-600 mt-2" />
+                                  <Check className="h-4 w-4 text-gray-900 mt-2" />
                                 )}
                               </CardContent>
                             </Card>
@@ -705,7 +705,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                   <Button 
                     onClick={handleNext}
                     disabled={!canProceed()}
-                    className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 h-10 px-6"
+                    className="bg-gray-900 hover:bg-gray-800 text-white h-10 px-6"
                   >
                     Next
                     <ArrowRight className="h-4 w-4 ml-2" />
@@ -713,7 +713,7 @@ const CreateAssistantDialog = ({ open, onOpenChange, onAssistantCreated }: Creat
                 ) : (
                   <Button 
                     onClick={handleCreate}
-                    className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 h-10 px-6"
+                    className="bg-gray-900 hover:bg-gray-800 text-white h-10 px-6"
                   >
                     <Sparkles className="h-4 w-4 mr-2" />
                     Create Assistant

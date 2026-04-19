@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import Header from '@/components/Header';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap, Users, BarChart3, Clock, CheckCircle, TrendingUp, Bot, Workflow, Brain, Shield, ChevronRight } from 'lucide-react';
+import { ArrowRight, Zap, Users, BarChart3, Clock, CheckCircle, TrendingUp, Workflow, Brain, Shield, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Animated counter hook
 const useCounter = (end: number, duration: number = 2000, start: boolean = false) => {
@@ -22,6 +22,7 @@ const useCounter = (end: number, duration: number = 2000, start: boolean = false
 };
 
 const Home = () => {
+  const { t } = useTranslation();
   const [statsVisible, setStatsVisible] = useState(false);
   const [heroVisible, setHeroVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -45,58 +46,28 @@ const Home = () => {
   }, []);
 
   const features = [
-    {
-      icon: Brain,
-      title: 'AI Employee Copilot',
-      description: 'Each team member gets a dedicated AI assistant that learns their workflow, preferences, and priorities — working autonomously in the background.',
-    },
-    {
-      icon: Workflow,
-      title: 'Automated Task Flows',
-      description: 'Tasks that used to take hours are handled in minutes. Emails, reports, data analysis, scheduling — all automated with zero friction.',
-    },
-    {
-      icon: BarChart3,
-      title: 'Productivity Intelligence',
-      description: 'Real-time analytics on team performance, bottlenecks, and time allocation. Know exactly where hours go and reclaim them instantly.',
-    },
-    {
-      icon: Shield,
-      title: 'Enterprise Security',
-      description: 'SOC 2 certified, end-to-end encrypted, and fully compliant. Your data stays private — always.',
-    },
+    { icon: Brain, title: t('home.feature1Title'), description: t('home.feature1Desc') },
+    { icon: Workflow, title: t('home.feature2Title'), description: t('home.feature2Desc') },
+    { icon: BarChart3, title: t('home.feature3Title'), description: t('home.feature3Desc') },
+    { icon: Shield, title: t('home.feature4Title'), description: t('home.feature4Desc') },
   ];
 
   const testimonials = [
-    {
-      quote: 'We closed our Q3 sprint in 3 days. What normally takes the full week.',
-      author: 'Sarah K.',
-      role: 'VP of Operations, Nexus Corp',
-    },
-    {
-      quote: 'My team went from firefighting to actually building product. Night and day.',
-      author: 'Marcus T.',
-      role: 'CTO, BuildFast',
-    },
-    {
-      quote: "The ROI was visible in week one. We've never looked back.",
-      author: 'Priya L.',
-      role: 'CEO, Streamline AI',
-    },
+    { quote: t('home.testimonial1Quote'), author: t('home.testimonial1Author'), role: t('home.testimonial1Role') },
+    { quote: t('home.testimonial2Quote'), author: t('home.testimonial2Author'), role: t('home.testimonial2Role') },
+    { quote: t('home.testimonial3Quote'), author: t('home.testimonial3Author'), role: t('home.testimonial3Role') },
   ];
 
   const steps = [
-    { step: '01', title: 'Connect Your Tools', desc: 'Integrates with Slack, Notion, Jira, Gmail, and 200+ tools in minutes.' },
-    { step: '02', title: 'AI Learns Your Team', desc: "Understands each employee's role, workload, and priorities automatically." },
-    { step: '03', title: 'Work Gets Done', desc: 'Routine tasks execute autonomously. Your team focuses on what matters.' },
+    { step: t('home.step1Number'), title: t('home.step1Title'), desc: t('home.step1Desc') },
+    { step: t('home.step2Number'), title: t('home.step2Title'), desc: t('home.step2Desc') },
+    { step: t('home.step3Number'), title: t('home.step3Title'), desc: t('home.step3Desc') },
   ];
 
   const tools = ['Slack', 'Notion', 'Jira', 'GitHub', 'Gmail', 'Salesforce', 'HubSpot', 'Linear'];
 
   return (
     <div className="min-h-screen bg-[#e8e6dc] dark:bg-[#181512] text-[#141413] dark:text-[#ede8e3] overflow-x-hidden">
-      <Header />
-
       {/* Hero */}
       <section className="relative pt-40 pb-28 px-6 lg:px-8">
         <div className="relative max-w-6xl mx-auto">
@@ -106,40 +77,40 @@ const Home = () => {
             style={{ borderRadius: '2px' }}
           >
             <Zap className="w-3 h-3" />
-            AI-Powered Employee Copilot
+            {t('home.badge')}
           </div>
 
           {/* Headline */}
           <h1
             className={`text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[1.0] max-w-4xl transition-all duration-700 delay-100 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           >
-            Where your team's work
+            {t('home.headline1')}
             <br />
-            actually gets done
+            {t('home.headline2')}
           </h1>
 
           {/* Subheadline + CTAs layout */}
           <div className={`flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-16 transition-all duration-700 delay-200 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <p className="text-lg text-[#30302e]/60 dark:text-white/60 max-w-md leading-relaxed">
-              Give every employee an AI copilot that automates repetitive work, accelerates decisions, and compresses your team's weekly output — effortlessly.
+              {t('home.subheadline')}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
               <Link to="/signup">
                 <button className="group inline-flex items-center gap-2 px-7 py-3.5 bg-[#141413] dark:bg-[#ede8e3] hover:bg-[#2a2a28] dark:hover:bg-white text-white dark:text-[#141413] text-sm font-medium transition-all duration-200" style={{ borderRadius: '4px' }}>
-                  Start for free
+                  {t('common.startForFree')}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </button>
               </Link>
               <Link to="/watch-demo">
                 <button className="inline-flex items-center gap-2 px-7 py-3.5 border border-[#141413]/20 dark:border-white/20 hover:border-[#141413]/40 dark:hover:border-white/40 text-[#141413] dark:text-[#ede8e3] text-sm font-medium transition-all duration-200 hover:bg-[#141413]/5 dark:hover:bg-white/5" style={{ borderRadius: '4px' }}>
-                  Book a demo
+                  {t('common.bookDemo')}
                 </button>
               </Link>
             </div>
           </div>
 
           <p className={`text-[#30302e]/35 dark:text-white/35 text-xs mt-6 tracking-wide transition-all duration-700 delay-300 ${heroVisible ? 'opacity-100' : 'opacity-0'}`}>
-            No credit card required · Setup in under 10 minutes
+            {t('home.noCreditCard')}
           </p>
 
           {/* UI preview */}
@@ -150,14 +121,14 @@ const Home = () => {
                 <div className="w-2.5 h-2.5 rounded-full bg-[#141413]/20 dark:bg-white/20" />
                 <div className="w-2.5 h-2.5 rounded-full bg-[#141413]/15 dark:bg-white/15" />
                 <div className="w-2.5 h-2.5 rounded-full bg-[#141413]/10 dark:bg-white/10" />
-                <span className="ml-4 text-[#141413]/30 dark:text-white/30 text-xs font-mono">copilot.dashboard</span>
+                <span className="ml-4 text-[#141413]/30 dark:text-white/30 text-xs font-mono">{t('home.uiPreview')}</span>
               </div>
               <div className="p-6 md:p-8">
                 <div className="grid grid-cols-3 gap-3 mb-5">
                   {[
-                    { label: 'Tasks Completed', value: '47', change: '+12 today' },
-                    { label: 'Hours Saved', value: '18.4h', change: 'this week' },
-                    { label: 'Automation Rate', value: '73%', change: 'of routine work' },
+                    { label: t('home.statsCompleted'), value: '47', change: t('home.statsToday') },
+                    { label: t('home.statsHoursSaved'), value: '18.4h', change: t('home.statsWeek') },
+                    { label: t('home.statsAutomation'), value: '73%', change: t('home.statsOfWork') },
                   ].map((stat, i) => (
                     <div key={i} className="p-4 text-left bg-[#e8e6dc] dark:bg-[#262220] border border-[#141413]/8 dark:border-white/8" style={{ borderRadius: '8px' }}>
                       <div className="text-xl md:text-2xl font-bold text-[#141413] dark:text-[#ede8e3] tracking-tight">{stat.value}</div>
@@ -168,9 +139,9 @@ const Home = () => {
                 </div>
                 <div className="space-y-2">
                   {[
-                    { task: 'Weekly report drafted and sent', time: '2 min ago', done: true },
-                    { task: 'Meeting notes summarized → Notion', time: '14 min ago', done: true },
-                    { task: 'Q4 budget analysis in progress...', time: 'Running', done: false },
+                    { task: t('home.task1'), time: t('home.time1'), done: true },
+                    { task: t('home.task2'), time: t('home.time2'), done: true },
+                    { task: t('home.task3'), time: t('home.timeRunning'), done: false },
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3 bg-[#eeece6] dark:bg-[#1f1d1a] border border-[#141413]/6 dark:border-white/6 px-4 py-3" style={{ borderRadius: '8px' }}>
                       <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-[#141413]/8 dark:bg-white/8 border border-[#141413]/15 dark:border-white/15' : 'bg-[#d97757]/15 border border-[#d97757]/25'}`}>
@@ -195,9 +166,9 @@ const Home = () => {
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:divide-x divide-[#141413]/10 dark:divide-white/10">
             {[
-              { value: `${productivity}%`, label: 'Increase in team productivity', icon: TrendingUp },
-              { value: `${timeSaved}%`, label: 'Reduction in manual task time', icon: Clock },
-              { value: `${companies}+`, label: 'Companies already using it', icon: Users },
+              { value: `${productivity}%`, label: t('home.statProductivity'), icon: TrendingUp },
+              { value: `${timeSaved}%`, label: t('home.statTimeSaved'), icon: Clock },
+              { value: `${companies}+`, label: t('home.statCompanies'), icon: Users },
             ].map((stat, i) => (
               <div key={i} className={`${i > 0 ? 'md:pl-12' : ''}`}>
                 <div className="text-5xl md:text-6xl font-bold text-[#141413] dark:text-[#ede8e3] tracking-tight mb-3">{stat.value}</div>
@@ -212,13 +183,13 @@ const Home = () => {
       <section className="py-28 bg-[#e8e6dc] dark:bg-[#181512]">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="mb-16">
-            <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">Capabilities</p>
+            <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">{t('home.featuresLabel')}</p>
             <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-16">
               <h2 className="text-4xl md:text-5xl font-bold text-[#141413] dark:text-[#ede8e3] leading-tight max-w-sm">
-                Your team, supercharged
+                {t('home.featuresHeadline')}
               </h2>
               <p className="text-[#30302e]/55 dark:text-white/55 text-base max-w-md leading-relaxed pb-1">
-                One AI copilot per employee. Every tool connected. Every task tracked. Every hour optimized.
+                {t('home.featuresSubheadline')}
               </p>
             </div>
           </div>
@@ -236,7 +207,7 @@ const Home = () => {
                 <h3 className="text-lg font-semibold text-[#141413] dark:text-[#ede8e3] mb-3 tracking-tight">{feature.title}</h3>
                 <p className="text-[#30302e]/50 dark:text-white/50 text-sm leading-relaxed">{feature.description}</p>
                 <div className="flex items-center gap-1 mt-6 text-[#d97757] text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  Learn more <ChevronRight className="w-3 h-3" />
+                  {t('common.learnMore')} <ChevronRight className="w-3 h-3" />
                 </div>
               </div>
             ))}
@@ -248,9 +219,9 @@ const Home = () => {
       <section className="py-28 border-t border-[#141413]/10 dark:border-white/10 bg-[#f5f3ee] dark:bg-[#1c1916]">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="mb-16">
-            <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">How it works</p>
+            <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">{t('home.howItWorksLabel')}</p>
             <h2 className="text-4xl md:text-5xl font-bold text-[#141413] dark:text-[#ede8e3] leading-tight">
-              Up and running in minutes
+              {t('home.howItWorksHeadline')}
             </h2>
           </div>
 
@@ -270,18 +241,18 @@ const Home = () => {
       <section className="py-28 bg-[#e8e6dc] dark:bg-[#181512]">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="mb-14">
-            <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">From our customers</p>
-            <h2 className="text-4xl font-bold text-[#141413] dark:text-[#ede8e3] tracking-tight">Teams love the difference</h2>
+            <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">{t('home.testimonialsLabel')}</p>
+            <h2 className="text-4xl font-bold text-[#141413] dark:text-[#ede8e3] tracking-tight">{t('home.testimonialsHeadline')}</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-4">
-            {testimonials.map((t, i) => (
+            {testimonials.map((testimonial, i) => (
               <div key={i} className="bg-[#f5f3ee] dark:bg-[#1c1916] border border-[#141413]/10 dark:border-white/10 p-8 hover:bg-white dark:hover:bg-[#222018] hover:shadow-lg hover:shadow-[#141413]/5 dark:hover:shadow-black/20 transition-all duration-300" style={{ borderRadius: '10px' }}>
                 <div className="w-8 h-0.5 bg-[#d97757] mb-7" />
-                <p className="text-[#141413]/70 dark:text-white/70 text-sm leading-relaxed mb-8">"{t.quote}"</p>
+                <p className="text-[#141413]/70 dark:text-white/70 text-sm leading-relaxed mb-8">"{testimonial.quote}"</p>
                 <div>
-                  <div className="text-[#141413] dark:text-[#ede8e3] font-semibold text-sm">{t.author}</div>
-                  <div className="text-[#30302e]/40 dark:text-white/40 text-xs mt-1">{t.role}</div>
+                  <div className="text-[#141413] dark:text-[#ede8e3] font-semibold text-sm">{testimonial.author}</div>
+                  <div className="text-[#30302e]/40 dark:text-white/40 text-xs mt-1">{testimonial.role}</div>
                 </div>
               </div>
             ))}
@@ -292,7 +263,7 @@ const Home = () => {
       {/* Integrations strip */}
       <section className="py-16 border-t border-[#141413]/10 dark:border-white/10 bg-[#f5f3ee] dark:bg-[#1c1916]">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <p className="text-[#30302e]/38 dark:text-white/38 text-xs uppercase tracking-widest font-semibold mb-8">Connects with the tools your team already uses</p>
+          <p className="text-[#30302e]/38 dark:text-white/38 text-xs uppercase tracking-widest font-semibold mb-8">{t('home.integrationsLabel')}</p>
           <div className="flex flex-wrap items-center gap-2">
             {tools.map((tool) => (
               <div
@@ -303,7 +274,7 @@ const Home = () => {
                 {tool}
               </div>
             ))}
-            <div className="text-[#30302e]/38 dark:text-white/38 text-sm px-3">+200 more</div>
+            <div className="text-[#30302e]/38 dark:text-white/38 text-sm px-3">{t('home.integrationsMore')}</div>
           </div>
         </div>
       </section>
@@ -315,51 +286,31 @@ const Home = () => {
         <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
           <div className="max-w-2xl">
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight tracking-tight">
-              Ready to reclaim
+              {t('home.ctaHeadline1')}
               <br />
-              2 days every week?
+              {t('home.ctaHeadline2')}
             </h2>
             <p className="text-white/45 text-lg mb-12 leading-relaxed max-w-md">
-              Join hundreds of teams who turned their workweek into focused, high-output time — without burning out.
+              {t('home.ctaSubheadline')}
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link to="/signup">
                 <button className="group inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-[#f5f3ee] text-[#141413] text-sm font-medium transition-all duration-200" style={{ borderRadius: '4px' }}>
-                  Start for free
+                  {t('common.startForFree')}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </button>
               </Link>
               <Link to="/schedule-demo">
                 <button className="inline-flex items-center gap-2 px-8 py-4 border border-white/15 hover:border-white/30 text-white text-sm font-medium transition-all duration-200 hover:bg-white/6" style={{ borderRadius: '4px' }}>
-                  Book a demo
+                  {t('common.bookDemo')}
                 </button>
               </Link>
             </div>
-            <p className="text-white/22 text-xs mt-8 tracking-wide">14-day free trial · No credit card · Cancel anytime</p>
+            <p className="text-white/22 text-xs mt-8 tracking-wide">{t('home.ctaTrial')}</p>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-[#141413]/15 dark:border-white/15 py-14 bg-[#e8e6dc] dark:bg-[#181512]">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 bg-[#141413] dark:bg-[#ede8e3] flex items-center justify-center" style={{ borderRadius: '4px' }}>
-                <Bot className="w-4 h-4 text-white dark:text-[#141413]" />
-              </div>
-              <span className="text-[#141413] dark:text-[#ede8e3] font-semibold text-base tracking-tight">3Days.ai</span>
-            </div>
-            <div className="flex gap-8 text-[#30302e]/45 dark:text-white/45 text-sm">
-              <Link to="/pricing" className="hover:text-[#141413] dark:hover:text-white transition-colors">Pricing</Link>
-              <Link to="/about" className="hover:text-[#141413] dark:hover:text-white transition-colors">About</Link>
-              <Link to="/contact" className="hover:text-[#141413] dark:hover:text-white transition-colors">Contact</Link>
-              <Link to="/careers" className="hover:text-[#141413] dark:hover:text-white transition-colors">Careers</Link>
-            </div>
-            <p className="text-[#30302e]/30 dark:text-white/30 text-sm">© 2026 3Days.ai. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
