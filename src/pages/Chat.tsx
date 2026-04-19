@@ -1,24 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, Mic, MicOff, Bot, Zap, User, Clock, Calendar, Paperclip, X, FileText, Image } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+import {
+  Send, Mic, MicOff, Bot, User,
+  Paperclip, X, FileText, Image, Plus, MessageSquare,
+  Hash, Clock, Pencil
+} from 'lucide-react';
 
 interface ChatMessage {
   id: number;
   text: string;
   sender: 'user' | 'assistant';
   timestamp: Date;
-  attachments?: Array<{
-    name: string;
-    type: string;
-    size: number;
-    url: string;
-  }>;
+  attachments?: Array<{ name: string; type: string; size: number; url: string }>;
 }
 
 interface ChatHistory {
@@ -29,404 +24,381 @@ interface ChatHistory {
   messageCount: number;
 }
 
+const AGENTS = [
+  { label: 'Emma',  color: '#fce7f3', dot: '#f472b6' },
+  { label: 'Aria',  color: '#dbeafe', dot: '#60a5fa' },
+  { label: 'Felix', color: '#dcfce7', dot: '#4ade80' },
+  { label: 'Maya',  color: '#ede9fe', dot: '#a78bfa' },
+];
+
+const SUGGESTIONS = [
+  { title: 'Create a marketing plan',   sub: 'for my new product launch'         },
+  { title: 'Analyze sales data',        sub: 'and generate a summary report'     },
+  { title: 'Draft a project timeline',  sub: 'with milestones and deliverables'  },
+  { title: 'Prepare a budget overview', sub: 'for Q2 planning session'           },
+];
+
 const Chat = () => {
-  console.log('=== Chat component starting to render ===');
-  
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [isListening, setIsListening] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
-  const [attachments, setAttachments] = useState<File[]>([]);
-  const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
+  const [message, setMessage]             = useState('');
+  const [messages, setMessages]           = useState<ChatMessage[]>([]);
+  const [isListening, setIsListening]     = useState(false);
+  const [attachments, setAttachments]     = useState<File[]>([]);
+  const [chatHistory, setChatHistory]     = useState<ChatHistory[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string>('current');
-  const [isLoading, setIsLoading] = useState(true);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const fileInputRef   = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef    = useRef<HTMLTextAreaElement>(null);
 
-  // Get user email from localStorage (should be available since this is a protected route)
-  const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
-
-  const fastCommands = [
-    { icon: Zap, label: '@Emma', description: 'Sales Assistant', color: 'bg-pink-100' },
-    { icon: User, label: '@Aria', description: 'Support Helper', color: 'bg-blue-100' },
-    { icon: Clock, label: '@Felix', description: 'Finance Expert', color: 'bg-green-100' },
-    { icon: Calendar, label: '@Maya', description: 'Marketing Pro', color: 'bg-purple-100' },
-  ];
+  const hasStarted = messages.some(m => m.sender === 'user');
 
   useEffect(() => {
-    console.log('=== Chat useEffect running ===');
-    
-    // Initialize with welcome message
-    const welcomeMessage = {
-      id: 1,
-      text: "Hello! Welcome to 3days.ai. I'm your AI assistant. Try asking me to help you with tasks like 'Create a marketing plan for my new product' or 'Analyze my sales data'. How can I help you today?",
-      sender: 'assistant' as const,
-      timestamp: new Date()
-    };
-    
-    console.log('Setting welcome message:', welcomeMessage);
-    setMessages([welcomeMessage]);
-
-    // Sample chat history
-    const sampleHistory: ChatHistory[] = [
-      {
-        id: 'chat-1',
-        title: 'Project Planning Discussion',
-        lastMessage: 'Thanks for the help with the timeline!',
-        timestamp: new Date(Date.now() - 86400000),
-        messageCount: 12
-      },
-      {
-        id: 'chat-2',
-        title: 'Budget Analysis',
-        lastMessage: 'Can you review these numbers?',
-        timestamp: new Date(Date.now() - 172800000),
-        messageCount: 8
-      }
-    ];
-    
-    console.log('Setting chat history:', sampleHistory);
-    setChatHistory(sampleHistory);
-    setIsLoading(false);
-    console.log('=== Chat initialization complete ===');
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
-    setIsTyping(e.target.value.length > 0);
-  };
-
-  const handleFileAttach = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setAttachments(prev => [...prev, ...files]);
-  };
-
-  const removeAttachment = (index: number) => {
-    setAttachments(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleSendMessage = () => {
-    if (!message.trim() && attachments.length === 0) return;
-
-    const messageAttachments = attachments.map(file => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      url: URL.createObjectURL(file)
-    }));
-
-    const newMessage: ChatMessage = {
-      id: messages.length + 1,
-      text: message,
-      sender: 'user',
-      timestamp: new Date(),
-      attachments: messageAttachments.length > 0 ? messageAttachments : undefined
-    };
-
-    setMessages(prev => [...prev, newMessage]);
-    setMessage('');
-    setAttachments([]);
-    setIsTyping(false);
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-
-    setTimeout(() => {
-      const response: ChatMessage = {
-        id: messages.length + 2,
-        text: attachments.length > 0 
-          ? `I can see you've shared ${attachments.length} file(s). I'll analyze them and help you with: "${message || 'the attached files'}". Here's a task I can create for you: "Process and analyze uploaded documents for insights and recommendations."`
-          : `I understand you're asking about: "${message}". Let me create a task for this: "AI Employee will handle: ${message}". I'll assign this to the most suitable AI assistant and get started right away!`,
-        sender: 'assistant',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, response]);
-    }, 1000);
-  };
-
-  const handleVoiceToggle = () => {
-    setIsListening(!isListening);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
-  const handleFastCommand = (command: string) => {
-    setMessage(command + ' ');
-    setIsTyping(true);
-  };
-
-  const selectChatHistory = (chatId: string) => {
-    setCurrentChatId(chatId);
-    if (chatId !== 'current') {
-      setMessages([{
-        id: 1,
-        text: `Loading conversation: ${chatHistory.find(c => c.id === chatId)?.title}...`,
-        sender: 'assistant',
-        timestamp: new Date()
-      }]);
-    }
-  };
-
-  const startNewChat = () => {
-    setCurrentChatId('current');
     setMessages([{
       id: 1,
       text: "Hello! Welcome to 3days.ai. I'm your AI assistant. Try asking me to help you with tasks like 'Create a marketing plan for my new product' or 'Analyze my sales data'. How can I help you today?",
       sender: 'assistant',
-      timestamp: new Date()
+      timestamp: new Date(),
     }]);
+    setChatHistory([
+      { id: 'chat-1', title: 'Project Planning Discussion', lastMessage: 'Thanks for the help with the timeline!', timestamp: new Date(Date.now() - 86400000),  messageCount: 12 },
+      { id: 'chat-2', title: 'Budget Analysis',             lastMessage: 'Can you review these numbers?',          timestamp: new Date(Date.now() - 172800000), messageCount: 8  },
+    ]);
+  }, []);
+
+  useEffect(() => {
+    if (hasStarted) messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, hasStarted]);
+
+  const adjustHeight = () => {
+    const el = textareaRef.current;
+    if (el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 180) + 'px'; }
   };
 
-  const getFileIcon = (fileType: string) => {
-    if (fileType.startsWith('image/')) return Image;
-    return FileText;
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value);
+    adjustHeight();
   };
 
-  console.log('=== Chat render state ===', { 
-    messagesCount: messages.length, 
-    currentChatId,
-    isLoading
-  });
+  const handleSend = () => {
+    if (!message.trim() && attachments.length === 0) return;
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[hsl(30,25%,97%)]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading chat...</p>
+    const atts = attachments.map(f => ({ name: f.name, type: f.type, size: f.size, url: URL.createObjectURL(f) }));
+    const userMsg: ChatMessage = { id: messages.length + 1, text: message, sender: 'user', timestamp: new Date(), attachments: atts.length ? atts : undefined };
+    setMessages(p => [...p, userMsg]);
+    setMessage('');
+    setAttachments([]);
+    if (textareaRef.current)  textareaRef.current.style.height = 'auto';
+    if (fileInputRef.current) fileInputRef.current.value = '';
+
+    setTimeout(() => {
+      const reply: ChatMessage = {
+        id: messages.length + 2,
+        text: attachments.length
+          ? `I can see you've shared ${attachments.length} file(s). I'll analyze them and help you with: "${message || 'the attached files'}". Here's a task I can create for you: "Process and analyze uploaded documents for insights and recommendations."`
+          : `I understand you're asking about: "${message}". Let me create a task for this: "AI Employee will handle: ${message}". I'll assign this to the most suitable AI assistant and get started right away!`,
+        sender: 'assistant',
+        timestamp: new Date(),
+      };
+      setMessages(p => [...p, reply]);
+    }, 1000);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+  };
+
+  const startNewChat = () => {
+    setCurrentChatId('current');
+    setMessages([{ id: 1, text: "Hello! Welcome to 3days.ai. I'm your AI assistant. How can I help you today?", sender: 'assistant', timestamp: new Date() }]);
+  };
+
+  const selectChat = (id: string) => {
+    setCurrentChatId(id);
+    if (id !== 'current') {
+      setMessages([{ id: 1, text: `Loading conversation: ${chatHistory.find(c => c.id === id)?.title}...`, sender: 'assistant', timestamp: new Date() }]);
+    }
+  };
+
+  const getFileIcon = (type: string) => type.startsWith('image/') ? Image : FileText;
+  const fmt = (d: Date) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  /* ── Agent pills ── */
+  const AgentPills = () => (
+    <div className="flex flex-wrap gap-1.5">
+      {AGENTS.map(a => (
+        <button
+          key={a.label}
+          onClick={() => { setMessage(`@${a.label} `); textareaRef.current?.focus(); }}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium text-gray-600 border border-gray-200 hover:border-gray-300 transition-all"
+          style={{ backgroundColor: a.color }}
+        >
+          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: a.dot }} />
+          {a.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  /* ── Bottom input bar (shared) ── */
+  const InputBar = () => (
+    <div className="w-full">
+      {/* Attachment chips */}
+      {attachments.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-2 px-1">
+          {attachments.map((f, i) => {
+            const Icon = getFileIcon(f.type);
+            return (
+              <div key={i} className="flex items-center gap-1.5 bg-gray-100 px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700">
+                <Icon className="h-3.5 w-3.5 text-gray-400" />
+                <span className="truncate max-w-[8rem]">{f.name}</span>
+                <button onClick={() => setAttachments(p => p.filter((_, j) => j !== i))} className="ml-0.5 text-gray-400 hover:text-gray-600"><X className="h-3 w-3" /></button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Textarea card */}
+      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm focus-within:border-[#8fc4e4] focus-within:shadow-md transition-all duration-200">
+        <textarea
+          ref={textareaRef}
+          value={message}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Message AI assistant… (Shift+Enter for new line)"
+          rows={1}
+          className="w-full resize-none bg-transparent text-sm text-gray-800 placeholder-gray-400 px-4 pt-3.5 pb-2 focus:outline-none leading-relaxed"
+          style={{ minHeight: '52px', maxHeight: '180px' }}
+        />
+        <div className="flex items-center justify-between px-3 pb-3">
+          {/* Left actions */}
+          <button onClick={() => fileInputRef.current?.click()} className="flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
+            <Paperclip className="h-4 w-4" />
+          </button>
+          {/* Right actions */}
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setIsListening(p => !p)}
+              className={`flex items-center justify-center h-7 w-7 rounded-lg transition-colors ${isListening ? 'bg-red-100 text-red-500' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
+            >
+              {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+            </button>
+            <button
+              onClick={handleSend}
+              disabled={!message.trim() && attachments.length === 0}
+              className={`flex items-center justify-center h-7 w-7 rounded-lg transition-all duration-150 ${
+                message.trim() || attachments.length > 0
+                  ? 'bg-gray-900 text-white hover:bg-gray-700 shadow-sm'
+                  : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+              }`}
+            >
+              <Send className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       </div>
-    );
-  }
+
+      <p className="text-center text-[11px] text-gray-400 mt-2">
+        AI can make mistakes. Consider checking important information.
+      </p>
+    </div>
+  );
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-[hsl(30,25%,97%)]">
-        <AppSidebar />
-        <SidebarInset className="flex-1">
-          <LoggedInHeader userEmail={userEmail} />
-          
-          <main className="flex-1 flex">
-            {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col relative">
-              <div className="p-6 border-b border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100">
-                      <Bot className="h-8 w-8 text-blue-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-3xl font-light text-gray-800">AI Chat</h1>
-                      <p className="text-gray-500">Chat with your AI assistants</p>
-                    </div>
+      <AppSidebar />
+      <SidebarInset className="flex flex-row overflow-hidden h-screen bg-white">
+
+        {/* ────────────── Main chat column ────────────── */}
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+
+          {!hasStarted ? (
+            /* ── Empty / welcome state ── */
+            <div className="flex-1 flex flex-col items-center justify-center overflow-y-auto px-6 py-16">
+              <div className="w-full max-w-2xl flex flex-col items-center gap-8">
+
+                {/* Icon + greeting */}
+                <div className="flex flex-col items-center gap-3 text-center">
+                  <div className="flex items-center justify-center h-14 w-14 rounded-2xl bg-[#bdd8ec]">
+                    <Bot className="h-7 w-7 text-gray-700" />
                   </div>
-                  <Button onClick={startNewChat} variant="outline" size="sm">
-                    New Chat
-                  </Button>
+                  <h1 className="text-[1.65rem] font-semibold text-gray-900 tracking-tight">How can I help you today?</h1>
+                  <p className="text-sm text-gray-500">Chat with your AI employees or ask anything</p>
                 </div>
-              </div>
 
-              {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto pb-40">
-                <div className="p-6">
-                  <div className="max-w-4xl mx-auto space-y-4">
-                    {messages.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
-                            msg.sender === 'user'
-                              ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white'
-                              : 'bg-white border border-gray-100 text-gray-800'
-                          }`}
-                        >
-                          {msg.text && <p className="text-sm">{msg.text}</p>}
-                          {msg.attachments && msg.attachments.length > 0 && (
-                            <div className="mt-2 space-y-2">
-                              {msg.attachments.map((attachment, index) => {
-                                const FileIcon = getFileIcon(attachment.type);
-                                return (
-                                  <div key={index} className="flex items-center space-x-2 p-2 bg-black/10 rounded-lg">
-                                    <FileIcon className="h-4 w-4" />
-                                    <span className="text-xs truncate">{attachment.name}</span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          )}
-                          <p className={`text-xs mt-2 ${msg.sender === 'user' ? 'text-blue-100' : 'text-gray-400'}`}>
-                            {msg.timestamp.toLocaleTimeString()}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                    <div ref={messagesEndRef} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Fixed Input Area */}
-              <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-100 p-6">
-                <div className="max-w-4xl mx-auto">
-                  {/* Attachments Preview */}
-                  {attachments.length > 0 && (
-                    <div className="mb-4 flex flex-wrap gap-2">
-                      {attachments.map((file, index) => {
-                        const FileIcon = getFileIcon(file.type);
-                        return (
-                          <div key={index} className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg">
-                            <FileIcon className="h-4 w-4 text-gray-600" />
-                            <span className="text-sm text-gray-700 truncate max-w-32">{file.name}</span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removeAttachment(index)}
-                              className="h-auto p-1"
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {/* Fast Commands */}
-                  {!isTyping && attachments.length === 0 && (
-                    <div className="mb-4 flex flex-wrap gap-2">
-                      {fastCommands.map((command, index) => (
-                        <Button
-                          key={index}
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleFastCommand(command.label)}
-                          className={`${command.color} text-gray-700 hover:scale-105 transition-all duration-200 border border-gray-200/50`}
-                        >
-                          <command.icon className="h-3 w-3 mr-2" />
-                          <span className="text-xs font-medium">{command.label}</span>
-                          <span className="text-xs text-gray-500 ml-1">- {command.description}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Input Field */}
-                  <div className={`relative transition-all duration-300 ${isTyping || attachments.length > 0 ? 'max-w-2xl mx-auto' : 'max-w-3xl'}`}>
-                    <Card className="bg-white/90 border-gray-200/50 shadow-lg">
-                      <div className="relative p-2">
-                        <Input
-                          value={message}
-                          onChange={handleInputChange}
-                          onKeyPress={handleKeyPress}
-                          placeholder="Try: 'Create a marketing plan for my startup' or 'Help me organize my project tasks'..."
-                          className="border-0 bg-transparent text-base pr-20 focus-visible:ring-0 focus-visible:ring-offset-0"
-                        />
-                        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                          <Button
-                            onClick={handleFileAttach}
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
-                          >
-                            <Paperclip className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            onClick={handleVoiceToggle}
-                            variant="ghost"
-                            size="icon"
-                            className={`h-8 w-8 rounded-full transition-all duration-200 ${
-                              isListening 
-                                ? "bg-red-100 text-red-600 hover:bg-red-200" 
-                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                            }`}
-                          >
-                            {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                          </Button>
-                          <Button 
-                            onClick={handleSendMessage} 
-                            size="icon" 
-                            className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-all duration-200"
-                          >
-                            <Send className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Chat History Sidebar */}
-            <div className="w-80 bg-white border-l border-gray-100 flex flex-col">
-              <div className="p-4 border-b border-gray-100">
-                <h3 className="font-medium text-gray-900">Chat History</h3>
-              </div>
-              <ScrollArea className="flex-1">
-                <div className="p-4 space-y-2">
-                  <div
-                    onClick={() => selectChatHistory('current')}
-                    className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                      currentChatId === 'current' 
-                        ? 'bg-blue-50 border border-blue-200' 
-                        : 'hover:bg-gray-50 border border-transparent'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-2 mb-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="font-medium text-sm">Current Chat</span>
-                    </div>
-                    <p className="text-xs text-gray-600 truncate">Active conversation</p>
-                    <p className="text-xs text-gray-400 mt-1">Now</p>
-                  </div>
-                  {chatHistory.map((chat) => (
-                    <div
-                      key={chat.id}
-                      onClick={() => selectChatHistory(chat.id)}
-                      className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                        currentChatId === chat.id 
-                          ? 'bg-blue-50 border border-blue-200' 
-                          : 'hover:bg-gray-50 border border-transparent'
-                      }`}
+                {/* Suggestion grid */}
+                <div className="grid grid-cols-2 gap-2.5 w-full">
+                  {SUGGESTIONS.map((s, i) => (
+                    <button
+                      key={i}
+                      onClick={() => { setMessage(s.title + ' ' + s.sub); textareaRef.current?.focus(); }}
+                      className="text-left p-4 rounded-xl border border-gray-200 hover:border-[#8fc4e4] hover:bg-blue-50/30 transition-all duration-150 group"
                     >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-medium text-sm truncate">{chat.title}</span>
-                        <span className="text-xs text-gray-400">{chat.messageCount}</span>
-                      </div>
-                      <p className="text-xs text-gray-600 truncate">{chat.lastMessage}</p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {chat.timestamp.toLocaleDateString()}
-                      </p>
-                    </div>
+                      <p className="text-sm font-medium text-gray-800 mb-0.5 group-hover:text-gray-900">{s.title}</p>
+                      <p className="text-xs text-gray-400">{s.sub}</p>
+                    </button>
                   ))}
                 </div>
-              </ScrollArea>
+
+                {/* Agents */}
+                <div className="w-full">
+                  <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-2.5">Available agents</p>
+                  <AgentPills />
+                </div>
+
+                {/* Input */}
+                <div className="w-full">
+                  <InputBar />
+                </div>
+              </div>
             </div>
 
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              className="hidden"
-              onChange={handleFileSelect}
-              accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx"
-            />
-          </main>
-        </SidebarInset>
-      </div>
+          ) : (
+            /* ── Active chat state ── */
+            <>
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-[#bdd8ec]">
+                    <Bot className="h-4 w-4 text-gray-700" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800">AI Chat</span>
+                </div>
+                <button
+                  onClick={startNewChat}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 border border-transparent hover:border-gray-200 transition-all"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  New chat
+                </button>
+              </div>
+
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="max-w-2xl mx-auto py-10 px-4 space-y-8">
+                  {messages.map(msg => (
+                    <div key={msg.id} className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
+                      {/* Avatar */}
+                      {msg.sender === 'assistant' ? (
+                        <div className="shrink-0 flex items-center justify-center h-8 w-8 rounded-lg bg-[#bdd8ec] mt-0.5">
+                          <Bot className="h-4 w-4 text-gray-700" />
+                        </div>
+                      ) : (
+                        <div className="shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-gray-800 mt-0.5">
+                          <User className="h-3.5 w-3.5 text-white" />
+                        </div>
+                      )}
+
+                      {/* Content */}
+                      <div className={`flex flex-col max-w-[80%] ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
+                        {msg.sender === 'assistant' ? (
+                          <p className="text-sm text-gray-800 leading-relaxed">{msg.text}</p>
+                        ) : (
+                          <div className="bg-gray-900 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm">
+                            {msg.text}
+                          </div>
+                        )}
+
+                        {msg.attachments && msg.attachments.length > 0 && (
+                          <div className="mt-1.5 flex flex-col gap-1.5">
+                            {msg.attachments.map((att, i) => {
+                              const Icon = getFileIcon(att.type);
+                              return (
+                                <div key={i} className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg border border-gray-200">
+                                  <Icon className="h-3.5 w-3.5 text-gray-500" />
+                                  <span className="text-xs text-gray-700 truncate max-w-48">{att.name}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        <span className="text-[11px] text-gray-400 mt-1.5 px-0.5">{fmt(msg.timestamp)}</span>
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
+              </div>
+
+              {/* Bottom bar */}
+              <div className="shrink-0 border-t border-gray-100 bg-white px-4 pt-3 pb-4">
+                <div className="max-w-2xl mx-auto space-y-2.5">
+                  <AgentPills />
+                  <InputBar />
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* ────────────── History sidebar ────────────── */}
+        <div className="w-60 shrink-0 border-l border-gray-100 flex flex-col bg-gray-50/60 h-full">
+          {/* Header */}
+          <div className="h-14 flex items-center justify-between px-4 border-b border-gray-100">
+            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+              <MessageSquare className="h-4 w-4 text-gray-400" />
+              History
+            </div>
+            <button onClick={startNewChat} title="New chat" className="flex items-center justify-center h-6 w-6 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-200 transition-colors">
+              <Pencil className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          <ScrollArea className="flex-1">
+            <div className="py-3 px-2 space-y-0.5">
+
+              {/* Today */}
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 pt-1 pb-2">Today</p>
+
+              <button
+                onClick={() => selectChat('current')}
+                className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors ${
+                  currentChatId === 'current'
+                    ? 'bg-white shadow-sm border border-gray-200'
+                    : 'hover:bg-white/80'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="h-2 w-2 rounded-full bg-green-400 shrink-0" />
+                  <span className={`text-sm truncate ${currentChatId === 'current' ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>Current Chat</span>
+                </div>
+                <p className="text-xs text-gray-400 pl-4">Active conversation</p>
+              </button>
+
+              {/* Earlier */}
+              {chatHistory.length > 0 && (
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 pt-4 pb-2">Earlier</p>
+              )}
+
+              {chatHistory.map(chat => (
+                <button
+                  key={chat.id}
+                  onClick={() => selectChat(chat.id)}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors ${
+                    currentChatId === chat.id
+                      ? 'bg-white shadow-sm border border-gray-200'
+                      : 'hover:bg-white/80'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-0.5">
+                    <span className={`text-sm truncate ${currentChatId === chat.id ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>{chat.title}</span>
+                  </div>
+                  <p className="text-xs text-gray-400 truncate">{chat.lastMessage}</p>
+                  <div className="flex items-center gap-1 mt-0.5 text-gray-300">
+                    <Clock className="h-2.5 w-2.5" />
+                    <span className="text-[11px]">{chat.timestamp.toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
+                  </div>
+                </button>
+              ))}
+
+            </div>
+          </ScrollArea>
+        </div>
+
+        {/* Hidden file input */}
+        <input ref={fileInputRef} type="file" multiple className="hidden" onChange={e => setAttachments(p => [...p, ...Array.from(e.target.files || [])])} accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx" />
+      </SidebarInset>
     </SidebarProvider>
   );
 };

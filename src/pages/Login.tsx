@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Microscope } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -11,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -122,9 +124,25 @@ const Login = () => {
                   className="h-10 bg-[#f9f6f2] border-black/10 text-[#111111] placeholder:text-black/35 rounded-xl"
                 />
               </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="rememberMe"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="rememberMe" className="text-sm text-black/60 font-normal cursor-pointer">
+                    Remember me
+                  </Label>
+                </div>
+                <Link to="/forgot-password" className="text-sm text-[#111111] hover:text-black/70 font-medium underline underline-offset-2">
+                  Forgot password?
+                </Link>
+              </div>
               <Button
                 type="submit"
-                className="w-full h-10 bg-[#111111] hover:bg-[#222222] text-white font-medium rounded-full border-0"
+                className="w-full h-10 bg-[#111111] hover:bg-[#222222] text-white font-medium rounded-xl border-0"
                 disabled={isLoading}
               >
                 {isLoading ? 'Signing in...' : 'Sign in'}
@@ -135,7 +153,7 @@ const Login = () => {
               <p className="text-sm text-black/50">
                 Don't have an account?{' '}
                 <Link to="/signup" className="text-[#111111] hover:text-black/70 font-medium underline underline-offset-2">
-                  Start your free trial
+                  Sign up
                 </Link>
               </p>
             </div>

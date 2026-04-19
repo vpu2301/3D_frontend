@@ -2,165 +2,98 @@
 import { Users, ArrowRight, MessageCircle, Heart, Star, Trophy, TrendingUp, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { useTranslation } from 'react-i18next';
 
 const Community = () => {
+  const { t } = useTranslation();
+
   const stats = [
-    {
-      icon: Users,
-      number: "10,000+",
-      label: "Active Members"
-    },
-    {
-      icon: MessageCircle,
-      number: "50,000+", 
-      label: "Discussions"
-    },
-    {
-      icon: Heart,
-      number: "95%",
-      label: "Satisfaction Rate"
-    },
-    {
-      icon: TrendingUp,
-      number: "24/7",
-      label: "Community Support"
-    }
+    { icon: Users, number: t('resources.community.s1Number'), label: t('resources.community.s1Label') },
+    { icon: MessageCircle, number: t('resources.community.s2Number'), label: t('resources.community.s2Label') },
+    { icon: Heart, number: t('resources.community.s3Number'), label: t('resources.community.s3Label') },
+    { icon: TrendingUp, number: t('resources.community.s4Number'), label: t('resources.community.s4Label') },
   ];
 
   const categories = [
-    {
-      name: "Getting Started",
-      icon: Star,
-      posts: 1200,
-      description: "New to automation? Start here for beginner guides and tips"
-    },
-    {
-      name: "Workflow Sharing",
-      icon: MessageCircle,
-      posts: 3400,
-      description: "Share and discover automation workflows from the community"
-    },
-    {
-      name: "Technical Support",
-      icon: Users,
-      posts: 2100,
-      description: "Get help with technical issues and troubleshooting"
-    },
-    {
-      name: "Feature Requests",
-      icon: Trophy,
-      posts: 800,
-      description: "Suggest new features and vote on community proposals"
-    }
+    { name: t('resources.community.cat1Name'), icon: Star, posts: 1200, description: t('resources.community.cat1Desc') },
+    { name: t('resources.community.cat2Name'), icon: MessageCircle, posts: 3400, description: t('resources.community.cat2Desc') },
+    { name: t('resources.community.cat3Name'), icon: Users, posts: 2100, description: t('resources.community.cat3Desc') },
+    { name: t('resources.community.cat4Name'), icon: Trophy, posts: 800, description: t('resources.community.cat4Desc') },
   ];
 
   const recentTopics = [
-    {
-      title: "Best practices for document automation workflows",
-      author: "Alex Chen",
-      replies: 24,
-      time: "2 hours ago",
-      category: "Workflow Sharing"
-    },
-    {
-      title: "How to set up multi-step approval processes?",
-      author: "Sarah Johnson",
-      replies: 15,
-      time: "4 hours ago", 
-      category: "Getting Started"
-    },
-    {
-      title: "Integration issues with Salesforce connector",
-      author: "Mike Rodriguez",
-      replies: 8,
-      time: "6 hours ago",
-      category: "Technical Support"
-    },
-    {
-      title: "Request: Advanced scheduling features",
-      author: "Emma Wilson",
-      replies: 32,
-      time: "1 day ago",
-      category: "Feature Requests"
-    }
+    { title: t('resources.community.topic1Title'), author: 'Alex Chen', replies: 24, time: '2 hours ago', category: t('resources.community.cat2Name') },
+    { title: t('resources.community.topic2Title'), author: 'Sarah Johnson', replies: 15, time: '4 hours ago', category: t('resources.community.cat1Name') },
+    { title: t('resources.community.topic3Title'), author: 'Mike Rodriguez', replies: 8, time: '6 hours ago', category: t('resources.community.cat3Name') },
+    { title: t('resources.community.topic4Title'), author: 'Emma Wilson', replies: 32, time: '1 day ago', category: t('resources.community.cat4Name') },
   ];
 
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
-      {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
-              Community Forum
+            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight dark:text-white">
+              {t('resources.community.heroTitle')}
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed">
-              Connect with fellow automation enthusiasts, share workflows, get expert help, 
-              and stay updated with the latest automation trends and best practices.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed dark:text-gray-300">
+              {t('resources.community.heroSubtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-md" asChild>
-                <Link to="/get-started">Join Community</Link>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+                <Link to="/get-started">{t('resources.community.heroCta1')}</Link>
               </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
-                <Link to="/contact">Browse Discussions</Link>
+              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
+                <Link to="/contact">{t('resources.community.heroCta2')}</Link>
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Community Stats */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-white dark:bg-[#1c1916]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Thriving Community</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Join thousands of automation professionals sharing knowledge and experiences
-            </p>
+            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('resources.community.communityTitle')}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-gray-300">{t('resources.community.communitySubtitle')}</p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
                   <stat.icon className="h-8 w-8 text-white" />
                 </div>
-                <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
-                <div className="text-gray-600">{stat.label}</div>
+                <div className="text-3xl font-light text-gray-900 mb-2 dark:text-white">{stat.number}</div>
+                <div className="text-gray-600 dark:text-gray-300">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Forum Categories */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-gray-50 dark:bg-[#181512]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Forum Categories</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Explore different topics and find the discussions that matter to you
-            </p>
+            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('resources.community.categoriesTitle')}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-gray-300">{t('resources.community.categoriesSubtitle')}</p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {categories.map((category, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 dark:bg-[#222018]">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-6">
                     <div className="p-4 rounded-2xl bg-gradient-to-r from-green-500 to-blue-500 mr-4">
                       <category.icon className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-medium text-gray-900 mb-2">{category.name}</h3>
-                      <p className="text-sm text-gray-500">{category.posts} posts</p>
+                      <h3 className="text-xl font-medium text-gray-900 mb-2 dark:text-white">{category.name}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{category.posts} {t('resources.community.posts', { count: category.posts }).replace(/\d+\s*/, '')}</p>
                     </div>
                   </div>
-                  <p className="text-gray-600 mb-6">{category.description}</p>
-                  <Button variant="outline" className="w-full">
-                    View Category
+                  <p className="text-gray-600 mb-6 dark:text-gray-300">{category.description}</p>
+                  <Button variant="outline" className="w-full dark:border-gray-600 dark:text-gray-300">
+                    {t('common.viewCategory')}
                   </Button>
                 </CardContent>
               </Card>
@@ -169,35 +102,31 @@ const Community = () => {
         </div>
       </section>
 
-      {/* Recent Topics */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-white dark:bg-[#1c1916]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Recent Discussions</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Stay up to date with the latest community conversations
-            </p>
+            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('resources.community.recentTitle')}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-gray-300">{t('resources.community.recentSubtitle')}</p>
           </div>
-
           <div className="space-y-6">
             {recentTopics.map((topic, index) => (
-              <div key={index} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <div key={index} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow dark:bg-[#222018] dark:border-white/10">
                 <div className="flex items-start justify-between">
                   <div className="flex-grow">
                     <div className="flex items-center space-x-3 mb-2">
                       <span className="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
                         {topic.category}
                       </span>
-                      <span className="text-xs text-gray-500 flex items-center">
+                      <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
                         <Clock className="h-3 w-3 mr-1" />
                         {topic.time}
                       </span>
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2 hover:text-blue-600 cursor-pointer">
+                    <h3 className="text-lg font-medium text-gray-900 mb-2 hover:text-blue-600 cursor-pointer dark:text-white">
                       {topic.title}
                     </h3>
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span>by {topic.author}</span>
+                    <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                      <span>{t('resources.community.by')} {topic.author}</span>
                       <span className="flex items-center">
                         <MessageCircle className="h-4 w-4 mr-1" />
                         {topic.replies} replies
@@ -208,25 +137,21 @@ const Community = () => {
               </div>
             ))}
           </div>
-
           <div className="text-center mt-12">
-            <Button variant="outline" className="px-8 py-3">
-              View All Discussions
+            <Button variant="outline" className="px-8 py-3 dark:border-gray-600 dark:text-gray-300">
+              {t('common.viewAllDiscussions')}
             </Button>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl font-light mb-8 tracking-tight">Join the Conversation</h2>
-          <p className="text-xl mb-12 opacity-90 font-light">
-            Become part of our growing community and accelerate your automation journey.
-          </p>
+          <h2 className="text-5xl font-light mb-8 tracking-tight">{t('resources.community.ctaTitle')}</h2>
+          <p className="text-xl mb-12 opacity-90 font-light">{t('resources.community.ctaSubtitle')}</p>
           <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/get-started">
-              Join Forum
+              {t('resources.community.ctaBtn')}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>

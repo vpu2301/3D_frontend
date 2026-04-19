@@ -2,86 +2,83 @@
 import { CheckCircle, ArrowRight, Clock, Users, Cog, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { useTranslation } from 'react-i18next';
 
 const ImplementationGuide = () => {
+  const { t } = useTranslation();
+
   const phases = [
     {
-      phase: "Phase 1",
-      title: "Assessment & Planning",
-      duration: "1-2 weeks",
+      phase: t('resources.implementationGuide.phase1'),
+      title: t('resources.implementationGuide.phase1Title'),
+      duration: t('resources.implementationGuide.phase1Duration'),
       icon: Target,
       steps: [
-        "Business process analysis",
-        "ROI calculation and goal setting",
-        "Technology stack evaluation",
-        "Implementation roadmap creation"
-      ]
+        t('resources.implementationGuide.phase1s1'),
+        t('resources.implementationGuide.phase1s2'),
+        t('resources.implementationGuide.phase1s3'),
+        t('resources.implementationGuide.phase1s4'),
+      ],
     },
     {
-      phase: "Phase 2", 
-      title: "Setup & Configuration",
-      duration: "2-3 weeks",
+      phase: t('resources.implementationGuide.phase2'),
+      title: t('resources.implementationGuide.phase2Title'),
+      duration: t('resources.implementationGuide.phase2Duration'),
       icon: Cog,
       steps: [
-        "Platform installation and setup",
-        "Integration with existing systems",
-        "Security configuration",
-        "Initial workflow creation"
-      ]
+        t('resources.implementationGuide.phase2s1'),
+        t('resources.implementationGuide.phase2s2'),
+        t('resources.implementationGuide.phase2s3'),
+        t('resources.implementationGuide.phase2s4'),
+      ],
     },
     {
-      phase: "Phase 3",
-      title: "Training & Deployment",
-      duration: "2-4 weeks", 
+      phase: t('resources.implementationGuide.phase3'),
+      title: t('resources.implementationGuide.phase3Title'),
+      duration: t('resources.implementationGuide.phase3Duration'),
       icon: Users,
       steps: [
-        "Team training and onboarding",
-        "Pilot program launch",
-        "Performance monitoring setup",
-        "Gradual rollout to full organization"
-      ]
-    }
+        t('resources.implementationGuide.phase3s1'),
+        t('resources.implementationGuide.phase3s2'),
+        t('resources.implementationGuide.phase3s3'),
+        t('resources.implementationGuide.phase3s4'),
+      ],
+    },
   ];
 
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
-      {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
-              Implementation Guide
+            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight dark:text-white">
+              {t('resources.implementationGuide.heroTitle')}
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed">
-              A comprehensive step-by-step guide to successfully implementing AI automation 
-              in your organization, from initial assessment to full deployment.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed dark:text-gray-300">
+              {t('resources.implementationGuide.heroSubtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-md" asChild>
-                <Link to="/get-started">Start Implementation</Link>
+              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+                <Link to="/get-started">{t('resources.implementationGuide.heroCta1')}</Link>
               </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-md" asChild>
-                <Link to="/contact">Get Expert Help</Link>
+              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
+                <Link to="/contact">{t('resources.implementationGuide.heroCta2')}</Link>
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Implementation Phases */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-white dark:bg-[#1c1916]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Implementation Phases</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our proven three-phase approach ensures smooth deployment and maximum ROI
-            </p>
+            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('resources.implementationGuide.phasesTitle')}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-gray-300">{t('resources.implementationGuide.phasesSubtitle')}</p>
           </div>
-
           <div className="space-y-8">
             {phases.map((phase, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 dark:bg-[#222018]">
                 <CardContent className="p-8">
                   <div className="flex items-start space-x-6">
                     <div className="flex-shrink-0">
@@ -94,17 +91,17 @@ const ImplementationGuide = () => {
                         <span className="text-sm font-medium text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
                           {phase.phase}
                         </span>
-                        <span className="text-sm text-gray-500 flex items-center">
+                        <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
                           <Clock className="h-4 w-4 mr-1" />
                           {phase.duration}
                         </span>
                       </div>
-                      <h3 className="text-2xl font-medium text-gray-900 mb-4">{phase.title}</h3>
+                      <h3 className="text-2xl font-medium text-gray-900 mb-4 dark:text-white">{phase.title}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {phase.steps.map((step, stepIndex) => (
                           <div key={stepIndex} className="flex items-center space-x-3">
                             <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                            <span className="text-gray-600">{step}</span>
+                            <span className="text-gray-600 dark:text-gray-300">{step}</span>
                           </div>
                         ))}
                       </div>
@@ -117,16 +114,13 @@ const ImplementationGuide = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Begin?</h2>
-          <p className="text-xl mb-12 opacity-90 font-light">
-            Let our experts guide you through a successful implementation.
-          </p>
+          <h2 className="text-5xl font-light mb-8 tracking-tight">{t('resources.implementationGuide.ctaTitle')}</h2>
+          <p className="text-xl mb-12 opacity-90 font-light">{t('resources.implementationGuide.ctaSubtitle')}</p>
           <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
             <Link to="/schedule-demo">
-              Schedule Implementation Call
+              {t('resources.implementationGuide.ctaBtn')}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>

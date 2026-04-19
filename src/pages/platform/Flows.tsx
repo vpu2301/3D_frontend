@@ -1,7 +1,6 @@
 
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import LoggedInHeader from '@/components/dashboard/LoggedInHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -25,8 +24,6 @@ import {
 } from 'lucide-react';
 
 const Flows = () => {
-  const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
-
   const protocolFeatures = [
     {
       icon: Network,
@@ -109,7 +106,6 @@ const Flows = () => {
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <main className="flex-1">
-          <LoggedInHeader userEmail={userEmail} />
           <div className="p-6 space-y-8">
             {/* Header */}
             <div className="flex items-center justify-between">

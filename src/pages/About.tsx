@@ -1,7 +1,5 @@
 
 import { useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -15,9 +13,7 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#181512]">
-      <Header />
-      
-      <main className="pt-24">
+      <main className="pt-[60px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-16">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -121,8 +117,6 @@ const About = () => {
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 };

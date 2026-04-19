@@ -138,10 +138,10 @@ const CreateTeamDialog = ({ open, onOpenChange, onTeamCreated }: CreateTeamDialo
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={handleCreateTeam}
               disabled={!teamName || !leader}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-gray-900 hover:bg-gray-800 text-white"
             >
               Create Team
             </Button>

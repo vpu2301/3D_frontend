@@ -103,7 +103,7 @@ const AgenticCommunication = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-gray-50 to-white dark:from-[#181512] dark:to-[#1c1916]">
+    <div className="min-h-screen pt-20 bg-white">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
