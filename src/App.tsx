@@ -43,6 +43,7 @@ import HowItWorks from './pages/HowItWorks';
 import WatchDemo from './pages/WatchDemo';
 import ScheduleDemo from './pages/ScheduleDemo';
 import ChannelsPage from './pages/ChannelsPage';
+import SkillsHub from './pages/SkillsHub';
 
 // Solution pages
 import Sales from './pages/solutions/Sales';
@@ -132,6 +133,7 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/get-started" element={<GetStarted />} />
               <Route path="/start-free-trial" element={<StartFreeTrial />} />
+              <Route path="/skills-hub" element={<SkillsHub />} />
 
               {/* Solutions routes */}
               <Route path="/solutions/sales" element={<Sales />} />
