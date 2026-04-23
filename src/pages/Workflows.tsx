@@ -723,7 +723,8 @@ const Workflows = () => {
   }
 
   useEffect(() => {
-    if (localStorage.getItem('isAuthenticated') !== 'true') navigate('/login');
+    const isAuth = localStorage.getItem('isAuthenticated') || sessionStorage.getItem('isAuthenticated');
+    if (isAuth !== 'true') navigate('/login');
   }, [navigate]);
 
   // Reset showAll when filters change

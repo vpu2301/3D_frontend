@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Send, Mic, MicOff, Bot, User,
-  Paperclip, X, FileText, Image, Plus, MessageSquare,
-  Hash, Clock, Pencil
+  Paperclip, X, FileText, Image, Plus,
 } from 'lucide-react';
 
 interface ChatMessage {
@@ -206,7 +204,12 @@ const Chat = () => {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar
+        chatHistory={chatHistory}
+        currentChatId={currentChatId}
+        onSelectChat={selectChat}
+        onNewChat={startNewChat}
+      />
       <SidebarInset className="flex flex-row overflow-hidden h-screen bg-white">
 
         {/* ────────────── Main chat column ────────────── */}
@@ -330,70 +333,6 @@ const Chat = () => {
               </div>
             </>
           )}
-        </div>
-
-        {/* ────────────── History sidebar ────────────── */}
-        <div className="w-60 shrink-0 border-l border-gray-100 flex flex-col bg-gray-50/60 h-full">
-          {/* Header */}
-          <div className="h-14 flex items-center justify-between px-4 border-b border-gray-100">
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-              <MessageSquare className="h-4 w-4 text-gray-400" />
-              History
-            </div>
-            <button onClick={startNewChat} title="New chat" className="flex items-center justify-center h-6 w-6 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-200 transition-colors">
-              <Pencil className="h-3.5 w-3.5" />
-            </button>
-          </div>
-
-          <ScrollArea className="flex-1">
-            <div className="py-3 px-2 space-y-0.5">
-
-              {/* Today */}
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 pt-1 pb-2">Today</p>
-
-              <button
-                onClick={() => selectChat('current')}
-                className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors ${
-                  currentChatId === 'current'
-                    ? 'bg-white shadow-sm border border-gray-200'
-                    : 'hover:bg-white/80'
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span className="h-2 w-2 rounded-full bg-green-400 shrink-0" />
-                  <span className={`text-sm truncate ${currentChatId === 'current' ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>Current Chat</span>
-                </div>
-                <p className="text-xs text-gray-400 pl-4">Active conversation</p>
-              </button>
-
-              {/* Earlier */}
-              {chatHistory.length > 0 && (
-                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 pt-4 pb-2">Earlier</p>
-              )}
-
-              {chatHistory.map(chat => (
-                <button
-                  key={chat.id}
-                  onClick={() => selectChat(chat.id)}
-                  className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors ${
-                    currentChatId === chat.id
-                      ? 'bg-white shadow-sm border border-gray-200'
-                      : 'hover:bg-white/80'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-0.5">
-                    <span className={`text-sm truncate ${currentChatId === chat.id ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>{chat.title}</span>
-                  </div>
-                  <p className="text-xs text-gray-400 truncate">{chat.lastMessage}</p>
-                  <div className="flex items-center gap-1 mt-0.5 text-gray-300">
-                    <Clock className="h-2.5 w-2.5" />
-                    <span className="text-[11px]">{chat.timestamp.toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
-                  </div>
-                </button>
-              ))}
-
-            </div>
-          </ScrollArea>
         </div>
 
         {/* Hidden file input */}
