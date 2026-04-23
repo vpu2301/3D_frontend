@@ -6,14 +6,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Microscope } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { pingStatus, setAuth, PincerError } from '@/lib/pincerClient';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [apiUrl, setApiUrl] = useState(
+    (import.meta.env.VITE_PINCER_API_URL as string | undefined) ?? 'http://localhost:8080'
+  );
+  const [token, setToken] = useState('');
+  const [isConnecting, setIsConnecting] = useState(false);
+
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -59,6 +68,48 @@ const Login = () => {
     }
   };
 
+  const handleTokenConnect = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!apiUrl.trim() || !token.trim()) {
+      toast({
+        title: 'Missing fields',
+        description: 'Enter both the API URL and the bearer token.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setIsConnecting(true);
+    try {
+      const { version } = await pingStatus(apiUrl.trim(), token.trim());
+      setAuth({ apiUrl: apiUrl.trim(), token: token.trim() });
+
+      // Let the rest of the app treat this session as authenticated, so
+      // ProtectedRoute lets us into /chat.
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('userEmail', 'pincer-token-user');
+
+      toast({
+        title: 'Connected',
+        description: `Pincer server ${version} is reachable.`,
+      });
+      navigate('/chat');
+    } catch (err) {
+      const msg =
+        err instanceof PincerError
+          ? err.status === 401
+            ? 'Token rejected by the server.'
+            : err.message
+          : 'Could not reach the server. Check the URL.';
+      toast({
+        title: 'Connection failed',
+        description: msg,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
   if (existingAuth) return <Navigate to="/dashboard" replace />;
 
   return (
@@ -81,69 +132,124 @@ const Login = () => {
           <CardHeader className="space-y-1">
             <CardTitle className="text-lg font-semibold text-[#111111]">Sign in</CardTitle>
             <CardDescription className="text-black/50">
-              Enter your credentials to continue
+              Choose how you want to connect
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-[#111111] text-sm font-medium">Email or Username</Label>
-                <Input
-                  id="email"
-                  type="text"
-                  placeholder="Enter your email or username"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="h-10 bg-[#f9f6f2] border-black/10 text-[#111111] placeholder:text-black/35 rounded-xl"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-[#111111] text-sm font-medium">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="h-10 bg-[#f9f6f2] border-black/10 text-[#111111] placeholder:text-black/35 rounded-xl"
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="rememberMe"
-                    checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(checked === true)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="rememberMe" className="text-sm text-black/60 font-normal cursor-pointer">
-                    Remember me
-                  </Label>
+            <Tabs defaultValue="credentials" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-4">
+                <TabsTrigger value="credentials">Credentials</TabsTrigger>
+                <TabsTrigger value="token">Token</TabsTrigger>
+              </TabsList>
+
+              {/* ── Credentials tab (existing flow) ── */}
+              <TabsContent value="credentials">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-[#111111] text-sm font-medium">Email or Username</Label>
+                    <Input
+                      id="email"
+                      type="text"
+                      placeholder="Enter your email or username"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="h-10 bg-[#f9f6f2] border-black/10 text-[#111111] placeholder:text-black/35 rounded-xl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-[#111111] text-sm font-medium">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="h-10 bg-[#f9f6f2] border-black/10 text-[#111111] placeholder:text-black/35 rounded-xl"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="rememberMe"
+                        checked={rememberMe}
+                        onCheckedChange={(checked) => setRememberMe(checked === true)}
+                        className="rounded"
+                      />
+                      <Label htmlFor="rememberMe" className="text-sm text-black/60 font-normal cursor-pointer">
+                        Remember me
+                      </Label>
+                    </div>
+                    <Link to="/forgot-password" className="text-sm text-[#111111] hover:text-black/70 font-medium underline underline-offset-2">
+                      Forgot password?
+                    </Link>
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full h-10 bg-[#111111] hover:bg-[#222222] text-white font-medium rounded-xl border-0"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Signing in...' : 'Sign in'}
+                  </Button>
+                </form>
+
+                <div className="mt-6 text-center">
+                  <p className="text-sm text-black/50">
+                    Don't have an account?{' '}
+                    <Link to="/signup" className="text-[#111111] hover:text-black/70 font-medium underline underline-offset-2">
+                      Sign up
+                    </Link>
+                  </p>
                 </div>
-                <Link to="/forgot-password" className="text-sm text-[#111111] hover:text-black/70 font-medium underline underline-offset-2">
-                  Forgot password?
-                </Link>
-              </div>
-              <Button
-                type="submit"
-                className="w-full h-10 bg-[#111111] hover:bg-[#222222] text-white font-medium rounded-xl border-0"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing in...' : 'Sign in'}
-              </Button>
-            </form>
+              </TabsContent>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-black/50">
-                Don't have an account?{' '}
-                <Link to="/signup" className="text-[#111111] hover:text-black/70 font-medium underline underline-offset-2">
-                  Sign up
-                </Link>
-              </p>
-            </div>
-
+              {/* ── Token tab (new: connects directly to a Pincer backend) ── */}
+              <TabsContent value="token">
+                <form onSubmit={handleTokenConnect} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="apiUrl" className="text-[#111111] text-sm font-medium">
+                      Pincer API URL
+                    </Label>
+                    <Input
+                      id="apiUrl"
+                      type="url"
+                      placeholder="https://pincer.example.com"
+                      value={apiUrl}
+                      onChange={(e) => setApiUrl(e.target.value)}
+                      required
+                      className="h-10 bg-[#f9f6f2] border-black/10 text-[#111111] placeholder:text-black/35 rounded-xl font-mono text-xs"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="token" className="text-[#111111] text-sm font-medium">
+                      Bearer token
+                    </Label>
+                    <Input
+                      id="token"
+                      type="password"
+                      placeholder="PINCER_DASHBOARD_TOKEN or PINCER_WEB_CHAT_TOKEN"
+                      value={token}
+                      onChange={(e) => setToken(e.target.value)}
+                      required
+                      className="h-10 bg-[#f9f6f2] border-black/10 text-[#111111] placeholder:text-black/35 rounded-xl font-mono text-xs"
+                    />
+                  </div>
+                  <p className="text-xs text-black/50 leading-relaxed">
+                    Connect this browser to a Pincer backend using the shared bearer
+                    token. No user account is created — the server keys your chat
+                    history by a UUID stored in this browser.
+                  </p>
+                  <Button
+                    type="submit"
+                    className="w-full h-10 bg-[#111111] hover:bg-[#222222] text-white font-medium rounded-xl border-0"
+                    disabled={isConnecting}
+                  >
+                    {isConnecting ? 'Connecting...' : 'Connect'}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
 

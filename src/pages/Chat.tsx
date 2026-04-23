@@ -3,8 +3,19 @@ import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import {
   Send, Mic, MicOff, Bot, User,
-  Paperclip, X, FileText, Image, Plus,
+  Paperclip, X, FileText, Image, Plus, Link2, Unlink,
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import {
+  isConnected as pincerConnected,
+  streamChat,
+  sendChat,
+  fetchLatestConversation,
+  resetUserId,
+  clearAuth,
+  PincerError,
+  type PincerMessage,
+} from '@/lib/pincerClient';
 
 interface ChatMessage {
   id: number;
@@ -12,6 +23,7 @@ interface ChatMessage {
   sender: 'user' | 'assistant';
   timestamp: Date;
   attachments?: Array<{ name: string; type: string; size: number; url: string }>;
+  streaming?: boolean;
 }
 
 interface ChatHistory {
@@ -36,32 +48,64 @@ const SUGGESTIONS = [
   { title: 'Prepare a budget overview', sub: 'for Q2 planning session'           },
 ];
 
+const WELCOME_MESSAGE: ChatMessage = {
+  id: 1,
+  text: "Hello! Welcome to 3days.ai. I'm your AI assistant. Try asking me to help you with tasks like 'Create a marketing plan for my new product' or 'Analyze my sales data'. How can I help you today?",
+  sender: 'assistant',
+  timestamp: new Date(),
+};
+
 const Chat = () => {
+  const { toast } = useToast();
   const [message, setMessage]             = useState('');
   const [messages, setMessages]           = useState<ChatMessage[]>([]);
   const [isListening, setIsListening]     = useState(false);
   const [attachments, setAttachments]     = useState<File[]>([]);
   const [chatHistory, setChatHistory]     = useState<ChatHistory[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string>('current');
+  const [isStreaming, setIsStreaming]     = useState(false);
+  const [pincerOn, setPincerOn]           = useState<boolean>(() => pincerConnected());
 
   const fileInputRef   = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef    = useRef<HTMLTextAreaElement>(null);
+  const abortRef       = useRef<AbortController | null>(null);
 
   const hasStarted = messages.some(m => m.sender === 'user');
 
+  // Boot: show welcome and, if Pincer is connected, hydrate past thread.
   useEffect(() => {
-    setMessages([{
-      id: 1,
-      text: "Hello! Welcome to 3days.ai. I'm your AI assistant. Try asking me to help you with tasks like 'Create a marketing plan for my new product' or 'Analyze my sales data'. How can I help you today?",
-      sender: 'assistant',
-      timestamp: new Date(),
-    }]);
+    setMessages([WELCOME_MESSAGE]);
     setChatHistory([
       { id: 'chat-1', title: 'Project Planning Discussion', lastMessage: 'Thanks for the help with the timeline!', timestamp: new Date(Date.now() - 86400000),  messageCount: 12 },
       { id: 'chat-2', title: 'Budget Analysis',             lastMessage: 'Can you review these numbers?',          timestamp: new Date(Date.now() - 172800000), messageCount: 8  },
     ]);
-  }, []);
+
+    if (!pincerConnected()) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const history = await fetchLatestConversation();
+        if (cancelled || !history || history.length === 0) return;
+        const hydrated = mapHistory(history);
+        if (hydrated.length > 0) setMessages(hydrated);
+      } catch (err) {
+        if (err instanceof PincerError && err.status === 401) {
+          setPincerOn(false);
+          toast({
+            title: 'Pincer token rejected',
+            description: 'Reconnect from the login page.',
+            variant: 'destructive',
+          });
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+      abortRef.current?.abort();
+    };
+  }, [toast]);
 
   useEffect(() => {
     if (hasStarted) messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -78,27 +122,115 @@ const Chat = () => {
   };
 
   const handleSend = () => {
+    if (isStreaming) return;
     if (!message.trim() && attachments.length === 0) return;
 
     const atts = attachments.map(f => ({ name: f.name, type: f.type, size: f.size, url: URL.createObjectURL(f) }));
-    const userMsg: ChatMessage = { id: messages.length + 1, text: message, sender: 'user', timestamp: new Date(), attachments: atts.length ? atts : undefined };
+    const userText = message;
+    const userMsg: ChatMessage = { id: messages.length + 1, text: userText, sender: 'user', timestamp: new Date(), attachments: atts.length ? atts : undefined };
     setMessages(p => [...p, userMsg]);
     setMessage('');
     setAttachments([]);
     if (textareaRef.current)  textareaRef.current.style.height = 'auto';
     if (fileInputRef.current) fileInputRef.current.value = '';
 
-    setTimeout(() => {
-      const reply: ChatMessage = {
-        id: messages.length + 2,
-        text: attachments.length
-          ? `I can see you've shared ${attachments.length} file(s). I'll analyze them and help you with: "${message || 'the attached files'}". Here's a task I can create for you: "Process and analyze uploaded documents for insights and recommendations."`
-          : `I understand you're asking about: "${message}". Let me create a task for this: "AI Employee will handle: ${message}". I'll assign this to the most suitable AI assistant and get started right away!`,
-        sender: 'assistant',
-        timestamp: new Date(),
-      };
-      setMessages(p => [...p, reply]);
-    }, 1000);
+    if (pincerOn) {
+      void dispatchToPincer(userText);
+    } else {
+      // Mock fallback so the UI still works without a Pincer backend.
+      setTimeout(() => {
+        const reply: ChatMessage = {
+          id: Date.now(),
+          text: attachments.length
+            ? `I can see you've shared ${attachments.length} file(s). I'll analyze them and help you with: "${userText || 'the attached files'}".`
+            : `I understand you're asking about: "${userText}". (Demo mode — connect to a Pincer backend for a real reply.)`,
+          sender: 'assistant',
+          timestamp: new Date(),
+        };
+        setMessages(p => [...p, reply]);
+      }, 600);
+    }
+  };
+
+  // Stream a reply from the Pincer backend, appending tokens to a single
+  // assistant bubble. Falls back to POST /api/chat/message on stream failure.
+  const dispatchToPincer = async (userText: string) => {
+    const assistantId = Date.now();
+    setMessages(p => [
+      ...p,
+      { id: assistantId, text: '', sender: 'assistant', timestamp: new Date(), streaming: true },
+    ]);
+
+    const controller = new AbortController();
+    abortRef.current?.abort();
+    abortRef.current = controller;
+    setIsStreaming(true);
+
+    const appendDelta = (delta: string) => {
+      setMessages(p =>
+        p.map(m => (m.id === assistantId ? { ...m, text: m.text + delta } : m)),
+      );
+    };
+    const finish = (finalText?: string) => {
+      setMessages(p =>
+        p.map(m =>
+          m.id === assistantId
+            ? { ...m, text: finalText && finalText.length > m.text.length ? finalText : m.text, streaming: false }
+            : m,
+        ),
+      );
+    };
+
+    try {
+      let gotChunk = false;
+      for await (const ev of streamChat(userText, controller.signal)) {
+        if (ev.event === 'chunk') {
+          gotChunk = true;
+          appendDelta(ev.data.delta);
+        } else if (ev.event === 'done') {
+          finish(ev.data.text);
+          return;
+        } else if (ev.event === 'error') {
+          throw new PincerError(ev.data.message, 500);
+        }
+        // 'tool' events are intentionally ignored for now.
+      }
+      // Stream closed without an explicit `done` — finalize whatever we have.
+      if (gotChunk) finish();
+      else throw new PincerError('Empty stream', 500);
+    } catch (streamErr) {
+      if (controller.signal.aborted) {
+        finish();
+        return;
+      }
+      // Fall back to the non-streaming endpoint so the user still gets a reply.
+      try {
+        const { reply } = await sendChat(userText);
+        setMessages(p =>
+          p.map(m => (m.id === assistantId ? { ...m, text: reply, streaming: false } : m)),
+        );
+      } catch (fallbackErr) {
+        const msg =
+          fallbackErr instanceof PincerError
+            ? fallbackErr.message
+            : streamErr instanceof Error
+              ? streamErr.message
+              : 'Unknown error';
+        setMessages(p =>
+          p.map(m =>
+            m.id === assistantId
+              ? { ...m, text: `⚠️ ${msg}`, streaming: false }
+              : m,
+          ),
+        );
+        if (fallbackErr instanceof PincerError && fallbackErr.status === 401) {
+          setPincerOn(false);
+        }
+      }
+    } finally {
+      setIsStreaming(false);
+      abortRef.current = null;
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -106,8 +238,10 @@ const Chat = () => {
   };
 
   const startNewChat = () => {
+    abortRef.current?.abort();
+    if (pincerOn) resetUserId();
     setCurrentChatId('current');
-    setMessages([{ id: 1, text: "Hello! Welcome to 3days.ai. I'm your AI assistant. How can I help you today?", sender: 'assistant', timestamp: new Date() }]);
+    setMessages([WELCOME_MESSAGE]);
   };
 
   const selectChat = (id: string) => {
@@ -115,6 +249,12 @@ const Chat = () => {
     if (id !== 'current') {
       setMessages([{ id: 1, text: `Loading conversation: ${chatHistory.find(c => c.id === id)?.title}...`, sender: 'assistant', timestamp: new Date() }]);
     }
+  };
+
+  const disconnectPincer = () => {
+    clearAuth();
+    setPincerOn(false);
+    toast({ title: 'Disconnected from Pincer', description: 'Chat will use demo replies until you reconnect.' });
   };
 
   const getFileIcon = (type: string) => type.startsWith('image/') ? Image : FileText;
@@ -163,9 +303,10 @@ const Chat = () => {
           value={message}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder="Message AI assistant… (Shift+Enter for new line)"
+          placeholder={isStreaming ? 'Generating reply…' : 'Message AI assistant… (Shift+Enter for new line)'}
           rows={1}
-          className="w-full resize-none bg-transparent text-sm text-gray-800 placeholder-gray-400 px-4 pt-3.5 pb-2 focus:outline-none leading-relaxed"
+          disabled={isStreaming}
+          className="w-full resize-none bg-transparent text-sm text-gray-800 placeholder-gray-400 px-4 pt-3.5 pb-2 focus:outline-none leading-relaxed disabled:opacity-60"
           style={{ minHeight: '52px', maxHeight: '180px' }}
         />
         <div className="flex items-center justify-between px-3 pb-3">
@@ -183,9 +324,9 @@ const Chat = () => {
             </button>
             <button
               onClick={handleSend}
-              disabled={!message.trim() && attachments.length === 0}
+              disabled={isStreaming || (!message.trim() && attachments.length === 0)}
               className={`flex items-center justify-center h-7 w-7 rounded-lg transition-all duration-150 ${
-                message.trim() || attachments.length > 0
+                !isStreaming && (message.trim() || attachments.length > 0)
                   ? 'bg-gray-900 text-white hover:bg-gray-700 shadow-sm'
                   : 'bg-gray-100 text-gray-300 cursor-not-allowed'
               }`}
@@ -200,6 +341,21 @@ const Chat = () => {
         AI can make mistakes. Consider checking important information.
       </p>
     </div>
+  );
+
+  const PincerBadge = () => (
+    <button
+      onClick={pincerOn ? disconnectPincer : undefined}
+      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all ${
+        pincerOn
+          ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100'
+          : 'bg-gray-50 border-gray-200 text-gray-500 cursor-default'
+      }`}
+      title={pincerOn ? 'Connected to Pincer — click to disconnect' : 'Demo mode — sign in with a token to connect'}
+    >
+      {pincerOn ? <Link2 className="h-3 w-3" /> : <Unlink className="h-3 w-3" />}
+      {pincerOn ? 'Pincer connected' : 'Demo mode'}
+    </button>
   );
 
   return (
@@ -227,6 +383,7 @@ const Chat = () => {
                   </div>
                   <h1 className="text-[1.65rem] font-semibold text-gray-900 tracking-tight">How can I help you today?</h1>
                   <p className="text-sm text-gray-500">Chat with your AI employees or ask anything</p>
+                  <PincerBadge />
                 </div>
 
                 {/* Suggestion grid */}
@@ -266,6 +423,7 @@ const Chat = () => {
                     <Bot className="h-4 w-4 text-gray-700" />
                   </div>
                   <span className="text-sm font-semibold text-gray-800">AI Chat</span>
+                  <PincerBadge />
                 </div>
                 <button
                   onClick={startNewChat}
@@ -295,9 +453,12 @@ const Chat = () => {
                       {/* Content */}
                       <div className={`flex flex-col max-w-[80%] ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
                         {msg.sender === 'assistant' ? (
-                          <p className="text-sm text-gray-800 leading-relaxed">{msg.text}</p>
+                          <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
+                            {msg.text}
+                            {msg.streaming && <span className="inline-block w-1.5 h-3.5 ml-0.5 bg-gray-400 animate-pulse align-middle" />}
+                          </p>
                         ) : (
-                          <div className="bg-gray-900 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm">
+                          <div className="bg-gray-900 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm whitespace-pre-wrap">
                             {msg.text}
                           </div>
                         )}
@@ -341,5 +502,22 @@ const Chat = () => {
     </SidebarProvider>
   );
 };
+
+// Turn Pincer's stored message log into local ChatMessage bubbles.
+function mapHistory(history: PincerMessage[]): ChatMessage[] {
+  const out: ChatMessage[] = [];
+  let counter = 1;
+  for (const m of history) {
+    if (m.role !== 'user' && m.role !== 'assistant') continue;
+    if (!m.content || !m.content.trim()) continue;
+    out.push({
+      id: counter++,
+      text: m.content,
+      sender: m.role,
+      timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
+    });
+  }
+  return out;
+}
 
 export default Chat;
