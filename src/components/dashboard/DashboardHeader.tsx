@@ -13,6 +13,8 @@ const DashboardHeader = ({ userEmail }: DashboardHeaderProps) => {
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('userEmail');
+    sessionStorage.removeItem('isAuthenticated');
+    sessionStorage.removeItem('userEmail');
     navigate('/login');
   };
 

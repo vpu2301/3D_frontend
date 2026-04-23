@@ -14,6 +14,7 @@ import {
   SidebarFooter,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   LayoutDashboard,
   MessageCircle,
@@ -32,7 +33,10 @@ import {
   Zap,
   Bell,
   CheckCheck,
+  Pencil,
+  MessageSquare,
 } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -45,6 +49,21 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
+
+interface ChatHistoryItem {
+  id: string;
+  title: string;
+  lastMessage: string;
+  timestamp: Date;
+  messageCount: number;
+}
+
+interface AppSidebarProps {
+  chatHistory?: ChatHistoryItem[];
+  currentChatId?: string;
+  onSelectChat?: (id: string) => void;
+  onNewChat?: () => void;
+}
 
 const navigationItems = [
   {
@@ -93,10 +112,11 @@ const languages = [
 ];
 
 
-export function AppSidebar() {
+export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat }: AppSidebarProps = {}) {
   const location = useLocation();
   const { state, toggleSidebar } = useSidebar();
   const navigate = useNavigate();
+  const isChat = location.pathname === '/chat';
   const [selectedLanguage, setSelectedLanguage] = useState('en');
 
   const userEmail = localStorage.getItem('userEmail') || '';
@@ -119,6 +139,8 @@ export function AppSidebar() {
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('userEmail');
+    sessionStorage.removeItem('isAuthenticated');
+    sessionStorage.removeItem('userEmail');
     navigate('/login');
   };
 
@@ -164,6 +186,63 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {isChat && state === 'expanded' && (
+          <SidebarGroup className="flex-1 min-h-0">
+            <div className="flex items-center justify-between px-2 pb-1">
+              <SidebarGroupLabel className="flex items-center gap-1.5 p-0">
+                <MessageSquare className="h-3 w-3" />
+                History
+              </SidebarGroupLabel>
+              {onNewChat && (
+                <button
+                  onClick={onNewChat}
+                  title="New chat"
+                  className="flex items-center justify-center h-5 w-5 rounded text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  <Pencil className="h-3 w-3" />
+                </button>
+              )}
+            </div>
+            <SidebarGroupContent className="flex-1 min-h-0">
+              <ScrollArea className="h-full max-h-64">
+                <div className="px-1 space-y-0.5">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 pt-1 pb-1.5">Today</p>
+                  <button
+                    onClick={() => onSelectChat?.('current')}
+                    className={`w-full text-left px-2 py-1.5 rounded-md transition-colors text-xs flex items-center gap-1.5 ${
+                      currentChatId === 'current'
+                        ? 'bg-accent font-medium text-gray-900'
+                        : 'hover:bg-accent/60 text-gray-700'
+                    }`}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-green-400 shrink-0" />
+                    <span className="truncate">Current Chat</span>
+                  </button>
+
+                  {chatHistory && chatHistory.length > 0 && (
+                    <>
+                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 pt-3 pb-1">Earlier</p>
+                      {chatHistory.map(chat => (
+                        <button
+                          key={chat.id}
+                          onClick={() => onSelectChat?.(chat.id)}
+                          className={`w-full text-left px-2 py-1.5 rounded-md transition-colors text-xs truncate ${
+                            currentChatId === chat.id
+                              ? 'bg-accent font-medium text-gray-900'
+                              : 'hover:bg-accent/60 text-gray-700'
+                          }`}
+                        >
+                          {chat.title}
+                        </button>
+                      ))}
+                    </>
+                  )}
+                </div>
+              </ScrollArea>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
       </SidebarContent>
       

@@ -11,11 +11,11 @@
 
 @layer base {
   :root {
-    /* Anthropic-inspired warm cream palette */
-    --background: 47 15% 88%;          /* #e8e6dc warm cream */
+    /* Light neutral gray palette */
+    --background: 0 0% 96%;            /* #f5f5f5 light neutral gray */
     --foreground: 60 3% 8%;            /* #141413 near-black */
 
-    --card: 40 20% 95%;
+    --card: 0 0% 100%;
     --card-foreground: 60 3% 8%;
 
     --popover: 0 0% 100%;
@@ -30,7 +30,7 @@
     --muted: 42 14% 92%;
     --muted-foreground: 30 5% 45%;
 
-    --accent: 42 14% 90%;
+    --accent: 42 8% 95%;
     --accent-foreground: 60 3% 8%;
 
     --destructive: 0 84% 60%;
@@ -46,7 +46,7 @@
     --sidebar-foreground: 0 0% 20%;
     --sidebar-primary: 0 0% 7%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 20% 92%;
+    --sidebar-accent: 30 10% 96%;
     --sidebar-accent-foreground: 0 0% 7%;
     --sidebar-border: 30 15% 87%;
     --sidebar-ring: 0 0% 7%;
@@ -114,7 +114,7 @@
     --muted: 30 18% 93%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 30 18% 90%;
+    --accent: 30 8% 95%;
     --accent-foreground: 0 0% 9%;
 
     --destructive: 0 84% 60%;
@@ -130,7 +130,7 @@
     --sidebar-foreground: 0 0% 20%;
     --sidebar-primary: 0 0% 9%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 18% 92%;
+    --sidebar-accent: 30 8% 96%;
     --sidebar-accent-foreground: 0 0% 9%;
     --sidebar-border: 30 15% 88%;
     --sidebar-ring: 0 0% 9%;
@@ -147,7 +147,7 @@
 
   body {
     @apply bg-background text-foreground;
-    background-color: #e8e6dc;
+    background-color: #f5f5f5;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -308,7 +308,7 @@
 
   /* Card styles */
   .pricing-card {
-    background: #f5f3ee;
+    background: #f5f5f5;
     border: 1px solid rgba(20,20,19,0.1);
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(20,20,19,0.04);
@@ -334,7 +334,7 @@
   /* Section shapes */
   .section-with-shapes {
     position: relative;
-    background-color: #e8e6dc;
+    background-color: #f5f5f5;
   }
 
   .dark .section-with-shapes {
@@ -343,15 +343,15 @@
 
   /* Gradient section backgrounds */
   .gradient-warm {
-    background-color: #e8e6dc;
+    background-color: #f5f5f5;
   }
 
   .gradient-warm-alt {
-    background-color: #f5f3ee;
+    background-color: #f5f5f5;
   }
 
   .gradient-cool-warm {
-    background-color: #f0ede6;
+    background-color: #f5f5f5;
   }
 
   .gradient-dark {
@@ -375,11 +375,11 @@
 
   /* Pricing backgrounds */
   .pricing-gradient {
-    background-color: #e8e6dc;
+    background-color: #f5f5f5;
   }
 
   .pricing-page-bg {
-    background-color: #e8e6dc;
+    background-color: #f5f5f5;
   }
 
   .dark .pricing-page-bg {
@@ -387,7 +387,7 @@
   }
 
   .pricing-section-bg {
-    background-color: #f5f3ee;
+    background-color: #f5f5f5;
   }
 
   .dark .pricing-section-bg {

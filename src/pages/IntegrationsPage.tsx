@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import { Button } from '@/components/ui/button';
-import { Plus, CheckCircle, Search } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Plus, CheckCircle, Search, LayoutGrid, Link2, ChevronRight, Zap, MoreVertical, Settings, Trash2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 // Brand color logos as inline SVG components
 const logos: Record<string, JSX.Element> = {
@@ -631,23 +635,30 @@ const categoryMeta: Record<string, { color: string; bg: string; border: string; 
   'Agent Frameworks': { color: 'text-orange-700', bg: 'bg-orange-50', border: 'border-orange-400', label: 'Agent Frameworks', gradient: 'from-orange-50 via-amber-50 to-yellow-50' },
 };
 
-const IntegrationsPage = () => {
-  const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+type TabKey = 'browse' | 'connected';
 
-  useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated !== 'true') { navigate('/login'); return; }
-  }, [navigate]);
+const CATEGORIES = [
+  { key: 'all',              label: 'All Integrations',  count: 84 },
+  { key: 'AI & LLM',         label: 'AI & LLM',          count: 10 },
+  { key: 'Databases',        label: 'Databases',          count: 8  },
+  { key: 'Vector DBs',       label: 'Vector DBs',         count: 4  },
+  { key: 'Agent Frameworks', label: 'Agent Frameworks',   count: 7  },
+  { key: 'Communication',    label: 'Communication',      count: 5  },
+  { key: 'CRM',              label: 'CRM',                count: 5  },
+  { key: 'Productivity',     label: 'Productivity',       count: 8  },
+  { key: 'Marketing',        label: 'Marketing',          count: 5  },
+  { key: 'E-commerce',       label: 'E-commerce',         count: 5  },
+  { key: 'Analytics',        label: 'Analytics',          count: 4  },
+  { key: 'Finance',          label: 'Finance',            count: 5  },
+  { key: 'HR',               label: 'HR & People',        count: 4  },
+  { key: 'Development',      label: 'Development',        count: 4  },
+  { key: 'Storage',          label: 'Storage',            count: 4  },
+  { key: 'Social Media',     label: 'Social Media',       count: 6  },
+];
 
-  const categories = [
-    'all', 'AI & LLM', 'Databases', 'Vector DBs', 'Agent Frameworks',
-    'Communication', 'CRM', 'Productivity', 'Marketing', 'E-commerce',
-    'Analytics', 'Finance', 'HR', 'Development', 'Storage', 'Social Media',
-  ];
+const INITIAL_VISIBLE = 9;
 
-  const integrations = [
+const ALL_INTEGRATIONS = [
     { id: 1,  name: 'Slack',            category: 'Communication', status: 'Connected',    description: 'Team messaging platform',               popularity: 98 },
     { id: 2,  name: 'Microsoft Teams',  category: 'Communication', status: 'Disconnected', description: 'Video conferencing and chat',            popularity: 95 },
     { id: 3,  name: 'Discord',          category: 'Communication', status: 'Connected',    description: 'Voice and text chat',                   popularity: 85 },
@@ -736,42 +747,54 @@ const IntegrationsPage = () => {
     { id: 82, name: 'n8n',              category: 'Agent Frameworks', status: 'Disconnected', description: 'Workflow automation with AI nodes',   popularity: 85 },
     { id: 83, name: 'Zapier',           category: 'Agent Frameworks', status: 'Connected',  description: 'No-code automation and AI actions',     popularity: 93 },
     { id: 84, name: 'Make',             category: 'Agent Frameworks', status: 'Disconnected', description: 'Visual workflow automation platform', popularity: 80 },
-  ];
+];
 
-  const filtered = integrations
-    .filter(i => {
-      const matchSearch = i.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          i.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchCat = selectedCategory === 'all' || i.category === selectedCategory;
-      return matchSearch && matchCat;
-    })
-    .sort((a, b) => b.popularity - a.popularity);
+const IntegrationsPage = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<TabKey>('browse');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showAll, setShowAll] = useState(false);
 
-  const connectedCount = integrations.filter(i => i.status === 'Connected').length;
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') || sessionStorage.getItem('isAuthenticated');
+    if (isAuthenticated !== 'true') { navigate('/login'); return; }
+  }, [navigate]);
 
-  const groupedByCategory: Record<string, typeof integrations> = {};
-  for (const item of filtered) {
-    if (!groupedByCategory[item.category]) groupedByCategory[item.category] = [];
-    groupedByCategory[item.category].push(item);
-  }
-  const categoryOrder = categories.filter(c => c !== 'all' && groupedByCategory[c]?.length > 0);
+  useEffect(() => { setShowAll(false); }, [selectedCategory, searchTerm]);
+
+  const filtered = useMemo(() => {
+    let result = ALL_INTEGRATIONS;
+    if (selectedCategory !== 'all') {
+      result = result.filter(i => i.category === selectedCategory);
+    }
+    if (searchTerm.trim()) {
+      const q = searchTerm.toLowerCase();
+      result = result.filter(i =>
+        i.name.toLowerCase().includes(q) ||
+        i.description.toLowerCase().includes(q) ||
+        i.category.toLowerCase().includes(q)
+      );
+    }
+    return [...result].sort((a, b) => b.popularity - a.popularity);
+  }, [selectedCategory, searchTerm]);
+
+  const visibleIntegrations = showAll ? filtered : filtered.slice(0, INITIAL_VISIBLE);
+  const connectedIntegrations = ALL_INTEGRATIONS.filter(i => i.status === 'Connected');
 
   return (
     <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col bg-white">
+          <SidebarInset className="flex-1 min-w-0 flex flex-col bg-white overflow-hidden">
             <main className="flex-1 p-6">
-              {/* Page header */}
+
+              {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900">Integrations</h1>
-                  <p className="text-gray-500 mt-1">
-                    Connect your favorite tools —{' '}
-                    <span className="text-green-600 font-semibold">{connectedCount} active</span>{' '}
-                    of {integrations.length} available
-                  </p>
+                  <p className="text-gray-600">Connect your tools and automate across your stack</p>
                 </div>
                 <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600">
                   <Plus className="h-4 w-4 mr-2" />
@@ -779,92 +802,245 @@ const IntegrationsPage = () => {
                 </Button>
               </div>
 
-              {/* Search + category pills */}
-              <div className="mb-8 space-y-3">
-                <div className="relative max-w-md">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-black/50 h-4 w-4" />
-                  <input
-                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-200"
-                    placeholder="Search integrations..."
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
-                        selectedCategory === cat
-                          ? 'bg-[#f5ede3] text-[#111111] border-gray-900'
-                          : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
-                      }`}
-                    >
-                      {cat === 'all' ? 'All' : cat}
-                    </button>
-                  ))}
-                </div>
+              {/* Tab nav */}
+              <div className="flex border-b border-gray-200 mb-6">
+                {([
+                  { key: 'browse' as TabKey,    label: 'Browse Integrations', icon: LayoutGrid },
+                  { key: 'connected' as TabKey, label: 'Connected',           icon: Link2      },
+                ] as const).map(({ key, label, icon: Icon }) => (
+                  <button
+                    key={key}
+                    onClick={() => setActiveTab(key)}
+                    className={cn(
+                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
+                      activeTab === key
+                        ? 'border-gray-900 text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {label}
+                    {key === 'connected' && (
+                      <span className="text-[10px] px-1.5 py-0 rounded-full font-semibold bg-green-100 text-green-700 ml-0.5">
+                        {connectedIntegrations.length}
+                      </span>
+                    )}
+                  </button>
+                ))}
               </div>
 
-              {/* Category sections */}
-              {filtered.length === 0 ? (
-                <div className="text-center py-16 text-black/50">No integrations found.</div>
-              ) : (
-                <div className="space-y-10">
-                  {categoryOrder.map(category => {
-                    const meta = categoryMeta[category] ?? { color: 'text-gray-700', bg: 'bg-gray-50', border: 'border-gray-300', label: category, gradient: 'from-gray-50 to-slate-50' };
-                    const items = groupedByCategory[category];
-                    const connectedInCategory = items.filter(i => i.status === 'Connected').length;
-                    return (
-                      <section key={category}>
-                        {/* Section divider */}
-                        <div className={`flex items-center gap-3 mb-4 pb-3 border-b-2 ${meta.border}`}>
-                          <h2 className={`text-sm font-bold uppercase tracking-widest ${meta.color}`}>{meta.label}</h2>
-                          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${meta.bg} ${meta.color}`}>
-                            {items.length} tools
-                            {connectedInCategory > 0 && ` · ${connectedInCategory} connected`}
-                          </span>
-                        </div>
+              {/* ── Browse tab ── */}
+              {activeTab === 'browse' && (
+                <div>
+                  {/* Subtitle + search row */}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+                    <p className="text-sm text-gray-500 flex-1">
+                      Browse and connect integrations across {CATEGORIES.length - 1} categories
+                    </p>
+                    <div className="relative w-full sm:w-56 flex-shrink-0">
+                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 pointer-events-none" />
+                      <input
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Search integrations…"
+                        className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-400 transition-colors"
+                      />
+                    </div>
+                  </div>
 
-                        {/* Cards */}
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-                          {items.map(integration => {
-                            const isConnected = integration.status === 'Connected';
-                            const logo = logos[integration.name] ?? getFallbackLogo(integration.name, category);
-                            return (
-                              <div
-                                key={integration.id}
-                                className={`relative bg-white rounded-xl border p-4 flex flex-col items-center gap-2 hover:shadow-md transition-all cursor-pointer group ${
-                                  isConnected ? 'border-green-200 ring-1 ring-green-100' : 'border-gray-100'
-                                }`}
-                              >
-                                {isConnected && (
-                                  <CheckCircle className="absolute top-2.5 right-2.5 h-3.5 w-3.5 text-green-500" />
-                                )}
-                                <div className="w-11 h-11 flex items-center justify-center rounded-xl bg-white border border-black/80 shadow-sm group-hover:scale-105 transition-transform">
+                  {/* Category filter chips */}
+                  <div className="flex gap-2 overflow-x-auto pb-3 mb-5 scrollbar-hide">
+                    {CATEGORIES.map((cat) => (
+                      <button
+                        key={cat.key}
+                        onClick={() => setSelectedCategory(cat.key)}
+                        className={cn(
+                          'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-colors flex-shrink-0',
+                          selectedCategory === cat.key
+                            ? 'bg-gray-900 text-white border-gray-900'
+                            : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-gray-800'
+                        )}
+                      >
+                        {cat.label}
+                        <span className={cn(
+                          'text-[10px] px-1.5 py-0 rounded-full font-semibold',
+                          selectedCategory === cat.key ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                        )}>
+                          {cat.count}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Results count */}
+                  {(searchTerm || selectedCategory !== 'all') && (
+                    <p className="text-xs text-gray-400 mb-3">
+                      {filtered.length} integration{filtered.length !== 1 ? 's' : ''} found
+                      {searchTerm && <> for "<span className="text-gray-600 font-medium">{searchTerm}</span>"</>}
+                    </p>
+                  )}
+
+                  {/* Integration grid */}
+                  {filtered.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <Search className="h-10 w-10 text-gray-200 mb-3" />
+                      <p className="text-sm font-medium text-gray-500">No integrations match your search</p>
+                      <button
+                        onClick={() => { setSearchTerm(''); setSelectedCategory('all'); }}
+                        className="text-xs text-green-600 hover:text-green-700 mt-2"
+                      >
+                        Clear filters
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {visibleIntegrations.map((integration) => {
+                          const isConnected = integration.status === 'Connected';
+                          const logo = logos[integration.name] ?? getFallbackLogo(integration.name, integration.category);
+                          const meta = categoryMeta[integration.category];
+                          return (
+                            <div
+                              key={integration.id}
+                              className="group bg-white border border-gray-200/70 rounded-xl p-4 hover:shadow-md hover:border-green-200 transition-all duration-200 cursor-pointer flex flex-col gap-3"
+                            >
+                              {/* Icon + name + category */}
+                              <div className="flex items-start gap-3">
+                                <div
+                                  className="w-10 h-10 bg-[#141413]/6 border border-[#c8c6be] flex items-center justify-center flex-shrink-0 group-hover:bg-[#141413]/10 transition-colors"
+                                  style={{ borderRadius: '9px' }}
+                                >
                                   {logo}
                                 </div>
-                                <span className="text-xs font-semibold text-gray-800 text-center leading-tight mt-0.5">{integration.name}</span>
-                                <span className="text-[10px] text-black/50 text-center leading-snug line-clamp-2">{integration.description}</span>
-                                <button
-                                  className={`mt-auto w-full text-[10px] font-bold py-1.5 px-2 rounded-lg transition-colors ${
-                                    isConnected
-                                      ? 'bg-green-50 text-green-700 hover:bg-green-100'
-                                      : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
-                                  }`}
-                                >
-                                  {isConnected ? 'Configure' : 'Connect'}
-                                </button>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-start gap-2 flex-wrap">
+                                    <h3 className="text-sm font-medium text-gray-900 leading-tight">{integration.name}</h3>
+                                    <Badge className={`text-[10px] px-1.5 py-0 font-normal border-0 flex-shrink-0 ${meta?.bg ?? 'bg-gray-100'} ${meta?.color ?? 'text-gray-600'}`}>
+                                      {meta?.label ?? integration.category}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-[11px] text-gray-500 mt-1 leading-relaxed line-clamp-2">{integration.description}</p>
+                                </div>
                               </div>
-                            );
-                          })}
+
+                              {/* Status line */}
+                              <div className="flex items-center gap-1.5">
+                                <Zap className="h-3 w-3 text-gray-300 flex-shrink-0" />
+                                <span className="text-[10px] text-gray-400 truncate">
+                                  {isConnected ? 'Active — connected to your workspace' : 'Available to connect'}
+                                </span>
+                              </div>
+
+                              {/* Footer */}
+                              <div className="flex items-center justify-between gap-2 mt-auto">
+                                <div className="flex items-center gap-2 flex-wrap min-w-0">
+                                  {isConnected && (
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium border bg-green-50 text-green-700 border-green-200">
+                                      Connected
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-xs text-green-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0">
+                                  {isConnected ? 'Configure' : 'Connect'} <ChevronRight className="h-3 w-3" />
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Load more / Show less */}
+                      {filtered.length > INITIAL_VISIBLE && (
+                        <div className="flex justify-center mt-6">
+                          <button
+                            onClick={() => setShowAll(v => !v)}
+                            className="flex items-center gap-1.5 text-sm text-green-600 hover:text-green-700 font-medium transition-colors"
+                          >
+                            {showAll ? 'Show less' : `Show all ${filtered.length} integrations`}
+                            <ChevronRight className={cn('h-4 w-4 transition-transform', showAll && 'rotate-90')} />
+                          </button>
                         </div>
-                      </section>
-                    );
-                  })}
+                      )}
+                    </>
+                  )}
                 </div>
               )}
+
+              {/* ── Connected tab ── */}
+              {activeTab === 'connected' && (
+                connectedIntegrations.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <Link2 className="h-10 w-10 text-gray-200 mb-3" />
+                    <p className="text-sm font-medium text-gray-500">No integrations connected yet</p>
+                    <button
+                      onClick={() => setActiveTab('browse')}
+                      className="text-xs text-green-600 hover:text-green-700 mt-2"
+                    >
+                      Browse integrations
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {connectedIntegrations.map((integration) => {
+                      const logo = logos[integration.name] ?? getFallbackLogo(integration.name, integration.category);
+                      return (
+                        <Card key={integration.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center justify-between text-sm">
+                              <div className="flex items-center space-x-2">
+                                <div
+                                  className="w-10 h-10 bg-[#141413]/6 border border-[#c8c6be] flex items-center justify-center flex-shrink-0"
+                                  style={{ borderRadius: '9px' }}
+                                >
+                                  {logo}
+                                </div>
+                                <span className="font-medium">{integration.name}</span>
+                              </div>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8">
+                                    <MoreVertical className="h-4 w-4 text-gray-500" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-44">
+                                  <DropdownMenuItem className="gap-2 cursor-pointer">
+                                    <Settings className="h-4 w-4 text-gray-500" />
+                                    Configure
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem className="gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
+                                    <Trash2 className="h-4 w-4" />
+                                    Disconnect
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="pt-0">
+                            <div className="space-y-3">
+                              <p className="text-xs text-gray-600">{integration.description}</p>
+                              <div className="flex items-center justify-between">
+                                <Badge variant="default" className="bg-green-500">Connected</Badge>
+                                <span className="text-[10px] text-gray-500">{integration.category}</span>
+                              </div>
+                              <div className="flex space-x-2">
+                                <Button variant="outline" size="sm" className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200">
+                                  <Settings className="h-3 w-3 mr-1" />
+                                  Configure
+                                </Button>
+                                <Button variant="outline" size="sm" className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200 text-red-600 hover:text-red-700 hover:bg-red-50">
+                                  Disconnect
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                )
+              )}
+
             </main>
           </SidebarInset>
         </div>
