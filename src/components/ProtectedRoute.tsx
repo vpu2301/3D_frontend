@@ -13,12 +13,12 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   useEffect(() => {
     const checkAuth = () => {
       console.log('ProtectedRoute: Checking authentication...');
-      const authStatus = localStorage.getItem('isAuthenticated');
-      const userEmail = localStorage.getItem('userEmail');
-      
-      console.log('ProtectedRoute: Auth status from localStorage:', authStatus);
-      console.log('ProtectedRoute: User email from localStorage:', userEmail);
-      
+      const authStatus = localStorage.getItem('isAuthenticated') || sessionStorage.getItem('isAuthenticated');
+      const userEmail = localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail');
+
+      console.log('ProtectedRoute: Auth status:', authStatus);
+      console.log('ProtectedRoute: User email:', userEmail);
+
       const isAuth = authStatus === 'true';
       setIsAuthenticated(isAuth);
       setIsChecking(false);

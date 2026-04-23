@@ -901,7 +901,7 @@ const Tasks = () => {
   ]);
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    const isAuthenticated = localStorage.getItem('isAuthenticated') || sessionStorage.getItem('isAuthenticated');
 
     if (isAuthenticated !== 'true') {
       navigate('/login');

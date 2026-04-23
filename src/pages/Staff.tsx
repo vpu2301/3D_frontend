@@ -1266,7 +1266,7 @@ const Staff = () => {
   const [showCreateTeamDialog, setShowCreateTeamDialog] = useState(false);
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    const isAuthenticated = localStorage.getItem('isAuthenticated') || sessionStorage.getItem('isAuthenticated');
     if (isAuthenticated !== 'true') { navigate('/login'); }
   }, [navigate]);
 
