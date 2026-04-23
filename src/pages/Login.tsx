@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,49 +17,33 @@ const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const existingAuth =
+    localStorage.getItem('isAuthenticated') === 'true' ||
+    sessionStorage.getItem('isAuthenticated') === 'true';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    console.log('Login: Form submitted with email:', email);
-
     try {
-      // Check for admin credentials
-      if (email.toLowerCase() === 'admin' && password === 'admin') {
-        console.log('Login: Admin credentials detected, logging in...');
-        
-        // Set authentication state
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userEmail', 'admin@3days.ai');
-        
-        toast({
-          title: "Welcome back!",
-          description: "Successfully logged in as Admin.",
-        });
+      const validEmail = import.meta.env.VITE_AUTH_EMAIL;
+      const validPassword = import.meta.env.VITE_AUTH_PASSWORD;
 
-        console.log('Login: Redirecting to dashboard...');
-        navigate('/dashboard');
-        return;
-      }
+      if (email === validEmail && password === validPassword) {
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem('isAuthenticated', 'true');
+        storage.setItem('userEmail', email);
 
-      // For demo purposes, accept any email/password combination
-      if (email && password) {
-        console.log('Login: Valid credentials provided, logging in...');
-        
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userEmail', email);
-        
         toast({
           title: "Welcome back!",
           description: "Successfully logged in to 3Days.ai.",
         });
 
-        console.log('Login: Redirecting to dashboard...');
         navigate('/dashboard');
       } else {
         toast({
-          title: "Error",
-          description: "Please enter both email and password.",
+          title: "Invalid credentials",
+          description: "The email or password you entered is incorrect.",
           variant: "destructive",
         });
       }
@@ -74,6 +58,8 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+
+  if (existingAuth) return <Navigate to="/dashboard" replace />;
 
   return (
     <div className="min-h-screen bg-[#f5ede3] dark:bg-[#181512] flex items-center justify-center p-4">
@@ -158,13 +144,6 @@ const Login = () => {
               </p>
             </div>
 
-            {/* Admin Demo Info */}
-            <div className="mt-6 p-4 bg-[#f9f6f2] rounded-2xl border border-black/8">
-              <p className="text-sm text-[#111111] font-medium mb-1">Demo Access</p>
-              <p className="text-xs text-black/50">
-                Use "admin" / "admin" for admin dashboard access
-              </p>
-            </div>
           </CardContent>
         </Card>
 
