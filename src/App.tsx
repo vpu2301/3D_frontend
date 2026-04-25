@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -44,6 +45,7 @@ import WatchDemo from './pages/WatchDemo';
 import ScheduleDemo from './pages/ScheduleDemo';
 import ChannelsPage from './pages/ChannelsPage';
 import SkillsHub from './pages/SkillsHub';
+const CalendarPage = lazy(() => import('./pages/calendar/CalendarPage'));
 
 // Solution pages
 import Sales from './pages/solutions/Sales';
@@ -230,6 +232,26 @@ function App() {
             <Route path="/dev/docs" element={<ProtectedRoute><DevDocs /></ProtectedRoute>} />
             <Route path="/demos" element={<ProtectedRoute><Demos /></ProtectedRoute>} />
             <Route path="/ai-fine-tuning" element={<ProtectedRoute><AIFineTuning /></ProtectedRoute>} />
+            <Route
+              path="/calendar"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading calendar…</div>}>
+                    <CalendarPage />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/calendar/:view"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading calendar…</div>}>
+                    <CalendarPage />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />

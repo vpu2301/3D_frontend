@@ -583,6 +583,7 @@ const DEPARTMENTS = ['All Departments', 'Engineering', 'Sales', 'Marketing', 'HR
 const EMP_STATUSES: Array<Employee['status'] | 'All'> = ['All', 'Active', 'Inactive', 'On Leave', 'Remote'];
 
 const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: boolean; setShowAddDialog: (v: boolean) => void }) => {
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState<Employee[]>(INITIAL_EMPLOYEES);
   const [search, setSearch] = useState('');
   const [deptFilter, setDeptFilter] = useState('All Departments');
@@ -733,7 +734,7 @@ const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: bool
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem><Eye className="h-4 w-4 mr-2" />View profile</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate(`/staff/human/${emp.id}`)}><Eye className="h-4 w-4 mr-2" />View profile</DropdownMenuItem>
                         <DropdownMenuItem><Pencil className="h-4 w-4 mr-2" />Edit</DropdownMenuItem>
                         <DropdownMenuItem><CheckSquare className="h-4 w-4 mr-2" />Assign to team</DropdownMenuItem>
                         <DropdownMenuSeparator />

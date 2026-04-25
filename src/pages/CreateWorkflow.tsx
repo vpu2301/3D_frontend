@@ -2859,8 +2859,8 @@ const CreateWorkflow = () => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated !== 'true') { navigate('/login'); return; }
+    const isAuth = localStorage.getItem('isAuthenticated') || sessionStorage.getItem('isAuthenticated');
+    if (isAuth !== 'true') { navigate('/login'); return; }
   }, [navigate]);
 
   const handleSave = () => {
