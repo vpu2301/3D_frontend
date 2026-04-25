@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import {
-  Send, Mic, MicOff, Bot, User,
+  Send, Mic, MicOff, Bot,
   Paperclip, X, FileText, Image, Plus, Link2, Unlink,
+  ShieldAlert, Check, AlertCircle, Loader2, Wrench,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -13,9 +14,24 @@ import {
   fetchLatestConversation,
   resetUserId,
   clearAuth,
+  respondApproval,
   PincerError,
   type PincerMessage,
 } from '@/lib/pincerClient';
+import { cleanAssistantText, renderAssistantText } from '@/lib/formatChat';
+
+interface ApprovalRequest {
+  id: string;
+  tool: string;
+  args?: Record<string, unknown>;
+  decision?: 'approved' | 'denied' | 'error';
+  error?: string;
+}
+
+interface ToolUsage {
+  name: string;
+  status: 'running' | 'done';
+}
 
 interface ChatMessage {
   id: number;
@@ -24,6 +40,8 @@ interface ChatMessage {
   timestamp: Date;
   attachments?: Array<{ name: string; type: string; size: number; url: string }>;
   streaming?: boolean;
+  approval?: ApprovalRequest;
+  tools?: ToolUsage[];
 }
 
 interface ChatHistory {
@@ -113,7 +131,7 @@ const Chat = () => {
 
   const adjustHeight = () => {
     const el = textareaRef.current;
-    if (el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 180) + 'px'; }
+    if (el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 240) + 'px'; }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -187,13 +205,56 @@ const Chat = () => {
         if (ev.event === 'chunk') {
           gotChunk = true;
           appendDelta(ev.data.delta);
+        } else if (ev.event === 'approval') {
+          // Backend is asking the user to confirm a destructive tool call
+          // (e.g. google__create_doc). Insert an inline approval card; the
+          // SSE keeps streaming once respondApproval() resolves the future.
+          const card: ChatMessage = {
+            id: Date.now() + Math.floor(Math.random() * 1000),
+            text: '',
+            sender: 'assistant',
+            timestamp: new Date(),
+            approval: {
+              id: ev.data.approval_id,
+              tool: ev.data.tool,
+              args: ev.data.args,
+            },
+          };
+          setMessages(p => [...p, card]);
+        } else if (ev.event === 'tool') {
+          const { phase, name } = ev.data;
+          setMessages(p =>
+            p.map(m => {
+              if (m.id !== assistantId) return m;
+              const tools = m.tools ?? [];
+              if (phase === 'start') {
+                return { ...m, tools: [...tools, { name, status: 'running' }] };
+              }
+              // phase === 'done': mark the latest running entry with this name as done
+              let idx = -1;
+              for (let k = tools.length - 1; k >= 0; k--) {
+                if (tools[k].name === name && tools[k].status === 'running') { idx = k; break; }
+              }
+              if (idx === -1) return m;
+              const updated = tools.slice();
+              updated[idx] = { ...updated[idx], status: 'done' };
+              return { ...m, tools: updated };
+            }),
+          );
         } else if (ev.event === 'done') {
+          // Any tool still marked running at end-of-turn is treated as completed.
+          setMessages(p =>
+            p.map(m =>
+              m.id === assistantId && m.tools
+                ? { ...m, tools: m.tools.map(t => (t.status === 'running' ? { ...t, status: 'done' } : t)) }
+                : m,
+            ),
+          );
           finish(ev.data.text);
           return;
         } else if (ev.event === 'error') {
           throw new PincerError(ev.data.message, 500);
         }
-        // 'tool' events are intentionally ignored for now.
       }
       // Stream closed without an explicit `done` — finalize whatever we have.
       if (gotChunk) finish();
@@ -237,6 +298,29 @@ const Chat = () => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
+  const handleApproval = async (msgId: number, approvalId: string, approved: boolean) => {
+    try {
+      await respondApproval(approvalId, approved);
+      setMessages(p =>
+        p.map(m =>
+          m.id === msgId && m.approval
+            ? { ...m, approval: { ...m.approval, decision: approved ? 'approved' : 'denied' } }
+            : m,
+        ),
+      );
+    } catch (err) {
+      const detail = err instanceof PincerError ? err.message : 'Failed to send decision';
+      setMessages(p =>
+        p.map(m =>
+          m.id === msgId && m.approval
+            ? { ...m, approval: { ...m.approval, decision: 'error', error: detail } }
+            : m,
+        ),
+      );
+      if (err instanceof PincerError && err.status === 401) setPincerOn(false);
+    }
+  };
+
   const startNewChat = () => {
     abortRef.current?.abort();
     if (pincerOn) resetUserId();
@@ -261,7 +345,7 @@ const Chat = () => {
   const fmt = (d: Date) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   /* ── Agent pills ── */
-  const AgentPills = () => (
+  const agentPills = (
     <div className="flex flex-wrap gap-1.5">
       {AGENTS.map(a => (
         <button
@@ -278,7 +362,7 @@ const Chat = () => {
   );
 
   /* ── Bottom input bar (shared) ── */
-  const InputBar = () => (
+  const inputBar = (
     <div className="w-full">
       {/* Attachment chips */}
       {attachments.length > 0 && (
@@ -306,32 +390,32 @@ const Chat = () => {
           placeholder={isStreaming ? 'Generating reply…' : 'Message AI assistant… (Shift+Enter for new line)'}
           rows={1}
           disabled={isStreaming}
-          className="w-full resize-none bg-transparent text-sm text-gray-800 placeholder-gray-400 px-4 pt-3.5 pb-2 focus:outline-none leading-relaxed disabled:opacity-60"
-          style={{ minHeight: '52px', maxHeight: '180px' }}
+          className="w-full resize-none bg-transparent text-base text-gray-800 placeholder-gray-400 px-5 pt-5 pb-2 focus:outline-none leading-relaxed disabled:opacity-60"
+          style={{ minHeight: '88px', maxHeight: '240px' }}
         />
-        <div className="flex items-center justify-between px-3 pb-3">
+        <div className="flex items-center justify-between px-4 pb-4">
           {/* Left actions */}
-          <button onClick={() => fileInputRef.current?.click()} className="flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
-            <Paperclip className="h-4 w-4" />
+          <button onClick={() => fileInputRef.current?.click()} className="flex items-center justify-center h-9 w-9 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
+            <Paperclip className="h-5 w-5" />
           </button>
           {/* Right actions */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setIsListening(p => !p)}
-              className={`flex items-center justify-center h-7 w-7 rounded-lg transition-colors ${isListening ? 'bg-red-100 text-red-500' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
+              className={`flex items-center justify-center h-9 w-9 rounded-lg transition-colors ${isListening ? 'bg-red-100 text-red-500' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
             >
-              {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
             </button>
             <button
               onClick={handleSend}
               disabled={isStreaming || (!message.trim() && attachments.length === 0)}
-              className={`flex items-center justify-center h-7 w-7 rounded-lg transition-all duration-150 ${
+              className={`flex items-center justify-center h-9 w-9 rounded-lg transition-all duration-150 ${
                 !isStreaming && (message.trim() || attachments.length > 0)
                   ? 'bg-gray-900 text-white hover:bg-gray-700 shadow-sm'
                   : 'bg-gray-100 text-gray-300 cursor-not-allowed'
               }`}
             >
-              <Send className="h-3.5 w-3.5" />
+              <Send className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -343,7 +427,7 @@ const Chat = () => {
     </div>
   );
 
-  const PincerBadge = () => (
+  const pincerBadge = (
     <button
       onClick={pincerOn ? disconnectPincer : undefined}
       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all ${
@@ -383,10 +467,15 @@ const Chat = () => {
                   </div>
                   <h1 className="text-[1.65rem] font-semibold text-gray-900 tracking-tight">How can I help you today?</h1>
                   <p className="text-sm text-gray-500">Chat with your AI employees or ask anything</p>
-                  <PincerBadge />
+                  {pincerBadge}
                 </div>
 
-                {/* Suggestion grid */}
+                {/* Input — centered */}
+                <div className="w-full">
+                  {inputBar}
+                </div>
+
+                {/* Quick command buttons — underneath the input */}
                 <div className="grid grid-cols-2 gap-2.5 w-full">
                   {SUGGESTIONS.map((s, i) => (
                     <button
@@ -403,12 +492,7 @@ const Chat = () => {
                 {/* Agents */}
                 <div className="w-full">
                   <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-2.5">Available agents</p>
-                  <AgentPills />
-                </div>
-
-                {/* Input */}
-                <div className="w-full">
-                  <InputBar />
+                  {agentPills}
                 </div>
               </div>
             </div>
@@ -417,13 +501,13 @@ const Chat = () => {
             /* ── Active chat state ── */
             <>
               {/* Header */}
-              <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
+              <div className="flex items-center justify-between px-5 h-14 shrink-0">
                 <div className="flex items-center gap-2.5">
                   <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-[#bdd8ec]">
                     <Bot className="h-4 w-4 text-gray-700" />
                   </div>
                   <span className="text-sm font-semibold text-gray-800">AI Chat</span>
-                  <PincerBadge />
+                  {pincerBadge}
                 </div>
                 <button
                   onClick={startNewChat}
@@ -438,27 +522,42 @@ const Chat = () => {
               <div className="flex-1 overflow-y-auto">
                 <div className="max-w-2xl mx-auto py-10 px-4 space-y-8">
                   {messages.map(msg => (
-                    <div key={msg.id} className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                      {/* Avatar */}
-                      {msg.sender === 'assistant' ? (
-                        <div className="shrink-0 flex items-center justify-center h-8 w-8 rounded-lg bg-[#bdd8ec] mt-0.5">
-                          <Bot className="h-4 w-4 text-gray-700" />
-                        </div>
-                      ) : (
-                        <div className="shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-gray-800 mt-0.5">
-                          <User className="h-3.5 w-3.5 text-white" />
-                        </div>
-                      )}
-
+                    <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
                       {/* Content */}
                       <div className={`flex flex-col max-w-[80%] ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                        {msg.sender === 'assistant' ? (
-                          <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
-                            {msg.text}
-                            {msg.streaming && <span className="inline-block w-1.5 h-3.5 ml-0.5 bg-gray-400 animate-pulse align-middle" />}
-                          </p>
+                        {msg.approval ? (
+                          <ApprovalCard msg={msg} onDecide={handleApproval} />
+                        ) : msg.sender === 'assistant' ? (
+                          (() => {
+                            const cleaned = cleanAssistantText(msg.text);
+                            const hasText = cleaned.length > 0;
+                            const showTyping = msg.streaming && !hasText && !(msg.tools && msg.tools.length);
+                            return (
+                              <div className="flex flex-col gap-1.5">
+                                {msg.tools && msg.tools.length > 0 && (
+                                  <ToolStatusList tools={msg.tools} />
+                                )}
+                                <div className="text-sm text-gray-800 leading-relaxed">
+                                  {showTyping ? (
+                                    <span className="inline-flex items-center gap-1 text-gray-400">
+                                      <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.3s]" />
+                                      <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.15s]" />
+                                      <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce" />
+                                    </span>
+                                  ) : hasText ? (
+                                    <>
+                                      {renderAssistantText(msg.text)}
+                                      {msg.streaming && (
+                                        <span className="inline-block w-1.5 h-3.5 ml-0.5 bg-gray-400 animate-pulse align-middle" />
+                                      )}
+                                    </>
+                                  ) : null}
+                                </div>
+                              </div>
+                            );
+                          })()
                         ) : (
-                          <div className="bg-gray-900 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm whitespace-pre-wrap">
+                          <div className="bg-gray-100 text-gray-900 text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm whitespace-pre-wrap">
                             {msg.text}
                           </div>
                         )}
@@ -486,10 +585,10 @@ const Chat = () => {
               </div>
 
               {/* Bottom bar */}
-              <div className="shrink-0 border-t border-gray-100 bg-white px-4 pt-3 pb-4">
+              <div className="shrink-0 bg-white px-4 pt-3 pb-4">
                 <div className="max-w-2xl mx-auto space-y-2.5">
-                  <AgentPills />
-                  <InputBar />
+                  {agentPills}
+                  {inputBar}
                 </div>
               </div>
             </>
@@ -502,6 +601,125 @@ const Chat = () => {
     </SidebarProvider>
   );
 };
+
+// Inline tool-approval card. Mirrors the Telegram inline-keyboard prompt
+// (`channels/telegram.py::request_approval`) — shows tool name + args and
+// posts the user's decision via `respondApproval`. Once decided, the card
+// collapses to a status line; the SSE keeps streaming on the server side
+// because the agent's awaiting Future has been resolved.
+function ApprovalCard({
+  msg,
+  onDecide,
+}: {
+  msg: ChatMessage;
+  onDecide: (msgId: number, approvalId: string, approved: boolean) => void;
+}) {
+  const ap = msg.approval!;
+  const argsPreview = ap.args ? formatArgs(ap.args) : '';
+
+  if (ap.decision === 'approved' || ap.decision === 'denied') {
+    const approved = ap.decision === 'approved';
+    return (
+      <div
+        className={`text-xs px-3 py-2 rounded-lg border flex items-center gap-2 ${
+          approved
+            ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+            : 'bg-gray-50 border-gray-200 text-gray-600'
+        }`}
+      >
+        {approved ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
+        <span>
+          {approved ? 'Approved' : 'Denied'} <code className="font-mono">{ap.tool}</code>
+        </span>
+      </div>
+    );
+  }
+
+  if (ap.decision === 'error') {
+    return (
+      <div className="text-xs px-3 py-2 rounded-lg border bg-red-50 border-red-200 text-red-700 flex items-center gap-2">
+        <AlertCircle className="h-3.5 w-3.5" />
+        <span>Could not send decision: {ap.error ?? 'unknown error'}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 max-w-md">
+      <div className="flex items-center gap-2 mb-2">
+        <ShieldAlert className="h-4 w-4 text-amber-600" />
+        <span className="text-xs font-semibold text-amber-800">Approval required</span>
+      </div>
+      <div className="text-xs text-gray-800 mb-1">
+        Tool: <code className="font-mono text-[11px] bg-white border border-amber-200 px-1.5 py-0.5 rounded">{ap.tool}</code>
+      </div>
+      {argsPreview && (
+        <pre className="text-[11px] text-gray-700 bg-white border border-amber-200 rounded px-2 py-1.5 mt-1 mb-2 max-h-40 overflow-auto whitespace-pre-wrap break-words">
+          {argsPreview}
+        </pre>
+      )}
+      <div className="flex gap-2 mt-2">
+        <button
+          onClick={() => onDecide(msg.id, ap.id, true)}
+          className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+        >
+          Approve
+        </button>
+        <button
+          onClick={() => onDecide(msg.id, ap.id, false)}
+          className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
+        >
+          Deny
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Inline tool-call status chips. Pincer streams `tool` SSE events with
+// phase=start/done so the user can see which backend tool the agent is
+// running (e.g. google__search, web__fetch) and whether it has finished.
+function ToolStatusList({ tools }: { tools: ToolUsage[] }) {
+  return (
+    <div className="flex flex-col gap-1">
+      {tools.map((t, i) => {
+        const running = t.status === 'running';
+        return (
+          <div
+            key={i}
+            className={`inline-flex items-center gap-1.5 self-start text-[11px] px-2 py-1 rounded-md border ${
+              running
+                ? 'bg-blue-50 border-blue-200 text-blue-700'
+                : 'bg-gray-50 border-gray-200 text-gray-600'
+            }`}
+          >
+            {running ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <Check className="h-3 w-3 text-emerald-600" />
+            )}
+            <Wrench className="h-3 w-3 opacity-60" />
+            <code className="font-mono">{t.name}</code>
+            <span className="opacity-70">{running ? 'running…' : 'done'}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function formatArgs(args: Record<string, unknown>): string {
+  try {
+    const trimmed: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(args)) {
+      if (typeof v === 'string' && v.length > 400) trimmed[k] = v.slice(0, 400) + '…';
+      else trimmed[k] = v;
+    }
+    return JSON.stringify(trimmed, null, 2);
+  } catch {
+    return String(args);
+  }
+}
 
 // Turn Pincer's stored message log into local ChatMessage bubbles.
 function mapHistory(history: PincerMessage[]): ChatMessage[] {

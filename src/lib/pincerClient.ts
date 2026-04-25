@@ -149,6 +149,14 @@ export async function sendChat(text: string): Promise<ChatReply> {
 export type StreamEvent =
   | { event: "chunk"; data: { delta: string } }
   | { event: "tool"; data: { phase: "start" | "done"; name: string } }
+  | {
+      event: "approval";
+      data: {
+        approval_id: string;
+        tool: string;
+        args?: Record<string, unknown>;
+      };
+    }
   | { event: "done"; data: { text?: string } }
   | { event: "error"; data: { message: string } };
 
@@ -222,6 +230,22 @@ function parseFrame(frame: string): StreamEvent | null {
   } catch {
     return null;
   }
+}
+
+// ───────────────────── tool approvals ─────────────────────
+
+// Resolve a pending approval the backend asked about via an SSE `approval`
+// event. The agent's `await request_approval(...)` future on the server
+// is keyed by `approval_id`; this POST resolves it and lets the streaming
+// turn continue.
+export async function respondApproval(
+  approvalId: string,
+  approved: boolean,
+): Promise<void> {
+  await request<{ ok: true }>("/api/chat/approval", {
+    method: "POST",
+    body: JSON.stringify({ approval_id: approvalId, approved }),
+  });
 }
 
 // ───────────────────── conversation history ─────────────────────
