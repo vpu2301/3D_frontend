@@ -112,6 +112,30 @@ function stripJsonBlocks(s: string): string {
   return out;
 }
 
+// Match an http(s) URL starting at `start`, tolerating common quirks:
+//   - trailing sentence punctuation isn't part of the URL
+//   - a URL wrapped as `<https://...>` shouldn't include the closing `>`
+//   - Google-Calendar-style eid params can contain a literal space that
+//     should have been %20-encoded; if the URL has a query string and the
+//     next token looks like a base64 continuation, fold it back in
+function matchUrl(line: string, start: number): { url: string; end: number } | null {
+  if (!line.startsWith('http://', start) && !line.startsWith('https://', start)) return null;
+  const m = line.slice(start).match(/^https?:\/\/[^\s<>)\]]+/);
+  if (!m) return null;
+  let url = m[0].replace(/[.,;:!?'"`)\]>]+$/, '');
+  let end = start + url.length;
+  if (url.includes('?')) {
+    const after = line.slice(end);
+    const cont = after.match(/^[ \t]+([A-Za-z0-9+/=_-]{6,})(?=$|[\s.,;:!?'"`)\]>])/);
+    if (cont && /\d/.test(cont[1])) {
+      url += cont[0];
+      end += cont[0].length;
+    }
+  }
+  if (url.length <= 'https://'.length) return null;
+  return { url, end };
+}
+
 function renderInline(line: string, keyPrefix: string): React.ReactNode[] {
   const out: React.ReactNode[] = [];
   let buf = '';
@@ -191,21 +215,21 @@ function renderInline(line: string, keyPrefix: string): React.ReactNode[] {
     }
 
     if (ch === 'h' && (line.startsWith('http://', i) || line.startsWith('https://', i))) {
-      const m = line.slice(i).match(/^https?:\/\/[^\s<)\]]+/);
-      if (m) {
+      const matched = matchUrl(line, i);
+      if (matched) {
         flush();
         out.push(
           <a
             key={`${keyPrefix}-u-${key++}`}
-            href={m[0]}
+            href={matched.url.replace(/\s+/g, '%20')}
             target="_blank"
             rel="noreferrer"
             className="text-blue-600 hover:underline break-all"
           >
-            {m[0]}
+            {matched.url}
           </a>,
         );
-        i += m[0].length;
+        i = matched.end;
         continue;
       }
     }
@@ -339,4 +363,64 @@ export function renderAssistantText(raw: string): React.ReactNode {
   }
 
   return <div className="space-y-1.5">{blocks}</div>;
+}
+
+/**
+ * Render plain user text, linkifying URLs and preserving line breaks.
+ * No markdown — user typing should display literally.
+ */
+export function renderTextWithLinks(raw: string): React.ReactNode {
+  if (!raw) return null;
+  const lines = raw.split('\n');
+  return (
+    <>
+      {lines.map((line, idx) => (
+        <React.Fragment key={idx}>
+          {idx > 0 && <br />}
+          {linkifyPlain(line, `u${idx}`)}
+        </React.Fragment>
+      ))}
+    </>
+  );
+}
+
+function linkifyPlain(line: string, keyPrefix: string): React.ReactNode[] {
+  const out: React.ReactNode[] = [];
+  let buf = '';
+  let i = 0;
+  let key = 0;
+  const flush = () => {
+    if (buf) {
+      out.push(<React.Fragment key={`${keyPrefix}-t-${key++}`}>{buf}</React.Fragment>);
+      buf = '';
+    }
+  };
+  while (i < line.length) {
+    if (
+      line[i] === 'h' &&
+      (line.startsWith('http://', i) || line.startsWith('https://', i))
+    ) {
+      const matched = matchUrl(line, i);
+      if (matched) {
+        flush();
+        out.push(
+          <a
+            key={`${keyPrefix}-u-${key++}`}
+            href={matched.url.replace(/\s+/g, '%20')}
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-700 hover:underline break-all"
+          >
+            {matched.url}
+          </a>,
+        );
+        i = matched.end;
+        continue;
+      }
+    }
+    buf += line[i];
+    i++;
+  }
+  flush();
+  return out;
 }

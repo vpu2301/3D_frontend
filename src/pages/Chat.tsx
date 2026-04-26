@@ -5,6 +5,7 @@ import {
   Send, Mic, MicOff, Bot,
   Paperclip, X, FileText, Image, Plus, Link2, Unlink,
   ShieldAlert, Check, AlertCircle, Loader2, Wrench,
+  Users, ChevronDown,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -18,20 +19,23 @@ import {
   PincerError,
   type PincerMessage,
 } from '@/lib/pincerClient';
-import { cleanAssistantText, renderAssistantText } from '@/lib/formatChat';
+import { cleanAssistantText, renderAssistantText, renderTextWithLinks } from '@/lib/formatChat';
 
-interface ApprovalRequest {
-  id: string;
-  tool: string;
-  args?: Record<string, unknown>;
-  decision?: 'approved' | 'denied' | 'error';
-  error?: string;
-}
-
-interface ToolUsage {
-  name: string;
-  status: 'running' | 'done';
-}
+type ChainStep =
+  | {
+      kind: 'tool';
+      key: string;
+      name: string;
+      status: 'running' | 'done';
+    }
+  | {
+      kind: 'approval';
+      key: string;
+      approvalId: string;
+      tool: string;
+      decision?: 'approved' | 'denied' | 'error';
+      error?: string;
+    };
 
 interface ChatMessage {
   id: number;
@@ -40,8 +44,7 @@ interface ChatMessage {
   timestamp: Date;
   attachments?: Array<{ name: string; type: string; size: number; url: string }>;
   streaming?: boolean;
-  approval?: ApprovalRequest;
-  tools?: ToolUsage[];
+  chain?: ChainStep[];
 }
 
 interface ChatHistory {
@@ -52,18 +55,18 @@ interface ChatHistory {
   messageCount: number;
 }
 
-const AGENTS = [
-  { label: 'Emma',  color: '#fce7f3', dot: '#f472b6' },
-  { label: 'Aria',  color: '#dbeafe', dot: '#60a5fa' },
-  { label: 'Felix', color: '#dcfce7', dot: '#4ade80' },
-  { label: 'Maya',  color: '#ede9fe', dot: '#a78bfa' },
-];
-
 const SUGGESTIONS = [
   { title: 'Create a marketing plan',   sub: 'for my new product launch'         },
   { title: 'Analyze sales data',        sub: 'and generate a summary report'     },
   { title: 'Draft a project timeline',  sub: 'with milestones and deliverables'  },
   { title: 'Prepare a budget overview', sub: 'for Q2 planning session'           },
+];
+
+const AGENTS = [
+  { label: 'Emma',  color: '#fce7f3', dot: '#f472b6' },
+  { label: 'Aria',  color: '#dbeafe', dot: '#60a5fa' },
+  { label: 'Felix', color: '#dcfce7', dot: '#4ade80' },
+  { label: 'Maya',  color: '#ede9fe', dot: '#a78bfa' },
 ];
 
 const WELCOME_MESSAGE: ChatMessage = {
@@ -83,11 +86,13 @@ const Chat = () => {
   const [currentChatId, setCurrentChatId] = useState<string>('current');
   const [isStreaming, setIsStreaming]     = useState(false);
   const [pincerOn, setPincerOn]           = useState<boolean>(() => pincerConnected());
+  const [showAgentMenu, setShowAgentMenu] = useState(false);
 
   const fileInputRef   = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef    = useRef<HTMLTextAreaElement>(null);
   const abortRef       = useRef<AbortController | null>(null);
+  const agentMenuRef   = useRef<HTMLDivElement>(null);
 
   const hasStarted = messages.some(m => m.sender === 'user');
 
@@ -128,6 +133,26 @@ const Chat = () => {
   useEffect(() => {
     if (hasStarted) messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, hasStarted]);
+
+  useEffect(() => {
+    if (!showAgentMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (agentMenuRef.current && !agentMenuRef.current.contains(e.target as Node)) {
+        setShowAgentMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showAgentMenu]);
+
+  const pickAgent = (label: string) => {
+    setMessage(prev => {
+      const sep = prev.length === 0 || /\s$/.test(prev) ? '' : ' ';
+      return `${prev}${sep}@${label} `;
+    });
+    setShowAgentMenu(false);
+    textareaRef.current?.focus();
+  };
 
   const adjustHeight = () => {
     const el = textareaRef.current;
@@ -171,7 +196,10 @@ const Chat = () => {
   };
 
   // Stream a reply from the Pincer backend, appending tokens to a single
-  // assistant bubble. Falls back to POST /api/chat/message on stream failure.
+  // assistant bubble. Tool starts/dones and approval requests are merged
+  // into a single `chain` timeline on that bubble so the user sees one
+  // vertical sequence of steps. Falls back to POST /api/chat/message on
+  // stream failure.
   const dispatchToPincer = async (userText: string) => {
     const assistantId = Date.now();
     setMessages(p => [
@@ -187,6 +215,13 @@ const Chat = () => {
     const appendDelta = (delta: string) => {
       setMessages(p =>
         p.map(m => (m.id === assistantId ? { ...m, text: m.text + delta } : m)),
+      );
+    };
+    const updateChain = (mut: (chain: ChainStep[]) => ChainStep[]) => {
+      setMessages(p =>
+        p.map(m =>
+          m.id === assistantId ? { ...m, chain: mut(m.chain ?? []) } : m,
+        ),
       );
     };
     const finish = (finalText?: string) => {
@@ -206,48 +241,46 @@ const Chat = () => {
           gotChunk = true;
           appendDelta(ev.data.delta);
         } else if (ev.event === 'approval') {
-          // Backend is asking the user to confirm a destructive tool call
-          // (e.g. google__create_doc). Insert an inline approval card; the
-          // SSE keeps streaming once respondApproval() resolves the future.
-          const card: ChatMessage = {
-            id: Date.now() + Math.floor(Math.random() * 1000),
-            text: '',
-            sender: 'assistant',
-            timestamp: new Date(),
-            approval: {
-              id: ev.data.approval_id,
+          // Backend is asking the user to confirm a destructive tool call.
+          // Append it to the chain so it sits inline with the surrounding
+          // tool steps; the SSE keeps streaming once respondApproval()
+          // resolves the future.
+          const stepKey = `ap-${ev.data.approval_id}`;
+          updateChain(chain => [
+            ...chain,
+            {
+              kind: 'approval',
+              key: stepKey,
+              approvalId: ev.data.approval_id,
               tool: ev.data.tool,
-              args: ev.data.args,
             },
-          };
-          setMessages(p => [...p, card]);
+          ]);
         } else if (ev.event === 'tool') {
           const { phase, name } = ev.data;
-          setMessages(p =>
-            p.map(m => {
-              if (m.id !== assistantId) return m;
-              const tools = m.tools ?? [];
-              if (phase === 'start') {
-                return { ...m, tools: [...tools, { name, status: 'running' }] };
+          if (phase === 'start') {
+            updateChain(chain => [
+              ...chain,
+              { kind: 'tool', key: `tool-${chain.length}-${name}`, name, status: 'running' },
+            ]);
+          } else {
+            // phase === 'done': mark the latest running tool with this name as done
+            updateChain(chain => {
+              for (let k = chain.length - 1; k >= 0; k--) {
+                const s = chain[k];
+                if (s.kind === 'tool' && s.name === name && s.status === 'running') {
+                  const next = chain.slice();
+                  next[k] = { ...s, status: 'done' };
+                  return next;
+                }
               }
-              // phase === 'done': mark the latest running entry with this name as done
-              let idx = -1;
-              for (let k = tools.length - 1; k >= 0; k--) {
-                if (tools[k].name === name && tools[k].status === 'running') { idx = k; break; }
-              }
-              if (idx === -1) return m;
-              const updated = tools.slice();
-              updated[idx] = { ...updated[idx], status: 'done' };
-              return { ...m, tools: updated };
-            }),
-          );
+              return chain;
+            });
+          }
         } else if (ev.event === 'done') {
           // Any tool still marked running at end-of-turn is treated as completed.
-          setMessages(p =>
-            p.map(m =>
-              m.id === assistantId && m.tools
-                ? { ...m, tools: m.tools.map(t => (t.status === 'running' ? { ...t, status: 'done' } : t)) }
-                : m,
+          updateChain(chain =>
+            chain.map(s =>
+              s.kind === 'tool' && s.status === 'running' ? { ...s, status: 'done' } : s,
             ),
           );
           finish(ev.data.text);
@@ -299,24 +332,28 @@ const Chat = () => {
   };
 
   const handleApproval = async (msgId: number, approvalId: string, approved: boolean) => {
+    const setDecision = (decision: 'approved' | 'denied' | 'error', error?: string) => {
+      setMessages(p =>
+        p.map(m => {
+          if (m.id !== msgId || !m.chain) return m;
+          return {
+            ...m,
+            chain: m.chain.map(s =>
+              s.kind === 'approval' && s.approvalId === approvalId
+                ? { ...s, decision, error }
+                : s,
+            ),
+          };
+        }),
+      );
+    };
+
     try {
       await respondApproval(approvalId, approved);
-      setMessages(p =>
-        p.map(m =>
-          m.id === msgId && m.approval
-            ? { ...m, approval: { ...m.approval, decision: approved ? 'approved' : 'denied' } }
-            : m,
-        ),
-      );
+      setDecision(approved ? 'approved' : 'denied');
     } catch (err) {
       const detail = err instanceof PincerError ? err.message : 'Failed to send decision';
-      setMessages(p =>
-        p.map(m =>
-          m.id === msgId && m.approval
-            ? { ...m, approval: { ...m.approval, decision: 'error', error: detail } }
-            : m,
-        ),
-      );
+      setDecision('error', detail);
       if (err instanceof PincerError && err.status === 401) setPincerOn(false);
     }
   };
@@ -344,20 +381,37 @@ const Chat = () => {
   const getFileIcon = (type: string) => type.startsWith('image/') ? Image : FileText;
   const fmt = (d: Date) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-  /* ── Agent pills ── */
-  const agentPills = (
-    <div className="flex flex-wrap gap-1.5">
-      {AGENTS.map(a => (
-        <button
-          key={a.label}
-          onClick={() => { setMessage(`@${a.label} `); textareaRef.current?.focus(); }}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium text-gray-600 border border-gray-200 hover:border-gray-300 transition-all"
-          style={{ backgroundColor: a.color }}
-        >
-          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: a.dot }} />
-          {a.label}
-        </button>
-      ))}
+  /* ── Agent dropdown (lives inside the input bar) ── */
+  const agentDropdown = (
+    <div className="relative" ref={agentMenuRef}>
+      <button
+        type="button"
+        onClick={() => setShowAgentMenu(p => !p)}
+        className={`flex items-center gap-1 h-9 px-2 rounded-lg transition-colors ${
+          showAgentMenu
+            ? 'bg-gray-100 text-gray-700'
+            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+        }`}
+        title="Mention an agent"
+      >
+        <Users className="h-5 w-5" />
+        <ChevronDown className="h-3 w-3" />
+      </button>
+      {showAgentMenu && (
+        <div className="absolute bottom-full right-0 mb-2 min-w-[150px] rounded-xl border border-gray-200 bg-white shadow-lg py-1 z-20">
+          {AGENTS.map(a => (
+            <button
+              key={a.label}
+              type="button"
+              onClick={() => pickAgent(a.label)}
+              className="flex items-center gap-2 w-full px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: a.dot }} />
+              <span>{a.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 
@@ -400,6 +454,7 @@ const Chat = () => {
           </button>
           {/* Right actions */}
           <div className="flex items-center gap-2">
+            {agentDropdown}
             <button
               onClick={() => setIsListening(p => !p)}
               className={`flex items-center justify-center h-9 w-9 rounded-lg transition-colors ${isListening ? 'bg-red-100 text-red-500' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
@@ -471,7 +526,7 @@ const Chat = () => {
                 </div>
 
                 {/* Input — centered */}
-                <div className="w-full">
+                <div className="w-full space-y-2.5">
                   {inputBar}
                 </div>
 
@@ -487,12 +542,6 @@ const Chat = () => {
                       <p className="text-xs text-gray-400">{s.sub}</p>
                     </button>
                   ))}
-                </div>
-
-                {/* Agents */}
-                <div className="w-full">
-                  <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-2.5">Available agents</p>
-                  {agentPills}
                 </div>
               </div>
             </div>
@@ -525,17 +574,21 @@ const Chat = () => {
                     <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
                       {/* Content */}
                       <div className={`flex flex-col max-w-[80%] ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                        {msg.approval ? (
-                          <ApprovalCard msg={msg} onDecide={handleApproval} />
-                        ) : msg.sender === 'assistant' ? (
+                        {msg.sender === 'assistant' ? (
                           (() => {
                             const cleaned = cleanAssistantText(msg.text);
                             const hasText = cleaned.length > 0;
-                            const showTyping = msg.streaming && !hasText && !(msg.tools && msg.tools.length);
+                            const hasChain = !!msg.chain && msg.chain.length > 0;
+                            const showTyping = msg.streaming && !hasText && !hasChain;
                             return (
-                              <div className="flex flex-col gap-1.5">
-                                {msg.tools && msg.tools.length > 0 && (
-                                  <ToolStatusList tools={msg.tools} />
+                              <div className="flex flex-col gap-2 w-full">
+                                {hasChain && (
+                                  <ChainTimeline
+                                    steps={msg.chain!}
+                                    msgId={msg.id}
+                                    streaming={!!msg.streaming}
+                                    onDecide={handleApproval}
+                                  />
                                 )}
                                 <div className="text-sm text-gray-800 leading-relaxed">
                                   {showTyping ? (
@@ -557,8 +610,8 @@ const Chat = () => {
                             );
                           })()
                         ) : (
-                          <div className="bg-gray-100 text-gray-900 text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm whitespace-pre-wrap">
-                            {msg.text}
+                          <div className="bg-gray-100 text-gray-900 text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm whitespace-pre-wrap break-words">
+                            {renderTextWithLinks(msg.text)}
                           </div>
                         )}
 
@@ -587,7 +640,6 @@ const Chat = () => {
               {/* Bottom bar */}
               <div className="shrink-0 bg-white px-4 pt-3 pb-4">
                 <div className="max-w-2xl mx-auto space-y-2.5">
-                  {agentPills}
                   {inputBar}
                 </div>
               </div>
@@ -602,123 +654,190 @@ const Chat = () => {
   );
 };
 
-// Inline tool-approval card. Mirrors the Telegram inline-keyboard prompt
-// (`channels/telegram.py::request_approval`) — shows tool name + args and
-// posts the user's decision via `respondApproval`. Once decided, the card
-// collapses to a status line; the SSE keeps streaming on the server side
-// because the agent's awaiting Future has been resolved.
-function ApprovalCard({
-  msg,
+// Vertical chain-of-thought timeline. Renders tool calls and approval
+// requests as a single sequence of points connected by a vertical line,
+// so the user reads the agent's work top-to-bottom as it happens.
+function ChainTimeline({
+  steps,
+  msgId,
+  streaming,
   onDecide,
 }: {
-  msg: ChatMessage;
+  steps: ChainStep[];
+  msgId: number;
+  streaming: boolean;
   onDecide: (msgId: number, approvalId: string, approved: boolean) => void;
 }) {
-  const ap = msg.approval!;
-  const argsPreview = ap.args ? formatArgs(ap.args) : '';
+  return (
+    <div className="rounded-xl border border-gray-200 bg-gray-50/60 px-3 py-2.5">
+      <ol className="flex flex-col">
+        {steps.map((step, i) => (
+          <ChainRow
+            key={step.key}
+            step={step}
+            isLast={i === steps.length - 1}
+            streaming={streaming}
+            msgId={msgId}
+            onDecide={onDecide}
+          />
+        ))}
+      </ol>
+    </div>
+  );
+}
 
-  if (ap.decision === 'approved' || ap.decision === 'denied') {
-    const approved = ap.decision === 'approved';
+function ChainRow({
+  step,
+  isLast,
+  streaming,
+  msgId,
+  onDecide,
+}: {
+  step: ChainStep;
+  isLast: boolean;
+  streaming: boolean;
+  msgId: number;
+  onDecide: (msgId: number, approvalId: string, approved: boolean) => void;
+}) {
+  // Active = the latest in-flight thing the agent is doing right now; this
+  // controls the dot accent so the chain reads like a progress indicator.
+  const isActive =
+    streaming &&
+    isLast &&
+    ((step.kind === 'tool' && step.status === 'running') ||
+      (step.kind === 'approval' && !step.decision));
+
+  return (
+    <li className="flex gap-3">
+      {/* Dot + connector */}
+      <div className="flex flex-col items-center pt-1">
+        <ChainDot step={step} isActive={isActive} />
+        {!isLast && <div className="flex-1 w-px bg-gray-200 mt-1 min-h-[14px]" />}
+      </div>
+
+      {/* Content */}
+      <div className={`flex-1 ${isLast ? 'pb-0' : 'pb-3'}`}>
+        {step.kind === 'tool' ? (
+          <ToolStepBody step={step} />
+        ) : (
+          <ApprovalStepBody step={step} msgId={msgId} onDecide={onDecide} />
+        )}
+      </div>
+    </li>
+  );
+}
+
+function ChainDot({ step, isActive }: { step: ChainStep; isActive: boolean }) {
+  if (step.kind === 'approval') {
+    if (step.decision === 'approved') {
+      return <span className="h-2 w-2 rounded-full bg-gray-700 ring-2 ring-gray-100" />;
+    }
+    if (step.decision === 'denied') {
+      return <span className="h-2 w-2 rounded-full bg-gray-300 ring-2 ring-gray-100" />;
+    }
+    if (step.decision === 'error') {
+      return <span className="h-2 w-2 rounded-full bg-red-400 ring-2 ring-red-50" />;
+    }
     return (
-      <div
-        className={`text-xs px-3 py-2 rounded-lg border flex items-center gap-2 ${
-          approved
-            ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-            : 'bg-gray-50 border-gray-200 text-gray-600'
+      <span
+        className={`h-2 w-2 rounded-full bg-gray-500 ring-2 ring-gray-100 ${
+          isActive ? 'animate-pulse' : ''
         }`}
-      >
-        {approved ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
-        <span>
-          {approved ? 'Approved' : 'Denied'} <code className="font-mono">{ap.tool}</code>
-        </span>
+      />
+    );
+  }
+  // tool
+  if (step.status === 'running') {
+    return (
+      <span
+        className={`h-2 w-2 rounded-full bg-[#8fc4e4] ring-2 ring-[#bdd8ec]/40 ${
+          isActive ? 'animate-pulse' : ''
+        }`}
+      />
+    );
+  }
+  return <span className="h-2 w-2 rounded-full bg-gray-400 ring-2 ring-gray-100" />;
+}
+
+function ToolStepBody({ step }: { step: Extract<ChainStep, { kind: 'tool' }> }) {
+  const running = step.status === 'running';
+  return (
+    <div className="flex items-center gap-2 text-[12px]">
+      <Wrench className="h-3 w-3 text-gray-400 shrink-0" />
+      <span className="font-mono text-gray-700">{step.name}</span>
+      <span className="inline-flex items-center gap-1 text-gray-400">
+        {running ? (
+          <>
+            <Loader2 className="h-3 w-3 animate-spin" />
+            <span>running…</span>
+          </>
+        ) : (
+          <>
+            <Check className="h-3 w-3 text-gray-400" />
+            <span>done</span>
+          </>
+        )}
+      </span>
+    </div>
+  );
+}
+
+function ApprovalStepBody({
+  step,
+  msgId,
+  onDecide,
+}: {
+  step: Extract<ChainStep, { kind: 'approval' }>;
+  msgId: number;
+  onDecide: (msgId: number, approvalId: string, approved: boolean) => void;
+}) {
+  if (step.decision === 'approved' || step.decision === 'denied') {
+    const approved = step.decision === 'approved';
+    return (
+      <div className="flex items-center gap-2 text-[12px]">
+        {approved ? (
+          <Check className="h-3 w-3 text-gray-500" />
+        ) : (
+          <X className="h-3 w-3 text-gray-400" />
+        )}
+        <span className="text-gray-500">{approved ? 'Approved' : 'Denied'}</span>
+        <span className="font-mono text-gray-700">{step.tool}</span>
       </div>
     );
   }
 
-  if (ap.decision === 'error') {
+  if (step.decision === 'error') {
     return (
-      <div className="text-xs px-3 py-2 rounded-lg border bg-red-50 border-red-200 text-red-700 flex items-center gap-2">
-        <AlertCircle className="h-3.5 w-3.5" />
-        <span>Could not send decision: {ap.error ?? 'unknown error'}</span>
+      <div className="flex items-center gap-2 text-[12px] text-red-500">
+        <AlertCircle className="h-3 w-3" />
+        <span>Could not send decision: {step.error ?? 'unknown error'}</span>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 max-w-md">
-      <div className="flex items-center gap-2 mb-2">
-        <ShieldAlert className="h-4 w-4 text-amber-600" />
-        <span className="text-xs font-semibold text-amber-800">Approval required</span>
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center gap-2 text-[12px]">
+        <ShieldAlert className="h-3.5 w-3.5 text-gray-500 shrink-0" />
+        <span className="font-medium text-gray-800">Approval required</span>
+        <span className="font-mono text-gray-700">{step.tool}</span>
       </div>
-      <div className="text-xs text-gray-800 mb-1">
-        Tool: <code className="font-mono text-[11px] bg-white border border-amber-200 px-1.5 py-0.5 rounded">{ap.tool}</code>
-      </div>
-      {argsPreview && (
-        <pre className="text-[11px] text-gray-700 bg-white border border-amber-200 rounded px-2 py-1.5 mt-1 mb-2 max-h-40 overflow-auto whitespace-pre-wrap break-words">
-          {argsPreview}
-        </pre>
-      )}
-      <div className="flex gap-2 mt-2">
+      <div className="flex gap-1.5">
         <button
-          onClick={() => onDecide(msg.id, ap.id, true)}
-          className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+          onClick={() => onDecide(msgId, step.approvalId, true)}
+          className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-gray-900 text-white hover:bg-gray-700 transition-colors"
         >
           Approve
         </button>
         <button
-          onClick={() => onDecide(msg.id, ap.id, false)}
-          className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
+          onClick={() => onDecide(msgId, step.approvalId, false)}
+          className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors"
         >
           Deny
         </button>
       </div>
     </div>
   );
-}
-
-// Inline tool-call status chips. Pincer streams `tool` SSE events with
-// phase=start/done so the user can see which backend tool the agent is
-// running (e.g. google__search, web__fetch) and whether it has finished.
-function ToolStatusList({ tools }: { tools: ToolUsage[] }) {
-  return (
-    <div className="flex flex-col gap-1">
-      {tools.map((t, i) => {
-        const running = t.status === 'running';
-        return (
-          <div
-            key={i}
-            className={`inline-flex items-center gap-1.5 self-start text-[11px] px-2 py-1 rounded-md border ${
-              running
-                ? 'bg-blue-50 border-blue-200 text-blue-700'
-                : 'bg-gray-50 border-gray-200 text-gray-600'
-            }`}
-          >
-            {running ? (
-              <Loader2 className="h-3 w-3 animate-spin" />
-            ) : (
-              <Check className="h-3 w-3 text-emerald-600" />
-            )}
-            <Wrench className="h-3 w-3 opacity-60" />
-            <code className="font-mono">{t.name}</code>
-            <span className="opacity-70">{running ? 'running…' : 'done'}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function formatArgs(args: Record<string, unknown>): string {
-  try {
-    const trimmed: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(args)) {
-      if (typeof v === 'string' && v.length > 400) trimmed[k] = v.slice(0, 400) + '…';
-      else trimmed[k] = v;
-    }
-    return JSON.stringify(trimmed, null, 2);
-  } catch {
-    return String(args);
-  }
 }
 
 // Turn Pincer's stored message log into local ChatMessage bubbles.
