@@ -1,6 +1,6 @@
 
-import { useState } from 'react';
-import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,9 +26,15 @@ const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const existingAuth =
-    localStorage.getItem('isAuthenticated') === 'true' ||
-    sessionStorage.getItem('isAuthenticated') === 'true';
+  // Redirect already-authenticated visitors away from /login. This runs only
+  // on mount — doing it inline during render would re-fire after the
+  // post-connect re-render and clobber a navigate() from a submit handler.
+  useEffect(() => {
+    const isAuth =
+      localStorage.getItem('isAuthenticated') === 'true' ||
+      sessionStorage.getItem('isAuthenticated') === 'true';
+    if (isAuth) navigate('/dashboard', { replace: true });
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +76,9 @@ const Login = () => {
 
   const handleTokenConnect = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!apiUrl.trim() || !token.trim()) {
+    const cleanUrl = apiUrl.trim().replace(/\/+$/, '');
+    const cleanToken = token.trim();
+    if (!cleanUrl || !cleanToken) {
       toast({
         title: 'Missing fields',
         description: 'Enter both the API URL and the bearer token.',
@@ -80,11 +88,8 @@ const Login = () => {
     }
     setIsConnecting(true);
     try {
-      const { version } = await pingStatus(apiUrl.trim(), token.trim());
-      setAuth({ apiUrl: apiUrl.trim(), token: token.trim() });
-
-      // Let the rest of the app treat this session as authenticated, so
-      // ProtectedRoute lets us into /chat.
+      const { version } = await pingStatus(cleanUrl, cleanToken);
+      setAuth({ apiUrl: cleanUrl, token: cleanToken });
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('userEmail', 'pincer-token-user');
 
@@ -92,7 +97,12 @@ const Login = () => {
         title: 'Connected',
         description: `Pincer server ${version} is reachable.`,
       });
-      navigate('/chat');
+
+      // Hard navigation. Don't reset isConnecting — letting React re-render
+      // Login after we've scheduled navigation can race the browser's
+      // location change and leave us stuck on /login.
+      window.location.href = '/chat';
+      return;
     } catch (err) {
       const msg =
         err instanceof PincerError
@@ -105,12 +115,9 @@ const Login = () => {
         description: msg,
         variant: 'destructive',
       });
-    } finally {
       setIsConnecting(false);
     }
   };
-
-  if (existingAuth) return <Navigate to="/dashboard" replace />;
 
   return (
     <div className="min-h-screen bg-[#f5ede3] dark:bg-[#181512] flex items-center justify-center p-4">
