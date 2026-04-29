@@ -19,6 +19,7 @@ import IntegrationsPage from './pages/IntegrationsPage';
 import Settings from './pages/Settings';
 import Billing from './pages/Billing';
 import Help from './pages/Help';
+import Profile from './pages/Profile';
 import AssistantProfile from './pages/AssistantProfile';
 import AssistantConfiguration from './pages/AssistantConfiguration';
 import Tasks from './pages/Tasks';
@@ -227,6 +228,7 @@ function App() {
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
             <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/dev/playground" element={<ProtectedRoute><DevPlayground /></ProtectedRoute>} />
             <Route path="/dev/api" element={<ProtectedRoute><DevAPI /></ProtectedRoute>} />
             <Route path="/dev/docs" element={<ProtectedRoute><DevDocs /></ProtectedRoute>} />

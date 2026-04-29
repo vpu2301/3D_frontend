@@ -2,9 +2,40 @@ import { useState, useEffect, useRef } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import {
-  Send, Mic, MicOff, Bot, User,
-  Paperclip, X, FileText, Image, Plus,
+  Send, Mic, MicOff, Bot,
+  Paperclip, X, FileText, Image, Plus, Link2, Unlink,
+  ShieldAlert, Check, AlertCircle, Loader2, Wrench,
+  Users, ChevronDown,
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import {
+  isConnected as pincerConnected,
+  streamChat,
+  sendChat,
+  fetchLatestConversation,
+  resetUserId,
+  clearAuth,
+  respondApproval,
+  PincerError,
+  type PincerMessage,
+} from '@/lib/pincerClient';
+import { cleanAssistantText, renderAssistantText, renderTextWithLinks } from '@/lib/formatChat';
+
+type ChainStep =
+  | {
+      kind: 'tool';
+      key: string;
+      name: string;
+      status: 'running' | 'done';
+    }
+  | {
+      kind: 'approval';
+      key: string;
+      approvalId: string;
+      tool: string;
+      decision?: 'approved' | 'denied' | 'error';
+      error?: string;
+    };
 
 interface ChatMessage {
   id: number;
@@ -12,6 +43,8 @@ interface ChatMessage {
   sender: 'user' | 'assistant';
   timestamp: Date;
   attachments?: Array<{ name: string; type: string; size: number; url: string }>;
+  streaming?: boolean;
+  chain?: ChainStep[];
 }
 
 interface ChatHistory {
@@ -22,13 +55,6 @@ interface ChatHistory {
   messageCount: number;
 }
 
-const AGENTS = [
-  { label: 'Emma',  color: '#fce7f3', dot: '#f472b6' },
-  { label: 'Aria',  color: '#dbeafe', dot: '#60a5fa' },
-  { label: 'Felix', color: '#dcfce7', dot: '#4ade80' },
-  { label: 'Maya',  color: '#ede9fe', dot: '#a78bfa' },
-];
-
 const SUGGESTIONS = [
   { title: 'Create a marketing plan',   sub: 'for my new product launch'         },
   { title: 'Analyze sales data',        sub: 'and generate a summary report'     },
@@ -36,40 +62,101 @@ const SUGGESTIONS = [
   { title: 'Prepare a budget overview', sub: 'for Q2 planning session'           },
 ];
 
+const AGENTS = [
+  { label: 'Emma',  color: '#fce7f3', dot: '#f472b6' },
+  { label: 'Aria',  color: '#dbeafe', dot: '#60a5fa' },
+  { label: 'Felix', color: '#dcfce7', dot: '#4ade80' },
+  { label: 'Maya',  color: '#ede9fe', dot: '#a78bfa' },
+];
+
+const WELCOME_MESSAGE: ChatMessage = {
+  id: 1,
+  text: "Hello! Welcome to 3days.ai. I'm your AI assistant. Try asking me to help you with tasks like 'Create a marketing plan for my new product' or 'Analyze my sales data'. How can I help you today?",
+  sender: 'assistant',
+  timestamp: new Date(),
+};
+
 const Chat = () => {
+  const { toast } = useToast();
   const [message, setMessage]             = useState('');
   const [messages, setMessages]           = useState<ChatMessage[]>([]);
   const [isListening, setIsListening]     = useState(false);
   const [attachments, setAttachments]     = useState<File[]>([]);
   const [chatHistory, setChatHistory]     = useState<ChatHistory[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string>('current');
+  const [isStreaming, setIsStreaming]     = useState(false);
+  const [pincerOn, setPincerOn]           = useState<boolean>(() => pincerConnected());
+  const [showAgentMenu, setShowAgentMenu] = useState(false);
 
   const fileInputRef   = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef    = useRef<HTMLTextAreaElement>(null);
+  const abortRef       = useRef<AbortController | null>(null);
+  const agentMenuRef   = useRef<HTMLDivElement>(null);
 
   const hasStarted = messages.some(m => m.sender === 'user');
 
+  // Boot: show welcome and, if Pincer is connected, hydrate past thread.
   useEffect(() => {
-    setMessages([{
-      id: 1,
-      text: "Hello! Welcome to 3days.ai. I'm your AI assistant. Try asking me to help you with tasks like 'Create a marketing plan for my new product' or 'Analyze my sales data'. How can I help you today?",
-      sender: 'assistant',
-      timestamp: new Date(),
-    }]);
+    setMessages([WELCOME_MESSAGE]);
     setChatHistory([
       { id: 'chat-1', title: 'Project Planning Discussion', lastMessage: 'Thanks for the help with the timeline!', timestamp: new Date(Date.now() - 86400000),  messageCount: 12 },
       { id: 'chat-2', title: 'Budget Analysis',             lastMessage: 'Can you review these numbers?',          timestamp: new Date(Date.now() - 172800000), messageCount: 8  },
     ]);
-  }, []);
+
+    if (!pincerConnected()) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const history = await fetchLatestConversation();
+        if (cancelled || !history || history.length === 0) return;
+        const hydrated = mapHistory(history);
+        if (hydrated.length > 0) setMessages(hydrated);
+      } catch (err) {
+        if (err instanceof PincerError && err.status === 401) {
+          setPincerOn(false);
+          toast({
+            title: 'Pincer token rejected',
+            description: 'Reconnect from the login page.',
+            variant: 'destructive',
+          });
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+      abortRef.current?.abort();
+    };
+  }, [toast]);
 
   useEffect(() => {
     if (hasStarted) messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, hasStarted]);
 
+  useEffect(() => {
+    if (!showAgentMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (agentMenuRef.current && !agentMenuRef.current.contains(e.target as Node)) {
+        setShowAgentMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showAgentMenu]);
+
+  const pickAgent = (label: string) => {
+    setMessage(prev => {
+      const sep = prev.length === 0 || /\s$/.test(prev) ? '' : ' ';
+      return `${prev}${sep}@${label} `;
+    });
+    setShowAgentMenu(false);
+    textareaRef.current?.focus();
+  };
+
   const adjustHeight = () => {
     const el = textareaRef.current;
-    if (el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 180) + 'px'; }
+    if (el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 240) + 'px'; }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -78,36 +165,204 @@ const Chat = () => {
   };
 
   const handleSend = () => {
+    if (isStreaming) return;
     if (!message.trim() && attachments.length === 0) return;
 
     const atts = attachments.map(f => ({ name: f.name, type: f.type, size: f.size, url: URL.createObjectURL(f) }));
-    const userMsg: ChatMessage = { id: messages.length + 1, text: message, sender: 'user', timestamp: new Date(), attachments: atts.length ? atts : undefined };
+    const userText = message;
+    const userMsg: ChatMessage = { id: messages.length + 1, text: userText, sender: 'user', timestamp: new Date(), attachments: atts.length ? atts : undefined };
     setMessages(p => [...p, userMsg]);
     setMessage('');
     setAttachments([]);
     if (textareaRef.current)  textareaRef.current.style.height = 'auto';
     if (fileInputRef.current) fileInputRef.current.value = '';
 
-    setTimeout(() => {
-      const reply: ChatMessage = {
-        id: messages.length + 2,
-        text: attachments.length
-          ? `I can see you've shared ${attachments.length} file(s). I'll analyze them and help you with: "${message || 'the attached files'}". Here's a task I can create for you: "Process and analyze uploaded documents for insights and recommendations."`
-          : `I understand you're asking about: "${message}". Let me create a task for this: "AI Employee will handle: ${message}". I'll assign this to the most suitable AI assistant and get started right away!`,
-        sender: 'assistant',
-        timestamp: new Date(),
-      };
-      setMessages(p => [...p, reply]);
-    }, 1000);
+    if (pincerOn) {
+      void dispatchToPincer(userText);
+    } else {
+      // Mock fallback so the UI still works without a Pincer backend.
+      setTimeout(() => {
+        const reply: ChatMessage = {
+          id: Date.now(),
+          text: attachments.length
+            ? `I can see you've shared ${attachments.length} file(s). I'll analyze them and help you with: "${userText || 'the attached files'}".`
+            : `I understand you're asking about: "${userText}". (Demo mode — connect to a Pincer backend for a real reply.)`,
+          sender: 'assistant',
+          timestamp: new Date(),
+        };
+        setMessages(p => [...p, reply]);
+      }, 600);
+    }
+  };
+
+  // Stream a reply from the Pincer backend, appending tokens to a single
+  // assistant bubble. Tool starts/dones and approval requests are merged
+  // into a single `chain` timeline on that bubble so the user sees one
+  // vertical sequence of steps. Falls back to POST /api/chat/message on
+  // stream failure.
+  const dispatchToPincer = async (userText: string) => {
+    const assistantId = Date.now();
+    setMessages(p => [
+      ...p,
+      { id: assistantId, text: '', sender: 'assistant', timestamp: new Date(), streaming: true },
+    ]);
+
+    const controller = new AbortController();
+    abortRef.current?.abort();
+    abortRef.current = controller;
+    setIsStreaming(true);
+
+    const appendDelta = (delta: string) => {
+      setMessages(p =>
+        p.map(m => (m.id === assistantId ? { ...m, text: m.text + delta } : m)),
+      );
+    };
+    const updateChain = (mut: (chain: ChainStep[]) => ChainStep[]) => {
+      setMessages(p =>
+        p.map(m =>
+          m.id === assistantId ? { ...m, chain: mut(m.chain ?? []) } : m,
+        ),
+      );
+    };
+    const finish = (finalText?: string) => {
+      setMessages(p =>
+        p.map(m =>
+          m.id === assistantId
+            ? { ...m, text: finalText && finalText.length > m.text.length ? finalText : m.text, streaming: false }
+            : m,
+        ),
+      );
+    };
+
+    try {
+      let gotChunk = false;
+      for await (const ev of streamChat(userText, controller.signal)) {
+        if (ev.event === 'chunk') {
+          gotChunk = true;
+          appendDelta(ev.data.delta);
+        } else if (ev.event === 'approval') {
+          // Backend is asking the user to confirm a destructive tool call.
+          // Append it to the chain so it sits inline with the surrounding
+          // tool steps; the SSE keeps streaming once respondApproval()
+          // resolves the future.
+          const stepKey = `ap-${ev.data.approval_id}`;
+          updateChain(chain => [
+            ...chain,
+            {
+              kind: 'approval',
+              key: stepKey,
+              approvalId: ev.data.approval_id,
+              tool: ev.data.tool,
+            },
+          ]);
+        } else if (ev.event === 'tool') {
+          const { phase, name } = ev.data;
+          if (phase === 'start') {
+            updateChain(chain => [
+              ...chain,
+              { kind: 'tool', key: `tool-${chain.length}-${name}`, name, status: 'running' },
+            ]);
+          } else {
+            // phase === 'done': mark the latest running tool with this name as done
+            updateChain(chain => {
+              for (let k = chain.length - 1; k >= 0; k--) {
+                const s = chain[k];
+                if (s.kind === 'tool' && s.name === name && s.status === 'running') {
+                  const next = chain.slice();
+                  next[k] = { ...s, status: 'done' };
+                  return next;
+                }
+              }
+              return chain;
+            });
+          }
+        } else if (ev.event === 'done') {
+          // Any tool still marked running at end-of-turn is treated as completed.
+          updateChain(chain =>
+            chain.map(s =>
+              s.kind === 'tool' && s.status === 'running' ? { ...s, status: 'done' } : s,
+            ),
+          );
+          finish(ev.data.text);
+          return;
+        } else if (ev.event === 'error') {
+          throw new PincerError(ev.data.message, 500);
+        }
+      }
+      // Stream closed without an explicit `done` — finalize whatever we have.
+      if (gotChunk) finish();
+      else throw new PincerError('Empty stream', 500);
+    } catch (streamErr) {
+      if (controller.signal.aborted) {
+        finish();
+        return;
+      }
+      // Fall back to the non-streaming endpoint so the user still gets a reply.
+      try {
+        const { reply } = await sendChat(userText);
+        setMessages(p =>
+          p.map(m => (m.id === assistantId ? { ...m, text: reply, streaming: false } : m)),
+        );
+      } catch (fallbackErr) {
+        const msg =
+          fallbackErr instanceof PincerError
+            ? fallbackErr.message
+            : streamErr instanceof Error
+              ? streamErr.message
+              : 'Unknown error';
+        setMessages(p =>
+          p.map(m =>
+            m.id === assistantId
+              ? { ...m, text: `⚠️ ${msg}`, streaming: false }
+              : m,
+          ),
+        );
+        if (fallbackErr instanceof PincerError && fallbackErr.status === 401) {
+          setPincerOn(false);
+        }
+      }
+    } finally {
+      setIsStreaming(false);
+      abortRef.current = null;
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
+  const handleApproval = async (msgId: number, approvalId: string, approved: boolean) => {
+    const setDecision = (decision: 'approved' | 'denied' | 'error', error?: string) => {
+      setMessages(p =>
+        p.map(m => {
+          if (m.id !== msgId || !m.chain) return m;
+          return {
+            ...m,
+            chain: m.chain.map(s =>
+              s.kind === 'approval' && s.approvalId === approvalId
+                ? { ...s, decision, error }
+                : s,
+            ),
+          };
+        }),
+      );
+    };
+
+    try {
+      await respondApproval(approvalId, approved);
+      setDecision(approved ? 'approved' : 'denied');
+    } catch (err) {
+      const detail = err instanceof PincerError ? err.message : 'Failed to send decision';
+      setDecision('error', detail);
+      if (err instanceof PincerError && err.status === 401) setPincerOn(false);
+    }
+  };
+
   const startNewChat = () => {
+    abortRef.current?.abort();
+    if (pincerOn) resetUserId();
     setCurrentChatId('current');
-    setMessages([{ id: 1, text: "Hello! Welcome to 3days.ai. I'm your AI assistant. How can I help you today?", sender: 'assistant', timestamp: new Date() }]);
+    setMessages([WELCOME_MESSAGE]);
   };
 
   const selectChat = (id: string) => {
@@ -117,28 +372,51 @@ const Chat = () => {
     }
   };
 
+  const disconnectPincer = () => {
+    clearAuth();
+    setPincerOn(false);
+    toast({ title: 'Disconnected from Pincer', description: 'Chat will use demo replies until you reconnect.' });
+  };
+
   const getFileIcon = (type: string) => type.startsWith('image/') ? Image : FileText;
   const fmt = (d: Date) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-  /* ── Agent pills ── */
-  const AgentPills = () => (
-    <div className="flex flex-wrap gap-1.5">
-      {AGENTS.map(a => (
-        <button
-          key={a.label}
-          onClick={() => { setMessage(`@${a.label} `); textareaRef.current?.focus(); }}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium text-gray-600 border border-gray-200 hover:border-gray-300 transition-all"
-          style={{ backgroundColor: a.color }}
-        >
-          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: a.dot }} />
-          {a.label}
-        </button>
-      ))}
+  /* ── Agent dropdown (lives inside the input bar) ── */
+  const agentDropdown = (
+    <div className="relative" ref={agentMenuRef}>
+      <button
+        type="button"
+        onClick={() => setShowAgentMenu(p => !p)}
+        className={`flex items-center gap-1 h-9 px-2 rounded-lg transition-colors ${
+          showAgentMenu
+            ? 'bg-gray-100 text-gray-700'
+            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+        }`}
+        title="Mention an agent"
+      >
+        <Users className="h-5 w-5" />
+        <ChevronDown className="h-3 w-3" />
+      </button>
+      {showAgentMenu && (
+        <div className="absolute bottom-full right-0 mb-2 min-w-[150px] rounded-xl border border-gray-200 bg-white shadow-lg py-1 z-20">
+          {AGENTS.map(a => (
+            <button
+              key={a.label}
+              type="button"
+              onClick={() => pickAgent(a.label)}
+              className="flex items-center gap-2 w-full px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: a.dot }} />
+              <span>{a.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 
   /* ── Bottom input bar (shared) ── */
-  const InputBar = () => (
+  const inputBar = (
     <div className="w-full">
       {/* Attachment chips */}
       {attachments.length > 0 && (
@@ -163,34 +441,36 @@ const Chat = () => {
           value={message}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder="Message AI assistant… (Shift+Enter for new line)"
+          placeholder={isStreaming ? 'Generating reply…' : 'Message AI assistant… (Shift+Enter for new line)'}
           rows={1}
-          className="w-full resize-none bg-transparent text-sm text-gray-800 placeholder-gray-400 px-4 pt-3.5 pb-2 focus:outline-none leading-relaxed"
-          style={{ minHeight: '52px', maxHeight: '180px' }}
+          disabled={isStreaming}
+          className="w-full resize-none bg-transparent text-base text-gray-800 placeholder-gray-400 px-5 pt-5 pb-2 focus:outline-none leading-relaxed disabled:opacity-60"
+          style={{ minHeight: '88px', maxHeight: '240px' }}
         />
-        <div className="flex items-center justify-between px-3 pb-3">
+        <div className="flex items-center justify-between px-4 pb-4">
           {/* Left actions */}
-          <button onClick={() => fileInputRef.current?.click()} className="flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
-            <Paperclip className="h-4 w-4" />
+          <button onClick={() => fileInputRef.current?.click()} className="flex items-center justify-center h-9 w-9 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
+            <Paperclip className="h-5 w-5" />
           </button>
           {/* Right actions */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
+            {agentDropdown}
             <button
               onClick={() => setIsListening(p => !p)}
-              className={`flex items-center justify-center h-7 w-7 rounded-lg transition-colors ${isListening ? 'bg-red-100 text-red-500' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
+              className={`flex items-center justify-center h-9 w-9 rounded-lg transition-colors ${isListening ? 'bg-red-100 text-red-500' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
             >
-              {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
             </button>
             <button
               onClick={handleSend}
-              disabled={!message.trim() && attachments.length === 0}
-              className={`flex items-center justify-center h-7 w-7 rounded-lg transition-all duration-150 ${
-                message.trim() || attachments.length > 0
+              disabled={isStreaming || (!message.trim() && attachments.length === 0)}
+              className={`flex items-center justify-center h-9 w-9 rounded-lg transition-all duration-150 ${
+                !isStreaming && (message.trim() || attachments.length > 0)
                   ? 'bg-gray-900 text-white hover:bg-gray-700 shadow-sm'
                   : 'bg-gray-100 text-gray-300 cursor-not-allowed'
               }`}
             >
-              <Send className="h-3.5 w-3.5" />
+              <Send className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -200,6 +480,21 @@ const Chat = () => {
         AI can make mistakes. Consider checking important information.
       </p>
     </div>
+  );
+
+  const pincerBadge = (
+    <button
+      onClick={pincerOn ? disconnectPincer : undefined}
+      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all ${
+        pincerOn
+          ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100'
+          : 'bg-gray-50 border-gray-200 text-gray-500 cursor-default'
+      }`}
+      title={pincerOn ? 'Connected to Pincer — click to disconnect' : 'Demo mode — sign in with a token to connect'}
+    >
+      {pincerOn ? <Link2 className="h-3 w-3" /> : <Unlink className="h-3 w-3" />}
+      {pincerOn ? 'Pincer connected' : 'Demo mode'}
+    </button>
   );
 
   return (
@@ -227,9 +522,15 @@ const Chat = () => {
                   </div>
                   <h1 className="text-[1.65rem] font-semibold text-gray-900 tracking-tight">How can I help you today?</h1>
                   <p className="text-sm text-gray-500">Chat with your AI employees or ask anything</p>
+                  {pincerBadge}
                 </div>
 
-                {/* Suggestion grid */}
+                {/* Input — centered */}
+                <div className="w-full space-y-2.5">
+                  {inputBar}
+                </div>
+
+                {/* Quick command buttons — underneath the input */}
                 <div className="grid grid-cols-2 gap-2.5 w-full">
                   {SUGGESTIONS.map((s, i) => (
                     <button
@@ -242,17 +543,6 @@ const Chat = () => {
                     </button>
                   ))}
                 </div>
-
-                {/* Agents */}
-                <div className="w-full">
-                  <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-2.5">Available agents</p>
-                  <AgentPills />
-                </div>
-
-                {/* Input */}
-                <div className="w-full">
-                  <InputBar />
-                </div>
               </div>
             </div>
 
@@ -260,12 +550,13 @@ const Chat = () => {
             /* ── Active chat state ── */
             <>
               {/* Header */}
-              <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
+              <div className="flex items-center justify-between px-5 h-14 shrink-0">
                 <div className="flex items-center gap-2.5">
                   <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-[#bdd8ec]">
                     <Bot className="h-4 w-4 text-gray-700" />
                   </div>
                   <span className="text-sm font-semibold text-gray-800">AI Chat</span>
+                  {pincerBadge}
                 </div>
                 <button
                   onClick={startNewChat}
@@ -280,25 +571,47 @@ const Chat = () => {
               <div className="flex-1 overflow-y-auto">
                 <div className="max-w-2xl mx-auto py-10 px-4 space-y-8">
                   {messages.map(msg => (
-                    <div key={msg.id} className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                      {/* Avatar */}
-                      {msg.sender === 'assistant' ? (
-                        <div className="shrink-0 flex items-center justify-center h-8 w-8 rounded-lg bg-[#bdd8ec] mt-0.5">
-                          <Bot className="h-4 w-4 text-gray-700" />
-                        </div>
-                      ) : (
-                        <div className="shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-gray-800 mt-0.5">
-                          <User className="h-3.5 w-3.5 text-white" />
-                        </div>
-                      )}
-
+                    <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
                       {/* Content */}
                       <div className={`flex flex-col max-w-[80%] ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
                         {msg.sender === 'assistant' ? (
-                          <p className="text-sm text-gray-800 leading-relaxed">{msg.text}</p>
+                          (() => {
+                            const cleaned = cleanAssistantText(msg.text);
+                            const hasText = cleaned.length > 0;
+                            const hasChain = !!msg.chain && msg.chain.length > 0;
+                            const showTyping = msg.streaming && !hasText && !hasChain;
+                            return (
+                              <div className="flex flex-col gap-2 w-full">
+                                {hasChain && (
+                                  <ChainTimeline
+                                    steps={msg.chain!}
+                                    msgId={msg.id}
+                                    streaming={!!msg.streaming}
+                                    onDecide={handleApproval}
+                                  />
+                                )}
+                                <div className="text-sm text-gray-800 leading-relaxed">
+                                  {showTyping ? (
+                                    <span className="inline-flex items-center gap-1 text-gray-400">
+                                      <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.3s]" />
+                                      <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.15s]" />
+                                      <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce" />
+                                    </span>
+                                  ) : hasText ? (
+                                    <>
+                                      {renderAssistantText(msg.text)}
+                                      {msg.streaming && (
+                                        <span className="inline-block w-1.5 h-3.5 ml-0.5 bg-gray-400 animate-pulse align-middle" />
+                                      )}
+                                    </>
+                                  ) : null}
+                                </div>
+                              </div>
+                            );
+                          })()
                         ) : (
-                          <div className="bg-gray-900 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm">
-                            {msg.text}
+                          <div className="bg-gray-100 text-gray-900 text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm whitespace-pre-wrap break-words">
+                            {renderTextWithLinks(msg.text)}
                           </div>
                         )}
 
@@ -325,10 +638,9 @@ const Chat = () => {
               </div>
 
               {/* Bottom bar */}
-              <div className="shrink-0 border-t border-gray-100 bg-white px-4 pt-3 pb-4">
+              <div className="shrink-0 bg-white px-4 pt-3 pb-4">
                 <div className="max-w-2xl mx-auto space-y-2.5">
-                  <AgentPills />
-                  <InputBar />
+                  {inputBar}
                 </div>
               </div>
             </>
@@ -341,5 +653,208 @@ const Chat = () => {
     </SidebarProvider>
   );
 };
+
+// Vertical chain-of-thought timeline. Renders tool calls and approval
+// requests as a single sequence of points connected by a vertical line,
+// so the user reads the agent's work top-to-bottom as it happens.
+function ChainTimeline({
+  steps,
+  msgId,
+  streaming,
+  onDecide,
+}: {
+  steps: ChainStep[];
+  msgId: number;
+  streaming: boolean;
+  onDecide: (msgId: number, approvalId: string, approved: boolean) => void;
+}) {
+  return (
+    <div className="rounded-xl border border-gray-200 bg-gray-50/60 px-3 py-2.5">
+      <ol className="flex flex-col">
+        {steps.map((step, i) => (
+          <ChainRow
+            key={step.key}
+            step={step}
+            isLast={i === steps.length - 1}
+            streaming={streaming}
+            msgId={msgId}
+            onDecide={onDecide}
+          />
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+function ChainRow({
+  step,
+  isLast,
+  streaming,
+  msgId,
+  onDecide,
+}: {
+  step: ChainStep;
+  isLast: boolean;
+  streaming: boolean;
+  msgId: number;
+  onDecide: (msgId: number, approvalId: string, approved: boolean) => void;
+}) {
+  // Active = the latest in-flight thing the agent is doing right now; this
+  // controls the dot accent so the chain reads like a progress indicator.
+  const isActive =
+    streaming &&
+    isLast &&
+    ((step.kind === 'tool' && step.status === 'running') ||
+      (step.kind === 'approval' && !step.decision));
+
+  return (
+    <li className="flex gap-3">
+      {/* Dot + connector */}
+      <div className="flex flex-col items-center pt-1">
+        <ChainDot step={step} isActive={isActive} />
+        {!isLast && <div className="flex-1 w-px bg-gray-200 mt-1 min-h-[14px]" />}
+      </div>
+
+      {/* Content */}
+      <div className={`flex-1 ${isLast ? 'pb-0' : 'pb-3'}`}>
+        {step.kind === 'tool' ? (
+          <ToolStepBody step={step} />
+        ) : (
+          <ApprovalStepBody step={step} msgId={msgId} onDecide={onDecide} />
+        )}
+      </div>
+    </li>
+  );
+}
+
+function ChainDot({ step, isActive }: { step: ChainStep; isActive: boolean }) {
+  if (step.kind === 'approval') {
+    if (step.decision === 'approved') {
+      return <span className="h-2 w-2 rounded-full bg-gray-700 ring-2 ring-gray-100" />;
+    }
+    if (step.decision === 'denied') {
+      return <span className="h-2 w-2 rounded-full bg-gray-300 ring-2 ring-gray-100" />;
+    }
+    if (step.decision === 'error') {
+      return <span className="h-2 w-2 rounded-full bg-red-400 ring-2 ring-red-50" />;
+    }
+    return (
+      <span
+        className={`h-2 w-2 rounded-full bg-gray-500 ring-2 ring-gray-100 ${
+          isActive ? 'animate-pulse' : ''
+        }`}
+      />
+    );
+  }
+  // tool
+  if (step.status === 'running') {
+    return (
+      <span
+        className={`h-2 w-2 rounded-full bg-[#8fc4e4] ring-2 ring-[#bdd8ec]/40 ${
+          isActive ? 'animate-pulse' : ''
+        }`}
+      />
+    );
+  }
+  return <span className="h-2 w-2 rounded-full bg-gray-400 ring-2 ring-gray-100" />;
+}
+
+function ToolStepBody({ step }: { step: Extract<ChainStep, { kind: 'tool' }> }) {
+  const running = step.status === 'running';
+  return (
+    <div className="flex items-center gap-2 text-[12px]">
+      <Wrench className="h-3 w-3 text-gray-400 shrink-0" />
+      <span className="font-mono text-gray-700">{step.name}</span>
+      <span className="inline-flex items-center gap-1 text-gray-400">
+        {running ? (
+          <>
+            <Loader2 className="h-3 w-3 animate-spin" />
+            <span>running…</span>
+          </>
+        ) : (
+          <>
+            <Check className="h-3 w-3 text-gray-400" />
+            <span>done</span>
+          </>
+        )}
+      </span>
+    </div>
+  );
+}
+
+function ApprovalStepBody({
+  step,
+  msgId,
+  onDecide,
+}: {
+  step: Extract<ChainStep, { kind: 'approval' }>;
+  msgId: number;
+  onDecide: (msgId: number, approvalId: string, approved: boolean) => void;
+}) {
+  if (step.decision === 'approved' || step.decision === 'denied') {
+    const approved = step.decision === 'approved';
+    return (
+      <div className="flex items-center gap-2 text-[12px]">
+        {approved ? (
+          <Check className="h-3 w-3 text-gray-500" />
+        ) : (
+          <X className="h-3 w-3 text-gray-400" />
+        )}
+        <span className="text-gray-500">{approved ? 'Approved' : 'Denied'}</span>
+        <span className="font-mono text-gray-700">{step.tool}</span>
+      </div>
+    );
+  }
+
+  if (step.decision === 'error') {
+    return (
+      <div className="flex items-center gap-2 text-[12px] text-red-500">
+        <AlertCircle className="h-3 w-3" />
+        <span>Could not send decision: {step.error ?? 'unknown error'}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center gap-2 text-[12px]">
+        <ShieldAlert className="h-3.5 w-3.5 text-gray-500 shrink-0" />
+        <span className="font-medium text-gray-800">Approval required</span>
+        <span className="font-mono text-gray-700">{step.tool}</span>
+      </div>
+      <div className="flex gap-1.5">
+        <button
+          onClick={() => onDecide(msgId, step.approvalId, true)}
+          className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-gray-900 text-white hover:bg-gray-700 transition-colors"
+        >
+          Approve
+        </button>
+        <button
+          onClick={() => onDecide(msgId, step.approvalId, false)}
+          className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors"
+        >
+          Deny
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Turn Pincer's stored message log into local ChatMessage bubbles.
+function mapHistory(history: PincerMessage[]): ChatMessage[] {
+  const out: ChatMessage[] = [];
+  let counter = 1;
+  for (const m of history) {
+    if (m.role !== 'user' && m.role !== 'assistant') continue;
+    if (!m.content || !m.content.trim()) continue;
+    out.push({
+      id: counter++,
+      text: m.content,
+      sender: m.role,
+      timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
+    });
+  }
+  return out;
+}
 
 export default Chat;
