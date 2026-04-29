@@ -30,9 +30,9 @@ export function MiniMonth() {
           'text-[10px] font-medium text-gray-400 uppercase w-7 h-6 flex items-center justify-center',
         row: 'flex',
         cell: 'h-7 w-7 text-center text-xs p-0 relative',
-        day: 'h-7 w-7 rounded-md text-gray-700 hover:bg-gray-100 inline-flex items-center justify-center',
-        day_selected: '!bg-gray-900 !text-white hover:!bg-gray-900',
-        day_today: 'font-semibold text-blue-600',
+        day: 'h-7 w-7 rounded-full text-gray-700 hover:bg-gray-100 inline-flex items-center justify-center',
+        day_selected: '!bg-[#bdd8ec] !text-gray-900 hover:!bg-[#a5c8e0]',
+        day_today: 'font-semibold text-[#1a73e8]',
         day_outside: 'text-gray-300',
       }}
     />

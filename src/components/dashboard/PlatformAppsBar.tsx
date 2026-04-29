@@ -41,7 +41,7 @@ const apps: PlatformApp[] = [
     iconColor: 'text-amber-600',
     bgColor: 'bg-amber-50 hover:bg-amber-100',
     ringColor: 'hover:ring-amber-200',
-    comingSoon: true,
+    href: '/notes',
   },
   {
     key: 'docs',
@@ -50,7 +50,7 @@ const apps: PlatformApp[] = [
     iconColor: 'text-sky-600',
     bgColor: 'bg-sky-50 hover:bg-sky-100',
     ringColor: 'hover:ring-sky-200',
-    comingSoon: true,
+    href: '/docs',
   },
   {
     key: 'drive',
@@ -59,7 +59,7 @@ const apps: PlatformApp[] = [
     iconColor: 'text-emerald-600',
     bgColor: 'bg-emerald-50 hover:bg-emerald-100',
     ringColor: 'hover:ring-emerald-200',
-    comingSoon: true,
+    href: '/drive',
   },
   {
     key: 'todos',
@@ -68,7 +68,7 @@ const apps: PlatformApp[] = [
     iconColor: 'text-violet-600',
     bgColor: 'bg-violet-50 hover:bg-violet-100',
     ringColor: 'hover:ring-violet-200',
-    comingSoon: true,
+    href: '/todo',
   },
   {
     key: 'contacts',
@@ -77,7 +77,7 @@ const apps: PlatformApp[] = [
     iconColor: 'text-rose-600',
     bgColor: 'bg-rose-50 hover:bg-rose-100',
     ringColor: 'hover:ring-rose-200',
-    comingSoon: true,
+    href: '/contacts',
   },
   {
     key: 'mail',
@@ -86,7 +86,7 @@ const apps: PlatformApp[] = [
     iconColor: 'text-indigo-600',
     bgColor: 'bg-indigo-50 hover:bg-indigo-100',
     ringColor: 'hover:ring-indigo-200',
-    comingSoon: true,
+    href: '/mail',
   },
 ];
 

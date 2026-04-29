@@ -10,13 +10,13 @@ export function AccountRail() {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="mb-2 px-1 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+        <h3 className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
           Calendars
         </h3>
         <ul className="space-y-3">
           {accounts.map(acc => (
             <li key={acc.id}>
-              <div className="mb-1 flex items-center justify-between px-1">
+              <div className="mb-1 flex items-center justify-between px-2">
                 <p className="text-xs font-medium text-gray-700">{acc.displayName}</p>
                 <span className="text-[10px] uppercase tracking-wide text-gray-400">
                   {acc.provider}
@@ -34,7 +34,7 @@ export function AccountRail() {
                           onClick={() => calendarStore.toggleCalendar(c.id)}
                           aria-pressed={c.visible}
                           className={cn(
-                            'flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-xs text-gray-700 transition hover:bg-gray-100',
+                            'flex w-full items-center gap-2 rounded-r-full py-1.5 pl-3 pr-3 text-left text-xs text-gray-700 transition hover:bg-gray-100',
                             !c.visible && 'opacity-50',
                           )}
                         >
@@ -61,7 +61,7 @@ export function AccountRail() {
 
       <button
         type="button"
-        className="flex w-full items-center gap-2 rounded-md border border-dashed border-gray-300 px-2 py-1.5 text-xs text-gray-500 transition hover:border-gray-400 hover:text-gray-700"
+        className="flex w-full items-center gap-2 rounded-full border border-dashed border-gray-300 px-3 py-1.5 text-xs text-gray-500 transition hover:border-[#8fc4e4] hover:text-[#1a73e8]"
         disabled
         aria-label="Connect account (platform connector)"
       >

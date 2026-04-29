@@ -126,7 +126,7 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
         <div className="flex items-center gap-2">
           {/* View switcher */}
           <div
-            className="inline-flex items-center rounded-lg border border-gray-200 bg-gray-50 p-0.5"
+            className="inline-flex items-center rounded-full border border-gray-200 bg-white p-0.5"
             role="tablist"
             aria-label="Calendar view"
           >
@@ -139,8 +139,8 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
                     aria-selected={view === v}
                     onClick={() => navigate(`/calendar/${v}`)}
                     className={cn(
-                      'rounded-md px-2.5 py-1 text-xs font-medium text-gray-600 transition',
-                      view === v && 'bg-white text-gray-900 shadow-sm ring-1 ring-gray-200',
+                      'rounded-full px-2.5 py-1 text-xs font-medium text-gray-600 transition',
+                      view === v && 'bg-[#dde9f4] text-gray-900',
                     )}
                   >
                     {VIEW_LABELS[v]}
@@ -169,15 +169,15 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
             </TooltipContent>
           </Tooltip>
 
-          <Button
-            size="sm"
-            className="h-8 gap-1.5 bg-gradient-to-r from-blue-500 to-violet-500 text-white hover:from-blue-600 hover:to-violet-600"
+          <button
+            type="button"
             onClick={onCreate}
             aria-label="New event (C)"
+            className="flex h-8 items-center gap-1.5 rounded-full bg-[#bdd8ec] px-4 text-sm font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
           >
             <Plus className="h-3.5 w-3.5" />
             New
-          </Button>
+          </button>
 
           <button
             type="button"
@@ -185,8 +185,8 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
             aria-label="Toggle AI chat"
             aria-pressed={chatOpen}
             className={cn(
-              'flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 text-gray-600 transition hover:bg-gray-50',
-              chatOpen && 'bg-gray-100 text-gray-900',
+              'flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition hover:bg-gray-100',
+              chatOpen && 'bg-[#dde9f4] text-gray-900',
             )}
           >
             <MessageSquare className="h-4 w-4" />
@@ -196,11 +196,11 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
 
       {/* Body: left rail + main + chat sidebar */}
       <div className="flex flex-1 overflow-hidden">
-        <aside className="hidden w-56 shrink-0 flex-col border-r border-gray-200/70 bg-gray-50/40 lg:flex">
+        <aside className="hidden w-60 shrink-0 flex-col border-r border-gray-100 bg-white lg:flex">
           <div className="p-3">
             <MiniMonth />
           </div>
-          <div className="flex-1 overflow-y-auto border-t border-gray-200/70 p-3">
+          <div className="flex-1 overflow-y-auto px-3 pb-3 pt-2">
             <AccountRail />
           </div>
         </aside>
