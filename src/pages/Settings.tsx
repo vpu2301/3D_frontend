@@ -1,394 +1,434 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Settings as SettingsIcon, User, Bell, Shield, Palette, Key, Copy, Plus, Trash2, Eye, EyeOff, RefreshCw } from 'lucide-react';
+import {
+  Settings as SettingsIcon, User, Bell, Shield, Palette, Key,
+  Copy, Plus, Trash2, Eye, EyeOff, RefreshCw, Check, MessageSquare,
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import CommunicationSettings from '@/components/dashboard/CommunicationSettings';
 
+const NAV_SECTIONS = [
+  { id: 'profile', label: 'Profile', icon: User },
+  { id: 'communication', label: 'Communication', icon: MessageSquare },
+  { id: 'api-keys', label: 'API keys', icon: Key },
+  { id: 'notifications', label: 'Notifications', icon: Bell },
+  { id: 'security', label: 'Security', icon: Shield },
+  { id: 'appearance', label: 'Appearance', icon: Palette },
+];
+
+interface ApiKey {
+  id: number;
+  name: string;
+  key: string;
+  type: string;
+  created: string;
+  lastUsed: string;
+  status: 'active' | 'revoked';
+}
+
+const KEY_TYPES = ['API Key', 'Access Token', 'Webhook Token', 'Integration Key'];
+
 const Settings = () => {
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState('');
-  const [apiKeys, setApiKeys] = useState([
-    {
-      id: 1,
-      name: 'Production API Key',
-      key: 'sk-abc123def456ghi789jkl012mno345pqr678stu901',
-      type: 'API Key',
-      created: '2024-01-15',
-      lastUsed: '2024-01-30',
-      status: 'active'
-    },
-    {
-      id: 2,
-      name: 'Development Token',
-      key: 'dev-token-xyz789abc123def456ghi789jkl012',
-      type: 'Access Token',
-      created: '2024-01-20',
-      lastUsed: '2024-01-29',
-      status: 'active'
-    }
-  ]);
-  const [showKeys, setShowKeys] = useState<{[key: number]: boolean}>({});
-  const [newKeyName, setNewKeyName] = useState('');
-  const [newKeyType, setNewKeyType] = useState('API Key');
   const { toast } = useToast();
 
+  const [userEmail, setUserEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>([
+    { id: 1, name: 'Production API Key', key: 'sk-abc123def456ghi789jkl012mno345pqr678stu901', type: 'API Key', created: '2024-01-15', lastUsed: '2024-01-30', status: 'active' },
+    { id: 2, name: 'Development Token', key: 'dev-token-xyz789abc123def456ghi789jkl012', type: 'Access Token', created: '2024-01-20', lastUsed: '2024-01-29', status: 'active' },
+  ]);
+  const [showKeys, setShowKeys] = useState<Record<number, boolean>>({});
+  const [newKeyName, setNewKeyName] = useState('');
+  const [newKeyType, setNewKeyType] = useState('API Key');
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeSection, setActiveSection] = useState<string>('profile');
+
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const email = localStorage.getItem('userEmail');
-    
-    if (isAuthenticated !== 'true') {
+    if (localStorage.getItem('isAuthenticated') !== 'true') {
       navigate('/login');
       return;
     }
-    
-    if (email) {
-      setUserEmail(email);
-    }
+    const email = localStorage.getItem('userEmail');
+    if (email) setUserEmail(email);
   }, [navigate]);
+
+  useEffect(() => {
+    const root = scrollRef.current;
+    if (!root) return;
+
+    const computeActive = () => {
+      const scrollTop = root.scrollTop;
+      const atBottom = scrollTop + root.clientHeight >= root.scrollHeight - 4;
+      if (atBottom) {
+        setActiveSection(NAV_SECTIONS[NAV_SECTIONS.length - 1].id);
+        return;
+      }
+      const threshold = scrollTop + 96;
+      let current = NAV_SECTIONS[0].id;
+      for (const s of NAV_SECTIONS) {
+        const el = document.getElementById(s.id);
+        if (!el) continue;
+        if (el.offsetTop <= threshold) current = s.id;
+        else break;
+      }
+      setActiveSection(current);
+    };
+
+    computeActive();
+    root.addEventListener('scroll', computeActive, { passive: true });
+    window.addEventListener('resize', computeActive);
+    return () => {
+      root.removeEventListener('scroll', computeActive);
+      window.removeEventListener('resize', computeActive);
+    };
+  }, []);
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el || !scrollRef.current) return;
+    const top = el.offsetTop - 16;
+    scrollRef.current.scrollTo({ top, behavior: 'smooth' });
+    setActiveSection(id);
+  };
 
   const generateKey = () => {
     if (!newKeyName.trim()) {
-      toast({
-        title: "Missing Name",
-        description: "Please enter a name for your API key.",
-        variant: "destructive",
-      });
+      toast({ title: 'Missing name', description: 'Enter a name for your API key.', variant: 'destructive' });
       return;
     }
-
-    const keyPrefix = newKeyType === 'API Key' ? 'sk-' : 'at-';
-    const randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const newKey = keyPrefix + randomString + Math.random().toString(36).substring(2, 15);
-
-    const newApiKey = {
-      id: Date.now(),
-      name: newKeyName,
-      key: newKey,
-      type: newKeyType,
-      created: new Date().toISOString().split('T')[0],
-      lastUsed: 'Never',
-      status: 'active'
-    };
-
-    setApiKeys(prev => [...prev, newApiKey]);
+    const prefix = newKeyType === 'API Key' ? 'sk-' : 'at-';
+    const random = Math.random().toString(36).slice(2, 15) + Math.random().toString(36).slice(2, 15);
+    setApiKeys(p => [
+      ...p,
+      {
+        id: Date.now(),
+        name: newKeyName,
+        key: prefix + random + Math.random().toString(36).slice(2, 15),
+        type: newKeyType,
+        created: new Date().toISOString().split('T')[0],
+        lastUsed: 'Never',
+        status: 'active',
+      },
+    ]);
     setNewKeyName('');
-    
-    toast({
-      title: "API Key Generated",
-      description: `${newKeyType} "${newKeyName}" has been created successfully.`,
-    });
+    toast({ title: 'API key generated', description: `${newKeyType} "${newKeyName}" created.` });
   };
 
   const copyToClipboard = (key: string, name: string) => {
     navigator.clipboard.writeText(key);
-    toast({
-      title: "Copied!",
-      description: `${name} has been copied to clipboard.`,
-    });
+    toast({ title: 'Copied', description: `${name} copied to clipboard.` });
   };
 
-  const toggleKeyVisibility = (keyId: number) => {
-    setShowKeys(prev => ({
-      ...prev,
-      [keyId]: !prev[keyId]
-    }));
+  const toggleKeyVisibility = (id: number) =>
+    setShowKeys(p => ({ ...p, [id]: !p[id] }));
+
+  const deleteKey = (id: number, name: string) => {
+    setApiKeys(p => p.filter(k => k.id !== id));
+    toast({ title: 'API key deleted', description: `${name} permanently deleted.`, variant: 'destructive' });
   };
 
-  const deleteKey = (keyId: number, keyName: string) => {
-    setApiKeys(prev => prev.filter(key => key.id !== keyId));
-    toast({
-      title: "API Key Deleted",
-      description: `${keyName} has been permanently deleted.`,
-      variant: "destructive",
-    });
-  };
-
-  const regenerateKey = (keyId: number) => {
-    const key = apiKeys.find(k => k.id === keyId);
+  const regenerateKey = (id: number) => {
+    const key = apiKeys.find(k => k.id === id);
     if (!key) return;
-
-    const keyPrefix = key.type === 'API Key' ? 'sk-' : 'at-';
-    const randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const newKeyValue = keyPrefix + randomString + Math.random().toString(36).substring(2, 15);
-
-    setApiKeys(prev => prev.map(k => 
-      k.id === keyId 
-        ? { ...k, key: newKeyValue, created: new Date().toISOString().split('T')[0], lastUsed: 'Never' }
-        : k
-    ));
-
-    toast({
-      title: "API Key Regenerated",
-      description: `${key.name} has been regenerated with a new value.`,
-    });
+    const prefix = key.type === 'API Key' ? 'sk-' : 'at-';
+    const random = Math.random().toString(36).slice(2, 15) + Math.random().toString(36).slice(2, 15);
+    setApiKeys(p =>
+      p.map(k =>
+        k.id === id
+          ? { ...k, key: prefix + random + Math.random().toString(36).slice(2, 15), created: new Date().toISOString().split('T')[0], lastUsed: 'Never' }
+          : k,
+      ),
+    );
+    toast({ title: 'API key regenerated', description: `${key.name} has a new value.` });
   };
 
-  const maskKey = (key: string) => {
-    if (key.length <= 8) return key;
-    return key.substring(0, 8) + '•'.repeat(key.length - 12) + key.substring(key.length - 4);
+  const maskKey = (k: string) => {
+    if (k.length <= 8) return k;
+    return k.slice(0, 8) + '•'.repeat(Math.max(k.length - 12, 4)) + k.slice(-4);
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
-      <SidebarProvider>
-        <div className="flex w-full flex-1">
-          <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col">
-            <main className="flex-1 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h1 className="text-3xl font-light text-gray-900">Settings</h1>
-                  <p className="text-gray-600">Manage your account and platform preferences</p>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset className="flex flex-col overflow-hidden h-screen bg-white">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 h-14 shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-[#bdd8ec]">
+              <SettingsIcon className="h-4 w-4 text-gray-700" />
+            </div>
+            <span className="text-sm font-semibold text-gray-800">Settings</span>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div ref={scrollRef} className="flex-1 overflow-y-auto">
+          <div className="max-w-5xl mx-auto py-10 px-4 flex gap-8">
+
+            {/* Sticky section navigator */}
+            <aside className="hidden lg:block w-56 shrink-0">
+              <nav className="sticky top-0">
+                <div className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2 px-2">
+                  Settings
+                </div>
+                <ul className="space-y-0.5">
+                  {NAV_SECTIONS.map(s => {
+                    const Icon = s.icon;
+                    const active = activeSection === s.id;
+                    return (
+                      <li key={s.id}>
+                        <button
+                          onClick={() => scrollToSection(s.id)}
+                          className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                            active
+                              ? 'bg-[#bdd8ec]/40 text-gray-900'
+                              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                          }`}
+                        >
+                          <Icon className={`h-3.5 w-3.5 ${active ? 'text-gray-800' : 'text-gray-400'}`} />
+                          <span className="truncate">{s.label}</span>
+                          {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#5ea7d4]" />}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+            </aside>
+
+            <div className="flex-1 max-w-2xl space-y-6 min-w-0">
+
+            {/* Profile */}
+            <section id="profile" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+              <SectionHeader icon={User} title="Profile" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FieldInput label="First name" value={firstName} onChange={setFirstName} placeholder="Enter your first name" />
+                <FieldInput label="Last name" value={lastName} onChange={setLastName} placeholder="Enter your last name" />
+              </div>
+              <div className="mt-3">
+                <FieldInput label="Email" value={userEmail} onChange={() => {}} disabled />
+              </div>
+              <div className="mt-4">
+                <button
+                  onClick={() => toast({ title: 'Profile saved' })}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-900 text-white hover:bg-gray-700 transition-all"
+                >
+                  Save profile
+                </button>
+              </div>
+            </section>
+
+            {/* Communication settings (external component, kept as-is) */}
+            <div id="communication" className="scroll-mt-4">
+              <CommunicationSettings />
+            </div>
+
+            {/* API keys */}
+            <section id="api-keys" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+              <SectionHeader icon={Key} title="API keys & tokens" />
+
+              {/* Generator */}
+              <div className="rounded-xl border border-gray-200 bg-gray-50/60 px-4 py-3 mb-4">
+                <div className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2">
+                  Generate new
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2">
+                  <input
+                    type="text"
+                    value={newKeyName}
+                    onChange={e => setNewKeyName(e.target.value)}
+                    placeholder="e.g., Production API Key"
+                    className="h-9 px-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#8fc4e4] transition-colors"
+                  />
+                  <select
+                    value={newKeyType}
+                    onChange={e => setNewKeyType(e.target.value)}
+                    className="h-9 px-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-800 focus:outline-none focus:border-[#8fc4e4] transition-colors"
+                  >
+                    {KEY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                  <button
+                    onClick={generateKey}
+                    className="flex items-center justify-center gap-1.5 h-9 px-3 rounded-lg text-xs font-medium bg-gray-900 text-white hover:bg-gray-700 transition-all"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    Generate
+                  </button>
                 </div>
               </div>
 
-              <div className="max-w-4xl space-y-6">
-                {/* Profile Settings */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <User className="h-5 w-5 mr-2" />
-                      Profile Settings
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" placeholder="Enter your first name" />
-                      </div>
-                      <div>
-                        <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" placeholder="Enter your last name" />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" value={userEmail} disabled />
-                    </div>
-                    <Button>Save Profile</Button>
-                  </CardContent>
-                </Card>
-
-                {/* Communication Settings */}
-                <CommunicationSettings />
-
-                {/* API Keys & Tokens */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Key className="h-5 w-5 mr-2" />
-                      API Keys & Tokens
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {/* Generate New Key */}
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-medium mb-4">Generate New API Key or Token</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <Label htmlFor="keyName">Name</Label>
-                          <Input 
-                            id="keyName" 
-                            placeholder="e.g., Production API Key"
-                            value={newKeyName}
-                            onChange={(e) => setNewKeyName(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="keyType">Type</Label>
-                          <select 
-                            id="keyType" 
-                            className="w-full h-10 px-3 rounded-md border border-input bg-background"
-                            value={newKeyType}
-                            onChange={(e) => setNewKeyType(e.target.value)}
-                          >
-                            <option value="API Key">API Key</option>
-                            <option value="Access Token">Access Token</option>
-                            <option value="Webhook Token">Webhook Token</option>
-                            <option value="Integration Key">Integration Key</option>
-                          </select>
-                        </div>
-                        <div className="flex items-end">
-                          <Button onClick={generateKey} className="w-full">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Generate
-                          </Button>
+              {/* Existing keys */}
+              <div className="space-y-2.5">
+                {apiKeys.map(k => (
+                  <div key={k.id} className="rounded-xl border border-gray-200 bg-gray-50/60 px-4 py-3">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm font-medium text-gray-800 truncate">{k.name}</div>
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-gray-500 mt-0.5">
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded-full border border-gray-200 bg-white text-gray-600">
+                            {k.type}
+                          </span>
+                          <span>Created {k.created}</span>
+                          <span>Last used {k.lastUsed}</span>
                         </div>
                       </div>
-                    </div>
-
-                    {/* Existing Keys */}
-                    <div className="space-y-4">
-                      <h4 className="font-medium">Your API Keys & Tokens</h4>
-                      {apiKeys.map((apiKey) => (
-                        <div key={apiKey.id} className="border rounded-lg p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <div>
-                              <h5 className="font-medium">{apiKey.name}</h5>
-                              <div className="flex items-center space-x-4 text-sm text-gray-600">
-                                <Badge variant="outline">{apiKey.type}</Badge>
-                                <span>Created: {apiKey.created}</span>
-                                <span>Last used: {apiKey.lastUsed}</span>
-                                <Badge variant={apiKey.status === 'active' ? 'default' : 'secondary'}>
-                                  {apiKey.status}
-                                </Badge>
-                              </div>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => toggleKeyVisibility(apiKey.id)}
-                              >
-                                {showKeys[apiKey.id] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => copyToClipboard(apiKey.key, apiKey.name)}
-                              >
-                                <Copy className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => regenerateKey(apiKey.id)}
-                              >
-                                <RefreshCw className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => deleteKey(apiKey.id, apiKey.name)}
-                                className="text-red-600 hover:text-red-700"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                          <div className="bg-gray-100 p-3 rounded font-mono text-sm">
-                            {showKeys[apiKey.id] ? apiKey.key : maskKey(apiKey.key)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h5 className="font-medium text-blue-900 mb-2">Security Notice</h5>
-                      <p className="text-sm text-blue-800">
-                        Keep your API keys secure and never share them publicly. 
-                        If you suspect a key has been compromised, regenerate it immediately.
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Notification Settings */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Bell className="h-5 w-5 mr-2" />
-                      Notification Settings
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label>Email Notifications</Label>
-                        <p className="text-sm text-gray-600">Receive email notifications for important updates</p>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <IconBtn title={showKeys[k.id] ? 'Hide' : 'Show'} onClick={() => toggleKeyVisibility(k.id)}>
+                          {showKeys[k.id] ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                        </IconBtn>
+                        <IconBtn title="Copy" onClick={() => copyToClipboard(k.key, k.name)}>
+                          <Copy className="h-3.5 w-3.5" />
+                        </IconBtn>
+                        <IconBtn title="Regenerate" onClick={() => regenerateKey(k.id)}>
+                          <RefreshCw className="h-3.5 w-3.5" />
+                        </IconBtn>
+                        <IconBtn title="Delete" danger onClick={() => deleteKey(k.id, k.name)}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </IconBtn>
                       </div>
-                      <Switch />
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label>Task Completion Alerts</Label>
-                        <p className="text-sm text-gray-600">Get notified when AI tasks are completed</p>
-                      </div>
-                      <Switch />
+                    <div className="font-mono text-xs text-gray-700 bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 truncate">
+                      {showKeys[k.id] ? k.key : maskKey(k.key)}
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label>System Maintenance</Label>
-                        <p className="text-sm text-gray-600">Receive alerts about scheduled maintenance</p>
-                      </div>
-                      <Switch />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Security Settings */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Shield className="h-5 w-5 mr-2" />
-                      Security Settings
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="currentPassword">Current Password</Label>
-                      <Input id="currentPassword" type="password" placeholder="Enter current password" />
-                    </div>
-                    <div>
-                      <Label htmlFor="newPassword">New Password</Label>
-                      <Input id="newPassword" type="password" placeholder="Enter new password" />
-                    </div>
-                    <div>
-                      <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                      <Input id="confirmPassword" type="password" placeholder="Confirm new password" />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label>Two-Factor Authentication</Label>
-                        <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
-                      </div>
-                      <Switch />
-                    </div>
-                    <Button>Update Security Settings</Button>
-                  </CardContent>
-                </Card>
-
-                {/* Appearance Settings */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Palette className="h-5 w-5 mr-2" />
-                      Appearance
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label>Dark Mode</Label>
-                        <p className="text-sm text-gray-600">Switch to dark theme</p>
-                      </div>
-                      <Switch />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label>Compact Layout</Label>
-                        <p className="text-sm text-gray-600">Use a more compact interface layout</p>
-                      </div>
-                      <Switch />
-                    </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                ))}
               </div>
-            </main>
-          </SidebarInset>
+
+              <div className="mt-4 rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-3">
+                <div className="text-[11px] font-medium text-blue-900 uppercase tracking-wide mb-1">
+                  Security notice
+                </div>
+                <p className="text-xs text-blue-800 leading-relaxed">
+                  Keep your keys secure and never share them publicly. If a key is compromised, regenerate it immediately.
+                </p>
+              </div>
+            </section>
+
+            {/* Notifications */}
+            <section id="notifications" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+              <SectionHeader icon={Bell} title="Notifications" />
+              <ToggleRow label="Email notifications" hint="Receive email notifications for important updates" />
+              <ToggleRow label="Task completion alerts" hint="Get notified when AI tasks are completed" />
+              <ToggleRow label="System maintenance" hint="Receive alerts about scheduled maintenance" />
+            </section>
+
+            {/* Security */}
+            <section id="security" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+              <SectionHeader icon={Shield} title="Security" />
+              <div className="space-y-3">
+                <FieldInput label="Current password" type="password" placeholder="Enter current password" value="" onChange={() => {}} />
+                <FieldInput label="New password" type="password" placeholder="Enter new password" value="" onChange={() => {}} />
+                <FieldInput label="Confirm new password" type="password" placeholder="Confirm new password" value="" onChange={() => {}} />
+              </div>
+              <div className="mt-3">
+                <ToggleRow label="Two-factor authentication" hint="Add an extra layer of security to your account" />
+              </div>
+              <div className="mt-2">
+                <button
+                  onClick={() => toast({ title: 'Security settings updated' })}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-900 text-white hover:bg-gray-700 transition-all"
+                >
+                  Update security
+                </button>
+              </div>
+            </section>
+
+            {/* Appearance */}
+            <section id="appearance" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+              <SectionHeader icon={Palette} title="Appearance" />
+              <ToggleRow label="Dark mode" hint="Switch to dark theme" />
+              <ToggleRow label="Compact layout" hint="Use a more compact interface layout" />
+            </section>
+            </div>
+          </div>
         </div>
-      </SidebarProvider>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
+
+function SectionHeader({ icon: Icon, title }: { icon: typeof User; title: string }) {
+  return (
+    <div className="flex items-center gap-2 mb-4">
+      <Icon className="h-4 w-4 text-gray-500" />
+      <h2 className="text-sm font-semibold text-gray-800">{title}</h2>
+    </div>
+  );
+}
+
+function FieldInput({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type = 'text',
+  disabled,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  type?: string;
+  disabled?: boolean;
+}) {
+  return (
+    <label className="block">
+      <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wide">{label}</span>
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        disabled={disabled}
+        className="mt-1 w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#8fc4e4] transition-colors disabled:bg-gray-50 disabled:text-gray-500"
+      />
+    </label>
+  );
+}
+
+function ToggleRow({ label, hint }: { label: string; hint: string }) {
+  return (
+    <div className="flex items-center justify-between gap-3 py-2">
+      <div className="min-w-0">
+        <div className="text-sm text-gray-800">{label}</div>
+        <div className="text-xs text-gray-500 mt-0.5">{hint}</div>
+      </div>
+      <Switch />
+    </div>
+  );
+}
+
+function IconBtn({
+  children,
+  onClick,
+  title,
+  danger,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  title: string;
+  danger?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className={`flex items-center justify-center h-7 w-7 rounded-lg border border-gray-200 bg-white transition-colors ${
+        danger
+          ? 'text-red-500 hover:text-red-600 hover:bg-red-50 hover:border-red-200'
+          : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
 
 export default Settings;

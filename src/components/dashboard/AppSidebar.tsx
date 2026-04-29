@@ -262,7 +262,7 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" align={state === "expanded" ? "end" : "center"} className="w-64 bg-white border shadow-lg">
-              <DropdownMenuItem className="flex items-center space-x-2 cursor-pointer">
+              <DropdownMenuItem onClick={() => navigate('/profile')} className="flex items-center space-x-2 cursor-pointer">
                 <User className="h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
