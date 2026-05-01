@@ -122,11 +122,11 @@ const WorkerActivityTable = () => {
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search activity…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 bg-white border-gray-200" />
+          <Input placeholder="Search activity…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[130px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[130px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Bot className="h-3.5 w-3.5 text-gray-400" />{workerFilter === 'All Workers' ? 'Worker' : workerFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -137,7 +137,7 @@ const WorkerActivityTable = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 text-gray-400" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -148,7 +148,7 @@ const WorkerActivityTable = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 text-gray-400" />{typeFilter === 'All Types' ? 'Type' : typeFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -270,7 +270,7 @@ const WorkersGrid = ({ employees, onViewEmployee, onShowCreate }: { employees: a
         <Bot className="h-16 w-16 text-black/50 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">No AI employees yet</h3>
         <p className="text-gray-600 mb-4">Create your first AI employee to get started</p>
-        <Button onClick={onShowCreate} className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"><Plus className="h-4 w-4 mr-2" />Add AI Employee</Button>
+        <Button onClick={onShowCreate} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800"><Plus className="h-4 w-4 mr-2" />Add AI Employee</Button>
       </div>
     )}
   </>
@@ -373,11 +373,11 @@ const AIWorkersListTab = ({ employees, onViewEmployee, onShowCreate }: {
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search AI workers…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 bg-white border-gray-200" />
+          <Input placeholder="Search AI workers…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[120px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[120px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 text-gray-400" />{typeFilter === 'All Types' ? 'Type' : typeFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -388,7 +388,7 @@ const AIWorkersListTab = ({ employees, onViewEmployee, onShowCreate }: {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 text-gray-400" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -399,7 +399,7 @@ const AIWorkersListTab = ({ employees, onViewEmployee, onShowCreate }: {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5 text-gray-400" />{scopeFilter === 'All Scopes' ? 'Scope' : scopeFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -409,7 +409,7 @@ const AIWorkersListTab = ({ employees, onViewEmployee, onShowCreate }: {
           </DropdownMenuContent>
         </DropdownMenu>
         <div className="flex-1" />
-        <Button size="sm" onClick={onShowCreate} className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white">
+        <Button size="sm" onClick={onShowCreate} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800">
           <Plus className="h-3.5 w-3.5 mr-1.5" />Add AI Worker
         </Button>
       </div>
@@ -537,15 +537,15 @@ const AIWorkersSection = () => {
         <p className="text-sm text-gray-500">Manage your artificial intelligence workforce and assistants</p>
       </div>
 
-      <div className="flex items-center border-b border-gray-200 mb-6">
-        <div className="flex flex-1">
+      <div className="flex items-center border-b border-gray-100 mb-6 py-2">
+        <div className="flex flex-1 items-center gap-1">
           {TABS.map(({ key, label, icon: Icon }) => (
-            <button key={key} onClick={() => setActiveTab(key)} className={cn('flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors', activeTab === key ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300')}>
-              <Icon className="h-4 w-4" />{label}
+            <button key={key} onClick={() => setActiveTab(key)} className={cn('flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors', activeTab === key ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]' : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900')}>
+              <Icon className="h-3.5 w-3.5" />{label}
             </button>
           ))}
         </div>
-        <Button size="sm" onClick={() => navigate('/staff/create-ai-worker')} className="mb-px bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white">
+        <Button size="sm" onClick={() => navigate('/staff/create-ai-worker')} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800">
           <Plus className="h-3.5 w-3.5 mr-1.5" />New AI Employee
         </Button>
       </div>
@@ -660,11 +660,11 @@ const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: bool
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search employees…" value={search} onChange={e => { setSearch(e.target.value); setEmpPage(1); }} className="pl-9 bg-white border-gray-200" />
+          <Input placeholder="Search employees…" value={search} onChange={e => { setSearch(e.target.value); setEmpPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[150px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[150px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5 text-gray-400" />{deptFilter === 'All Departments' ? 'Department' : deptFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -675,7 +675,7 @@ const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: bool
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 text-gray-400" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -690,7 +690,7 @@ const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: bool
             <Trash2 className="h-3.5 w-3.5 mr-1.5" />Delete {selected.size}
           </Button>
         )}
-        <Button variant="outline" size="sm" onClick={() => setShowImportDialog(true)} className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50">
+        <Button variant="outline" size="sm" onClick={() => setShowImportDialog(true)} className="bg-[#f1f3f4] border-transparent rounded-full text-gray-700 hover:bg-gray-200">
           <Upload className="h-3.5 w-3.5 mr-1.5" />Import
         </Button>
       </div>
@@ -845,7 +845,7 @@ const HumanTeamsSection = () => {
           <h2 className="text-xl font-semibold text-gray-900">Humans</h2>
           <p className="text-sm text-gray-500">Manage hybrid teams of human workers and AI assistants</p>
         </div>
-        <Button size="sm" onClick={() => setShowAddDialog(true)} className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white">
+        <Button size="sm" onClick={() => setShowAddDialog(true)} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800">
           <UserPlus className="h-3.5 w-3.5 mr-1.5" />Add Employee
         </Button>
       </div>
@@ -928,11 +928,11 @@ const AgentActivityTable = () => {
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search activity…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 bg-white border-gray-200" />
+          <Input placeholder="Search activity…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[140px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[140px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Bot className="h-3.5 w-3.5 text-gray-400" />{groupFilter === 'All Groups' ? 'Group' : groupFilter.replace(' Agent', '')}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -943,7 +943,7 @@ const AgentActivityTable = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 text-gray-400" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -954,7 +954,7 @@ const AgentActivityTable = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[130px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[130px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 text-gray-400" />{catFilter === 'All Categories' ? 'Category' : catFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -1094,11 +1094,11 @@ const AgentsListTab = ({ agents, onShowCreate }: { agents: any[]; onShowCreate: 
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search agent groups…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 bg-white border-gray-200" />
+          <Input placeholder="Search agent groups…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[130px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[130px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 text-gray-400" />{purposeFilter === 'All Purposes' ? 'Purpose' : purposeFilter}</span>
               <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
             </Button>
@@ -1108,7 +1108,7 @@ const AgentsListTab = ({ agents, onShowCreate }: { agents: any[]; onShowCreate: 
           </DropdownMenuContent>
         </DropdownMenu>
         <div className="flex-1" />
-        <Button size="sm" onClick={onShowCreate} className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white">
+        <Button size="sm" onClick={onShowCreate} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800">
           <Plus className="h-3.5 w-3.5 mr-1.5" />Deploy Agent
         </Button>
       </div>
@@ -1230,16 +1230,16 @@ const WorkerGroupsSection = () => {
         <h2 className="text-xl font-semibold text-gray-900">Teams</h2>
         <p className="text-sm text-gray-500">Manage hybrid teams of human workers and AI assistants</p>
       </div>
-      <div className="flex items-center justify-between border-b border-gray-200 mb-6">
-        <div className="flex">
+      <div className="flex items-center justify-between border-b border-gray-100 mb-6 py-2">
+        <div className="flex items-center gap-1">
           {TABS.map(({ key, label, icon: Icon }) => (
-            <button key={key} onClick={() => setActiveTab(key)} className={cn('flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors', activeTab === key ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300')}>
-              <Icon className="h-4 w-4" />{label}
+            <button key={key} onClick={() => setActiveTab(key)} className={cn('flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors', activeTab === key ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]' : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900')}>
+              <Icon className="h-3.5 w-3.5" />{label}
             </button>
           ))}
         </div>
         {activeTab === 'groups' && (
-          <Button size="icon" onClick={() => setShowCreateTeamDialog(true)} className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 mb-1 h-8 w-8">
+          <Button size="icon" onClick={() => setShowCreateTeamDialog(true)} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800 h-8 w-8 rounded-full">
             <Plus className="h-4 w-4" />
           </Button>
         )}
@@ -1281,24 +1281,24 @@ const Staff = () => {
 
               {/* Page header */}
               <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">Staff</h1>
+                <h1 className="text-3xl font-light text-gray-900">Staff</h1>
                 <p className="text-gray-600">Manage your entire workforce — AI workers, human teams, and agent groups</p>
               </div>
 
               {/* Section switcher */}
-              <div className="inline-flex items-center bg-gray-100 rounded-xl p-1 mb-8 gap-1">
+              <div className="inline-flex items-center gap-1 mb-8">
                 {SECTIONS.map(({ key, label, icon: Icon }) => (
                   <button
                     key={key}
                     onClick={() => setActiveSection(key)}
                     className={cn(
-                      'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150',
+                      'flex h-9 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors',
                       activeSection === key
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
+                        ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
+                        : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900'
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-3.5 w-3.5" />
                     {label}
                   </button>
                 ))}

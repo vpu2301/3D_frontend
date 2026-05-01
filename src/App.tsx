@@ -59,6 +59,7 @@ const DriveHome = lazy(() => import('./pages/drive/DriveHome'));
 const DriveSpaces = lazy(() => import('./pages/drive/DriveSpaces'));
 const DriveTrash = lazy(() => import('./pages/drive/DriveTrash'));
 const DriveSearch = lazy(() => import('./pages/drive/DriveSearch'));
+const TelephonyHome = lazy(() => import('./pages/telephony/TelephonyHome'));
 const TodoHome = lazy(() => import('./pages/todo/TodoHome'));
 const TodoFocus = lazy(() => import('./pages/todo/TodoFocus'));
 const TodoTrash = lazy(() => import('./pages/todo/TodoTrash'));
@@ -498,11 +499,37 @@ function App() {
               }
             />
 
+            {/* Telephony (mocked) */}
+            {(['', '/calls', '/calls/live', '/calls/pending-approval', '/numbers', '/usage', '/policies', '/audit', '/settings'] as const).map((sub) => (
+              <Route
+                key={sub}
+                path={`/telephony${sub}`}
+                element={
+                  <ProtectedRoute>
+                    <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Telephony…</div>}>
+                      <TelephonyHome />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+            ))}
+            <Route
+              path="/telephony/calls/:callSid"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading call…</div>}>
+                    <TelephonyHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
             {/* AI-Native Todo (mocked) */}
             <Route path="/todo" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Todo…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
             <Route path="/todo/today" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
             <Route path="/todo/upcoming" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
             <Route path="/todo/all" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/starred" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
             <Route path="/todo/completed" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
             <Route path="/todo/list/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
             <Route path="/todo/project/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />

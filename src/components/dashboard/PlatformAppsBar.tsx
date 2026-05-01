@@ -4,6 +4,7 @@ import {
   FileText,
   FolderOpen,
   ListTodo,
+  Phone,
   Contact,
   Mail,
   Plus,
@@ -63,7 +64,7 @@ const apps: PlatformApp[] = [
   },
   {
     key: 'todos',
-    label: 'To-Dos',
+    label: 'To-Do',
     icon: ListTodo,
     iconColor: 'text-violet-600',
     bgColor: 'bg-violet-50 hover:bg-violet-100',
@@ -87,6 +88,15 @@ const apps: PlatformApp[] = [
     bgColor: 'bg-indigo-50 hover:bg-indigo-100',
     ringColor: 'hover:ring-indigo-200',
     href: '/mail',
+  },
+  {
+    key: 'phone',
+    label: 'Telephony',
+    icon: Phone,
+    iconColor: 'text-green-600',
+    bgColor: 'bg-green-50 hover:bg-green-100',
+    ringColor: 'hover:ring-green-200',
+    href: '/telephony',
   },
 ];
 
@@ -115,14 +125,23 @@ export function PlatformAppsBar() {
                     disabled={app.comingSoon}
                     onClick={() => app.href && navigate(app.href)}
                     className={cn(
-                      'group relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-150 ring-1 ring-transparent',
+                      'group relative flex h-10 w-10 items-center justify-center rounded-xl ring-1 ring-transparent transition-all duration-150',
                       app.bgColor,
                       app.ringColor,
-                      'hover:ring-2 active:scale-95',
-                      isActive && 'ring-2',
+                      'active:scale-95',
+                      isActive && 'shadow-sm',
                       app.comingSoon && 'cursor-not-allowed opacity-80'
                     )}
                   >
+                    {isActive && (
+                      <span
+                        aria-hidden
+                        className={cn(
+                          'absolute -left-1.5 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-current',
+                          app.iconColor
+                        )}
+                      />
+                    )}
                     <Icon className={cn('h-[18px] w-[18px]', app.iconColor)} />
                     {app.comingSoon && (
                       <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 ring-2 ring-white" />

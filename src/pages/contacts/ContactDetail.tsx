@@ -301,26 +301,27 @@ export default function ContactDetail() {
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   {primaryEmail && (
                     <a
                       href={`mailto:${primaryEmail.value}`}
-                      className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1.5 text-xs hover:bg-gray-50"
+                      className="flex h-9 items-center gap-1.5 rounded-full bg-[#f1f3f4] px-3.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
                     >
                       <MailIcon className="h-3.5 w-3.5" /> Email
                     </a>
                   )}
                   <button
                     type="button"
-                    className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1.5 text-xs hover:bg-gray-50"
+                    className="flex h-9 items-center gap-1.5 rounded-full bg-[#f1f3f4] px-3.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
                   >
                     <CalendarPlus className="h-3.5 w-3.5" /> Schedule
                   </button>
                   <button
                     type="button"
                     onClick={() => star(contact.id)}
-                    className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100"
+                    className="rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100"
                     aria-label={contact.starred ? 'Unstar' : 'Star'}
+                    title={contact.starred ? 'Unstar' : 'Star'}
                   >
                     <Star className={cn('h-4 w-4', contact.starred && 'fill-yellow-400 text-yellow-400')} />
                   </button>
@@ -332,8 +333,9 @@ export default function ContactDetail() {
                         navigate('/contacts');
                       }
                     }}
-                    className="rounded-md p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600"
+                    className="rounded-full p-2 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600"
                     aria-label="Trash"
+                    title="Move to trash"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -343,7 +345,7 @@ export default function ContactDetail() {
 
             <IdentityCard contact={contact} />
 
-            <div className="border-b border-gray-200 px-6">
+            <div className="border-b border-gray-100 px-6 py-2">
               <div className="flex items-center gap-1">
                 {(['about', 'mail', 'meetings', 'shared', 'timeline', 'activity'] as Tab[]).map(
                   (t) => (
@@ -352,10 +354,10 @@ export default function ContactDetail() {
                       type="button"
                       onClick={() => setTab(t)}
                       className={cn(
-                        'rounded-md px-3 py-2 text-sm capitalize transition-colors',
+                        'flex h-8 items-center rounded-full px-3.5 text-xs font-medium capitalize transition-colors',
                         tab === t
-                          ? 'border-b-2 border-rose-500 font-medium text-gray-900'
-                          : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900',
+                          ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
+                          : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900',
                       )}
                     >
                       {t}
@@ -371,11 +373,6 @@ export default function ContactDetail() {
                   contact={contact}
                   onGenerateSummary={onGenerateSummary}
                   summarizing={summarizing}
-                  askInput={askInput}
-                  setAskInput={setAskInput}
-                  askMessages={askMessages}
-                  askLoading={askLoading}
-                  onAsk={onAsk}
                 />
               )}
               {tab === 'mail' && (
@@ -411,6 +408,13 @@ export default function ContactDetail() {
 
           {/* Right rail */}
           <aside className="hidden w-80 shrink-0 flex-col gap-3 overflow-y-auto border-l border-gray-200 bg-gray-50 p-4 lg:flex">
+            <AskAiPanel
+              askInput={askInput}
+              setAskInput={setAskInput}
+              askMessages={askMessages}
+              askLoading={askLoading}
+              onAsk={onAsk}
+            />
             <RelationshipStrengthPanel
               contact={contact}
               onRefresh={() => refreshStrength(contact.id)}
@@ -562,20 +566,10 @@ function AboutTab({
   contact,
   onGenerateSummary,
   summarizing,
-  askInput,
-  setAskInput,
-  askMessages,
-  askLoading,
-  onAsk,
 }: {
   contact: Contact;
   onGenerateSummary: () => void;
   summarizing: boolean;
-  askInput: string;
-  setAskInput: (v: string) => void;
-  askMessages: { role: 'user' | 'assistant'; content: string }[];
-  askLoading: boolean;
-  onAsk: () => void;
 }) {
   return (
     <div className="space-y-5">
@@ -586,7 +580,7 @@ function AboutTab({
             type="button"
             onClick={onGenerateSummary}
             disabled={summarizing}
-            className="flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50"
+            className="flex h-8 items-center gap-1.5 rounded-full bg-[#bdd8ec] px-3 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0] disabled:opacity-50"
           >
             {summarizing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
             {contact.aiSummary ? 'Regenerate' : 'Generate'}
@@ -604,47 +598,6 @@ function AboutTab({
             No summary yet — click Generate to synthesize from interactions.
           </div>
         )}
-      </div>
-
-      <div>
-        <h3 className="mb-2 text-sm font-medium text-gray-900">Ask AI about this contact</h3>
-        <div className="space-y-2">
-          {askMessages.map((m, i) => (
-            <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
-              <div
-                className={cn(
-                  'max-w-[85%] rounded-lg px-3 py-2 text-sm',
-                  m.role === 'user' ? 'bg-rose-600 text-white' : 'bg-gray-100 text-gray-900',
-                )}
-              >
-                <div className="whitespace-pre-wrap">
-                  {m.content || (m.role === 'assistant' ? 'Thinking…' : '')}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onAsk();
-          }}
-          className="mt-2 flex items-center gap-1"
-        >
-          <input
-            value={askInput}
-            onChange={(e) => setAskInput(e.target.value)}
-            placeholder="What did we discuss last quarter?"
-            className="flex-1 rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm focus:border-rose-400 focus:outline-none"
-          />
-          <button
-            type="submit"
-            disabled={askLoading || !askInput.trim()}
-            className="flex h-8 w-8 items-center justify-center rounded-md bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-50"
-          >
-            <Send className="h-4 w-4" />
-          </button>
-        </form>
       </div>
     </div>
   );
@@ -681,6 +634,77 @@ function InteractionList({
         );
       })}
     </ul>
+  );
+}
+
+function AskAiPanel({
+  askInput,
+  setAskInput,
+  askMessages,
+  askLoading,
+  onAsk,
+}: {
+  askInput: string;
+  setAskInput: (v: string) => void;
+  askMessages: { role: 'user' | 'assistant'; content: string }[];
+  askLoading: boolean;
+  onAsk: () => void;
+}) {
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white p-3">
+      <div className="mb-2 flex items-center gap-1.5">
+        <Sparkles className="h-3.5 w-3.5 text-blue-500" />
+        <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+          Ask AI
+        </div>
+      </div>
+      {askMessages.length === 0 ? (
+        <div className="rounded-md bg-gray-50 px-2.5 py-2 text-[11px] italic text-gray-500">
+          Ask anything about this contact — e.g. "What did we discuss last quarter?"
+        </div>
+      ) : (
+        <div className="max-h-72 space-y-2 overflow-y-auto pr-0.5">
+          {askMessages.map((m, i) => (
+            <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
+              <div
+                className={cn(
+                  'max-w-[90%] rounded-lg px-2.5 py-1.5 text-[12px] leading-relaxed',
+                  m.role === 'user'
+                    ? 'bg-[#bdd8ec] text-gray-800'
+                    : 'bg-gray-100 text-gray-900',
+                )}
+              >
+                <div className="whitespace-pre-wrap">
+                  {m.content || (m.role === 'assistant' ? 'Thinking…' : '')}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onAsk();
+        }}
+        className="mt-2 flex items-center gap-1.5"
+      >
+        <input
+          value={askInput}
+          onChange={(e) => setAskInput(e.target.value)}
+          placeholder="Ask AI…"
+          className="h-8 flex-1 rounded-full bg-[#f1f3f4] px-3 text-xs text-gray-900 placeholder:text-gray-500 transition-colors focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#8fc4e4]"
+        />
+        <button
+          type="submit"
+          disabled={askLoading || !askInput.trim()}
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#bdd8ec] text-gray-800 transition-colors hover:bg-[#a5c8e0] disabled:opacity-50"
+          aria-label="Send"
+        >
+          {askLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+        </button>
+      </form>
+    </div>
   );
 }
 

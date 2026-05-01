@@ -173,7 +173,7 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
-                    isActive={location.pathname === item.url}
+                    isActive={location.pathname === item.url || location.pathname.startsWith(item.url + '/')}
                     tooltip={state === "collapsed" ? item.title : undefined}
                   >
                     <Link to={item.url}>
