@@ -1,291 +1,442 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap, Users, BarChart3, Clock, CheckCircle, TrendingUp, Workflow, Brain, Shield, ChevronRight } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-
-// Animated counter hook
-const useCounter = (end: number, duration: number = 2000, start: boolean = false) => {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let startTime: number;
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * end));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
-  }, [end, duration, start]);
-  return count;
-};
 
 const Home = () => {
-  const { t } = useTranslation();
-  const [statsVisible, setStatsVisible] = useState(false);
   const [heroVisible, setHeroVisible] = useState(false);
+  const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
-  const productivity = useCounter(40, 2000, statsVisible);
-  const timeSaved = useCounter(60, 2000, statsVisible);
-  const companies = useCounter(500, 2500, statsVisible);
-
   useEffect(() => {
-    const timer = setTimeout(() => setHeroVisible(true), 100);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setHeroVisible(true), 80);
+    return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setStatsVisible(true); },
-      { threshold: 0.3 }
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setStatsVisible(true); },
+      { threshold: 0.2 }
     );
-    if (statsRef.current) observer.observe(statsRef.current);
-    return () => observer.disconnect();
+    if (statsRef.current) obs.observe(statsRef.current);
+    return () => obs.disconnect();
   }, []);
-
-  const features = [
-    { icon: Brain, title: t('home.feature1Title'), description: t('home.feature1Desc') },
-    { icon: Workflow, title: t('home.feature2Title'), description: t('home.feature2Desc') },
-    { icon: BarChart3, title: t('home.feature3Title'), description: t('home.feature3Desc') },
-    { icon: Shield, title: t('home.feature4Title'), description: t('home.feature4Desc') },
-  ];
-
-  const testimonials = [
-    { quote: t('home.testimonial1Quote'), author: t('home.testimonial1Author'), role: t('home.testimonial1Role') },
-    { quote: t('home.testimonial2Quote'), author: t('home.testimonial2Author'), role: t('home.testimonial2Role') },
-    { quote: t('home.testimonial3Quote'), author: t('home.testimonial3Author'), role: t('home.testimonial3Role') },
-  ];
-
-  const steps = [
-    { step: t('home.step1Number'), title: t('home.step1Title'), desc: t('home.step1Desc') },
-    { step: t('home.step2Number'), title: t('home.step2Title'), desc: t('home.step2Desc') },
-    { step: t('home.step3Number'), title: t('home.step3Title'), desc: t('home.step3Desc') },
-  ];
-
-  const tools = ['Slack', 'Notion', 'Jira', 'GitHub', 'Gmail', 'Salesforce', 'HubSpot', 'Linear'];
 
   return (
-    <div className="min-h-screen bg-[#e8e6dc] dark:bg-[#181512] text-[#141413] dark:text-[#ede8e3] overflow-x-hidden">
-      {/* Hero */}
-      <section className="relative pt-40 pb-28 px-6 lg:px-8">
-        <div className="relative max-w-6xl mx-auto">
-          {/* Badge */}
-          <div
-            className={`inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#d97757]/12 text-[#d97757] text-xs font-semibold mb-10 tracking-widest uppercase transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-            style={{ borderRadius: '2px' }}
+    <div
+      className="min-h-screen overflow-x-hidden"
+      style={{ background: '#F2EEE6', color: '#1A1715', fontFamily: '"Inter Tight", "Inter", system-ui, sans-serif' }}
+    >
+
+      {/* ── HERO ── */}
+      <section style={{ maxWidth: 1480, margin: '0 auto', padding: '96px 56px 24px' }}>
+        <div
+          className="inline-flex items-center gap-3.5"
+          style={{
+            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: '#5A5550',
+            padding: '8px 16px',
+            border: '1px solid rgba(26,23,21,0.14)',
+            borderRadius: 999,
+          }}
+        >
+          <span
+            className="animate-pulse"
+            style={{ width: 7, height: 7, borderRadius: '50%', background: 'oklch(0.62 0.16 35)', flexShrink: 0, display: 'inline-block' }}
+          />
+          Built in Germany · EU-sovereign AI
+        </div>
+
+        <h1
+          className={`transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+          style={{
+            fontSize: 'clamp(56px, 8.4vw, 132px)',
+            fontWeight: 500,
+            lineHeight: 0.94,
+            letterSpacing: '-0.045em',
+            margin: '28px 0 0',
+            maxWidth: 1320,
+          }}
+        >
+          Five days of work,<br />
+          <span style={{ color: 'oklch(0.62 0.16 35)', fontWeight: 600 }}>done in under three.</span>
+        </h1>
+
+        <p
+          className={`transition-all duration-700 delay-100 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          style={{ fontSize: 22, lineHeight: 1.45, color: '#5A5550', maxWidth: 640, marginTop: 32, fontWeight: 400 }}
+        >
+          Give every employee their own team of digital coworkers. The repetitive work runs in the background — your people stay focused on what only they can do.
+        </p>
+
+        <div
+          className={`flex flex-wrap gap-3.5 items-center transition-all duration-700 delay-150 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          style={{ marginTop: 40 }}
+        >
+          <Link
+            to="/schedule-demo"
+            className="inline-flex items-center gap-2.5 transition-all duration-150 hover:-translate-y-px"
+            style={{
+              padding: '12px 22px',
+              fontSize: 15,
+              fontWeight: 500,
+              borderRadius: 999,
+              border: '1px solid #1A1715',
+              background: '#1A1715',
+              color: '#F2EEE6',
+              letterSpacing: '-0.01em',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'oklch(0.62 0.16 35)'; (e.currentTarget as HTMLElement).style.borderColor = 'oklch(0.62 0.16 35)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#1A1715'; (e.currentTarget as HTMLElement).style.borderColor = '#1A1715'; }}
           >
-            <Zap className="w-3 h-3" />
-            {t('home.badge')}
-          </div>
-
-          {/* Headline */}
-          <h1
-            className={`text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[1.0] max-w-4xl transition-all duration-700 delay-100 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            Book a demo <span>→</span>
+          </Link>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2.5 transition-all duration-150"
+            style={{
+              padding: '12px 22px',
+              fontSize: 15,
+              fontWeight: 500,
+              borderRadius: 999,
+              border: '1px solid #1A1715',
+              background: 'transparent',
+              color: '#1A1715',
+              letterSpacing: '-0.01em',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1715'; (e.currentTarget as HTMLElement).style.color = '#F2EEE6'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#1A1715'; }}
           >
-            {t('home.headline1')}
-            <br />
-            {t('home.headline2')}
-          </h1>
+            Talk to sales
+          </Link>
+        </div>
 
-          {/* Subheadline + CTAs layout */}
-          <div className={`flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-16 transition-all duration-700 delay-200 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <p className="text-lg text-[#30302e]/60 dark:text-white/60 max-w-md leading-relaxed">
-              {t('home.subheadline')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
-              <Link to="/signup">
-                <button className="group inline-flex items-center gap-2 px-7 py-3.5 bg-[#141413] dark:bg-[#ede8e3] hover:bg-[#2a2a28] dark:hover:bg-white text-white dark:text-[#141413] text-sm font-medium transition-all duration-200" style={{ borderRadius: '4px' }}>
-                  {t('common.startForFree')}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              </Link>
-              <Link to="/watch-demo">
-                <button className="inline-flex items-center gap-2 px-7 py-3.5 border border-[#141413]/20 dark:border-white/20 hover:border-[#141413]/40 dark:hover:border-white/40 text-[#141413] dark:text-[#ede8e3] text-sm font-medium transition-all duration-200 hover:bg-[#141413]/5 dark:hover:bg-white/5" style={{ borderRadius: '4px' }}>
-                  {t('common.bookDemo')}
-                </button>
-              </Link>
-            </div>
-          </div>
-
-          <p className={`text-[#30302e]/35 dark:text-white/35 text-xs mt-6 tracking-wide transition-all duration-700 delay-300 ${heroVisible ? 'opacity-100' : 'opacity-0'}`}>
-            {t('home.noCreditCard')}
-          </p>
-
-          {/* UI preview */}
-          <div className={`mt-20 transition-all duration-1000 delay-500 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className="relative overflow-hidden border border-[#141413]/10 dark:border-white/10 bg-[#f5f3ee] dark:bg-[#1c1916] shadow-2xl shadow-[#141413]/8 dark:shadow-black/40" style={{ borderRadius: '12px' }}>
-              {/* Window chrome */}
-              <div className="flex items-center gap-1.5 px-5 py-4 border-b border-[#141413]/8 dark:border-white/8 bg-[#eeece6] dark:bg-[#1f1d1a]">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#141413]/20 dark:bg-white/20" />
-                <div className="w-2.5 h-2.5 rounded-full bg-[#141413]/15 dark:bg-white/15" />
-                <div className="w-2.5 h-2.5 rounded-full bg-[#141413]/10 dark:bg-white/10" />
-                <span className="ml-4 text-[#141413]/30 dark:text-white/30 text-xs font-mono">{t('home.uiPreview')}</span>
-              </div>
-              <div className="p-6 md:p-8">
-                <div className="grid grid-cols-3 gap-3 mb-5">
-                  {[
-                    { label: t('home.statsCompleted'), value: '47', change: t('home.statsToday') },
-                    { label: t('home.statsHoursSaved'), value: '18.4h', change: t('home.statsWeek') },
-                    { label: t('home.statsAutomation'), value: '73%', change: t('home.statsOfWork') },
-                  ].map((stat, i) => (
-                    <div key={i} className="p-4 text-left bg-[#e8e6dc] dark:bg-[#262220] border border-[#141413]/8 dark:border-white/8" style={{ borderRadius: '8px' }}>
-                      <div className="text-xl md:text-2xl font-bold text-[#141413] dark:text-[#ede8e3] tracking-tight">{stat.value}</div>
-                      <div className="text-[#141413]/50 dark:text-white/50 text-xs mt-0.5">{stat.label}</div>
-                      <div className="text-[#141413]/30 dark:text-white/30 text-xs">{stat.change}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="space-y-2">
-                  {[
-                    { task: t('home.task1'), time: t('home.time1'), done: true },
-                    { task: t('home.task2'), time: t('home.time2'), done: true },
-                    { task: t('home.task3'), time: t('home.timeRunning'), done: false },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 bg-[#eeece6] dark:bg-[#1f1d1a] border border-[#141413]/6 dark:border-white/6 px-4 py-3" style={{ borderRadius: '8px' }}>
-                      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-[#141413]/8 dark:bg-white/8 border border-[#141413]/15 dark:border-white/15' : 'bg-[#d97757]/15 border border-[#d97757]/25'}`}>
-                        {item.done
-                          ? <CheckCircle className="w-3 h-3 text-[#141413]/55 dark:text-white/55" />
-                          : <div className="w-2 h-2 rounded-full bg-[#d97757]/70 animate-pulse" />
-                        }
-                      </div>
-                      <span className="text-[#141413]/60 dark:text-white/60 text-sm flex-1 text-left">{item.task}</span>
-                      <span className="text-[#141413]/30 dark:text-white/30 text-xs">{item.time}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+        <div
+          className={`flex flex-wrap items-center gap-6 transition-all duration-700 delay-200 ${heroVisible ? 'opacity-100' : 'opacity-0'}`}
+          style={{
+            marginTop: 28,
+            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+            fontSize: 12,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: '#5A5550',
+          }}
+        >
+          <span>14h saved / user / week</span>
+          <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(26,23,21,0.14)', display: 'inline-block' }} />
+          <span>626+ tools connected</span>
+          <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(26,23,21,0.14)', display: 'inline-block' }} />
+          <span>6-week payback</span>
         </div>
       </section>
 
-      {/* Stats */}
-      <section ref={statsRef} className="py-20 border-t border-[#141413]/10 dark:border-white/10 bg-[#f5f3ee] dark:bg-[#1c1916]">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:divide-x divide-[#141413]/10 dark:divide-white/10">
-            {[
-              { value: `${productivity}%`, label: t('home.statProductivity'), icon: TrendingUp },
-              { value: `${timeSaved}%`, label: t('home.statTimeSaved'), icon: Clock },
-              { value: `${companies}+`, label: t('home.statCompanies'), icon: Users },
-            ].map((stat, i) => (
-              <div key={i} className={`${i > 0 ? 'md:pl-12' : ''}`}>
-                <div className="text-5xl md:text-6xl font-bold text-[#141413] dark:text-[#ede8e3] tracking-tight mb-3">{stat.value}</div>
-                <div className="text-[#30302e]/50 dark:text-white/50 text-sm leading-relaxed">{stat.label}</div>
-              </div>
-            ))}
-          </div>
+      {/* ── HERO VIDEO ── */}
+      <div style={{ maxWidth: 1480, margin: '56px auto 0', padding: '0 56px' }}>
+        <div
+          style={{
+            position: 'relative',
+            aspectRatio: '16/9',
+            width: '100%',
+            borderRadius: 18,
+            overflow: 'hidden',
+            background: '#FBF8F2',
+            boxShadow: '0 1px 0 rgba(26,23,21,0.04), 0 30px 60px -30px rgba(26,23,21,0.25), 0 8px 20px -10px rgba(26,23,21,0.12)',
+            border: '1px solid rgba(26,23,21,0.08)',
+          }}
+        >
+          <span
+            className="inline-flex items-center gap-2"
+            style={{
+              position: 'absolute',
+              left: 20,
+              top: 20,
+              zIndex: 4,
+              fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+              fontSize: 11,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: '#1A1715',
+              background: 'rgba(251,248,242,0.86)',
+              backdropFilter: 'blur(8px)',
+              padding: '8px 14px',
+              borderRadius: 999,
+              border: '1px solid rgba(26,23,21,0.08)',
+            }}
+          >
+            <span className="animate-pulse" style={{ width: 6, height: 6, borderRadius: '50%', background: 'oklch(0.62 0.16 35)', display: 'inline-block' }} />
+            Live demo
+          </span>
+          <iframe
+            src="/promo.html"
+            title="3Days.ai promo"
+            loading="lazy"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0, background: '#F2EEE6' }}
+          />
         </div>
-      </section>
+      </div>
 
-      {/* Features */}
-      <section className="py-28 bg-[#e8e6dc] dark:bg-[#181512]">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="mb-16">
-            <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">{t('home.featuresLabel')}</p>
-            <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#141413] dark:text-[#ede8e3] leading-tight max-w-sm">
-                {t('home.featuresHeadline')}
-              </h2>
-              <p className="text-[#30302e]/55 dark:text-white/55 text-base max-w-md leading-relaxed pb-1">
-                {t('home.featuresSubheadline')}
-              </p>
+      {/* ── LOGO STRIP ── */}
+      <section style={{ maxWidth: 1480, margin: '0 auto', padding: '80px 56px 0' }}>
+        <div
+          style={{
+            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+            fontSize: 11.5,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: '#5A5550',
+            marginBottom: 24,
+          }}
+        >
+          Trusted by Mittelstand teams across DACH
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            gap: 1,
+            background: 'rgba(26,23,21,0.08)',
+            borderTop: '1px solid rgba(26,23,21,0.08)',
+            borderBottom: '1px solid rgba(26,23,21,0.08)',
+          }}
+        >
+          {['Schneider AG', 'Müller GmbH', 'Hofmann & Co', 'Voigt Industrie', 'Becker Werke', 'Krämer Logistik'].map(name => (
+            <div
+              key={name}
+              style={{
+                background: '#F2EEE6',
+                padding: '30px 16px',
+                textAlign: 'center',
+                fontSize: 22,
+                fontWeight: 500,
+                letterSpacing: '-0.02em',
+                color: '#5A5550',
+                transition: 'color 0.2s',
+                cursor: 'default',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#1A1715'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#5A5550'; }}
+            >
+              {name}
             </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-3">
-            {features.map((feature, i) => (
-              <div
-                key={i}
-                className="group p-8 border border-[#141413]/10 dark:border-white/10 bg-[#f5f3ee] dark:bg-[#1c1916] hover:bg-white dark:hover:bg-[#222018] hover:shadow-lg hover:shadow-[#141413]/5 dark:hover:shadow-black/20 transition-all duration-300"
-                style={{ borderRadius: '10px' }}
-              >
-                <div className="inline-flex items-center justify-center w-10 h-10 bg-[#141413]/8 dark:bg-white/8 mb-6" style={{ borderRadius: '8px' }}>
-                  <feature.icon className="w-5 h-5 text-[#141413]/55 dark:text-white/55" />
-                </div>
-                <h3 className="text-lg font-semibold text-[#141413] dark:text-[#ede8e3] mb-3 tracking-tight">{feature.title}</h3>
-                <p className="text-[#30302e]/50 dark:text-white/50 text-sm leading-relaxed">{feature.description}</p>
-                <div className="flex items-center gap-1 mt-6 text-[#d97757] text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  {t('common.learnMore')} <ChevronRight className="w-3 h-3" />
-                </div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-28 border-t border-[#141413]/10 dark:border-white/10 bg-[#f5f3ee] dark:bg-[#1c1916]">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="mb-16">
-            <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">{t('home.howItWorksLabel')}</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#141413] dark:text-[#ede8e3] leading-tight">
-              {t('home.howItWorksHeadline')}
+      {/* ── STATS ── */}
+      <section
+        ref={statsRef}
+        style={{
+          maxWidth: 1480,
+          margin: '0 auto',
+          padding: '120px 56px 0',
+          display: 'grid',
+          gridTemplateColumns: '1fr 2fr',
+          gap: 80,
+          alignItems: 'end',
+        }}
+        className="max-md:!grid-cols-1 max-md:!gap-10"
+      >
+        <h2 style={{ fontSize: 56, fontWeight: 500, lineHeight: 1.0, letterSpacing: '-0.03em', margin: 0 }}>
+          The numbers from <span style={{ color: 'oklch(0.62 0.16 35)', fontWeight: 600 }}>real teams.</span>
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 48 }} className="max-sm:!grid-cols-1">
+          {[
+            { num: '14', unit: 'h', label: 'recovered per user, every week — automatically.' },
+            { num: '~3', unit: '×', label: 'FTE-equivalent capacity unlocked across a 40-person company.' },
+            { num: '6', unit: 'wk', label: 'typical payback period — the agents pay for themselves before quarter-end.' },
+          ].map(({ num, unit, label }) => (
+            <div
+              key={num}
+              className={`transition-all duration-700 ${statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              style={{ borderTop: '1px solid #1A1715', paddingTop: 24 }}
+            >
+              <div style={{ fontSize: 92, fontWeight: 600, lineHeight: 0.9, letterSpacing: '-0.045em', color: 'oklch(0.62 0.16 35)', fontVariantNumeric: 'tabular-nums' }}>
+                {num}<span style={{ fontSize: '0.5em', color: '#1A1715', marginLeft: 4 }}>{unit}</span>
+              </div>
+              <div style={{ marginTop: 18, fontSize: 16, color: '#5A5550', lineHeight: 1.45 }}>{label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── HOW IT WORKS ── */}
+      <section id="how" style={{ maxWidth: 1480, margin: '0 auto', padding: '160px 56px 0' }}>
+        <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#5A5550', borderTop: '1px solid #1A1715', paddingTop: 18 }}>
+          01 / How it works
+        </div>
+        <h2 style={{ fontSize: 'clamp(48px, 5.5vw, 80px)', fontWeight: 500, lineHeight: 1.0, letterSpacing: '-0.035em', margin: '32px 0 0', maxWidth: 1100 }}>
+          Hire a team of agents in <span style={{ color: 'oklch(0.62 0.16 35)', fontWeight: 600 }}>three days.</span>
+        </h2>
+        <div style={{ marginTop: 80, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 56 }} className="max-md:!grid-cols-1">
+          {[
+            {
+              day: 'Day 01',
+              title: 'Connect your stack.',
+              desc: 'One click into 626+ tools — CRM, email, ERP, calendars, document stores. We map what your team already does.',
+              glyph: (
+                <svg width="64" height="64" viewBox="0 0 64 64">
+                  <circle cx="20" cy="32" r="10" fill="#1A1715" />
+                  <circle cx="44" cy="32" r="10" fill="none" stroke="#1A1715" strokeWidth="1.5" strokeDasharray="2 3" />
+                </svg>
+              ),
+            },
+            {
+              day: 'Day 02',
+              title: 'Train your coworkers.',
+              desc: "Each agent learns from your real workflows — invoices, follow-ups, reports — under your team's supervision. No prompts to write.",
+              glyph: (
+                <svg width="84" height="64" viewBox="0 0 84 64">
+                  <rect x="2" y="20" width="24" height="24" fill="#1A1715" />
+                  <rect x="30" y="20" width="24" height="24" fill="none" stroke="#1A1715" strokeWidth="1.5" />
+                  <rect x="58" y="20" width="24" height="24" fill="none" stroke="#1A1715" strokeWidth="1.5" />
+                </svg>
+              ),
+            },
+            {
+              day: 'Day 03',
+              title: 'Ship. Save 14h / week.',
+              desc: 'Agents go live in production. Your people delegate the busywork and get their day back — by Friday lunch, the week is done.',
+              glyph: (
+                <svg width="64" height="64" viewBox="0 0 64 64">
+                  <path d="M8 32 L32 8 L56 32 L32 56 Z" fill="none" stroke="#1A1715" strokeWidth="1.5" />
+                  <circle cx="32" cy="32" r="8" fill="oklch(0.62 0.16 35)" />
+                </svg>
+              ),
+            },
+          ].map(({ day, title, desc, glyph }) => (
+            <div key={day}>
+              <div style={{ height: 96, marginBottom: 24, display: 'flex', alignItems: 'center', borderBottom: '1px solid rgba(26,23,21,0.14)' }}>
+                {glyph}
+              </div>
+              <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 12, letterSpacing: '0.22em', color: '#5A5550', marginBottom: 18 }}>{day}</div>
+              <h3 style={{ fontSize: 28, fontWeight: 500, letterSpacing: '-0.02em', lineHeight: 1.15, margin: '0 0 14px' }}>{title}</h3>
+              <p style={{ fontSize: 16.5, color: '#5A5550', lineHeight: 1.55, margin: 0 }}>{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── ROLES ── */}
+      <section id="roles" style={{ maxWidth: 1480, margin: '0 auto', padding: '160px 56px 0' }}>
+        <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#5A5550', borderTop: '1px solid #1A1715', paddingTop: 18 }}>
+          02 / For every role
+        </div>
+        <h2 style={{ fontSize: 'clamp(48px, 5.5vw, 80px)', fontWeight: 500, lineHeight: 1.0, letterSpacing: '-0.035em', margin: '32px 0 0', maxWidth: 1100 }}>
+          Every employee, <span style={{ color: 'oklch(0.62 0.16 35)', fontWeight: 600 }}>irreplaceable.</span>
+        </h2>
+        <div
+          style={{ marginTop: 64, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'rgba(26,23,21,0.08)', borderTop: '1px solid rgba(26,23,21,0.14)', borderBottom: '1px solid rgba(26,23,21,0.14)' }}
+          className="max-md:!grid-cols-1"
+        >
+          {[
+            {
+              tag: 'The Sales Rep — empowered to',
+              mult: '3×',
+              headline: 'close',
+              verbObj: 'more deals',
+              desc: 'Research, follow-ups and CRM updates run in the background. Your reps spend the day on calls, not data entry.',
+            },
+            {
+              tag: 'The Bookkeeper — empowered to',
+              mult: '2×',
+              headline: 'run',
+              verbObj: 'the books faster',
+              desc: 'Invoices processed, categorized and reconciled — automatically. Month-end close in days, not weeks.',
+            },
+            {
+              tag: 'The Service Agent — empowered to',
+              mult: '4×',
+              headline: 'handle',
+              verbObj: 'tickets faster',
+              desc: 'Replies drafted before the customer even hits send. Your team handles the hard ones — the agent handles the rest.',
+            },
+          ].map(({ tag, mult, headline, verbObj, desc }) => (
+            <div
+              key={tag}
+              style={{ background: '#F2EEE6', padding: '40px 32px', display: 'flex', flexDirection: 'column', gap: 14, minHeight: 280 }}
+            >
+              <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#5A5550' }}>{tag}</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
+                <div style={{ fontSize: 80, fontWeight: 600, lineHeight: 0.9, letterSpacing: '-0.05em', color: 'oklch(0.62 0.16 35)', fontVariantNumeric: 'tabular-nums' }}>{mult}</div>
+                <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: '-0.015em', lineHeight: 1.2, marginTop: -4 }}>
+                  {headline} <span style={{ color: '#5A5550', fontWeight: 400 }}>{verbObj}</span>
+                </div>
+              </div>
+              <p style={{ fontSize: 15, color: '#5A5550', lineHeight: 1.55, margin: '6px 0 0' }}>{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── EU SOVEREIGN ── */}
+      <section id="sovereign" style={{ maxWidth: 1480, margin: '160px auto 0', padding: '0 56px' }}>
+        <div
+          style={{
+            background: '#1A1715',
+            color: '#F2EEE6',
+            borderRadius: 18,
+            padding: '64px 56px',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: 64,
+            alignItems: 'center',
+          }}
+          className="max-md:!grid-cols-1 max-md:!p-10 max-md:!gap-8"
+        >
+          <div>
+            <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(242,238,230,0.6)', borderTop: '1px solid rgba(242,238,230,0.2)', paddingTop: 18 }}>
+              03 / Built for Europe
+            </div>
+            <h2 style={{ fontSize: 56, fontWeight: 500, lineHeight: 1.0, letterSpacing: '-0.03em', margin: '28px 0 0' }}>
+              EU-sovereign by design. <span style={{ color: 'oklch(0.62 0.16 35)', fontWeight: 600 }}>No exceptions.</span>
             </h2>
+            <p style={{ fontSize: 17, color: 'rgba(242,238,230,0.7)', lineHeight: 1.55, margin: '24px 0 0' }}>
+              Your data stays in the EU. Your agents run on EU infrastructure. GDPR, AI Act, and your compliance team's questions — all answered before you ask.
+            </p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-12 md:gap-8">
-            {steps.map((step, i) => (
-              <div key={i} className="border-t-2 border-[#141413]/12 dark:border-white/12 pt-8">
-                <div className="text-[#d97757] font-bold text-sm tracking-widest mb-5">{step.step}</div>
-                <h3 className="text-[#141413] dark:text-[#ede8e3] font-semibold text-lg mb-3 tracking-tight">{step.title}</h3>
-                <p className="text-[#30302e]/50 dark:text-white/50 text-sm leading-relaxed">{step.desc}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px 24px' }}>
+            {[
+              { tag: 'Data residency', title: 'Frankfurt & Paris.', desc: 'Every byte processed inside the EU. Audit-ready logs, region-locked.' },
+              { tag: 'Compliance', title: 'GDPR · ISO 27001.', desc: 'Drafted with the EU AI Act in hand. SOC 2 Type II in flight.' },
+              { tag: 'Models', title: 'European-hosted.', desc: 'Mistral, Aleph Alpha, and your own. Switch providers without rewiring.' },
+              { tag: 'Support', title: 'German-speaking.', desc: 'A real human in your timezone. Response SLA under four hours.' },
+            ].map(({ tag, title, desc }) => (
+              <div key={tag} style={{ borderTop: '1px solid rgba(242,238,230,0.2)', paddingTop: 18 }}>
+                <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(242,238,230,0.5)' }}>{tag}</div>
+                <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: '-0.015em', margin: '8px 0 0' }}>{title}</div>
+                <p style={{ fontSize: 14.5, color: 'rgba(242,238,230,0.65)', lineHeight: 1.5, margin: '8px 0 0' }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-28 bg-[#e8e6dc] dark:bg-[#181512]">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="mb-14">
-            <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">{t('home.testimonialsLabel')}</p>
-            <h2 className="text-4xl font-bold text-[#141413] dark:text-[#ede8e3] tracking-tight">{t('home.testimonialsHeadline')}</h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-4">
-            {testimonials.map((testimonial, i) => (
-              <div key={i} className="bg-[#f5f3ee] dark:bg-[#1c1916] border border-[#141413]/10 dark:border-white/10 p-8 hover:bg-white dark:hover:bg-[#222018] hover:shadow-lg hover:shadow-[#141413]/5 dark:hover:shadow-black/20 transition-all duration-300" style={{ borderRadius: '10px' }}>
-                <div className="w-8 h-0.5 bg-[#d97757] mb-7" />
-                <p className="text-[#141413]/70 dark:text-white/70 text-sm leading-relaxed mb-8">"{testimonial.quote}"</p>
-                <div>
-                  <div className="text-[#141413] dark:text-[#ede8e3] font-semibold text-sm">{testimonial.author}</div>
-                  <div className="text-[#30302e]/40 dark:text-white/40 text-xs mt-1">{testimonial.role}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Integrations strip */}
-      <section className="py-16 border-t border-[#141413]/10 dark:border-white/10 bg-[#f5f3ee] dark:bg-[#1c1916]">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-            <div className="flex-1">
-              <p className="text-[#30302e]/38 dark:text-white/38 text-xs uppercase tracking-widest font-semibold mb-8">{t('home.integrationsLabel')}</p>
-              <div className="flex flex-wrap items-center gap-2">
-                {tools.map((tool) => (
-                  <div
-                    key={tool}
-                    className="px-5 py-2 border border-[#141413]/15 dark:border-white/15 bg-[#e8e6dc] dark:bg-[#181512] text-[#141413]/55 dark:text-white/55 text-sm font-medium hover:text-[#141413] dark:hover:text-white hover:border-[#141413]/30 dark:hover:border-white/30 hover:bg-white dark:hover:bg-[#252220] transition-all duration-200"
-                    style={{ borderRadius: '4px' }}
-                  >
-                    {tool}
-                  </div>
-                ))}
-                <div className="text-[#30302e]/38 dark:text-white/38 text-sm px-3">{t('home.integrationsMore')}</div>
-              </div>
-            </div>
-            <Link to="/schedule-demo" className="flex-shrink-0">
-              <button className="group inline-flex items-center gap-2 px-7 py-3.5 bg-[#141413] dark:bg-[#ede8e3] hover:bg-[#2a2a28] dark:hover:bg-white text-white dark:text-[#141413] text-sm font-medium transition-all duration-200" style={{ borderRadius: '4px' }}>
-                {t('common.bookDemo')}
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </Link>
-          </div>
+      {/* ── FINAL CTA ── */}
+      <section id="demo" style={{ maxWidth: 1480, margin: '0 auto', padding: '200px 56px 120px', textAlign: 'center' }}>
+        <h2 style={{ fontSize: 'clamp(56px, 9vw, 144px)', fontWeight: 500, lineHeight: 0.94, letterSpacing: '-0.045em', margin: 0 }}>
+          Get your team<br /><span style={{ color: 'oklch(0.62 0.16 35)', fontWeight: 600 }}>their three days back.</span>
+        </h2>
+        <div className="inline-flex flex-wrap gap-3.5 justify-center" style={{ marginTop: 56 }}>
+          <Link
+            to="/schedule-demo"
+            className="inline-flex items-center gap-2.5 transition-all duration-150 hover:-translate-y-px"
+            style={{ padding: '12px 22px', fontSize: 15, fontWeight: 500, borderRadius: 999, border: '1px solid #1A1715', background: '#1A1715', color: '#F2EEE6', letterSpacing: '-0.01em' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'oklch(0.62 0.16 35)'; (e.currentTarget as HTMLElement).style.borderColor = 'oklch(0.62 0.16 35)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#1A1715'; (e.currentTarget as HTMLElement).style.borderColor = '#1A1715'; }}
+          >
+            Book a demo <span>→</span>
+          </Link>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2.5 transition-all duration-150"
+            style={{ padding: '12px 22px', fontSize: 15, fontWeight: 500, borderRadius: 999, border: '1px solid #1A1715', background: 'transparent', color: '#1A1715', letterSpacing: '-0.01em' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1715'; (e.currentTarget as HTMLElement).style.color = '#F2EEE6'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#1A1715'; }}
+          >
+            Talk to sales
+          </Link>
         </div>
       </section>
 
