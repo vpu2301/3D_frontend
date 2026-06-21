@@ -1,0 +1,89 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Premium texture utilities — drop into src/index.css under @layer components
+   Palette-locked to the repo's warm neutral (#141413 / #f5f5f5). No purple/blue.
+   Use sparingly: ~one mesh OR grain background + one layered shadow per section.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* 1. Gradient mesh — soft warm radial blooms, on-palette. Sits behind content. */
+.mesh-warm {
+  background-color: #f5f5f5;
+  background-image:
+    radial-gradient(at 18% 22%, hsla(40, 30%, 88%, 0.9) 0px, transparent 55%),
+    radial-gradient(at 82% 12%, hsla(28, 35%, 90%, 0.8) 0px, transparent 50%),
+    radial-gradient(at 70% 78%, hsla(20, 20%, 85%, 0.6) 0px, transparent 55%);
+}
+.dark .mesh-warm {
+  background-color: #181512;
+  background-image:
+    radial-gradient(at 18% 22%, hsla(28, 25%, 18%, 0.9) 0px, transparent 55%),
+    radial-gradient(at 82% 12%, hsla(20, 20%, 16%, 0.8) 0px, transparent 50%),
+    radial-gradient(at 70% 78%, hsla(30, 15%, 14%, 0.6) 0px, transparent 55%);
+}
+
+/* 2. Grain / noise overlay — add as a ::after layer for premium texture.
+   Apply .grain to a position:relative container. Inline SVG = no asset needed. */
+.grain { position: relative; }
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.dark .grain::after { opacity: 0.06; }
+
+/* 3. Layered, dramatic soft shadow — depth without a hard edge. */
+.shadow-layered {
+  box-shadow:
+    0 1px 1px rgba(20, 20, 19, 0.04),
+    0 4px 8px rgba(20, 20, 19, 0.04),
+    0 12px 24px rgba(20, 20, 19, 0.06),
+    0 32px 64px rgba(20, 20, 19, 0.08);
+}
+.dark .shadow-layered {
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.25),
+    0 12px 24px rgba(0, 0, 0, 0.3),
+    0 32px 64px rgba(0, 0, 0, 0.4);
+}
+
+/* 4. Sharp geometric border — hairline + inner highlight for a crafted edge. */
+.border-crafted {
+  border: 1px solid rgba(20, 20, 19, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.dark .border-crafted {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* 5. Layered transparency / frosted panel (extends the repo's .glass). */
+.glass-strong {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+.dark .glass-strong {
+  background: rgba(28, 25, 22, 0.55);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* 6. Diagonal accent rule — a thin grid-breaking line for diagonal narrative flow. */
+.rule-diagonal {
+  position: relative;
+}
+.rule-diagonal::before {
+  content: "";
+  position: absolute;
+  left: -10%;
+  top: 50%;
+  width: 120%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(20, 20, 19, 0.15), transparent);
+  transform: rotate(-2.5deg);
+  pointer-events: none;
+}
