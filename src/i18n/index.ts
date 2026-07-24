@@ -15,6 +15,9 @@ const resources: Record<string, { translation: typeof enTranslation }> = {
 mockedLangs.forEach(code => {
   resources[code] = { translation: enTranslation };
 });
+// Ukrainian: marketing copy falls back to English; the accounting app ships
+// full uk resources in its own namespace (src/pages/accounting/_lib/i18n.ts).
+resources['uk'] = { translation: enTranslation };
 
 i18n
   .use(LanguageDetector)
@@ -22,7 +25,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'en',
-    supportedLngs: ['en', 'de', ...mockedLangs],
+    supportedLngs: ['en', 'de', 'uk', ...mockedLangs],
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],

@@ -7,6 +7,7 @@ import {
   Phone,
   Contact,
   Mail,
+  Calculator,
   Plus,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -97,6 +98,15 @@ const apps: PlatformApp[] = [
     bgColor: 'bg-green-50 hover:bg-green-100',
     ringColor: 'hover:ring-green-200',
     href: '/telephony',
+  },
+  {
+    key: 'accounting',
+    label: 'Pincer Close',
+    icon: Calculator,
+    iconColor: 'text-amber-600',
+    bgColor: 'bg-amber-50 hover:bg-amber-100',
+    ringColor: 'hover:ring-amber-200',
+    href: '/accounting',
   },
 ];
 

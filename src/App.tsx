@@ -60,6 +60,7 @@ const DriveSpaces = lazy(() => import('./pages/drive/DriveSpaces'));
 const DriveTrash = lazy(() => import('./pages/drive/DriveTrash'));
 const DriveSearch = lazy(() => import('./pages/drive/DriveSearch'));
 const TelephonyHome = lazy(() => import('./pages/telephony/TelephonyHome'));
+const AccountingHome = lazy(() => import('./pages/accounting/AccountingHome'));
 const TodoHome = lazy(() => import('./pages/todo/TodoHome'));
 const TodoFocus = lazy(() => import('./pages/todo/TodoFocus'));
 const TodoTrash = lazy(() => import('./pages/todo/TodoTrash'));
@@ -96,6 +97,7 @@ import Agents from './pages/product/Agents';
 import CrossCompanyCollaboration from './pages/product/CrossCompanyCollaboration';
 import WorkflowBuilder from './pages/product/WorkflowBuilder';
 import FineTuning from './pages/product/FineTuning';
+import PincerClose from './pages/product/PincerClose';
 
 // Platform pages
 import Analytics from './pages/platform/Analytics';
@@ -189,6 +191,7 @@ function App() {
               <Route path="/product/cross-company-collaboration" element={<CrossCompanyCollaboration />} />
               <Route path="/product/workflow-builder" element={<WorkflowBuilder />} />
               <Route path="/product/fine-tuning" element={<FineTuning />} />
+              <Route path="/product/pincer-close" element={<PincerClose />} />
 
               {/* Platform routes */}
               <Route path="/platform/analytics" element={<Analytics />} />
@@ -523,6 +526,21 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* Pincer Close — accounting operator workspace (mocked) */}
+            {(['', '/radar', '/queue', '/requests', '/audit'] as const).map((sub) => (
+              <Route
+                key={`accounting${sub}`}
+                path={`/accounting${sub}`}
+                element={
+                  <ProtectedRoute>
+                    <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Pincer Close…</div>}>
+                      <AccountingHome />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+            ))}
 
             {/* AI-Native Todo (mocked) */}
             <Route path="/todo" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Todo…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
