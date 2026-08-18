@@ -793,17 +793,20 @@ const IntegrationsPage = () => {
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Integrations</h1>
-                  <p className="text-gray-600">Connect your tools and automate across your stack</p>
+                  <h1 className="text-2xl font-light text-gray-900">Integrations</h1>
+                  <p className="text-sm text-gray-600">Connect your tools and automate across your stack</p>
                 </div>
-                <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600">
-                  <Plus className="h-4 w-4 mr-2" />
+                <button
+                  type="button"
+                  className="flex h-9 items-center gap-1.5 rounded-full bg-[#bdd8ec] px-3.5 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
+                >
+                  <Plus className="h-3.5 w-3.5" />
                   Add Integration
-                </Button>
+                </button>
               </div>
 
               {/* Tab nav */}
-              <div className="flex border-b border-gray-200 mb-6">
+              <div className="flex items-center gap-1 border-b border-gray-100 pb-2 mb-6">
                 {([
                   { key: 'browse' as TabKey,    label: 'Browse Integrations', icon: LayoutGrid },
                   { key: 'connected' as TabKey, label: 'Connected',           icon: Link2      },
@@ -812,16 +815,19 @@ const IntegrationsPage = () => {
                     key={key}
                     onClick={() => setActiveTab(key)}
                     className={cn(
-                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
+                      'flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors',
                       activeTab === key
-                        ? 'border-gray-900 text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
+                        : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900'
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-3.5 w-3.5" />
                     {label}
                     {key === 'connected' && (
-                      <span className="text-[10px] px-1.5 py-0 rounded-full font-semibold bg-green-100 text-green-700 ml-0.5">
+                      <span className={cn(
+                        'text-[10px] px-1.5 py-0 rounded-full font-semibold ml-0.5',
+                        activeTab === key ? 'bg-white/40 text-gray-800' : 'bg-gray-100 text-gray-600'
+                      )}>
                         {connectedIntegrations.length}
                       </span>
                     )}
@@ -837,34 +843,34 @@ const IntegrationsPage = () => {
                     <p className="text-sm text-gray-500 flex-1">
                       Browse and connect integrations across {CATEGORIES.length - 1} categories
                     </p>
-                    <div className="relative w-full sm:w-56 flex-shrink-0">
-                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 pointer-events-none" />
+                    <div className="relative w-full sm:w-72 flex-shrink-0">
+                      <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                       <input
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="Search integrations…"
-                        className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-400 transition-colors"
+                        className="h-10 w-full rounded-full border border-transparent bg-[#f1f3f4] pl-11 pr-4 text-sm text-gray-900 placeholder:text-gray-500 transition-colors focus:border-[#8fc4e4] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#8fc4e4]"
                       />
                     </div>
                   </div>
 
                   {/* Category filter chips */}
-                  <div className="flex gap-2 overflow-x-auto pb-3 mb-5 scrollbar-hide">
+                  <div className="flex gap-1.5 overflow-x-auto pb-3 mb-5 scrollbar-hide">
                     {CATEGORIES.map((cat) => (
                       <button
                         key={cat.key}
                         onClick={() => setSelectedCategory(cat.key)}
                         className={cn(
-                          'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-colors flex-shrink-0',
+                          'flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0',
                           selectedCategory === cat.key
-                            ? 'bg-gray-900 text-white border-gray-900'
-                            : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-gray-800'
+                            ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
+                            : 'bg-[#f1f3f4] text-gray-700 hover:bg-gray-200'
                         )}
                       >
                         {cat.label}
                         <span className={cn(
                           'text-[10px] px-1.5 py-0 rounded-full font-semibold',
-                          selectedCategory === cat.key ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                          selectedCategory === cat.key ? 'bg-white/40 text-gray-800' : 'bg-white text-gray-500'
                         )}>
                           {cat.count}
                         </span>
@@ -887,7 +893,7 @@ const IntegrationsPage = () => {
                       <p className="text-sm font-medium text-gray-500">No integrations match your search</p>
                       <button
                         onClick={() => { setSearchTerm(''); setSelectedCategory('all'); }}
-                        className="text-xs text-green-600 hover:text-green-700 mt-2"
+                        className="mt-3 flex h-8 items-center rounded-full bg-[#f1f3f4] px-3.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
                       >
                         Clear filters
                       </button>
@@ -902,7 +908,7 @@ const IntegrationsPage = () => {
                           return (
                             <div
                               key={integration.id}
-                              className="group bg-white border border-gray-200/70 rounded-xl p-4 hover:shadow-md hover:border-green-200 transition-all duration-200 cursor-pointer flex flex-col gap-3"
+                              className="group bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#bdd8ec] transition-all duration-200 cursor-pointer flex flex-col gap-3"
                             >
                               {/* Icon + name + category */}
                               <div className="flex items-start gap-3">
@@ -940,7 +946,7 @@ const IntegrationsPage = () => {
                                     </span>
                                   )}
                                 </div>
-                                <span className="text-xs text-green-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0">
+                                <span className="text-xs text-gray-700 font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0">
                                   {isConnected ? 'Configure' : 'Connect'} <ChevronRight className="h-3 w-3" />
                                 </span>
                               </div>
@@ -954,10 +960,10 @@ const IntegrationsPage = () => {
                         <div className="flex justify-center mt-6">
                           <button
                             onClick={() => setShowAll(v => !v)}
-                            className="flex items-center gap-1.5 text-sm text-green-600 hover:text-green-700 font-medium transition-colors"
+                            className="flex h-9 items-center gap-1.5 rounded-full bg-[#f1f3f4] px-4 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
                           >
                             {showAll ? 'Show less' : `Show all ${filtered.length} integrations`}
-                            <ChevronRight className={cn('h-4 w-4 transition-transform', showAll && 'rotate-90')} />
+                            <ChevronRight className={cn('h-3.5 w-3.5 transition-transform', showAll && 'rotate-90')} />
                           </button>
                         </div>
                       )}
@@ -974,7 +980,7 @@ const IntegrationsPage = () => {
                     <p className="text-sm font-medium text-gray-500">No integrations connected yet</p>
                     <button
                       onClick={() => setActiveTab('browse')}
-                      className="text-xs text-green-600 hover:text-green-700 mt-2"
+                      className="mt-3 flex h-8 items-center rounded-full bg-[#bdd8ec] px-3.5 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
                     >
                       Browse integrations
                     </button>
@@ -998,8 +1004,8 @@ const IntegrationsPage = () => {
                               </div>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8">
-                                    <MoreVertical className="h-4 w-4 text-gray-500" />
+                                  <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 text-gray-500 hover:bg-gray-100">
+                                    <MoreVertical className="h-4 w-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-44">
@@ -1023,14 +1029,20 @@ const IntegrationsPage = () => {
                                 <Badge variant="default" className="bg-green-500">Connected</Badge>
                                 <span className="text-[10px] text-gray-500">{integration.category}</span>
                               </div>
-                              <div className="flex space-x-2">
-                                <Button variant="outline" size="sm" className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200">
-                                  <Settings className="h-3 w-3 mr-1" />
+                              <div className="flex gap-2">
+                                <button
+                                  type="button"
+                                  className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full bg-[#f1f3f4] px-3 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                                >
+                                  <Settings className="h-3 w-3" />
                                   Configure
-                                </Button>
-                                <Button variant="outline" size="sm" className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200 text-red-600 hover:text-red-700 hover:bg-red-50">
+                                </button>
+                                <button
+                                  type="button"
+                                  className="flex h-9 flex-1 items-center justify-center rounded-full bg-[#f1f3f4] px-3 text-xs font-medium text-gray-700 transition-colors hover:bg-red-50 hover:text-red-600"
+                                >
                                   Disconnect
-                                </Button>
+                                </button>
                               </div>
                             </div>
                           </CardContent>

@@ -961,7 +961,7 @@ const AssistantProfile = () => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    const isAuthenticated = localStorage.getItem('isAuthenticated') || sessionStorage.getItem('isAuthenticated');
     if (isAuthenticated !== 'true') { navigate('/login'); return; }
 
     const storedAssistants = JSON.parse(localStorage.getItem('aiAssistants') || '[]');

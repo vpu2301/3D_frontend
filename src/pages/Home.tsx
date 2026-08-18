@@ -69,8 +69,8 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-[#e8e6dc] dark:bg-[#181512] text-[#141413] dark:text-[#ede8e3] overflow-x-hidden">
       {/* Hero */}
-      <section className="relative pt-40 pb-28 px-6 lg:px-8">
-        <div className="relative max-w-6xl mx-auto">
+      <section className="mesh-warm grain relative pt-40 pb-28 px-6 lg:px-8 overflow-hidden">
+        <div className="relative z-10 max-w-6xl mx-auto">
           {/* Badge */}
           <div
             className={`inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#d97757]/12 text-[#d97757] text-xs font-semibold mb-10 tracking-widest uppercase transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
@@ -80,13 +80,13 @@ const Home = () => {
             {t('home.badge')}
           </div>
 
-          {/* Headline */}
+          {/* Headline — editorial display face, weight/style contrast for hierarchy */}
           <h1
-            className={`text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[1.0] max-w-4xl transition-all duration-700 delay-100 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            className={`font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-[-0.02em] mb-8 leading-[0.95] max-w-4xl transition-all duration-700 delay-100 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           >
             {t('home.headline1')}
             <br />
-            {t('home.headline2')}
+            <span className="font-display italic font-normal text-[#d97757]">{t('home.headline2')}</span>
           </h1>
 
           {/* Subheadline + CTAs layout */}
@@ -114,8 +114,13 @@ const Home = () => {
           </p>
 
           {/* UI preview */}
-          <div className={`mt-20 transition-all duration-1000 delay-500 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className="relative overflow-hidden border border-[#141413]/10 dark:border-white/10 bg-[#f5f3ee] dark:bg-[#1c1916] shadow-2xl shadow-[#141413]/8 dark:shadow-black/40" style={{ borderRadius: '12px' }}>
+          <div className={`relative mt-20 transition-all duration-1000 delay-500 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+            {/* Grid-breaking floating stat chip, overlapping the preview corner */}
+            <div className={`glass-strong absolute -top-7 right-6 z-20 hidden lg:block px-5 py-3 transition-all duration-700 delay-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`} style={{ borderRadius: '10px' }}>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#30302e]/45 dark:text-white/45">{t('home.statTimeSaved')}</p>
+              <p className="font-display text-2xl font-semibold text-[#141413] dark:text-[#ede8e3] leading-tight">37 hrs<span className="text-sm font-normal text-[#30302e]/40 dark:text-white/40"> / wk</span></p>
+            </div>
+            <div className="border-crafted shadow-layered relative overflow-hidden bg-[#f5f3ee] dark:bg-[#1c1916]" style={{ borderRadius: '12px' }}>
               {/* Window chrome */}
               <div className="flex items-center gap-1.5 px-5 py-4 border-b border-[#141413]/8 dark:border-white/8 bg-[#eeece6] dark:bg-[#1f1d1a]">
                 <div className="w-2.5 h-2.5 rounded-full bg-[#141413]/20 dark:bg-white/20" />
@@ -171,7 +176,7 @@ const Home = () => {
               { value: `${companies}+`, label: t('home.statCompanies'), icon: Users },
             ].map((stat, i) => (
               <div key={i} className={`${i > 0 ? 'md:pl-12' : ''}`}>
-                <div className="text-5xl md:text-6xl font-bold text-[#141413] dark:text-[#ede8e3] tracking-tight mb-3">{stat.value}</div>
+                <div className="font-display text-5xl md:text-6xl font-semibold text-[#141413] dark:text-[#ede8e3] tracking-[-0.01em] mb-3">{stat.value}</div>
                 <div className="text-[#30302e]/50 dark:text-white/50 text-sm leading-relaxed">{stat.label}</div>
               </div>
             ))}
@@ -185,7 +190,7 @@ const Home = () => {
           <div className="mb-16">
             <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">{t('home.featuresLabel')}</p>
             <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#141413] dark:text-[#ede8e3] leading-tight max-w-sm">
+              <h2 className="font-display text-4xl md:text-5xl font-semibold tracking-[-0.01em] text-[#141413] dark:text-[#ede8e3] leading-[1.05] max-w-sm">
                 {t('home.featuresHeadline')}
               </h2>
               <p className="text-[#30302e]/55 dark:text-white/55 text-base max-w-md leading-relaxed pb-1">
@@ -220,7 +225,7 @@ const Home = () => {
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="mb-16">
             <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">{t('home.howItWorksLabel')}</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#141413] dark:text-[#ede8e3] leading-tight">
+            <h2 className="font-display text-4xl md:text-5xl font-semibold tracking-[-0.01em] text-[#141413] dark:text-[#ede8e3] leading-[1.05]">
               {t('home.howItWorksHeadline')}
             </h2>
           </div>
@@ -242,7 +247,7 @@ const Home = () => {
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="mb-14">
             <p className="text-[#d97757] text-xs uppercase tracking-widest font-semibold mb-5">{t('home.testimonialsLabel')}</p>
-            <h2 className="text-4xl font-bold text-[#141413] dark:text-[#ede8e3] tracking-tight">{t('home.testimonialsHeadline')}</h2>
+            <h2 className="font-display text-4xl md:text-5xl font-semibold text-[#141413] dark:text-[#ede8e3] tracking-[-0.01em] leading-[1.05]">{t('home.testimonialsHeadline')}</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-4">

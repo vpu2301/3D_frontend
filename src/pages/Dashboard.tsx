@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import {
   Bot,
   Users,
@@ -92,16 +91,17 @@ const Dashboard = () => {
               {/* Page header */}
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+                  <h1 className="text-2xl font-light text-gray-900">Dashboard</h1>
                   <p className="text-sm text-gray-500 mt-0.5">Your AI workforce at a glance</p>
                 </div>
-                <Button
+                <button
+                  type="button"
                   onClick={() => setWizardOpen(true)}
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                  className="flex h-9 items-center gap-1.5 rounded-full bg-[#bdd8ec] px-3.5 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className="h-3.5 w-3.5" />
                   Deploy Agent
-                </Button>
+                </button>
               </div>
 
               {/* KPIs */}
@@ -159,25 +159,35 @@ const Dashboard = () => {
                     <CardTitle className="text-sm font-semibold text-gray-900">Quick Actions</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
-                    <Button
-                      className="w-full justify-start bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+                    <button
+                      type="button"
                       onClick={() => setWizardOpen(true)}
+                      className="flex h-9 w-full items-center justify-start gap-1.5 rounded-full bg-[#bdd8ec] px-3.5 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
                     >
-                      <Bot className="h-4 w-4 mr-2" />
+                      <Bot className="h-3.5 w-3.5" />
                       Create New AI Worker
-                    </Button>
-                    <Button className="w-full justify-start" variant="outline">
-                      <BarChart3 className="h-4 w-4 mr-2" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex h-9 w-full items-center justify-start gap-1.5 rounded-full bg-[#f1f3f4] px-3.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                    >
+                      <BarChart3 className="h-3.5 w-3.5" />
                       View Analytics
-                    </Button>
-                    <Button className="w-full justify-start" variant="outline">
-                      <Settings className="h-4 w-4 mr-2" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex h-9 w-full items-center justify-start gap-1.5 rounded-full bg-[#f1f3f4] px-3.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                    >
+                      <Settings className="h-3.5 w-3.5" />
                       Manage Automations
-                    </Button>
-                    <Button className="w-full justify-start" variant="outline">
-                      <Users className="h-4 w-4 mr-2" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex h-9 w-full items-center justify-start gap-1.5 rounded-full bg-[#f1f3f4] px-3.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                    >
+                      <Users className="h-3.5 w-3.5" />
                       User Management
-                    </Button>
+                    </button>
                   </CardContent>
                 </Card>
               </div>

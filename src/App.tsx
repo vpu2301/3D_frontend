@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -18,6 +19,7 @@ import IntegrationsPage from './pages/IntegrationsPage';
 import Settings from './pages/Settings';
 import Billing from './pages/Billing';
 import Help from './pages/Help';
+import Profile from './pages/Profile';
 import AssistantProfile from './pages/AssistantProfile';
 import AssistantConfiguration from './pages/AssistantConfiguration';
 import Tasks from './pages/Tasks';
@@ -44,6 +46,33 @@ import WatchDemo from './pages/WatchDemo';
 import ScheduleDemo from './pages/ScheduleDemo';
 import ChannelsPage from './pages/ChannelsPage';
 import SkillsHub from './pages/SkillsHub';
+const CalendarPage = lazy(() => import('./pages/calendar/CalendarPage'));
+const DocsDashboard = lazy(() => import('./pages/docs/DocsDashboard'));
+const DocsEditor = lazy(() => import('./pages/docs/DocsEditor'));
+const DocsHistory = lazy(() => import('./pages/docs/DocsHistory'));
+const DocsTrash = lazy(() => import('./pages/docs/DocsTrash'));
+const NotesHome = lazy(() => import('./pages/notes/NotesHome'));
+const NotesDaily = lazy(() => import('./pages/notes/NotesDaily'));
+const NotesGraph = lazy(() => import('./pages/notes/NotesGraph'));
+const NotesTrash = lazy(() => import('./pages/notes/NotesTrash'));
+const DriveHome = lazy(() => import('./pages/drive/DriveHome'));
+const DriveSpaces = lazy(() => import('./pages/drive/DriveSpaces'));
+const DriveTrash = lazy(() => import('./pages/drive/DriveTrash'));
+const DriveSearch = lazy(() => import('./pages/drive/DriveSearch'));
+const TelephonyHome = lazy(() => import('./pages/telephony/TelephonyHome'));
+const AccountingHome = lazy(() => import('./pages/accounting/AccountingHome'));
+const TodoHome = lazy(() => import('./pages/todo/TodoHome'));
+const TodoFocus = lazy(() => import('./pages/todo/TodoFocus'));
+const TodoTrash = lazy(() => import('./pages/todo/TodoTrash'));
+const ContactsHome = lazy(() => import('./pages/contacts/ContactsHome'));
+const ContactDetail = lazy(() => import('./pages/contacts/ContactDetail'));
+const ContactsDuplicates = lazy(() => import('./pages/contacts/ContactsDuplicates'));
+const ContactsStaleness = lazy(() => import('./pages/contacts/ContactsStaleness'));
+const ContactsSmartView = lazy(() => import('./pages/contacts/ContactsSmartView'));
+const ContactsImport = lazy(() => import('./pages/contacts/ContactsImport'));
+const ContactsTimeline = lazy(() => import('./pages/contacts/ContactsTimeline'));
+const ContactsTrash = lazy(() => import('./pages/contacts/ContactsTrash'));
+const MailHome = lazy(() => import('./pages/mail/MailHome'));
 
 // Solution pages
 import Sales from './pages/solutions/Sales';
@@ -68,6 +97,7 @@ import Agents from './pages/product/Agents';
 import CrossCompanyCollaboration from './pages/product/CrossCompanyCollaboration';
 import WorkflowBuilder from './pages/product/WorkflowBuilder';
 import FineTuning from './pages/product/FineTuning';
+import PincerClose from './pages/product/PincerClose';
 
 // Platform pages
 import Analytics from './pages/platform/Analytics';
@@ -110,6 +140,9 @@ import HelpCenter from './pages/support/HelpCenter';
 import Documentation from './pages/support/Documentation';
 import ContactCenter from './pages/support/ContactCenter';
 import SystemStatus from './pages/support/SystemStatus';
+
+// Notes — global quick-capture (mounted at root for Cmd+Shift+N from anywhere)
+import QuickCapture from './pages/notes/_components/quick-capture/QuickCapture';
 
 function App() {
   return (
@@ -158,6 +191,7 @@ function App() {
               <Route path="/product/cross-company-collaboration" element={<CrossCompanyCollaboration />} />
               <Route path="/product/workflow-builder" element={<WorkflowBuilder />} />
               <Route path="/product/fine-tuning" element={<FineTuning />} />
+              <Route path="/product/pincer-close" element={<PincerClose />} />
 
               {/* Platform routes */}
               <Route path="/platform/analytics" element={<Analytics />} />
@@ -225,16 +259,336 @@ function App() {
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
             <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/dev/playground" element={<ProtectedRoute><DevPlayground /></ProtectedRoute>} />
             <Route path="/dev/api" element={<ProtectedRoute><DevAPI /></ProtectedRoute>} />
             <Route path="/dev/docs" element={<ProtectedRoute><DevDocs /></ProtectedRoute>} />
             <Route path="/demos" element={<ProtectedRoute><Demos /></ProtectedRoute>} />
             <Route path="/ai-fine-tuning" element={<ProtectedRoute><AIFineTuning /></ProtectedRoute>} />
+            <Route
+              path="/calendar"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading calendar…</div>}>
+                    <CalendarPage />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/calendar/:view"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading calendar…</div>}>
+                    <CalendarPage />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* AI-Native Docs (mocked) */}
+            <Route
+              path="/docs"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading docs…</div>}>
+                    <DocsDashboard />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/docs/trash"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <DocsTrash />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/docs/:id"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading editor…</div>}>
+                    <DocsEditor />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/docs/:id/history"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading history…</div>}>
+                    <DocsHistory />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* AI-Native Notes (mocked) */}
+            <Route
+              path="/notes"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading notes…</div>}>
+                    <NotesHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/daily"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <NotesDaily />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/graph"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading graph…</div>}>
+                    <NotesGraph />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/trash"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <NotesTrash />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/notebook/:id"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <NotesHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/tag/:tag"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <NotesHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/:id"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading note…</div>}>
+                    <NotesHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* AI-Native Drive (mocked) */}
+            <Route
+              path="/drive"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Drive…</div>}>
+                    <DriveHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/drive/folder/:id"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <DriveHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/drive/file/:id"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <DriveHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/drive/shared"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <DriveHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/drive/recent"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <DriveHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/drive/starred"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <DriveHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/drive/search"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <DriveSearch />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/drive/spaces"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Spaces…</div>}>
+                    <DriveSpaces />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/drive/spaces/:id"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Space…</div>}>
+                    <DriveSpaces />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/drive/trash"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}>
+                    <DriveTrash />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Telephony (mocked) */}
+            {(['', '/calls', '/calls/live', '/calls/pending-approval', '/numbers', '/usage', '/policies', '/audit', '/settings'] as const).map((sub) => (
+              <Route
+                key={sub}
+                path={`/telephony${sub}`}
+                element={
+                  <ProtectedRoute>
+                    <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Telephony…</div>}>
+                      <TelephonyHome />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+            ))}
+            <Route
+              path="/telephony/calls/:callSid"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading call…</div>}>
+                    <TelephonyHome />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Pincer Close — accounting operator workspace (mocked) */}
+            {(['', '/radar', '/queue', '/requests', '/audit'] as const).map((sub) => (
+              <Route
+                key={`accounting${sub}`}
+                path={`/accounting${sub}`}
+                element={
+                  <ProtectedRoute>
+                    <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Pincer Close…</div>}>
+                      <AccountingHome />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+            ))}
+
+            {/* AI-Native Todo (mocked) */}
+            <Route path="/todo" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Todo…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/today" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/upcoming" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/all" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/starred" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/completed" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/list/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/project/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/tag/:tag" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/smart/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoHome /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/focus" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading focus…</div>}><TodoFocus /></Suspense></ProtectedRoute>} />
+            <Route path="/todo/trash" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><TodoTrash /></Suspense></ProtectedRoute>} />
+
+            {/* AI-Native Contacts (mocked) */}
+            <Route path="/contacts" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Contacts…</div>}><ContactsHome /></Suspense></ProtectedRoute>} />
+            <Route path="/contacts/contact/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><ContactDetail /></Suspense></ProtectedRoute>} />
+            <Route path="/contacts/group/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><ContactsHome /></Suspense></ProtectedRoute>} />
+            <Route path="/contacts/views/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><ContactsSmartView /></Suspense></ProtectedRoute>} />
+            <Route path="/contacts/duplicates" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><ContactsDuplicates /></Suspense></ProtectedRoute>} />
+            <Route path="/contacts/staleness" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><ContactsStaleness /></Suspense></ProtectedRoute>} />
+            <Route path="/contacts/import" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><ContactsImport /></Suspense></ProtectedRoute>} />
+            <Route path="/contacts/timeline" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><ContactsTimeline /></Suspense></ProtectedRoute>} />
+            <Route path="/contacts/trash" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><ContactsTrash /></Suspense></ProtectedRoute>} />
+
+            {/* AI-Native Mail (mocked) */}
+            <Route path="/mail" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading Mail…</div>}><MailHome /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/thread/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/important" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="important" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/starred" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="starred" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/sent" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="sent" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/drafts" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="drafts" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/scheduled" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="scheduled" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/snoozed" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="snoozed" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/archive" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="archive" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/spam" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="spam" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/all" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="all" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/folder/trash" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="trash" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/follow-ups" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="follow-ups" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/label/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="label" /></Suspense></ProtectedRoute>} />
+            <Route path="/mail/views/:id" element={<ProtectedRoute><Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading…</div>}><MailHome mode="view" /></Suspense></ProtectedRoute>} />
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
+          <QuickCapture />
         </div>
       </Router>
     </ThemeProvider>

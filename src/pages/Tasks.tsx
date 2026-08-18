@@ -92,18 +92,18 @@ const JournalTable = ({
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
           <Input
             placeholder="Search journal…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="pl-9 bg-white border-gray-200"
+            className="pl-11 rounded-full border-transparent bg-[#f1f3f4] placeholder:text-gray-500 focus-visible:border-[#8fc4e4] focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-[#8fc4e4]"
           />
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[140px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[140px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5">
                 <BookOpen className="h-3.5 w-3.5 text-gray-400" />
                 {categoryFilter === 'All Categories' ? 'Category' : categoryFilter}
@@ -122,7 +122,7 @@ const JournalTable = ({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[110px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5">
                 <Filter className="h-3.5 w-3.5 text-gray-400" />
                 {statusFilter === 'All' ? 'Status' : statusFilter}
@@ -276,7 +276,7 @@ const JournalTable = ({
               <div className="flex items-center gap-1">
                 <Button
                   variant="outline" size="icon"
-                  className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700"
+                  className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700"
                   disabled={safePage === 1}
                   onClick={() => setPage(p => p - 1)}
                 >
@@ -285,9 +285,14 @@ const JournalTable = ({
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
                   <Button
                     key={p}
-                    variant={p === safePage ? 'default' : 'outline'}
+                    variant="outline"
                     size="icon"
-                    className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')}
+                    className={cn(
+                      'h-7 w-7 text-xs !rounded-full',
+                      p === safePage
+                        ? '!bg-[#bdd8ec] !text-gray-800 !border-transparent hover:!bg-[#a5c8e0]'
+                        : '!border-transparent text-gray-600 hover:!bg-gray-100 hover:!text-gray-700'
+                    )}
                     onClick={() => setPage(p)}
                   >
                     {p}
@@ -295,7 +300,7 @@ const JournalTable = ({
                 ))}
                 <Button
                   variant="outline" size="icon"
-                  className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700"
+                  className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700"
                   disabled={safePage === totalPages}
                   onClick={() => setPage(p => p + 1)}
                 >
@@ -393,18 +398,18 @@ const ActiveTasksTable = ({
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
           <Input
             placeholder="Search tasks…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="pl-9 bg-white border-gray-200"
+            className="pl-11 rounded-full border-transparent bg-[#f1f3f4] placeholder:text-gray-500 focus-visible:border-[#8fc4e4] focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-[#8fc4e4]"
           />
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[140px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[140px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5">
                 <Filter className="h-3.5 w-3.5 text-gray-400" />
                 {categoryFilter === 'All Categories' ? 'Category' : categoryFilter}
@@ -423,7 +428,7 @@ const ActiveTasksTable = ({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[110px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5">
                 <Filter className="h-3.5 w-3.5 text-gray-400" />
                 {priorityFilter === 'All' ? 'Priority' : priorityFilter}
@@ -565,15 +570,15 @@ const ActiveTasksTable = ({
             )}
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
+                  <Button key={p} variant="outline" size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[#bdd8ec] !text-gray-800 !border-transparent hover:!bg-[#a5c8e0]' : '!border-transparent text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
                     {p}
                   </Button>
                 ))}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -636,18 +641,18 @@ const ApprovalsTable = ({
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
           <Input
             placeholder="Search approvals…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="pl-9 bg-white border-gray-200"
+            className="pl-11 rounded-full border-transparent bg-[#f1f3f4] placeholder:text-gray-500 focus-visible:border-[#8fc4e4] focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-[#8fc4e4]"
           />
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[140px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[140px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5">
                 <Filter className="h-3.5 w-3.5 text-gray-400" />
                 {categoryFilter === 'All Categories' ? 'Category' : categoryFilter}
@@ -666,7 +671,7 @@ const ApprovalsTable = ({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[110px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
               <span className="flex items-center gap-1.5">
                 <Filter className="h-3.5 w-3.5 text-gray-400" />
                 {priorityFilter === 'All' ? 'Priority' : priorityFilter}
@@ -792,15 +797,15 @@ const ApprovalsTable = ({
             )}
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
+                  <Button key={p} variant="outline" size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[#bdd8ec] !text-gray-800 !border-transparent hover:!bg-[#a5c8e0]' : '!border-transparent text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
                     {p}
                   </Button>
                 ))}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -938,7 +943,7 @@ const Tasks = () => {
             <main className="flex-1 p-6 pb-20">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Tasks</h1>
+                  <h1 className="text-2xl font-light text-gray-900">Tasks</h1>
                   <p className="text-gray-600">Manage tasks, approvals, and AI assistant activities</p>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -953,7 +958,7 @@ const Tasks = () => {
               </div>
 
               {/* Tab nav */}
-              <div className="flex border-b border-gray-200 mb-6">
+              <div className="flex items-center gap-1 border-b border-gray-100 mb-6 py-2">
                 {([
                   { key: 'approvals' as TabKey, label: `Approvals (${pendingTasks.length})`, icon: ClipboardList },
                   { key: 'active' as TabKey,    label: `Active Tasks (${activeTasks.length})`, icon: Activity },
@@ -963,13 +968,13 @@ const Tasks = () => {
                     key={key}
                     onClick={() => setActiveTab(key)}
                     className={cn(
-                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
+                      'flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors',
                       activeTab === key
-                        ? 'border-gray-900 text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
+                        : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900'
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-3.5 w-3.5" />
                     {label}
                   </button>
                 ))}

@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import PlatformAppsBar from '@/components/dashboard/PlatformAppsBar';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -51,7 +52,12 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   console.log('ProtectedRoute: Authenticated, rendering children');
-  return <div className="platform min-h-screen">{children}</div>;
+  return (
+    <div className="platform min-h-screen md:pr-14">
+      {children}
+      <PlatformAppsBar />
+    </div>
+  );
 };
 
 export default ProtectedRoute;

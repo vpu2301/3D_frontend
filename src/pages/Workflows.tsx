@@ -768,20 +768,21 @@ const Workflows = () => {
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">{t('workflows.pageTitle')}</h1>
-                  <p className="text-gray-600">{t('workflows.pageSubtitle')}</p>
+                  <h1 className="text-2xl font-light text-gray-900">{t('workflows.pageTitle')}</h1>
+                  <p className="text-sm text-gray-500">{t('workflows.pageSubtitle')}</p>
                 </div>
-                <Button
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                <button
+                  type="button"
                   onClick={() => navigate('/workflows/create')}
+                  className="flex h-9 items-center gap-1.5 rounded-full bg-[#bdd8ec] px-3.5 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className="h-3.5 w-3.5" />
                   {t('workflows.createWorkflow')}
-                </Button>
+                </button>
               </div>
 
               {/* Tab nav */}
-              <div className="flex border-b border-gray-200 mb-6">
+              <div className="flex items-center gap-1 border-b border-gray-100 pb-3 mb-6">
                 {([
                   { key: 'templates' as TabKey,    label: t('workflows.tabTemplates'),    icon: LayoutTemplate },
                   { key: 'my-workflows' as TabKey, label: t('workflows.tabMyWorkflows'), icon: Workflow },
@@ -790,13 +791,13 @@ const Workflows = () => {
                     key={key}
                     onClick={() => setActiveTab(key)}
                     className={cn(
-                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
+                      'flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors',
                       activeTab === key
-                        ? 'border-gray-900 text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
+                        : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900'
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-3.5 w-3.5" />
                     {label}
                   </button>
                 ))}
@@ -810,34 +811,34 @@ const Workflows = () => {
                     <p className="text-sm text-gray-500 flex-1">
                       {t('workflows.templatesSubtitle')}
                     </p>
-                    <div className="relative w-full sm:w-56 flex-shrink-0">
-                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 pointer-events-none" />
+                    <div className="relative w-full sm:w-64 flex-shrink-0">
+                      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
                       <input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search templates…"
-                        className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-400 transition-colors"
+                        className="h-9 w-full rounded-full border border-transparent bg-[#f1f3f4] pl-9 pr-3 text-xs text-gray-900 placeholder:text-gray-500 transition-colors focus:border-[#8fc4e4] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#8fc4e4]"
                       />
                     </div>
                   </div>
 
                   {/* Category filter chips */}
-                  <div className="flex gap-2 overflow-x-auto pb-3 mb-5 scrollbar-hide">
+                  <div className="flex gap-1.5 overflow-x-auto pb-3 mb-5 scrollbar-hide">
                     {CATEGORIES.map((cat) => (
                       <button
                         key={cat.key}
                         onClick={() => setActiveCategory(cat.key)}
                         className={cn(
-                          'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-colors flex-shrink-0',
+                          'flex h-8 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0',
                           activeCategory === cat.key
-                            ? 'bg-gray-900 text-white border-gray-900'
-                            : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-gray-800'
+                            ? 'bg-[#bdd8ec] text-gray-800 border-transparent hover:bg-[#a5c8e0]'
+                            : 'bg-[#f1f3f4] text-gray-600 border-transparent hover:bg-gray-200 hover:text-gray-800'
                         )}
                       >
                         {cat.label}
                         <span className={cn(
                           'text-[10px] px-1.5 py-0 rounded-full font-semibold',
-                          activeCategory === cat.key ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                          activeCategory === cat.key ? 'bg-white/40 text-gray-800' : 'bg-white text-gray-500'
                         )}>
                           {cat.key === 'all' ? ALL_TEMPLATES.length : cat.count}
                         </span>
@@ -1042,7 +1043,7 @@ const Workflows = () => {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
+                              className="flex-1 text-xs bg-[#f1f3f4] hover:bg-gray-200 border-transparent rounded-full font-medium text-gray-700"
                             >
                               {workflow.status === 'Active' ? (
                                 <><Pause className="h-3 w-3 mr-1" />{t('common.pause')}</>
@@ -1053,7 +1054,7 @@ const Workflows = () => {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
+                              className="flex-1 text-xs bg-[#f1f3f4] hover:bg-gray-200 border-transparent rounded-full font-medium text-gray-700"
                               onClick={() => navigate('/workflows/create')}
                             >
                               {t('common.edit')}

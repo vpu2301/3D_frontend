@@ -18,6 +18,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				// Distinctive editorial display face for marketing headings.
+				// Body stays Inter (default) so the platform is unaffected.
+				display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
