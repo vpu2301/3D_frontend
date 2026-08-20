@@ -16,15 +16,15 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4">
+    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-4">
       <div className="mb-3 flex items-center justify-between">
-        <span className="text-xs font-medium uppercase tracking-wide text-gray-400">{label}</span>
-        <div className={cn('rounded-lg p-2', accent ?? 'bg-gray-100')}>
-          <Icon className="h-4 w-4 text-gray-600" />
+        <span className="plat-eyebrow">{label}</span>
+        <div className={cn('rounded-[10px] p-2', accent ?? 'bg-[var(--sand)]')}>
+          <Icon className="h-4 w-4 text-[var(--ink)]" />
         </div>
       </div>
-      <p className="text-2xl font-semibold text-gray-900">{value}</p>
-      {sub && <p className="mt-0.5 text-xs text-gray-400">{sub}</p>}
+      <p className="plat-num" style={{ fontSize: 28 }}>{value}</p>
+      {sub && <p className="plat-stat-sub mt-1">{sub}</p>}
     </div>
   );
 }
@@ -45,10 +45,10 @@ function BarChart({
         return (
           <div key={d.date} className="group relative flex flex-1 flex-col items-center gap-1">
             <div
-              className="w-full rounded-t-sm bg-[#bdd8ec] transition-all group-hover:bg-[#a5c8e0]"
+              className="w-full rounded-t-sm bg-[var(--ink)] transition-all group-hover:opacity-85"
               style={{ height: `${pct}%`, minHeight: pct > 0 ? 4 : 0 }}
             />
-            <span className="hidden text-[8px] text-gray-400 group-hover:block absolute -top-5">
+            <span className="hidden text-[8px] text-[var(--text-5)] group-hover:block absolute -top-5">
               {label(d.value)}
             </span>
           </div>
@@ -62,7 +62,7 @@ export default function UsageView() {
   const u = MOCK_USAGE;
   const budgetPct = Math.min((u.budgetUsedEur / u.budgetEur) * 100, 100);
   const budgetColor =
-    budgetPct >= 95 ? 'bg-red-400' : budgetPct >= 75 ? 'bg-amber-400' : 'bg-[#bdd8ec]';
+    budgetPct >= 95 ? 'bg-red-400' : budgetPct >= 75 ? 'bg-amber-400' : 'bg-[var(--ink)]';
 
   const spendData = u.dailySpend.map((d) => ({ date: d.date, value: d.spend }));
   const maxSpend = Math.max(...spendData.map((d) => d.value), 0.01);
@@ -76,16 +76,17 @@ export default function UsageView() {
   const agentMax = Math.max(...u.spendByAgent.map((a) => a.spend), 0.01);
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden bg-white">
+    <div className="flex flex-1 flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-100 px-6 pt-5 pb-4">
+      <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 pt-5 pb-4">
         <div>
-          <h1 className="text-2xl font-light text-gray-900">Usage</h1>
-          <p className="mt-0.5 text-xs text-gray-400">Current billing period · Europe/Berlin</p>
+          <p className="plat-crumb" style={{ color: 'var(--text-4)' }}>3days.telephony</p>
+          <h1 className="mt-1 text-[26px] text-[var(--ink)]">Usage</h1>
+          <p className="mt-1 text-xs text-[var(--text-4)]">Current billing period · Europe/Berlin</p>
         </div>
         <button
           type="button"
-          className="flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50"
+          className="flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--text-3)] hover:bg-[var(--sand)]"
         >
           <Download className="h-3.5 w-3.5" /> Export report
         </button>
@@ -99,51 +100,51 @@ export default function UsageView() {
             value={`€${u.thisMonthSpend.toFixed(2)}`}
             sub={`of €${u.budgetEur} budget`}
             icon={Euro}
-            accent="bg-blue-50"
+            accent="bg-[var(--sand)]"
           />
           <StatCard
             label="Calls placed"
             value={String(u.callsPlaced)}
             sub="outbound"
             icon={Phone}
-            accent="bg-green-50"
+            accent="bg-[var(--sand)]"
           />
           <StatCard
             label="Calls received"
             value={String(u.callsReceived)}
             sub="inbound"
             icon={PhoneIncoming}
-            accent="bg-violet-50"
+            accent="bg-[var(--sand)]"
           />
           <StatCard
             label="Avg duration"
             value={`${Math.floor(u.avgDurationSec / 60)}m ${u.avgDurationSec % 60}s`}
             icon={Clock}
-            accent="bg-amber-50"
+            accent="bg-[var(--sand)]"
           />
           <StatCard
             label="Avg cost/call"
             value={`€${u.avgCostEur.toFixed(3)}`}
             icon={TrendingUp}
-            accent="bg-rose-50"
+            accent="bg-[var(--sand)]"
           />
         </div>
 
         {/* Budget bar */}
-        <div className="rounded-xl border border-gray-200 bg-white p-4">
+        <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-4">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Monthly budget</span>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm font-medium text-[var(--text-2)]">Monthly budget</span>
+            <span className="text-sm text-[var(--text-4)]">
               €{u.budgetUsedEur.toFixed(2)} / €{u.budgetEur.toFixed(2)}
             </span>
           </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-100">
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-[var(--sand-deep)]">
             <div
               className={cn('h-full rounded-full transition-all', budgetColor)}
               style={{ width: `${budgetPct}%` }}
             />
           </div>
-          <p className="mt-1.5 text-[10px] text-gray-400">
+          <p className="mt-1.5 text-[10px] text-[var(--text-5)]">
             {(100 - budgetPct).toFixed(1)}% remaining · resets 1st of next month
           </p>
         </div>
@@ -151,30 +152,30 @@ export default function UsageView() {
         {/* Charts row */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {/* Daily spend */}
-          <div className="rounded-xl border border-gray-200 bg-white p-4">
-            <p className="mb-1 text-sm font-medium text-gray-700">Daily spend (14d)</p>
-            <p className="mb-4 text-xs text-gray-400">€ per day</p>
+          <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-4">
+            <p className="mb-1 text-sm font-medium text-[var(--text-2)]">Daily spend (14d)</p>
+            <p className="mb-4 text-xs text-[var(--text-5)]">€ per day</p>
             <BarChart
               data={spendData}
               maxValue={maxSpend}
               label={(v) => `€${v.toFixed(2)}`}
             />
-            <div className="mt-2 flex justify-between text-[9px] text-gray-400">
+            <div className="mt-2 flex justify-between text-[9px] text-[var(--text-5)]">
               <span>{spendData[0]?.date?.slice(5)}</span>
               <span>{spendData[spendData.length - 1]?.date?.slice(5)}</span>
             </div>
           </div>
 
           {/* Calls per day */}
-          <div className="rounded-xl border border-gray-200 bg-white p-4">
-            <p className="mb-1 text-sm font-medium text-gray-700">Calls per day (14d)</p>
-            <p className="mb-4 text-xs text-gray-400">Total calls</p>
+          <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-4">
+            <p className="mb-1 text-sm font-medium text-[var(--text-2)]">Calls per day (14d)</p>
+            <p className="mb-4 text-xs text-[var(--text-5)]">Total calls</p>
             <BarChart
               data={callData}
               maxValue={maxCalls}
               label={(v) => `${v} calls`}
             />
-            <div className="mt-2 flex justify-between text-[9px] text-gray-400">
+            <div className="mt-2 flex justify-between text-[9px] text-[var(--text-5)]">
               <span>{callData[0]?.date?.slice(5)}</span>
               <span>{callData[callData.length - 1]?.date?.slice(5)}</span>
             </div>
@@ -182,20 +183,20 @@ export default function UsageView() {
         </div>
 
         {/* Spend by agent */}
-        <div className="rounded-xl border border-gray-200 bg-white p-4">
-          <p className="mb-4 text-sm font-medium text-gray-700">Spend by agent persona</p>
+        <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-4">
+          <p className="mb-4 text-sm font-medium text-[var(--text-2)]">Spend by agent persona</p>
           <div className="space-y-3">
             {u.spendByAgent.map((a) => {
               const pct = (a.spend / agentMax) * 100;
               return (
                 <div key={a.name}>
                   <div className="mb-1 flex items-center justify-between">
-                    <span className="text-sm text-gray-700">{a.name}</span>
-                    <span className="text-sm font-medium text-gray-900">€{a.spend.toFixed(2)}</span>
+                    <span className="text-sm text-[var(--text-2)]">{a.name}</span>
+                    <span className="text-sm font-medium text-[var(--ink)]">€{a.spend.toFixed(2)}</span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--sand-deep)]">
                     <div
-                      className="h-full rounded-full bg-[#bdd8ec]"
+                      className="h-full rounded-full bg-[var(--ink)]"
                       style={{ width: `${pct}%` }}
                     />
                   </div>

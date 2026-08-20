@@ -23,18 +23,18 @@ export default function DocRow({ doc }: { doc: Doc }) {
       draggable
       onDragStart={(e) => e.dataTransfer.setData('text/doc-id', doc.id)}
       className={cn(
-        'group grid grid-cols-[20px_minmax(0,1fr)_140px_140px_28px] items-center gap-3 border-b border-gray-100 px-3 py-2 text-sm transition-colors hover:bg-gray-50',
-        selected && 'bg-blue-50',
+        'group grid grid-cols-[20px_minmax(0,1fr)_140px_140px_28px] items-center gap-3 border-b border-[var(--line-soft)] px-4 py-2.5 text-sm transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]',
+        selected && 'bg-[rgba(20,22,26,0.06)]',
       )}
     >
       <button
         type="button"
         onClick={() => toggleSelected(doc.id)}
         className={cn(
-          'h-4 w-4 rounded border transition-opacity',
+          'h-4 w-4 rounded-[4px] border transition-opacity',
           selected
-            ? 'border-blue-500 bg-blue-500'
-            : 'border-gray-300 opacity-0 group-hover:opacity-100',
+            ? 'border-[var(--ink)] bg-[var(--ink)]'
+            : 'border-[var(--line)] opacity-0 group-hover:opacity-100',
         )}
         aria-label={selected ? 'Deselect' : 'Select'}
       >
@@ -46,18 +46,18 @@ export default function DocRow({ doc }: { doc: Doc }) {
       </button>
 
       <Link to={`/docs/${doc.id}`} className="flex min-w-0 items-center gap-2.5">
-        <FileText className="h-4 w-4 shrink-0 text-blue-500" />
-        {doc.shared && <Users className="h-3.5 w-3.5 shrink-0 text-gray-400" />}
-        <span className="truncate text-gray-900">
+        <FileText className="h-4 w-4 shrink-0 text-[var(--text-4)]" />
+        {doc.shared && <Users className="h-3.5 w-3.5 shrink-0 text-[var(--text-5)]" />}
+        <span className="truncate font-medium text-[var(--ink)]">
           {doc.icon && <span className="mr-1">{doc.icon}</span>}
           {doc.title || 'Untitled document'}
         </span>
-        {doc.starred && <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />}
+        {doc.starred && <Star className="h-3.5 w-3.5 fill-[var(--ink)] text-[var(--ink)]" />}
       </Link>
 
-      <div className="text-xs text-gray-500">You</div>
+      <div className="text-xs text-[var(--text-4)]">You</div>
 
-      <div className="text-xs text-gray-500">{formatDate(doc.updatedAt)}</div>
+      <div className="text-xs text-[var(--text-4)]">{formatDate(doc.updatedAt)}</div>
 
       <button
         type="button"
@@ -65,7 +65,7 @@ export default function DocRow({ doc }: { doc: Doc }) {
           e.preventDefault();
           star(doc.id, !doc.starred);
         }}
-        className="rounded p-1 text-gray-400 opacity-0 transition-opacity hover:bg-gray-100 hover:text-gray-700 group-hover:opacity-100"
+        className="rounded-[8px] p-1 text-[var(--text-4)] opacity-0 transition-opacity hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)] group-hover:opacity-100"
         aria-label="More"
       >
         <MoreVertical className="h-4 w-4" />

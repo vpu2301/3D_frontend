@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, Clock, Bot, AlertCircle, FileText, DollarSign, Users } from 'lucide-react';
@@ -82,17 +81,17 @@ const TaskApproval = () => {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'High': return 'bg-red-100 text-red-800';
-      case 'Medium': return 'bg-yellow-100 text-yellow-800';
-      case 'Low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'High': return 'plat-pill !border-0 !bg-[rgba(179,56,46,0.1)] !text-[color:var(--bad-fg)]';
+      case 'Medium': return 'plat-pill !border-0 !bg-[var(--warn-bg)] !text-[color:var(--warn-fg)]';
+      case 'Low': return 'plat-pill !border-0 !bg-[var(--ok-bg)] !text-[color:var(--ok-fg)]';
+      default: return 'plat-pill !border-0 !bg-[var(--sand-deep)] !text-[color:var(--text-3)]';
     }
   };
 
   const formatTimeAgo = (timestamp: Date) => {
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - timestamp.getTime()) / (1000 * 60));
-    
+
     if (diffInMinutes < 60) {
       return `${diffInMinutes} minutes ago`;
     } else {
@@ -102,22 +101,23 @@ const TaskApproval = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col">
-            <main className="flex-1 p-6 pb-20">
-              <div className="flex items-center justify-between mb-6">
+          <SidebarInset className="flex-1 flex flex-col bg-transparent">
+            <main className="flex-1 p-6 pb-20 lg:p-8 lg:pb-20">
+              <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h1 className="text-3xl font-light text-gray-900">Task Approvals</h1>
-                  <p className="text-gray-600">Review and approve tasks from your AI assistants</p>
+                  <p className="plat-crumb">3days.tasks.approval</p>
+                  <h1 className="mt-1 text-[26px]">Task Approvals</h1>
+                  <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Review and approve tasks from your AI assistants</p>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="plat-pill plat-pill-mute !border-0">
                     {pendingTasks.length} pending
                   </Badge>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="plat-btn-ghost !h-9 !rounded-full !border !border-[color:var(--line)] !bg-transparent !px-4 !text-xs">
                     <AlertCircle className="h-4 w-4 mr-2" />
                     View All Notifications
                   </Button>
@@ -125,71 +125,67 @@ const TaskApproval = () => {
               </div>
 
               {pendingTasks.length === 0 ? (
-                <div className="text-center py-12">
-                  <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">All caught up!</h3>
-                  <p className="text-gray-600">No pending approvals at the moment</p>
+                <div className="plat-panel text-center py-12">
+                  <CheckCircle className="h-16 w-16 mx-auto mb-4" strokeWidth={1.25} style={{ color: 'var(--ok-fg)' }} />
+                  <h3 className="text-lg font-medium mb-2">All caught up!</h3>
+                  <p className="text-sm" style={{ color: 'var(--text-4)' }}>No pending approvals at the moment</p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="plat-panel !p-0 divide-y" style={{ borderColor: 'var(--line-soft)' }}>
                   {pendingTasks.map((task) => (
-                    <Card key={task.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="flex items-center justify-between text-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className={`p-3 rounded-lg bg-gradient-to-br ${task.bgColor}`}>
-                              <task.icon className={`h-5 w-5 ${task.iconColor}`} />
-                            </div>
-                            <div>
-                              <span className="font-medium text-gray-900">{task.title}</span>
-                              <div className="flex items-center space-x-2 mt-1">
-                                <Badge className={getPriorityColor(task.priority)} variant="secondary">
-                                  {task.priority}
-                                </Badge>
-                                <Badge variant="outline" className="text-xs">
-                                  {task.category}
-                                </Badge>
-                              </div>
+                    <div key={task.id} className="p-5" style={{ borderColor: 'var(--line-soft)' }}>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-start gap-3 min-w-0">
+                          <span className="plat-item-icon !h-11 !w-11 !rounded-[10px]">
+                            <task.icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                          </span>
+                          <div className="min-w-0">
+                            <span className="text-[15px] font-semibold">{task.title}</span>
+                            <div className="flex items-center gap-2 mt-1.5">
+                              <Badge className={getPriorityColor(task.priority)} variant="secondary">
+                                {task.priority}
+                              </Badge>
+                              <Badge variant="outline" className="plat-pill !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] !font-medium">
+                                {task.category}
+                              </Badge>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <div className="flex items-center space-x-1 text-sm text-gray-500 mb-2">
-                              <Bot className="h-3 w-3" />
-                              <span>{task.assistant}</span>
-                            </div>
-                            <div className="flex items-center space-x-1 text-xs text-gray-400">
-                              <Clock className="h-3 w-3" />
-                              <span>{formatTimeAgo(task.timestamp)}</span>
-                            </div>
-                          </div>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-gray-700 mb-4">{task.description}</p>
-                        <div className="flex space-x-3">
-                          <Button 
-                            onClick={() => handleApprove(task.id)}
-                            className="bg-green-600 hover:bg-green-700 text-white"
-                            size="sm"
-                          >
-                            <CheckCircle className="h-4 w-4 mr-2" />
-                            Approve
-                          </Button>
-                          <Button 
-                            onClick={() => handleReject(task.id)}
-                            variant="outline"
-                            className="border-red-200 text-red-600 hover:bg-red-50"
-                            size="sm"
-                          >
-                            <XCircle className="h-4 w-4 mr-2" />
-                            Reject
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            View Details
-                          </Button>
                         </div>
-                      </CardContent>
-                    </Card>
+                        <div className="text-right shrink-0">
+                          <div className="flex items-center justify-end gap-1.5 text-xs mb-1.5" style={{ color: 'var(--text-3)' }}>
+                            <Bot className="h-3 w-3" />
+                            <span>{task.assistant}</span>
+                          </div>
+                          <div className="flex items-center justify-end gap-1.5 text-xs" style={{ color: 'var(--text-5)' }}>
+                            <Clock className="h-3 w-3" />
+                            <span>{formatTimeAgo(task.timestamp)}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="mt-3 text-sm" style={{ color: 'var(--text-2)' }}>{task.description}</p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <Button
+                          onClick={() => handleApprove(task.id)}
+                          className="plat-btn !h-9 !rounded-full !bg-[var(--ink)] !px-4 !text-xs !text-white"
+                          size="sm"
+                        >
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Approve
+                        </Button>
+                        <Button
+                          onClick={() => handleReject(task.id)}
+                          variant="outline"
+                          className="plat-btn-ghost !h-9 !rounded-full !border !border-[color:var(--line)] !bg-transparent !px-4 !text-xs !text-[color:var(--bad-fg)]"
+                          size="sm"
+                        >
+                          <XCircle className="h-4 w-4 mr-2" />
+                          Reject
+                        </Button>
+                        <Button variant="ghost" size="sm" className="!h-9 !rounded-full !px-4 !text-xs !text-[color:var(--text-3)]">
+                          View Details
+                        </Button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}

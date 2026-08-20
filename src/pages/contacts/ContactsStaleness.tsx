@@ -120,15 +120,16 @@ export default function ContactsStaleness() {
       <div className="flex flex-1 overflow-hidden">
         <ContactsMiniRail />
         <main className="flex flex-1 flex-col overflow-hidden">
-          <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+          <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 py-4">
             <div>
-              <Link to="/contacts" className="inline-flex items-center gap-1 text-xs text-gray-500 hover:underline">
+              <p className="plat-crumb">3days.contacts / staleness</p>
+              <Link to="/contacts" className="mt-1.5 inline-flex items-center gap-1 text-xs text-[var(--text-4)] transition-colors hover:text-[var(--ink)]">
                 <ArrowLeft className="h-3 w-3" /> Back to Contacts
               </Link>
-              <h1 className="mt-1 flex items-center gap-2 text-2xl font-light text-gray-900">
-                <Clock className="h-5 w-5 text-red-500" /> Going stale
+              <h1 className="mt-1 flex items-center gap-2 text-[26px] leading-tight">
+                <Clock className="h-5 w-5 text-[var(--text-4)]" /> Going stale
               </h1>
-              <p className="text-xs text-gray-500">
+              <p className="mt-1 text-xs text-[var(--text-4)]">
                 {entries.length} relationship{entries.length === 1 ? '' : 's'} that have gone quiet
               </p>
             </div>
@@ -136,7 +137,7 @@ export default function ContactsStaleness() {
               type="button"
               onClick={compute}
               disabled={running}
-              className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1 text-xs hover:bg-gray-50 disabled:opacity-50"
+              className="plat-btn-ghost disabled:opacity-50"
             >
               {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
               Recompute
@@ -145,39 +146,39 @@ export default function ContactsStaleness() {
 
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {entries.length === 0 ? (
-              <div className="rounded-md border border-dashed border-gray-200 px-6 py-16 text-center text-sm text-gray-500">
+              <div className="rounded-[14px] border border-dashed border-[var(--line)] px-6 py-16 text-center text-sm text-[var(--text-4)]">
                 {running ? 'Computing…' : 'Nothing stale right now.'}
               </div>
             ) : (
-              <ul className="space-y-3">
+              <ul className="plat-list">
                 {entries.map((e) => {
                   const c = contactsMap[e.contactId];
                   if (!c) return null;
                   return (
-                    <li key={e.contactId} className="flex items-center gap-3 rounded-md border border-gray-200 bg-white p-3">
+                    <li key={e.contactId} className="flex items-center gap-3 border-b border-[var(--line-soft)] px-4 py-3 last:border-b-0">
                       <ContactAvatar contact={c} size={40} />
                       <div className="min-w-0 flex-1">
                         <button
                           type="button"
                           onClick={() => navigate(`/contacts/contact/${c.id}`)}
-                          className="text-sm font-medium text-gray-900 hover:underline"
+                          className="text-sm font-semibold text-[var(--ink)] hover:underline"
                         >
                           {displayName(c)}
                         </button>
-                        <div className="text-xs italic text-gray-500">{e.reason}</div>
+                        <div className="text-xs italic text-[var(--text-4)]">{e.reason}</div>
                       </div>
                       <div className="flex items-center gap-1">
                         {c.emails[0] && (
                           <a
                             href={`mailto:${c.emails[0].value}`}
-                            className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1 text-xs hover:bg-gray-50"
+                            className="plat-btn-ghost h-8"
                           >
                             <Send className="h-3.5 w-3.5" /> Draft check-in
                           </a>
                         )}
                         <button
                           type="button"
-                          className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1 text-xs hover:bg-gray-50"
+                          className="plat-btn-ghost h-8"
                           title="Schedule (Calendar — UI deferred)"
                         >
                           <CalendarPlus className="h-3.5 w-3.5" /> Schedule
@@ -185,14 +186,14 @@ export default function ContactsStaleness() {
                         <button
                           type="button"
                           onClick={() => onSnooze(c.id)}
-                          className="flex items-center gap-1 rounded-md px-2.5 py-1 text-xs text-gray-600 hover:bg-gray-100"
+                          className="flex h-8 items-center gap-1.5 rounded-full px-3 text-xs font-semibold text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                         >
                           <Bell className="h-3.5 w-3.5" /> Snooze
                         </button>
                         <button
                           type="button"
                           onClick={() => onMarkExpected(c.id, displayName(c))}
-                          className="rounded-md px-2.5 py-1 text-xs text-gray-600 hover:bg-gray-100"
+                          className="flex h-8 items-center rounded-full px-3 text-xs font-semibold text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                         >
                           Mark expected
                         </button>

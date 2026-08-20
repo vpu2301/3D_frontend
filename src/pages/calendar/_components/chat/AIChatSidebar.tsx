@@ -89,19 +89,19 @@ export function AIChatSidebar({ onOpenEvent }: Props = {}) {
   }
 
   return (
-    <aside className="flex h-full w-[340px] shrink-0 flex-col border-l border-gray-200/70 bg-white">
-      <header className="flex items-center justify-between border-b border-gray-200/70 px-3 py-2">
-        <div className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-violet-500">
-            <Sparkles className="h-3.5 w-3.5 text-white" />
+    <aside className="flex h-full w-[340px] shrink-0 flex-col border-l border-[var(--line-soft)]">
+      <header className="flex items-center justify-between border-b border-[var(--line-soft)] px-3 py-2.5">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-[8px] bg-[var(--sand)]">
+            <Sparkles className="h-3.5 w-3.5 text-[var(--ink)]" />
           </div>
-          <p className="text-sm font-semibold text-gray-900">Assistant</p>
+          <h2 className="text-sm">Assistant</h2>
         </div>
         <button
           type="button"
           onClick={calendarStore.toggleChat}
           aria-label="Close assistant"
-          className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100"
+          className="flex h-7 w-7 items-center justify-center rounded-[8px] text-[var(--text-4)] transition hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
         >
           <X className="h-4 w-4" />
         </button>
@@ -113,10 +113,10 @@ export function AIChatSidebar({ onOpenEvent }: Props = {}) {
             <div
               key={m.id}
               className={cn(
-                'max-w-[90%] rounded-2xl px-3 py-2 text-sm',
+                'max-w-[90%] rounded-[12px] px-3 py-2 text-sm',
                 m.role === 'user'
-                  ? 'ml-auto bg-gray-900 text-white'
-                  : 'mr-auto bg-gray-100 text-gray-800',
+                  ? 'ml-auto bg-[var(--ink)] text-white'
+                  : 'mr-auto border border-[var(--line-soft)] bg-[var(--sand)] text-[var(--text-1)]',
               )}
             >
               <p className="whitespace-pre-wrap">
@@ -144,11 +144,9 @@ export function AIChatSidebar({ onOpenEvent }: Props = {}) {
         </div>
 
         {activity.length > 0 && (
-          <div className="mt-5 border-t border-gray-200/70 pt-3">
-            <h3 className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
-              Activity
-            </h3>
-            <ul className="space-y-1.5">
+          <div className="mt-5 border-t border-[var(--line-soft)] pt-3">
+            <p className="plat-eyebrow mb-2.5">Activity</p>
+            <ul className="plat-list">
               {activity.slice(0, 6).map(a => {
                 const live = events.find(e => e.id === a.eventId);
                 const canOpen = !!live && !!onOpenEvent;
@@ -156,16 +154,14 @@ export function AIChatSidebar({ onOpenEvent }: Props = {}) {
                   <li
                     key={a.id}
                     className={cn(
-                      'flex items-start gap-2 rounded-md border border-gray-100 bg-white px-2 py-1.5 text-xs',
+                      'flex items-start gap-2 border-b border-[var(--line-soft)] px-3 py-2 text-xs last:border-b-0',
                       a.undone && 'opacity-50',
                     )}
                   >
                     <span
                       className={cn(
-                        'mt-1 h-1.5 w-1.5 shrink-0 rounded-full',
-                        a.actor === 'ai'
-                          ? 'bg-gradient-to-br from-blue-500 to-violet-500'
-                          : 'bg-gray-400',
+                        'mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full',
+                        a.actor === 'ai' ? 'bg-[var(--blue)]' : 'bg-[var(--text-5)]',
                       )}
                     />
                     <button
@@ -179,13 +175,13 @@ export function AIChatSidebar({ onOpenEvent }: Props = {}) {
                     >
                       <p
                         className={cn(
-                          'truncate text-gray-700',
-                          canOpen && 'group-hover:text-blue-600 group-hover:underline',
+                          'truncate text-[var(--text-1)]',
+                          canOpen && 'group-hover:text-[var(--ink)] group-hover:underline',
                         )}
                       >
                         {a.summary}
                       </p>
-                      <p className="text-[10px] text-gray-400">
+                      <p className="text-[10px] text-[var(--text-5)]">
                         {format(parseUTC(a.at), 'h:mm a')} · {a.actor}
                       </p>
                     </button>
@@ -193,7 +189,7 @@ export function AIChatSidebar({ onOpenEvent }: Props = {}) {
                       <button
                         type="button"
                         onClick={() => calendarStore.undo(a.id)}
-                        className="inline-flex shrink-0 items-center gap-1 rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] text-gray-600 hover:bg-gray-50"
+                        className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[var(--line)] px-2 py-0.5 text-[10px] font-semibold text-[var(--text-3)] transition hover:border-[var(--ink)] hover:text-[var(--ink)]"
                       >
                         <Undo2 className="h-2.5 w-2.5" />
                         Undo
@@ -207,7 +203,7 @@ export function AIChatSidebar({ onOpenEvent }: Props = {}) {
         )}
       </div>
 
-      <div className="border-t border-gray-200/70 p-3">
+      <div className="border-t border-[var(--line-soft)] p-3">
         <div className="relative">
           <Textarea
             value={input}
@@ -220,19 +216,19 @@ export function AIChatSidebar({ onOpenEvent }: Props = {}) {
             }}
             rows={2}
             placeholder="Ask or schedule anything…"
-            className="resize-none pr-10 text-sm"
+            className="resize-none rounded-[10px] border-[var(--line)] bg-white pr-10 text-sm"
           />
           <Button
             size="sm"
             onClick={send}
             disabled={!input.trim()}
-            className="absolute bottom-2 right-2 h-7 w-7 p-0"
+            className="absolute bottom-2 right-2 h-7 w-7 rounded-full bg-[var(--ink)] p-0 text-white hover:bg-[var(--ink)] hover:opacity-85"
             aria-label="Send"
           >
             <Send className="h-3.5 w-3.5" />
           </Button>
         </div>
-        <p className="mt-1 text-[10px] text-gray-400">
+        <p className="mt-1.5 text-[10px] text-[var(--text-5)]">
           Every AI action is logged and undoable.
         </p>
       </div>
@@ -260,57 +256,57 @@ function ToolCallCard({
   const display = liveEvent ?? tc.after ?? undefined;
 
   return (
-    <div className="mt-2 overflow-hidden rounded-lg border border-gray-200 bg-white/80 text-[11px] text-gray-700">
+    <div className="mt-2 overflow-hidden rounded-[10px] border border-[var(--line-soft)] bg-white text-[11px] text-[var(--text-1)]">
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center gap-1.5 px-2 py-2 text-left hover:bg-gray-50"
+        className="flex w-full items-center gap-1.5 px-2 py-2 text-left transition hover:bg-[rgba(20,22,26,0.02)]"
       >
-        <span className="rounded bg-gray-900 px-1 py-0.5 font-mono text-[9px] text-white">
+        <span className="rounded-[4px] bg-[var(--ink)] px-1 py-0.5 font-mono text-[9px] text-white">
           {tc.name}
         </span>
         <span
           className={cn(
-            'rounded px-1 py-0.5 text-[9px] uppercase',
-            tc.status === 'applied' && 'bg-emerald-100 text-emerald-700',
-            tc.status === 'proposed' && 'bg-amber-100 text-amber-700',
-            tc.status === 'undone' && 'bg-gray-100 text-gray-500',
+            'rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase',
+            tc.status === 'applied' && 'bg-[var(--ok-bg)] text-[var(--ok-fg)]',
+            tc.status === 'proposed' && 'bg-[var(--warn-bg)] text-[var(--warn-fg)]',
+            tc.status === 'undone' && 'bg-[var(--sand-deep)] text-[var(--text-3)]',
           )}
         >
           {tc.status}
         </span>
         {display && (
-          <span className="ml-auto truncate text-gray-500">
+          <span className="ml-auto truncate text-[var(--text-4)]">
             {display.title}
           </span>
         )}
-        <span className="ml-1 text-gray-400">{expanded ? '▾' : '▸'}</span>
+        <span className="ml-1 text-[var(--text-5)]">{expanded ? '▾' : '▸'}</span>
       </button>
 
       {expanded && display && (
-        <div className="space-y-2 border-t border-gray-100 px-2 py-2">
+        <div className="space-y-2 border-t border-[var(--line-soft)] px-2 py-2">
           <div>
-            <p className="font-medium text-gray-900">{display.title}</p>
-            <p className="text-[10px] text-gray-500">
+            <p className="font-semibold text-[var(--ink)]">{display.title}</p>
+            <p className="text-[10px] text-[var(--text-4)]">
               {format(parseUTC(display.start), 'EEE, MMM d · h:mm a')} –{' '}
               {format(parseUTC(display.end), 'h:mm a')}
             </p>
           </div>
           {display.location && (
-            <p className="text-[10px] text-gray-600">📍 {display.location}</p>
+            <p className="text-[10px] text-[var(--text-3)]">📍 {display.location}</p>
           )}
           {display.attendees && display.attendees.length > 0 && (
-            <p className="text-[10px] text-gray-600">
+            <p className="text-[10px] text-[var(--text-3)]">
               👥 {display.attendees.map(a => a.name ?? a.email).join(', ')}
             </p>
           )}
           {display.description && (
-            <p className="whitespace-pre-wrap text-[10px] text-gray-600">
+            <p className="whitespace-pre-wrap text-[10px] text-[var(--text-3)]">
               {display.description}
             </p>
           )}
           {!liveEvent && (
-            <p className="text-[10px] italic text-gray-400">
+            <p className="text-[10px] italic text-[var(--text-5)]">
               {tc.status === 'undone'
                 ? 'This action was undone.'
                 : 'Event no longer exists.'}
@@ -324,7 +320,7 @@ function ToolCallCard({
                   e.stopPropagation();
                   onOpenEvent?.(eventId);
                 }}
-                className="inline-flex items-center gap-1 rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] text-gray-700 hover:bg-gray-50"
+                className="inline-flex items-center gap-1 rounded-full border border-[var(--line)] px-2 py-0.5 text-[10px] font-semibold text-[var(--text-2)] transition hover:border-[var(--ink)] hover:text-[var(--ink)]"
               >
                 <Pencil className="h-2.5 w-2.5" />
                 Edit
@@ -340,7 +336,7 @@ function ToolCallCard({
                     return;
                   calendarStore.deleteEvent(eventId);
                 }}
-                className="inline-flex items-center gap-1 rounded border border-rose-200 bg-white px-1.5 py-0.5 text-[10px] text-rose-600 hover:bg-rose-50"
+                className="inline-flex items-center gap-1 rounded-full border border-[rgba(179,56,46,0.3)] px-2 py-0.5 text-[10px] font-semibold text-[var(--bad-fg)] transition hover:bg-[rgba(179,56,46,0.06)]"
               >
                 <Trash2 className="h-2.5 w-2.5" />
                 Delete

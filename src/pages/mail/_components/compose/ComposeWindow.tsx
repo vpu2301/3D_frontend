@@ -226,18 +226,18 @@ export default function ComposeWindow({ draftId, position }: Props) {
   };
 
   const containerCls = maximized
-    ? 'fixed inset-x-12 inset-y-12 z-40 flex flex-col rounded-lg border border-gray-200 bg-white shadow-2xl'
+    ? 'fixed inset-x-12 inset-y-12 z-40 flex flex-col rounded-[14px] border border-[var(--line)] bg-white shadow-2xl'
     : collapsed
-      ? 'fixed bottom-0 z-40 w-72 rounded-t-lg border border-gray-200 bg-white shadow-xl'
-      : 'fixed bottom-0 z-40 flex h-[560px] w-[520px] flex-col rounded-t-lg border border-gray-200 bg-white shadow-xl';
+      ? 'fixed bottom-0 z-40 w-72 rounded-t-[14px] border border-[var(--line)] bg-white shadow-xl'
+      : 'fixed bottom-0 z-40 flex h-[560px] w-[520px] flex-col rounded-t-[14px] border border-[var(--line)] bg-white shadow-xl';
 
   const positionStyle = maximized ? {} : { right: 24 + position * 540 };
 
   return (
     <div className={containerCls} style={positionStyle} data-compose-id={draftId}>
       {/* Header */}
-      <div className="flex shrink-0 items-center justify-between border-b border-gray-100 bg-gray-50 px-3 py-2">
-        <span className="truncate text-sm font-medium text-gray-800">
+      <div className="flex shrink-0 items-center justify-between border-b border-[var(--line-soft)] bg-[var(--sand)] px-3 py-2">
+        <span className="truncate text-sm font-semibold text-[var(--ink)]">
           {draft.subject || 'New message'}
         </span>
         <div className="flex items-center gap-0.5">
@@ -245,7 +245,7 @@ export default function ComposeWindow({ draftId, position }: Props) {
             <button
               type="button"
               onClick={() => setCollapsed((c) => !c)}
-              className="rounded p-1 text-gray-500 hover:bg-gray-200"
+              className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.08)] hover:text-[var(--ink)]"
               aria-label={collapsed ? 'Expand' : 'Collapse'}
             >
               {collapsed ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
@@ -254,7 +254,7 @@ export default function ComposeWindow({ draftId, position }: Props) {
           <button
             type="button"
             onClick={() => setMaximized((m) => !m)}
-            className="rounded p-1 text-gray-500 hover:bg-gray-200"
+            className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.08)] hover:text-[var(--ink)]"
             aria-label={maximized ? 'Restore' : 'Maximize'}
           >
             {maximized ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
@@ -262,7 +262,7 @@ export default function ComposeWindow({ draftId, position }: Props) {
           <button
             type="button"
             onClick={close}
-            className="rounded p-1 text-gray-500 hover:bg-gray-200"
+            className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.08)] hover:text-[var(--ink)]"
             aria-label="Close"
           >
             <X className="h-3.5 w-3.5" />
@@ -282,28 +282,28 @@ export default function ComposeWindow({ draftId, position }: Props) {
             <button
               type="button"
               onClick={() => setShowCcBcc(true)}
-              className="self-end px-3 py-0.5 text-[11px] text-gray-500 hover:text-[#1a73e8]"
+              className="self-end px-3 py-0.5 text-[11px] font-medium text-[var(--text-4)] transition-colors hover:text-[var(--ink)]"
             >
               Cc / Bcc
             </button>
           )}
 
-          <div className="flex items-center border-b border-gray-100 px-3 py-1.5">
-            <span className="shrink-0 text-xs text-gray-500">Subject</span>
+          <div className="flex items-center border-b border-[var(--line-soft)] px-3 py-1.5">
+            <span className="shrink-0 text-xs text-[var(--text-4)]">Subject</span>
             <input
               value={draft.subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder="Subject"
-              className="ml-2 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
+              className="ml-2 flex-1 bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--text-5)]"
             />
           </div>
 
           {/* Body */}
           <div className="relative flex-1 overflow-y-auto px-3 py-2 text-sm">
             <EditorContent editor={editor} className="prose prose-sm max-w-none focus:outline-none [&_.ProseMirror]:min-h-[200px] [&_.ProseMirror]:outline-none" />
-            <span className="compose-ghost pointer-events-none ml-1 text-gray-400" />
+            <span className="compose-ghost pointer-events-none ml-1 text-[var(--text-5)]" />
             {aiBusy && (
-              <div className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[#dde9f4] px-2 py-0.5 text-[10px] font-medium text-[#1a73e8]">
+              <div className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--sand-deep)] px-2 py-0.5 text-[10px] font-semibold text-[var(--text-2)]">
                 <Sparkles className="h-3 w-3 animate-pulse" />
                 Drafting…
               </div>
@@ -312,12 +312,12 @@ export default function ComposeWindow({ draftId, position }: Props) {
 
           {/* Pre-send issues */}
           {issues.length > 0 && (
-            <div className="border-t border-amber-200 bg-amber-50 px-3 py-2">
-              <div className="mb-1 flex items-center gap-1.5 text-[11px] font-medium text-amber-800">
+            <div className="border-t border-[var(--line-soft)] bg-[var(--warn-bg)] px-3 py-2">
+              <div className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold text-[var(--warn-fg)]">
                 <AlertTriangle className="h-3.5 w-3.5" />
                 Before you send
               </div>
-              <ul className="space-y-1 text-xs text-amber-900">
+              <ul className="space-y-1 text-xs text-[var(--warn-fg)]">
                 {issues.map((i, idx) => (
                   <li key={idx}>• {i.message}</li>
                 ))}
@@ -326,7 +326,7 @@ export default function ComposeWindow({ draftId, position }: Props) {
                 <button
                   type="button"
                   onClick={() => setIssues([])}
-                  className="text-[11px] text-gray-600 hover:underline"
+                  className="text-[11px] font-medium text-[var(--text-3)] transition-colors hover:text-[var(--ink)] hover:underline"
                 >
                   Edit
                 </button>
@@ -336,7 +336,7 @@ export default function ComposeWindow({ draftId, position }: Props) {
                     setIssues([]);
                     void reallySend();
                   }}
-                  className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-medium text-amber-900 hover:bg-amber-200"
+                  className="rounded-full bg-[var(--ink)] px-2.5 py-0.5 text-[11px] font-semibold text-white transition-opacity hover:opacity-[0.86]"
                 >
                   Send anyway
                 </button>
@@ -345,11 +345,11 @@ export default function ComposeWindow({ draftId, position }: Props) {
           )}
 
           {/* Footer / actions */}
-          <div className="relative flex shrink-0 items-center gap-1 border-t border-gray-100 px-2 py-2">
+          <div className="relative flex shrink-0 items-center gap-1 border-t border-[var(--line-soft)] px-2 py-2">
             <button
               type="button"
               onClick={() => onSend()}
-              className="flex items-center gap-1.5 rounded-full bg-[#bdd8ec] px-3 py-1.5 text-sm font-medium text-gray-900 hover:bg-[#a5c8e0]"
+              className="flex items-center gap-1.5 rounded-full bg-[var(--ink)] px-4 py-1.5 text-sm font-semibold text-white transition-opacity hover:opacity-[0.86]"
               title="Send (Cmd/Ctrl+Enter)"
             >
               <Send className="h-3.5 w-3.5" />
@@ -358,7 +358,7 @@ export default function ComposeWindow({ draftId, position }: Props) {
             <button
               type="button"
               onClick={onSchedule}
-              className="rounded-full p-1.5 text-gray-600 hover:bg-gray-100"
+              className="rounded-full p-1.5 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
               title="Schedule send"
             >
               <Clock className="h-3.5 w-3.5" />
@@ -366,7 +366,7 @@ export default function ComposeWindow({ draftId, position }: Props) {
             <button
               type="button"
               onClick={onSendAndMakeTask}
-              className="rounded-full p-1.5 text-gray-600 hover:bg-gray-100"
+              className="rounded-full p-1.5 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
               title="Send + make follow-up task"
             >
               <ListTodo className="h-3.5 w-3.5" />
@@ -377,7 +377,7 @@ export default function ComposeWindow({ draftId, position }: Props) {
                 type="button"
                 onClick={onAiPrompt}
                 disabled={aiBusy}
-                className="rounded-full p-1.5 text-[#1a73e8] hover:bg-[#dde9f4] disabled:opacity-50"
+                className="rounded-full p-1.5 text-[var(--ink)] transition-colors hover:bg-[rgba(20,22,26,0.06)] disabled:opacity-50"
                 title="AI draft"
               >
                 <Sparkles className="h-3.5 w-3.5" />
@@ -386,14 +386,14 @@ export default function ComposeWindow({ draftId, position }: Props) {
                 type="button"
                 onClick={() => setIntentOpen((o) => !o)}
                 disabled={aiBusy}
-                className="rounded-full px-2 py-1 text-[11px] font-medium text-[#1a73e8] hover:bg-[#dde9f4] disabled:opacity-50"
+                className="rounded-full px-2 py-1 text-[11px] font-semibold text-[var(--ink)] transition-colors hover:bg-[rgba(20,22,26,0.06)] disabled:opacity-50"
               >
                 Reply with AI
               </button>
               <button
                 type="button"
                 disabled
-                className="rounded-full p-1.5 text-gray-400"
+                className="rounded-full p-1.5 text-[var(--text-5)]"
                 title="Attach (coming soon)"
               >
                 <Paperclip className="h-3.5 w-3.5" />
@@ -401,7 +401,7 @@ export default function ComposeWindow({ draftId, position }: Props) {
               <button
                 type="button"
                 onClick={onDiscard}
-                className="rounded-full p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600"
+                className="rounded-full p-1.5 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--bad-fg)]"
                 title="Discard"
               >
                 <Trash2 className="h-3.5 w-3.5" />

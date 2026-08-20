@@ -13,12 +13,12 @@ export default function EditorFloatingMenu({ editor }: { editor: Editor }) {
         return isEmpty;
       }}
     >
-      <div className="flex items-center gap-0.5 rounded-md border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-        <span className="px-1 text-[10px] uppercase tracking-wider text-zinc-400">Quick:</span>
+      <div className="flex items-center gap-0.5 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_4px_16px_rgba(20,22,26,0.08)]">
+        <span className="plat-eyebrow px-1">Quick:</span>
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Heading 1"
         >
           <Heading1 className="h-3.5 w-3.5" />
@@ -26,7 +26,7 @@ export default function EditorFloatingMenu({ editor }: { editor: Editor }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Heading 2"
         >
           <Heading2 className="h-3.5 w-3.5" />
@@ -34,7 +34,7 @@ export default function EditorFloatingMenu({ editor }: { editor: Editor }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Bulleted list"
         >
           <List className="h-3.5 w-3.5" />
@@ -42,7 +42,7 @@ export default function EditorFloatingMenu({ editor }: { editor: Editor }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Numbered list"
         >
           <ListOrdered className="h-3.5 w-3.5" />
@@ -50,7 +50,7 @@ export default function EditorFloatingMenu({ editor }: { editor: Editor }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleTaskList().run()}
-          className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Task list"
         >
           <CheckSquare className="h-3.5 w-3.5" />
@@ -58,7 +58,7 @@ export default function EditorFloatingMenu({ editor }: { editor: Editor }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Blockquote"
         >
           <Quote className="h-3.5 w-3.5" />
@@ -66,16 +66,16 @@ export default function EditorFloatingMenu({ editor }: { editor: Editor }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Code block"
         >
           <Code2 className="h-3.5 w-3.5" />
         </button>
-        <div className="mx-0.5 h-5 w-px bg-zinc-200 dark:bg-zinc-700" />
+        <div className="mx-0.5 h-5 w-px bg-[var(--line-soft)]" />
         <button
           type="button"
           onClick={() => editor.chain().focus().insertContent({ type: 'aiSummary' }).run()}
-          className="flex items-center gap-1 rounded p-1 text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950"
+          className="flex items-center gap-1 rounded-[8px] p-1 text-[var(--ink)] transition-colors hover:bg-[rgba(20,22,26,0.05)]"
           title="AI summary block"
         >
           <Sparkles className="h-3.5 w-3.5" />

@@ -17,9 +17,9 @@ interface CaseDrawerProps {
 
 function EvidenceRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="grid grid-cols-[7.5rem_1fr] gap-3 border-b border-gray-50 py-2.5 last:border-0">
-      <dt className="text-xs font-medium text-gray-400">{label}</dt>
-      <dd className={cn('text-sm text-gray-700', mono && 'font-mono text-xs')}>{value}</dd>
+    <div className="grid grid-cols-[7.5rem_1fr] gap-3 border-b border-[var(--line-soft)] py-2.5 last:border-0">
+      <dt className="text-xs font-medium text-[#7a8087]">{label}</dt>
+      <dd className={cn('text-sm text-[#4a5057]', mono && 'text-xs')} style={mono ? { fontFamily: "'IBM Plex Mono', monospace" } : undefined}>{value}</dd>
     </div>
   );
 }
@@ -78,17 +78,22 @@ export default function CaseDrawer({ caseId, onClose }: CaseDrawerProps) {
   return (
     <Sheet open={!!caseId} onOpenChange={(open) => !open && onClose()}>
       <SheetContent side="right" className="flex w-full flex-col gap-0 overflow-y-auto p-0 sm:max-w-lg">
-        <SheetHeader className="space-y-1 border-b border-gray-100 px-6 pb-4 pt-5 text-left">
+        <SheetHeader className="space-y-1.5 border-b border-[var(--line-soft)] px-6 pb-5 pt-5 text-left">
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-[#f0e9df] px-2.5 py-0.5 text-[11px] font-medium text-gray-700">
+            <span className="inline-flex items-center rounded-full bg-[#e9ebef] px-3 py-1 text-[11.5px] font-semibold text-[#6b7178]">
               {t(`category.${c.category}`)}
             </span>
-            <span className="font-mono text-[11px] text-gray-400">{c.transactionRef}</span>
+            <span className="text-[11px] text-[#7a8087]" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+              {c.transactionRef}
+            </span>
           </div>
-          <SheetTitle className="font-display text-xl font-light leading-snug text-gray-900">
+          <SheetTitle
+            className="text-[21px] font-semibold leading-snug tracking-[-0.03em] text-[#14161a]"
+            style={{ fontFamily: "'Sora', sans-serif" }}
+          >
             {c.problem}
           </SheetTitle>
-          <SheetDescription className="text-xs text-gray-400">
+          <SheetDescription className="text-xs text-[#7a8087]">
             {mandate?.name} · {formatCurrency(i18n.language, c.amount, c.currency)}
           </SheetDescription>
         </SheetHeader>
@@ -97,40 +102,46 @@ export default function CaseDrawer({ caseId, onClose }: CaseDrawerProps) {
           {/* Confidence block */}
           <div
             className={cn(
-              'flex items-center gap-4 rounded-xl border p-4',
-              high ? 'border-green-200 bg-green-50' : 'border-amber-200 bg-amber-50',
+              'flex items-center gap-4 rounded-[14px] border p-4',
+              high ? 'border-[#c6e5d1] bg-[#e6f5ea]' : 'border-[#f0d9bf] bg-[#fdf0e4]',
             )}
           >
-            <p className={cn('font-display text-4xl font-light', high ? 'text-green-700' : 'text-amber-700')}>
+            <p
+              className={cn('text-4xl font-semibold tracking-[-0.035em]', high ? 'text-[#1e7a3c]' : 'text-[#9a5312]')}
+              style={{ fontFamily: "'Sora', sans-serif" }}
+            >
               {c.confidence}
               <span className="text-lg">%</span>
             </p>
             <div>
-              <p className={cn('flex items-center gap-1.5 text-xs font-semibold', high ? 'text-green-700' : 'text-amber-700')}>
+              <p className={cn('flex items-center gap-1.5 text-xs font-semibold', high ? 'text-[#1e7a3c]' : 'text-[#9a5312]')}>
                 {high ? <BadgeCheck aria-hidden className="h-3.5 w-3.5" /> : <CircleAlert aria-hidden className="h-3.5 w-3.5" />}
                 {high ? t('queue.highConfidence') : t('queue.belowThreshold')}
               </p>
-              <p className="mt-0.5 text-xs text-gray-600">
+              <p className="mt-0.5 text-xs text-[#5a6067]">
                 {high ? t('drawer.confidenceNoteHigh') : t('drawer.confidenceNoteLow')}
               </p>
             </div>
           </div>
 
           {/* Evidence */}
-          <h3 className="mb-1 mt-6 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+          <h3
+            className="mb-1 mt-6 text-[10px] font-medium uppercase tracking-[0.22em] text-[#9aa0a6]"
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
             {t('drawer.evidence')}
           </h3>
           <dl>
             <EvidenceRow label={t('drawer.problem')} value={c.problem} />
             <EvidenceRow label={t('drawer.suspectedCause')} value={c.suspectedCause} />
             <EvidenceRow label={t('drawer.source')} value={c.source} />
-            <div className="grid grid-cols-[7.5rem_1fr] gap-3 border-b border-gray-50 py-2.5">
-              <dt className="text-xs font-medium text-gray-400">{t('drawer.ruleCheck')}</dt>
-              <dd className="flex items-start gap-1.5 text-sm text-gray-700">
+            <div className="grid grid-cols-[7.5rem_1fr] gap-3 border-b border-[var(--line-soft)] py-2.5">
+              <dt className="text-xs font-medium text-[#7a8087]">{t('drawer.ruleCheck')}</dt>
+              <dd className="flex items-start gap-1.5 text-sm text-[#4a5057]">
                 {c.ruleCheckPassed ? (
-                  <ShieldCheck aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-600" />
+                  <ShieldCheck aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#1e7a3c]" />
                 ) : (
-                  <ShieldX aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600" />
+                  <ShieldX aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#9a5312]" />
                 )}
                 {c.ruleCheck}
               </dd>
@@ -141,7 +152,10 @@ export default function CaseDrawer({ caseId, onClose }: CaseDrawerProps) {
           </dl>
 
           {/* Proposed action */}
-          <h3 className="mb-2 mt-6 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+          <h3
+            className="mb-2 mt-6 text-[10px] font-medium uppercase tracking-[0.22em] text-[#9aa0a6]"
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
             {t('drawer.proposedAction')}
           </h3>
           {editing ? (
@@ -158,36 +172,35 @@ export default function CaseDrawer({ caseId, onClose }: CaseDrawerProps) {
                 <button
                   type="button"
                   onClick={saveEdit}
-                  className="rounded-full bg-gray-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                  className="inline-flex h-9 items-center gap-2 rounded-full bg-[#14161a] px-5 text-xs font-semibold text-white transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14161a]/25"
                 >
                   {t('drawer.saveProposal')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setEditing(false)}
-                  className="rounded-full border border-gray-200 px-4 py-1.5 text-xs text-gray-600 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                  className="inline-flex h-9 items-center gap-2 rounded-full border border-[var(--line)] px-4 text-xs font-semibold text-[#5a6067] transition-colors hover:border-[var(--ink)] hover:text-[#14161a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14161a]/25"
                 >
                   {t('common.cancel')}
                 </button>
               </div>
             </div>
           ) : (
-            <div className="rounded-xl border border-gray-900/10 bg-[#faf7f2] p-4">
-              <p className="text-sm text-gray-800">{c.proposedAction}</p>
+            <div className="rounded-[12px] border border-[var(--line-soft)] bg-[#f4f5f7] p-4">
+              <p className="text-sm text-[#14161a]">{c.proposedAction}</p>
             </div>
           )}
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 border-t border-gray-100 px-6 py-4">
+        <div className="flex items-center gap-2 border-t border-[var(--line-soft)] px-6 py-4">
           <button
             type="button"
             onClick={handleApprove}
             disabled={!can('approve') || editing}
             title={!can('approve') ? t('common.noPermission') : undefined}
             className={cn(
-              'flex-1 rounded-full px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
-              high ? 'bg-green-700 hover:bg-green-800' : 'bg-amber-600 hover:bg-amber-700',
+              'inline-flex h-10 flex-1 items-center justify-center rounded-full bg-[#14161a] px-5 text-[13px] font-semibold text-white transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14161a]/25',
               (!can('approve') || editing) && 'cursor-not-allowed opacity-40',
             )}
           >
@@ -199,7 +212,7 @@ export default function CaseDrawer({ caseId, onClose }: CaseDrawerProps) {
             disabled={!can('prepare') || editing}
             title={!can('prepare') ? t('common.noPermission') : undefined}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
+              'inline-flex h-10 items-center gap-2 rounded-full border border-[var(--line)] px-4 text-[12.5px] font-semibold text-[#5a6067] transition-colors hover:border-[var(--ink)] hover:text-[#14161a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14161a]/25',
               (!can('prepare') || editing) && 'cursor-not-allowed opacity-40',
             )}
           >
@@ -212,7 +225,7 @@ export default function CaseDrawer({ caseId, onClose }: CaseDrawerProps) {
             disabled={!can('approve') || editing}
             title={!can('approve') ? t('common.noPermission') : undefined}
             className={cn(
-              'rounded-full border border-red-200 px-4 py-2 text-sm text-red-700 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300',
+              'inline-flex h-10 items-center rounded-full border border-[rgba(179,56,46,0.25)] px-4 text-[12.5px] font-semibold text-[#b3382e] transition-colors hover:bg-[rgba(179,56,46,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b3382e]/25',
               (!can('approve') || editing) && 'cursor-not-allowed opacity-40',
             )}
           >

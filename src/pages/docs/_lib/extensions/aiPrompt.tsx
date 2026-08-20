@@ -33,16 +33,16 @@ function AiPromptView({ editor, updateAttributes, node }: NodeViewProps) {
 
   return (
     <NodeViewWrapper className="my-3">
-      <div className="rounded-lg border border-amber-200 bg-amber-50/60 p-4 dark:border-amber-900 dark:bg-amber-950/30" contentEditable={false}>
+      <div className="rounded-[12px] border border-[var(--line-soft)] bg-[var(--sand)] p-4" contentEditable={false}>
         <div className="mb-2 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+          <div className="plat-eyebrow flex items-center gap-1.5 text-[var(--text-3)]">
             <Wand2 className="h-3.5 w-3.5" /> AI prompt
           </div>
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => setEditing((e) => !e)}
-              className="flex items-center gap-1 rounded px-2 py-1 text-xs hover:bg-amber-100 dark:hover:bg-amber-900"
+              className="flex items-center gap-1 rounded-[8px] px-2 py-1 text-xs font-medium text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             >
               <Pencil className="h-3 w-3" />
               {editing ? 'Done' : 'Edit'}
@@ -51,7 +51,7 @@ function AiPromptView({ editor, updateAttributes, node }: NodeViewProps) {
               type="button"
               onClick={run}
               disabled={loading}
-              className="flex items-center gap-1 rounded bg-amber-600 px-2 py-1 text-xs font-medium text-white hover:bg-amber-700 disabled:opacity-50"
+              className="flex items-center gap-1 rounded-full bg-[var(--ink)] px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-85 disabled:opacity-35"
             >
               <Play className="h-3 w-3" />
               {loading ? 'Running…' : 'Run'}
@@ -62,14 +62,14 @@ function AiPromptView({ editor, updateAttributes, node }: NodeViewProps) {
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="w-full rounded-md border border-amber-200 bg-white p-2 text-sm focus:border-amber-400 focus:outline-none dark:border-amber-900 dark:bg-zinc-900"
+            className="w-full rounded-[10px] border border-[var(--line-soft)] bg-white p-2 text-sm text-[var(--ink)] focus:border-[var(--ink)] focus:outline-none"
             rows={2}
           />
         ) : (
-          <div className="mb-2 text-xs italic text-amber-800 dark:text-amber-300">"{prompt}"</div>
+          <div className="mb-2 text-xs italic text-[var(--text-3)]">"{prompt}"</div>
         )}
         {output && (
-          <div className="mt-2 whitespace-pre-wrap rounded-md bg-white/60 p-2 text-sm leading-relaxed dark:bg-zinc-900/60">
+          <div className="mt-2 whitespace-pre-wrap rounded-[10px] border border-[var(--line-soft)] bg-white p-2 text-sm leading-relaxed text-[var(--ink)]">
             {output}
           </div>
         )}

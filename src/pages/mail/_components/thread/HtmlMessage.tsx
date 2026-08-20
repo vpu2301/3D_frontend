@@ -44,21 +44,21 @@ export default function HtmlMessage({ html, plainText, showImages, onShowImages 
   }, [sanitized, plainText]);
 
   if (!html && !plainText) {
-    return <p className="px-1 py-2 text-sm text-gray-400 italic">No content.</p>;
+    return <p className="px-1 py-2 text-sm italic text-[var(--text-5)]">No content.</p>;
   }
 
   return (
     <div className="overflow-hidden">
       {hasBlockedImages && (
-        <div className="mb-2 flex items-center justify-between gap-2 rounded-md border border-gray-200 bg-[#f8fbff] px-3 py-1.5 text-xs text-gray-700">
+        <div className="mb-2 flex items-center justify-between gap-2 rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] px-3 py-1.5 text-xs text-[var(--text-2)]">
           <span className="flex items-center gap-1.5">
-            <ImageOff className="h-3.5 w-3.5 text-gray-500" />
+            <ImageOff className="h-3.5 w-3.5 text-[var(--text-4)]" />
             External images blocked for your privacy.
           </span>
           <button
             type="button"
             onClick={onShowImages}
-            className="rounded-full border border-[#8fc4e4] bg-[#dde9f4] px-2 py-0.5 text-[11px] font-medium text-[#1a73e8] hover:bg-[#bdd8ec]"
+            className="rounded-full bg-[var(--ink)] px-2.5 py-0.5 text-[11px] font-semibold text-white transition-opacity hover:opacity-[0.86]"
           >
             Show images
           </button>

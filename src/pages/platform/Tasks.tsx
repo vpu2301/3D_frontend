@@ -57,23 +57,23 @@ const Tasks = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-white">
+    <div className="min-h-screen pt-20 bg-[color:var(--paper)]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+            <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight">
               Task Management
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed">
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto font-light leading-relaxed">
               Orchestrate work intelligently with AI-powered task management that prioritizes, 
               assigns, and tracks progress automatically. Never miss a deadline or drop a task again.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+              <Button className="bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/start-free-trial">Organize Your Tasks</Link>
               </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
+              <Button variant="outline" className="border-[color:var(--line)] text-[color:var(--ink)] hover:bg-[color:var(--sand)] px-8 py-3 rounded-full" asChild>
                 <Link to="/watch-demo">See Demo</Link>
               </Button>
             </div>
@@ -82,11 +82,11 @@ const Tasks = () => {
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Intelligent Task Features</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Intelligent Task Features</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto">
               Beyond traditional task management - powered by AI for maximum productivity
             </p>
           </div>
@@ -95,11 +95,11 @@ const Tasks = () => {
             {features.map((feature, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-[#222222] w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-[28px] bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--text-2)] w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{feature.title}</h3>
+                  <p className="text-[color:var(--text-2)] leading-relaxed">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -108,25 +108,25 @@ const Tasks = () => {
       </section>
 
       {/* Workflow Types */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Workflow Templates</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Workflow Templates</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto">
               Pre-built workflows for common business processes, ready to customize
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {workflowTypes.map((workflow, index) => (
-              <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
-                <h3 className="text-2xl font-medium text-gray-900 mb-4">{workflow.name}</h3>
-                <p className="text-gray-600 mb-6">{workflow.description}</p>
+              <div key={index} className="bg-[color:var(--paper)] p-8 rounded-[28px] shadow-lg">
+                <h3 className="text-2xl font-medium text-[color:var(--ink)] mb-4">{workflow.name}</h3>
+                <p className="text-[color:var(--text-2)] mb-6">{workflow.description}</p>
                 <div className="space-y-2">
                   {workflow.features.map((feature, idx) => (
                     <div key={idx} className="flex items-center">
-                      <div className="w-2 h-2 bg-indigo-500 rounded-full mr-3"></div>
-                      <span className="text-gray-700">{feature}</span>
+                      <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mr-3"></div>
+                      <span className="text-[color:var(--ink)]">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -138,53 +138,53 @@ const Tasks = () => {
       </section>
 
       {/* Productivity Stats */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Productivity Impact</h2>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Productivity Impact</h2>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-light text-indigo-600 mb-2">40%</div>
-              <div className="text-gray-600">Faster task completion</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">40%</div>
+              <div className="text-[color:var(--text-2)]">Faster task completion</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-purple-600 mb-2">85%</div>
-              <div className="text-gray-600">Reduction in missed deadlines</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">85%</div>
+              <div className="text-[color:var(--text-2)]">Reduction in missed deadlines</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-blue-600 mb-2">60%</div>
-              <div className="text-gray-600">Better resource utilization</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">60%</div>
+              <div className="text-[color:var(--text-2)]">Better resource utilization</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-green-600 mb-2">3x</div>
-              <div className="text-gray-600">Improved team coordination</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">3x</div>
+              <div className="text-[color:var(--text-2)]">Improved team coordination</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Advanced Features */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8">
+          <div className="bg-[color:var(--paper)] rounded-[28px] p-12 text-[color:var(--ink)] border border-[color:var(--line)]">
             <h3 className="text-3xl font-light mb-8 text-center">Advanced Capabilities</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
-                <BarChart3 className="h-12 w-12 text-indigo-400 mx-auto mb-4" />
+                <BarChart3 className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Analytics Dashboard</h4>
-                <p className="text-black/60">Real-time insights into team productivity and bottlenecks</p>
+                <p className="text-[color:var(--text-2)]">Real-time insights into team productivity and bottlenecks</p>
               </div>
               <div className="text-center">
-                <Zap className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
+                <Zap className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Automation Rules</h4>
-                <p className="text-black/60">Custom automation triggers for recurring workflows</p>
+                <p className="text-[color:var(--text-2)]">Custom automation triggers for recurring workflows</p>
               </div>
               <div className="text-center">
-                <Settings className="h-12 w-12 text-green-400 mx-auto mb-4" />
+                <Settings className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Custom Workflows</h4>
-                <p className="text-black/60">Build complex workflows with conditional logic</p>
+                <p className="text-[color:var(--text-2)]">Build complex workflows with conditional logic</p>
               </div>
             </div>
           </div>
@@ -192,13 +192,13 @@ const Tasks = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
+      <section className="py-20 bg-[color:var(--sand)] text-[color:var(--ink)] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Master Your Tasks</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Transform chaos into clarity with intelligent task management.
           </p>
-          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Start Organizing
               <ArrowRight className="ml-2 h-4 w-4" />

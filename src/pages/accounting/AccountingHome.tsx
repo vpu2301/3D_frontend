@@ -6,6 +6,8 @@ import CloseRadarView from '@/pages/accounting/_components/radar/CloseRadarView'
 import ReviewQueueView from '@/pages/accounting/_components/queue/ReviewQueueView';
 import RequestsView from '@/pages/accounting/_components/requests/RequestsView';
 import AuditLogView from '@/pages/accounting/_components/audit/AuditLogView';
+import WorkflowsView from '@/pages/accounting/_components/workflows/WorkflowsView';
+import WorkflowBuilderView from '@/pages/accounting/_components/workflows/WorkflowBuilderView';
 
 export default function AccountingHome() {
   const location = useLocation();
@@ -15,6 +17,8 @@ export default function AccountingHome() {
     if (path === '/accounting/queue') return <ReviewQueueView />;
     if (path === '/accounting/requests') return <RequestsView />;
     if (path === '/accounting/audit') return <AuditLogView />;
+    if (path === '/accounting/workflows') return <WorkflowsView />;
+    if (path.startsWith('/accounting/workflows/')) return <WorkflowBuilderView />;
     // Default: Close Radar (handles /accounting and /accounting/radar)
     return <CloseRadarView />;
   };

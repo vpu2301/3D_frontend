@@ -208,14 +208,20 @@ function MetricTile({
   color: string;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border bg-white p-4 shadow-sm">
-      <div className={`rounded-lg p-2 ${color}`}>
-        <Icon className="h-4 w-4 text-white" />
+    <div
+      className="flex items-start gap-3 rounded-[14px] p-4"
+      style={{ background: 'var(--paper)', border: '1px solid var(--line-soft)' }}
+    >
+      <div
+        className="flex items-center justify-center p-2"
+        style={{ borderRadius: '10px', background: 'var(--sand)', color: 'var(--ink)' }}
+      >
+        <Icon className="h-4 w-4" strokeWidth={1.75} />
       </div>
       <div className="min-w-0">
-        <p className="text-xs text-gray-500">{label}</p>
-        <p className="text-xl font-semibold text-gray-900 leading-tight">{value}</p>
-        {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+        <p className="text-xs" style={{ color: 'var(--text-4)' }}>{label}</p>
+        <p className="plat-num !text-xl leading-tight">{value}</p>
+        {sub && <p className="text-xs mt-0.5" style={{ color: 'var(--text-5)' }}>{sub}</p>}
       </div>
     </div>
   );
@@ -280,24 +286,25 @@ const ChannelsPage = () => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="plat">
         <div className="flex flex-col h-[calc(100vh-64px)]">
           {/* ── Page header ── */}
-          <div className="border-b bg-white px-6 py-4">
+          <div className="border-b px-6 py-4" style={{ borderColor: 'var(--line-soft)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Channels</h1>
-                <p className="text-sm text-gray-500 mt-0.5">
+                <p className="plat-crumb">3days.channels</p>
+                <h1 className="mt-1 text-xl font-semibold">Channels</h1>
+                <p className="text-sm mt-0.5" style={{ color: 'var(--text-4)' }}>
                   Manage messaging channels and assign AI workers
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="outline" className="text-xs font-normal gap-1.5">
-                  <Wifi className="h-3 w-3 text-green-500" />
+                <Badge variant="outline" className="plat-pill plat-pill-ok border-0">
+                  <Wifi className="h-3 w-3" />
                   {connectedCount} connected
                 </Badge>
-                <Badge variant="outline" className="text-xs font-normal gap-1.5">
-                  <WifiOff className="h-3 w-3 text-gray-400" />
+                <Badge variant="outline" className="plat-pill plat-pill-mute border-0">
+                  <WifiOff className="h-3 w-3" />
                   {channels.length - connectedCount} disconnected
                 </Badge>
               </div>
@@ -308,7 +315,8 @@ const ChannelsPage = () => {
           <div className="flex flex-1 overflow-hidden">
 
             {/* Left: channel list */}
-            <div className="w-72 flex-shrink-0 border-r bg-gray-50 overflow-y-auto p-4 space-y-2">
+            <div className="w-72 flex-shrink-0 border-r overflow-y-auto p-4" style={{ borderColor: 'var(--line-soft)' }}>
+              <div className="plat-list">
               {channels.map((ch) => {
                 const Icon = ch.icon;
                 const isActive = ch.id === selectedId;
@@ -316,30 +324,30 @@ const ChannelsPage = () => {
                   <button
                     key={ch.id}
                     onClick={() => setSelectedId(ch.id)}
-                    className={`w-full text-left rounded-xl border p-3.5 transition-all ${
-                      isActive
-                        ? 'bg-white border-gray-300 shadow-sm'
-                        : 'bg-white border-transparent hover:border-gray-200 hover:shadow-sm'
-                    }`}
+                    className="w-full text-left border-b last:border-b-0 p-3.5 transition-colors"
+                    style={{
+                      borderColor: 'var(--line-soft)',
+                      background: isActive ? 'rgba(20, 22, 26, 0.06)' : 'transparent',
+                    }}
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-9 h-9 rounded-lg bg-gradient-to-br ${ch.bgGradient} flex items-center justify-center flex-shrink-0`}
+                        className="w-9 h-9 flex items-center justify-center flex-shrink-0"
+                        style={{ borderRadius: '10px', background: 'var(--sand)', color: 'var(--ink)' }}
                       >
-                        <Icon className="h-4 w-4 text-white" />
+                        <Icon className="h-4 w-4" strokeWidth={1.75} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1">
-                          <span className="text-sm font-medium text-gray-900 truncate">
+                          <span className="text-sm font-semibold truncate" style={{ color: 'var(--ink)' }}>
                             {ch.name}
                           </span>
                           <span
-                            className={`h-2 w-2 rounded-full flex-shrink-0 ${
-                              ch.connected ? 'bg-green-400' : 'bg-gray-300'
-                            }`}
+                            className="h-2 w-2 rounded-full flex-shrink-0"
+                            style={{ background: ch.connected ? 'var(--ok-fg)' : 'var(--sand-deep)' }}
                           />
                         </div>
-                        <p className="text-xs text-gray-400 mt-0.5">
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--text-4)' }}>
                           {ch.connected
                             ? `${ch.assignedWorkers.length} worker${ch.assignedWorkers.length !== 1 ? 's' : ''} assigned`
                             : 'Not connected'}
@@ -349,36 +357,41 @@ const ChannelsPage = () => {
                   </button>
                 );
               })}
+              </div>
             </div>
 
             {/* Right: channel detail */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {/* Channel header card */}
-              <Card className="border-0 shadow-sm overflow-hidden">
-                <div
-                  className={`bg-gradient-to-r ${selected.bgGradient} p-5`}
-                >
+              <Card
+                className="rounded-[14px] shadow-none overflow-hidden"
+                style={{ background: 'var(--paper)', borderColor: 'var(--line-soft)' }}
+              >
+                <div className="p-5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <selected.icon className="h-6 w-6 text-white" />
+                      <div
+                        className="w-12 h-12 flex items-center justify-center"
+                        style={{ borderRadius: '12px', background: 'var(--sand)', color: 'var(--ink)' }}
+                      >
+                        <selected.icon className="h-6 w-6" strokeWidth={1.75} />
                       </div>
                       <div>
-                        <h2 className="text-lg font-semibold text-white">
+                        <h2 className="text-lg font-semibold">
                           {selected.name}
                         </h2>
-                        <p className="text-sm text-white/80">{selected.description}</p>
+                        <p className="text-sm" style={{ color: 'var(--text-4)' }}>{selected.description}</p>
                       </div>
                     </div>
                     <Button
                       onClick={() => toggleConnect(selected.id)}
                       variant="secondary"
                       size="sm"
-                      className={`gap-1.5 font-medium ${
+                      className={
                         selected.connected
-                          ? 'bg-white/20 text-white border-white/30 hover:bg-white/30'
-                          : 'bg-white text-gray-900 hover:bg-white/90'
-                      }`}
+                          ? 'plat-btn-ghost !rounded-full !bg-transparent !text-[color:var(--text-2)] !h-9'
+                          : 'plat-btn !rounded-full !bg-[color:var(--ink)] !text-white !h-9'
+                      }
                     >
                       {selected.connected ? (
                         <>
@@ -400,7 +413,7 @@ const ChannelsPage = () => {
                 <>
                   {/* ── Metrics grid ── */}
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                    <h3 className="plat-eyebrow mb-3">
                       Business Metrics
                     </h3>
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -437,37 +450,43 @@ const ChannelsPage = () => {
 
                   {/* ── Rate bars ── */}
                   <div className="grid grid-cols-2 gap-4">
-                    <Card className="border shadow-sm">
+                    <Card
+                      className="rounded-[14px] shadow-none"
+                      style={{ background: 'var(--paper)', borderColor: 'var(--line-soft)' }}
+                    >
                       <CardHeader className="pb-2 pt-4 px-4">
-                        <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                          <TrendingUp className="h-4 w-4 text-green-500" />
+                        <CardTitle className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-2)' }}>
+                          <TrendingUp className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
                           Resolution Rate
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="px-4 pb-4">
                         <div className="flex items-end gap-2 mb-2">
-                          <span className="text-3xl font-bold text-gray-900">
+                          <span className="plat-num">
                             {selected.metrics.resolutionRate}%
                           </span>
-                          <span className="text-xs text-gray-400 mb-1">of conversations</span>
+                          <span className="text-xs mb-1" style={{ color: 'var(--text-5)' }}>of conversations</span>
                         </div>
                         <Progress value={selected.metrics.resolutionRate} className="h-2" />
                       </CardContent>
                     </Card>
 
-                    <Card className="border shadow-sm">
+                    <Card
+                      className="rounded-[14px] shadow-none"
+                      style={{ background: 'var(--paper)', borderColor: 'var(--line-soft)' }}
+                    >
                       <CardHeader className="pb-2 pt-4 px-4">
-                        <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                          <BarChart3 className="h-4 w-4 text-blue-500" />
+                        <CardTitle className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-2)' }}>
+                          <BarChart3 className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
                           Customer Satisfaction
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="px-4 pb-4">
                         <div className="flex items-end gap-2 mb-2">
-                          <span className="text-3xl font-bold text-gray-900">
+                          <span className="plat-num">
                             {selected.metrics.satisfactionScore}%
                           </span>
-                          <span className="text-xs text-gray-400 mb-1">CSAT score</span>
+                          <span className="text-xs mb-1" style={{ color: 'var(--text-5)' }}>CSAT score</span>
                         </div>
                         <Progress value={selected.metrics.satisfactionScore} className="h-2" />
                       </CardContent>
@@ -477,17 +496,17 @@ const ChannelsPage = () => {
                   {/* ── Assigned AI workers ── */}
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                        <Bot className="h-4 w-4 text-gray-500" />
+                      <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-2)' }}>
+                        <Bot className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
                         Assigned AI Workers
-                        <Badge variant="secondary" className="text-xs font-normal">
+                        <Badge variant="secondary" className="plat-pill plat-pill-mute border-0">
                           {assignedWorkers.length}
                         </Badge>
                       </h3>
                       {availableWorkers.length > 0 && (
                         <Button
                           size="sm"
-                          className="h-7 gap-1.5 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-xs"
+                          className="plat-btn !h-8 !px-4 !rounded-full !bg-[color:var(--ink)] !text-white !text-xs"
                           onClick={() => setShowAddWorker(true)}
                         >
                           <Plus className="h-3.5 w-3.5" />
@@ -497,13 +516,13 @@ const ChannelsPage = () => {
                     </div>
 
                     {assignedWorkers.length === 0 ? (
-                      <div className="rounded-xl border border-dashed p-8 text-center">
-                        <Bot className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-                        <p className="text-sm text-gray-400">No AI workers assigned yet</p>
+                      <div className="rounded-[14px] border border-dashed p-8 text-center" style={{ borderColor: 'var(--line)' }}>
+                        <Bot className="h-8 w-8 mx-auto mb-2" style={{ color: 'var(--sand-deep)' }} />
+                        <p className="text-sm" style={{ color: 'var(--text-4)' }}>No AI workers assigned yet</p>
                         <Button
                           size="sm"
                           variant="outline"
-                          className="mt-3 gap-1.5 text-xs"
+                          className="plat-btn-ghost !rounded-full !bg-transparent mt-3 !text-xs"
                           onClick={() => setShowAddWorker(true)}
                         >
                           <Plus className="h-3.5 w-3.5" />
@@ -511,36 +530,39 @@ const ChannelsPage = () => {
                         </Button>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div className="plat-list">
                         {assignedWorkers.map((worker) => (
                           <div
                             key={worker.id}
-                            className="flex items-center gap-3 rounded-xl border bg-white p-3.5 shadow-sm group"
+                            className="flex items-center gap-3 border-b last:border-b-0 px-4 py-3 group"
+                            style={{ borderColor: 'var(--line-soft)' }}
                           >
                             <Avatar className="h-9 w-9">
                               <AvatarFallback
-                                className={`bg-gradient-to-br ${worker.bgColor} ${worker.iconColor} text-xs font-semibold`}
+                                className="text-xs font-semibold"
+                                style={{ background: 'var(--sand)', color: 'var(--ink)' }}
                               >
                                 {worker.initials}
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-900 truncate">
+                              <p className="text-sm font-semibold truncate" style={{ color: 'var(--ink)' }}>
                                 {worker.name}
                               </p>
-                              <p className="text-xs text-gray-400">{worker.department}</p>
+                              <p className="text-xs" style={{ color: 'var(--text-4)' }}>{worker.department}</p>
                             </div>
                             <div className="flex items-center gap-2">
                               <span
-                                className={`h-2 w-2 rounded-full ${
-                                  worker.status === 'Active'
-                                    ? 'bg-green-400'
-                                    : 'bg-yellow-400'
-                                }`}
+                                className="h-2 w-2 rounded-full"
+                                style={{
+                                  background:
+                                    worker.status === 'Active' ? 'var(--ok-fg)' : 'var(--warn-fg)',
+                                }}
                               />
                               <button
                                 onClick={() => removeWorker(selected.id, worker.id)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                style={{ color: 'var(--text-5)' }}
                               >
                                 <X className="h-3.5 w-3.5" />
                               </button>
@@ -555,20 +577,21 @@ const ChannelsPage = () => {
                 /* ── Disconnected state ── */
                 <div className="flex flex-col items-center justify-center py-20 text-center">
                   <div
-                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${selected.bgGradient} flex items-center justify-center mb-4 opacity-40`}
+                    className="w-16 h-16 rounded-[14px] flex items-center justify-center mb-4"
+                    style={{ background: 'var(--sand)', color: 'var(--text-4)' }}
                   >
-                    <selected.icon className="h-8 w-8 text-white" />
+                    <selected.icon className="h-8 w-8" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-1">
+                  <h3 className="text-lg font-semibold mb-1">
                     {selected.name} is not connected
                   </h3>
-                  <p className="text-sm text-gray-400 max-w-xs mb-6">
+                  <p className="text-sm max-w-xs mb-6" style={{ color: 'var(--text-4)' }}>
                     Connect this channel to start assigning AI workers and tracking
                     business metrics in real time.
                   </p>
                   <Button
                     onClick={() => toggleConnect(selected.id)}
-                    className="gap-1.5 bg-gradient-to-r from-[#5c939f] to-[#4e8491] hover:from-blue-600 hover:to-purple-600 text-white"
+                    className="plat-btn !rounded-full !bg-[color:var(--ink)] !text-white !h-10"
                   >
                     <Wifi className="h-4 w-4" />
                     Connect {selected.name}
@@ -581,7 +604,7 @@ const ChannelsPage = () => {
 
         {/* ── Add Worker dialog ── */}
         <Dialog open={showAddWorker} onOpenChange={setShowAddWorker}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="plat !bg-none !bg-white sm:max-w-md rounded-[14px]">
             <DialogHeader>
               <DialogTitle>Add AI Worker to {selected.name}</DialogTitle>
               <DialogDescription>
@@ -590,7 +613,7 @@ const ChannelsPage = () => {
             </DialogHeader>
             <div className="space-y-2 pt-2">
               {availableWorkers.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-4">
+                <p className="text-sm text-center py-4" style={{ color: 'var(--text-4)' }}>
                   All workers are already assigned to this channel.
                 </p>
               ) : (
@@ -598,29 +621,29 @@ const ChannelsPage = () => {
                   <button
                     key={worker.id}
                     onClick={() => addWorker(worker.id)}
-                    className="w-full flex items-center gap-3 rounded-xl border p-3.5 hover:bg-gray-50 transition-colors text-left"
+                    className="w-full flex items-center gap-3 rounded-[12px] border p-3.5 transition-colors text-left hover:bg-[rgba(20,22,26,0.04)]"
+                    style={{ borderColor: 'var(--line-soft)' }}
                   >
                     <Avatar className="h-10 w-10">
                       <AvatarFallback
-                        className={`bg-gradient-to-br ${worker.bgColor} ${worker.iconColor} text-sm font-semibold`}
+                        className="text-sm font-semibold"
+                        style={{ background: 'var(--sand)', color: 'var(--ink)' }}
                       >
                         {worker.initials}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">{worker.name}</p>
-                      <p className="text-xs text-gray-400">{worker.department}</p>
+                      <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>{worker.name}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-4)' }}>{worker.department}</p>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <span
-                        className={`h-2 w-2 rounded-full ${
-                          worker.status === 'Active' ? 'bg-green-400' : 'bg-yellow-400'
-                        }`}
+                        className="h-2 w-2 rounded-full"
+                        style={{ background: worker.status === 'Active' ? 'var(--ok-fg)' : 'var(--warn-fg)' }}
                       />
                       <span
-                        className={`text-xs ${
-                          worker.status === 'Active' ? 'text-green-600' : 'text-yellow-600'
-                        }`}
+                        className="text-xs"
+                        style={{ color: worker.status === 'Active' ? 'var(--ok-fg)' : 'var(--warn-fg)' }}
                       >
                         {worker.status}
                       </span>

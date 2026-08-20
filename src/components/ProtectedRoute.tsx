@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import PlatformAppsBar from '@/components/dashboard/PlatformAppsBar';
+import '@/styles/platform.css';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

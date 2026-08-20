@@ -1,13 +1,10 @@
 import {
   Calendar,
   StickyNote,
-  FileText,
-  FolderOpen,
   ListTodo,
   Phone,
   Contact,
   Mail,
-  Calculator,
   Plus,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -46,24 +43,6 @@ const apps: PlatformApp[] = [
     href: '/notes',
   },
   {
-    key: 'docs',
-    label: 'Docs',
-    icon: FileText,
-    iconColor: 'text-sky-600',
-    bgColor: 'bg-sky-50 hover:bg-sky-100',
-    ringColor: 'hover:ring-sky-200',
-    href: '/docs',
-  },
-  {
-    key: 'drive',
-    label: 'Drive',
-    icon: FolderOpen,
-    iconColor: 'text-emerald-600',
-    bgColor: 'bg-emerald-50 hover:bg-emerald-100',
-    ringColor: 'hover:ring-emerald-200',
-    href: '/drive',
-  },
-  {
     key: 'todos',
     label: 'To-Do',
     icon: ListTodo,
@@ -99,15 +78,6 @@ const apps: PlatformApp[] = [
     ringColor: 'hover:ring-green-200',
     href: '/telephony',
   },
-  {
-    key: 'accounting',
-    label: 'Pincer Close',
-    icon: Calculator,
-    iconColor: 'text-amber-600',
-    bgColor: 'bg-amber-50 hover:bg-amber-100',
-    ringColor: 'hover:ring-amber-200',
-    href: '/accounting',
-  },
 ];
 
 export const PLATFORM_APPS_BAR_WIDTH = 56;
@@ -119,6 +89,7 @@ export function PlatformAppsBar() {
     <TooltipProvider delayDuration={150} skipDelayDuration={100}>
       <aside
         aria-label="3Days apps"
+        data-appsbar
         className="fixed right-0 top-0 z-40 hidden h-screen w-14 flex-col items-center justify-between border-l border-gray-200/70 bg-white/90 py-3 backdrop-blur-sm md:flex"
       >
         <div className="flex w-full flex-col items-center gap-3">
@@ -135,26 +106,24 @@ export function PlatformAppsBar() {
                     disabled={app.comingSoon}
                     onClick={() => app.href && navigate(app.href)}
                     className={cn(
-                      'group relative flex h-10 w-10 items-center justify-center rounded-xl ring-1 ring-transparent transition-all duration-150',
+                      'group relative flex h-10 w-10 items-center justify-center rounded-[10px] border transition-colors duration-150',
                       app.bgColor,
-                      app.ringColor,
                       'active:scale-95',
-                      isActive && 'shadow-sm',
+                      /* One neutral frame for every tile — the current app is
+                         marked by the ink bar at its left edge, not a colour. */
+                      'border-[color:var(--line)] hover:border-[color:var(--ink)]',
                       app.comingSoon && 'cursor-not-allowed opacity-80'
                     )}
                   >
                     {isActive && (
                       <span
                         aria-hidden
-                        className={cn(
-                          'absolute -left-1.5 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-current',
-                          app.iconColor
-                        )}
+                        className="absolute -left-1.5 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-[color:var(--ink)]"
                       />
                     )}
                     <Icon className={cn('h-[18px] w-[18px]', app.iconColor)} />
                     {app.comingSoon && (
-                      <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 ring-2 ring-white" />
+                      <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[color:var(--ink)] ring-2 ring-white" />
                     )}
                   </button>
                 </TooltipTrigger>
@@ -176,7 +145,7 @@ export function PlatformAppsBar() {
             <button
               type="button"
               aria-label="Add app"
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-dashed border-gray-300 text-gray-400 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600"
+              className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-[color:var(--line)] text-[color:var(--text-4)] transition-colors hover:border-[var(--line)] hover:text-[color:var(--ink)]"
             >
               <Plus className="h-[18px] w-[18px]" />
             </button>

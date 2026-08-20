@@ -55,15 +55,15 @@ export default function ShortcutsModal() {
       onClick={() => setShortcutsOpen(false)}
     >
       <div
-        className="max-h-[80vh] w-full max-w-xl overflow-y-auto rounded-xl border border-zinc-200 bg-white p-5 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+        className="max-h-[80vh] w-full max-w-xl overflow-y-auto rounded-[14px] border border-[var(--line-soft)] bg-white p-5 shadow-[0_16px_48px_rgba(20,22,26,0.16)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="font-semibold">Keyboard shortcuts</h3>
+          <h3 className="font-semibold text-[var(--ink)]">Keyboard shortcuts</h3>
           <button
             type="button"
             onClick={() => setShortcutsOpen(false)}
-            className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           >
             <X className="h-4 w-4" />
           </button>
@@ -71,14 +71,14 @@ export default function ShortcutsModal() {
         <div className="space-y-5">
           {SHORTCUTS.map((g) => (
             <div key={g.group}>
-              <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              <div className="plat-eyebrow mb-2">
                 {g.group}
               </div>
               <div className="space-y-1">
                 {g.items.map((s) => (
                   <div key={s.keys} className="flex items-center justify-between text-sm">
-                    <span className="text-zinc-700 dark:text-zinc-300">{s.desc}</span>
-                    <kbd className="rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 font-mono text-[11px] text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                    <span className="text-[var(--text-2)]">{s.desc}</span>
+                    <kbd className="rounded-[8px] border border-[var(--line-soft)] bg-[var(--sand)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--text-2)]">
                       {s.keys}
                     </kbd>
                   </div>

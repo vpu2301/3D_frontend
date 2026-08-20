@@ -3,13 +3,13 @@ import { wordDiff, type DiffSegment } from '@/pages/docs/_lib/diff';
 export default function DiffView({ before, after }: { before: string; after: string }) {
   const segments: DiffSegment[] = wordDiff(before, after);
   return (
-    <div className="whitespace-pre-wrap rounded-md border border-zinc-200 bg-white p-3 font-[ui-serif,Georgia,serif] text-[13px] leading-relaxed dark:border-zinc-700 dark:bg-zinc-950">
+    <div className="whitespace-pre-wrap rounded-[12px] border border-[var(--line-soft)] bg-white p-3 font-[ui-serif,Georgia,serif] text-[13px] leading-relaxed text-[var(--ink)]">
       {segments.map((s, i) => {
         if (s.type === 'added') {
           return (
             <span
               key={i}
-              className="rounded-sm bg-green-100 px-0.5 text-green-900 dark:bg-green-900/40 dark:text-green-100"
+              className="rounded-sm bg-[var(--ok-bg)] px-0.5 text-[var(--ok-fg)]"
             >
               {s.value}
             </span>
@@ -19,7 +19,7 @@ export default function DiffView({ before, after }: { before: string; after: str
           return (
             <span
               key={i}
-              className="rounded-sm bg-red-100 px-0.5 text-red-900 line-through dark:bg-red-900/40 dark:text-red-100"
+              className="rounded-sm bg-[rgba(179,56,46,0.12)] px-0.5 text-[var(--bad-fg)] line-through"
             >
               {s.value}
             </span>

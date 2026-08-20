@@ -28,37 +28,43 @@ export default function TodoTrash() {
       <div className="flex flex-1 overflow-hidden">
         <TodoMiniRail />
         <main className="flex flex-1 flex-col overflow-hidden">
-          <div className="border-b border-gray-200 px-6 py-4">
-            <Link to="/todo" className="inline-flex items-center gap-1 text-xs text-gray-500 hover:underline">
+          <div className="border-b border-[var(--line-soft)] px-6 pt-5 pb-4">
+            <Link
+              to="/todo"
+              className="inline-flex items-center gap-1 text-xs text-[var(--text-4)] transition-colors hover:text-[var(--ink)]"
+            >
               <ArrowLeft className="h-3 w-3" /> Back to Todo
             </Link>
-            <h1 className="mt-1 text-2xl font-light text-gray-900">Trash</h1>
-            <p className="text-xs text-gray-500">Soft-deleted tasks. Restore or delete forever.</p>
+            <p className="plat-crumb mt-2">3days.todo</p>
+            <h1 className="mt-1.5 text-[22px]">Trash</h1>
+            <p className="mt-0.5 text-xs text-[var(--text-5)]">
+              Soft-deleted tasks. Restore or delete forever.
+            </p>
           </div>
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {trashed.length === 0 ? (
-              <div className="rounded-md border border-gray-200 bg-white py-16 text-center">
-                <Trash2 className="mx-auto mb-3 h-7 w-7 text-gray-300" />
-                <p className="text-sm text-gray-500">Trash is empty.</p>
+              <div className="plat-list py-16 text-center">
+                <Trash2 className="mx-auto mb-3 h-7 w-7" style={{ color: 'var(--text-5)' }} />
+                <p className="text-sm text-[var(--text-4)]">Trash is empty.</p>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-md border border-gray-200 bg-white">
+              <div className="plat-list">
                 {trashed.map((t) => (
                   <div
                     key={t.id}
-                    className="flex items-center justify-between gap-4 border-b border-gray-100 px-4 py-3 last:border-0"
+                    className="flex items-center justify-between gap-4 border-b border-[var(--line-soft)] px-4 py-3 transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm text-gray-900">{t.title}</div>
-                      <div className="text-[11px] text-gray-500">
+                      <div className="truncate text-sm text-[var(--ink)]">{t.title}</div>
+                      <div className="text-[11px] text-[var(--text-4)]">
                         Trashed {new Date(t.updatedAt).toLocaleDateString()}
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5">
                       <button
                         type="button"
                         onClick={() => restore(t.id)}
-                        className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1 text-xs text-gray-700 hover:bg-gray-50"
+                        className="plat-btn-ghost !h-7 !px-3 !text-xs"
                       >
                         <RotateCcw className="h-3.5 w-3.5" /> Restore
                       </button>
@@ -67,7 +73,8 @@ export default function TodoTrash() {
                         onClick={() => {
                           if (confirm(`Permanently delete "${t.title}"?`)) remove(t.id);
                         }}
-                        className="flex items-center gap-1 rounded-md px-2.5 py-1 text-xs text-red-600 hover:bg-red-50"
+                        className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs transition-colors hover:bg-[rgba(179,56,46,0.08)]"
+                        style={{ color: 'var(--bad-fg)' }}
                       >
                         <Trash2 className="h-3.5 w-3.5" /> Delete forever
                       </button>

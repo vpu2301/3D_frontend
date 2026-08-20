@@ -29,29 +29,30 @@ const Help = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col">
-            <main className="flex-1 p-6">
-              <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">Help & Support</h1>
-                <p className="text-gray-600">Get the help you need to make the most of 3days.ai</p>
+          <SidebarInset className="flex-1 flex flex-col bg-transparent">
+            <main className="flex-1 p-6 lg:p-8">
+              <div className="mb-8">
+                <p className="plat-crumb">3days.help</p>
+                <h1 className="mt-1 text-[26px]">Help &amp; Support</h1>
+                <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Get the help you need to make the most of 3days.ai</p>
               </div>
 
               <div className="max-w-4xl space-y-8">
                 {/* Search */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Search Help Center</CardTitle>
+                <Card className="rounded-[14px] border-[color:var(--line-soft)] bg-white shadow-none">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-semibold">Search Help Center</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-black/50" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" style={{ color: 'var(--text-5)' }} />
                       <Input
                         placeholder="Search for help articles, guides, and FAQ..."
-                        className="pl-10"
+                        className="pl-10 !rounded-[10px] border-[color:var(--line)] bg-white"
                       />
                     </div>
                   </CardContent>
@@ -59,48 +60,51 @@ const Help = () => {
 
                 {/* Help Topics */}
                 <div>
-                  <h2 className="text-xl font-semibold mb-4">Popular Help Topics</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {helpTopics.map((topic, index) => (
-                      <Card key={index} className="cursor-pointer hover:shadow-md transition-shadow">
-                        <CardContent className="p-6">
-                          <div className="flex items-start space-x-3">
-                            <topic.icon className="h-6 w-6 text-blue-600 mt-1" />
-                            <div>
-                              <h3 className="font-medium text-gray-900">{topic.title}</h3>
-                              <p className="text-sm text-gray-600 mt-1">{topic.description}</p>
-                            </div>
+                  <h2 className="plat-eyebrow mb-3">Popular Help Topics</h2>
+                  <div className="plat-panel !p-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                      {helpTopics.map((topic, index) => (
+                        <div
+                          key={index}
+                          className="plat-item cursor-pointer transition-colors hover:bg-[rgba(20,22,26,0.04)]"
+                        >
+                          <span className="plat-item-icon !h-10 !w-10 !rounded-[10px]">
+                            <topic.icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                          </span>
+                          <div className="min-w-0">
+                            <h3 className="plat-item-title text-[14px]">{topic.title}</h3>
+                            <p className="plat-item-sub mt-0.5">{topic.description}</p>
                           </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
                 {/* Contact Support */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Contact Support</CardTitle>
+                <Card className="rounded-[14px] border-[color:var(--line-soft)] bg-white shadow-none">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-semibold">Contact Support</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="text-center">
-                        <MessageCircle className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                        <h3 className="font-medium">Live Chat</h3>
-                        <p className="text-sm text-gray-600 mb-3">Chat with our support team</p>
-                        <Button variant="outline">Start Chat</Button>
+                        <MessageCircle className="h-8 w-8 mx-auto mb-2" strokeWidth={1.5} style={{ color: 'var(--text-4)' }} />
+                        <h3 className="text-sm font-semibold">Live Chat</h3>
+                        <p className="text-sm mb-3" style={{ color: 'var(--text-4)' }}>Chat with our support team</p>
+                        <Button variant="outline" className="plat-btn-ghost mx-auto !h-9 !rounded-full !border !border-[color:var(--line)] !bg-transparent !px-4 !text-xs">Start Chat</Button>
                       </div>
                       <div className="text-center">
-                        <Mail className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                        <h3 className="font-medium">Email Support</h3>
-                        <p className="text-sm text-gray-600 mb-3">Send us an email</p>
-                        <Button variant="outline">Send Email</Button>
+                        <Mail className="h-8 w-8 mx-auto mb-2" strokeWidth={1.5} style={{ color: 'var(--text-4)' }} />
+                        <h3 className="text-sm font-semibold">Email Support</h3>
+                        <p className="text-sm mb-3" style={{ color: 'var(--text-4)' }}>Send us an email</p>
+                        <Button variant="outline" className="plat-btn-ghost mx-auto !h-9 !rounded-full !border !border-[color:var(--line)] !bg-transparent !px-4 !text-xs">Send Email</Button>
                       </div>
                       <div className="text-center">
-                        <Phone className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                        <h3 className="font-medium">Phone Support</h3>
-                        <p className="text-sm text-gray-600 mb-3">Call our support line</p>
-                        <Button variant="outline">Call Now</Button>
+                        <Phone className="h-8 w-8 mx-auto mb-2" strokeWidth={1.5} style={{ color: 'var(--text-4)' }} />
+                        <h3 className="text-sm font-semibold">Phone Support</h3>
+                        <p className="text-sm mb-3" style={{ color: 'var(--text-4)' }}>Call our support line</p>
+                        <Button variant="outline" className="plat-btn-ghost mx-auto !h-9 !rounded-full !border !border-[color:var(--line)] !bg-transparent !px-4 !text-xs">Call Now</Button>
                       </div>
                     </div>
                   </CardContent>

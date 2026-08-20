@@ -1,0 +1,983 @@
+/* ==========================================================================
+   Platform design system — 3days.ai logged-in app
+   Same token family as the marketing site (src/styles/marketing.css), tuned
+   for an operating surface. Scoped to `.plat`, the wrapper the redesigned
+   platform pages put around their content, so unmigrated pages keep their
+   current look untouched.
+
+   Primitives transcribed from the reference screens:
+     .plat-crumb    mono lowercase breadcrumb        ("copilot.dashboard")
+     .plat-stat     big rounded stat card            (47 / Tasks Completed)
+     .plat-num      display numeral                  (Sora, tight tracking)
+     .plat-row      rounded activity row             (✓ Weekly report … 2 min ago)
+     .plat-bigstat  hairline-divided giant numbers   (40% | 60% | 500+)
+     .plat-item     squircle icon + title + subtitle (AI Copilot list rows)
+     .plat-eyebrow  spaced uppercase section label   (P R O D U C T)
+   ========================================================================== */
+
+/* Tokens live on :root as well as on the scopes below, because Radix renders
+   dialogs, dropdowns and popovers into document.body — outside `.platform` —
+   where scoped custom properties would not resolve. `.site3d` (marketing)
+   redefines the same names for its own subtree, so nothing leaks there. */
+:root {
+  --ink: #14161a;
+  --paper: #ffffff;
+  --sand: #f4f5f7;
+  --sand-deep: #e9ebef;
+  --blue: #3e52d9;
+  --blue-100: #e5eafb;
+  --blue-200: #bfcef8;
+  --text-1: #4a5057;
+  --text-2: #5a6067;
+  --text-3: #6b7178;
+  --text-4: #7a8087;
+  --text-5: #9aa0a6;
+  --ok-bg: #e6f5ea;
+  --ok-fg: #1e7a3c;
+  --warn-bg: #fdf0e4;
+  --warn-fg: #9a5312;
+  --bad-fg: #b3382e;
+  --line: rgba(20, 22, 26, 0.1);
+  --line-soft: rgba(20, 22, 26, 0.07);
+  --sans: 'Manrope', system-ui, sans-serif;
+  --display: 'Sora', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+}
+
+.platform,
+.plat {
+  --bg: #f1f2f4;
+  --paper: #ffffff;
+  --sand: #f4f5f7;
+  --sand-deep: #e9ebef;
+  --ink: #14161a;
+
+  --blue: #3e52d9;
+  --blue-100: #e5eafb;
+  --blue-200: #bfcef8;
+
+  --text-1: #4a5057;
+  --text-2: #5a6067;
+  --text-3: #6b7178;
+  --text-4: #7a8087;
+  --text-5: #9aa0a6;
+
+  --ok-bg: #e6f5ea;
+  --ok-fg: #1e7a3c;
+  --warn-bg: #fdf0e4;
+  --warn-fg: #9a5312;
+  --bad-fg: #b3382e;
+
+  --line: rgba(20, 22, 26, 0.1);
+  --line-soft: rgba(20, 22, 26, 0.07);
+
+  --sans: 'Manrope', system-ui, sans-serif;
+  --display: 'Sora', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+
+  /* One continuous ambient wash behind sidebar, work area AND the right apps
+     rail. `background-attachment: fixed` anchors every layer to the viewport,
+     so separate elements painting it line up pixel-for-pixel — no seam. */
+  background:
+    radial-gradient(900px 600px at 6% -4%, rgba(62, 82, 217, 0.035), transparent 60%),
+    radial-gradient(1100px 750px at 96% 8%, rgba(191, 206, 248, 0.14), transparent 55%),
+    linear-gradient(165deg, #fcfcfd 0%, #f7f8fa 52%, #f1f3f6 100%);
+  background-attachment: fixed, fixed, fixed;
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.platform h1,
+.platform h2,
+.platform h3,
+.plat h1,
+.plat h2,
+.plat h3,
+.plat .plat-display {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.platform ::selection,
+.plat ::selection {
+  background: var(--blue-200);
+  color: var(--ink);
+}
+
+/* ── Micro-labels ───────────────────────────────────────────────────── */
+
+.plat-crumb {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.plat-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-5);
+}
+
+/* ── Stat cards (screenshot 1) ──────────────────────────────────────── */
+
+.plat-stat {
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  padding: 26px 28px 24px;
+}
+
+.plat-num {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.plat-num-unit {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-4);
+}
+
+.plat-stat-label {
+  margin-top: 10px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.plat-stat-sub {
+  font-size: 13px;
+  color: var(--text-4);
+  line-height: 1.4;
+}
+
+/* ── Activity rows (screenshot 1, bottom) ───────────────────────────── */
+
+/* One card holds the whole feed; rows are separated by hairlines inside it,
+   never by gaps — a list reads as a single object, not N floating cards. */
+.plat-list {
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.plat-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 20px 13px 16px;
+  border-bottom: 1px solid var(--line-soft);
+  transition: background-color 0.15s ease;
+}
+
+.plat-row:last-child {
+  border-bottom: 0;
+}
+
+.plat-row:hover {
+  background: rgba(20, 22, 26, 0.02);
+}
+
+.plat-row-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--sand);
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.plat-row-title {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.plat-row-meta {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--text-4);
+  white-space: nowrap;
+}
+
+/* Running indicator: solid blue dot inside a sand ring, like the mock. */
+.plat-dot-running {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--blue);
+  animation: plat-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes plat-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* ── Giant hairline-divided numbers (screenshot 2) ──────────────────── */
+
+.plat-bigstat {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.plat-bigstat > div {
+  padding: 8px 32px;
+}
+
+.plat-bigstat > div + div {
+  border-left: 1px solid var(--line);
+}
+
+.plat-bigstat .n {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 52px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.plat-bigstat .c {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--text-3);
+}
+
+@media (max-width: 700px) {
+  .plat-bigstat { grid-template-columns: 1fr; }
+  .plat-bigstat > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  .plat-bigstat > div { padding: 20px 8px; }
+}
+
+/* ── Squircle icon list rows (screenshot 3) ─────────────────────────── */
+
+.plat-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  border-radius: 10px;
+  padding: 8px 10px;
+  transition: background-color 0.15s ease;
+}
+
+button.plat-item:hover {
+  background: rgba(20, 22, 26, 0.04);
+}
+
+.plat-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--sand);
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.plat-item-title {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.plat-item-sub {
+  font-size: 13px;
+  color: var(--text-4);
+  line-height: 1.35;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────── */
+
+.plat-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.plat-btn:hover { opacity: 0.86; }
+.plat-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.plat-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.plat-btn-ghost:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* ── Panels (charts, rails) ─────────────────────────────────────────── */
+
+.plat-panel {
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  padding: 24px 26px;
+}
+
+/* ── Status pills ───────────────────────────────────────────────────── */
+
+.plat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.plat-pill-ok   { background: var(--ok-bg);  color: var(--ok-fg); }
+.plat-pill-warn { background: var(--warn-bg); color: var(--warn-fg); }
+.plat-pill-mute { background: var(--sand-deep); color: var(--text-3); }
+
+/* ── Sidebar re-skin — pure CSS so AppSidebar stays shared ──────────── */
+
+.platform [data-sidebar='sidebar'] {
+  background: transparent !important;
+  font-family: var(--sans);
+}
+
+/* The shadcn sidebar shell (the element AppSidebar hands border-r/bg-white to)
+   goes quiet so sidebar and page read as one surface — but keeps a hairline
+   so the two zones stay legibly separated. */
+.platform *:has(> [data-sidebar='sidebar']) {
+  background: transparent !important;
+  border-color: var(--line-soft) !important;
+}
+
+.platform [data-sidebar='group-label'] {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-5);
+}
+
+.platform [data-sidebar='menu-button'] {
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.platform [data-sidebar='menu-button']:hover {
+  background: rgba(20, 22, 26, 0.05);
+  color: var(--ink);
+}
+
+.platform [data-sidebar='menu-button'][data-active='true'] {
+  background: rgba(20, 22, 26, 0.07);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── Right apps rail ────────────────────────────────────────────────────
+   It is mounted by ProtectedRoute, outside the `.plat` page wrapper, so it
+   is matched from the shared shell instead. Same viewport-anchored gradient
+   as above, so the wash runs unbroken from the sidebar to the right edge;
+   only a hairline marks the boundary. */
+.platform [data-appsbar] {
+  background:
+    radial-gradient(900px 600px at 6% -4%, rgba(62, 82, 217, 0.035), transparent 60%),
+    radial-gradient(1100px 750px at 96% 8%, rgba(191, 206, 248, 0.14), transparent 55%),
+    linear-gradient(165deg, #fcfcfd 0%, #f7f8fa 52%, #f1f3f6 100%) !important;
+  background-attachment: fixed, fixed, fixed !important;
+  border-left-color: rgba(20, 22, 26, 0.07) !important;
+  backdrop-filter: none;
+}
+
+/* ── Shell neutralisation ───────────────────────────────────────────────
+   Platform pages historically painted their own page background (bg-white,
+   bg-gray-50, bg-[hsl(30,25%,97%)]) on the page root and on SidebarInset.
+   Those surfaces must go transparent so the shared ambient wash shows
+   through; anything *inside* (cards, panels, dialogs) keeps its own fill. */
+.platform > div,
+.platform [data-sidebar-inset],
+.platform main {
+  background: transparent !important;
+}
+
+/* Column rails inside app suites (Notes/Docs/Drive/Mail/…): keep the layout
+   hairlines, drop the white fills so the wash runs edge to edge. */
+.platform aside {
+  background: transparent !important;
+}
+
+/* ── Portaled surfaces ──────────────────────────────────────────────────
+   Radix renders dialogs, dropdowns, popovers and tooltips into document.body,
+   outside `.platform`, so they never inherit the platform type stack. Both
+   design systems (platform and marketing) share these families, so applying
+   them at the portal level is safe and keeps overlays consistent with the
+   page that opened them. */
+[data-radix-popper-content-wrapper],
+[role='dialog'],
+[role='alertdialog'],
+[data-radix-menu-content],
+[data-radix-dropdown-menu-content],
+[data-radix-tooltip-content] {
+  font-family: 'Manrope', system-ui, sans-serif;
+}
+
+[role='dialog'] h1,
+[role='dialog'] h2,
+[role='dialog'] h3,
+[role='alertdialog'] h2 {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+/* ── Form controls — ONE frame width and ONE colour, everywhere ──────────
+   Inputs used to arrive from three directions: the shadcn primitives (blue
+   focus ring, gray-300 border), page-level Tailwind overrides (bg-[#f1f3f4],
+   border-transparent, rounded-full), and native controls (browser-blue
+   checkbox accents). The result was thick/thin and blue/black side by side.
+
+   `.plat-field` is now the single definition, applied by ui/input.tsx,
+   ui/textarea.tsx and ui/select.tsx, and repeated below for bare native
+   fields. Rules are unscoped on purpose: form controls appear inside Radix
+   portals (dialogs, popovers) that render outside `.platform`, and the
+   marketing pages share the same palette, so one definition serves both.
+
+   Opt-out: a control marked `bg-transparent` is deliberately bare — the chat
+   composer's textarea, inline editors — where the frame belongs to the card
+   around it, not to the control. Those keep their own styling. */
+
+.plat-field,
+.platform input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):not(.bg-transparent),
+.platform textarea:not(.bg-transparent),
+.platform select:not(.bg-transparent),
+[role='dialog'] input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):not(.bg-transparent),
+[role='dialog'] textarea:not(.bg-transparent),
+[role='dialog'] select:not(.bg-transparent) {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.plat-field::placeholder,
+.platform input:not(.bg-transparent)::placeholder,
+.platform textarea:not(.bg-transparent)::placeholder,
+[role='dialog'] input::placeholder,
+[role='dialog'] textarea::placeholder {
+  color: var(--text-5);
+}
+
+.plat-field:hover:not(:disabled),
+.platform input:not([type='checkbox']):not([type='radio']):not(.bg-transparent):hover:not(:disabled),
+.platform textarea:not(.bg-transparent):hover:not(:disabled),
+.platform select:not(.bg-transparent):hover:not(:disabled) {
+  border-color: rgba(20, 22, 26, 0.22);
+}
+
+/* Active field = a thin blue border, nothing else. Same 1px width as the
+   resting frame, so the field never shifts or thickens on focus — only the
+   colour changes. No halo, no ring. */
+.plat-field:focus,
+.plat-field:focus-visible,
+.platform input:not(.bg-transparent):focus,
+.platform input:not(.bg-transparent):focus-visible,
+.platform textarea:not(.bg-transparent):focus,
+.platform select:not(.bg-transparent):focus,
+[role='dialog'] input:not(.bg-transparent):focus,
+[role='dialog'] textarea:not(.bg-transparent):focus,
+[role='dialog'] select:not(.bg-transparent):focus {
+  /* !important because pages carry their own `focus-visible:ring-*` /
+     `border-*` utilities that Tailwind emits in a later sheet; the active
+     state is a design-system decision, not a per-page one. */
+  border-color: var(--blue) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Native checkbox / radio: the browser paints these with its own accent
+   (blue on Chrome, orange on Firefox). Force the ink accent instead. */
+.platform input[type='checkbox'],
+.platform input[type='radio'],
+[role='dialog'] input[type='checkbox'],
+[role='dialog'] input[type='radio'] {
+  accent-color: var(--ink);
+  width: 16px;
+  height: 16px;
+}
+
+/* Radix checkbox / radio / switch: same ink treatment, same 1px frame. */
+.platform [role='checkbox'],
+[role='dialog'] [role='checkbox'] {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--paper);
+}
+
+.platform [role='checkbox'][data-state='checked'],
+[role='dialog'] [role='checkbox'][data-state='checked'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #ffffff;
+}
+
+.platform [role='radio'],
+[role='dialog'] [role='radio'] {
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.platform [role='radio'][data-state='checked'],
+[role='dialog'] [role='radio'][data-state='checked'] {
+  border-color: var(--ink);
+}
+
+.platform [role='switch'][data-state='checked'],
+[role='dialog'] [role='switch'][data-state='checked'] {
+  background: var(--ink);
+}
+
+.platform [role='switch'][data-state='unchecked'],
+[role='dialog'] [role='switch'][data-state='unchecked'] {
+  background: var(--sand-deep);
+}
+
+/* Focus rings inherited from shadcn utilities resolve through --ring; point
+   it at ink so no stray blue halo survives anywhere in the platform. */
+.platform,
+[role='dialog'],
+[data-radix-popper-content-wrapper] {
+  --ring: 220 9% 8%;
+}
+
+/* Bare controls hand their focus state to the card around them (the chat
+   composer). Same thin blue border, applied on focus-within. */
+.plat-field-shell:focus-within {
+  border-color: var(--blue) !important;
+}
+
+/* ── Expand-on-demand: affordance, detail view, data tables ─────────── */
+
+.plat-expandable {
+  position: relative;
+}
+
+/* Only shows on hover or focus: the card's content stays the thing you read. */
+.plat-expand {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  width: 26px;
+  border-radius: 8px;
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  color: var(--text-4);
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 0.16s ease, transform 0.16s ease, color 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.plat-expandable:hover > .plat-expand,
+.plat-expand:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.plat-expand:hover {
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+/* Whole-card trigger. Stretched to the grid row so the card inside still
+   matches its neighbours' height, as an unwrapped card would. */
+.plat-expandable-card {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  border-radius: 14px;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.plat-expandable-card > :not(.plat-expand) {
+  flex: 1;
+  min-width: 0;
+}
+
+.plat-expandable-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px -14px rgba(20, 22, 26, 0.35);
+}
+
+.plat-expandable-card:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.plat-expandable-card:hover .plat-expand {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* For cards whose corner is already spoken for. */
+.plat-expand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-5);
+  transition: color 0.15s ease;
+}
+
+.plat-expand-link:hover,
+.plat-expand-link:focus-visible {
+  color: var(--ink);
+}
+
+/* No hover on touch, so keep it quietly visible there. */
+@media (hover: none) {
+  .plat-expand {
+    opacity: 0.55;
+    transform: none;
+  }
+}
+
+.plat-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(20, 22, 26, 0.34);
+  backdrop-filter: blur(3px);
+}
+
+.plat-detail-overlay[data-state='open'] {
+  animation: plat-fade-in 0.18s ease-out;
+}
+
+.plat-detail {
+  position: fixed;
+  z-index: 61;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  width: min(1180px, calc(100vw - 32px));
+  max-height: min(90vh, 960px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #f7f8fa;
+  box-shadow: 0 24px 70px -24px rgba(20, 22, 26, 0.4);
+}
+
+.plat-detail[data-state='open'] {
+  animation: plat-detail-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes plat-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes plat-detail-in {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 10px)) scale(0.985); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.plat-detail-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--paper);
+}
+
+/* Pop-out + close, kept together on the right of the detail header. */
+.plat-detail-actions {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plat-detail-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  flex: none;
+  border-radius: 9px;
+  border: 1px solid var(--line-soft);
+  color: var(--text-3);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.plat-detail-close:hover {
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.plat-detail-body {
+  /* min-height:0 is what makes this scroll: without it the flex item refuses
+     to shrink below its content and the dialog clips instead. */
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px 22px 26px;
+}
+
+/* Flex children shrink by default, which would compress a long detail view
+   instead of scrolling it. Sections keep their natural height. */
+.plat-detail-body > * {
+  flex: 0 0 auto;
+}
+
+/* ── The same detail, popped out into its own browser window ────────── */
+
+.plat-popout {
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+/* No modal frame out here, so the header carries the hairline itself and
+   stays put while the body scrolls with the window. */
+.plat-popout-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.plat-popout-body {
+  overflow: visible;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* ── ⋮ menu (export / download / print) ─────────────────────────────── */
+
+.plat-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.plat-menu-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 5;
+  min-width: 268px;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: 0 18px 40px -18px rgba(20, 22, 26, 0.34);
+  animation: plat-menu-in 0.14s ease-out;
+}
+
+@keyframes plat-menu-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* At the bottom of a rail, a menu has nowhere to open but upwards. */
+.plat-menu-up {
+  top: auto;
+  bottom: calc(100% + 6px);
+  animation: plat-menu-up-in 0.14s ease-out;
+}
+
+@keyframes plat-menu-up-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.plat-menu-start {
+  left: 0;
+  right: auto;
+}
+
+.plat-menu-label {
+  padding: 6px 10px 8px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-5);
+}
+
+.plat-menu-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-1);
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.plat-menu-item:hover:not(:disabled),
+.plat-menu-item:focus-visible:not(:disabled) {
+  background: var(--sand);
+  color: var(--ink);
+}
+
+.plat-menu-item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.plat-menu-hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-5);
+  white-space: nowrap;
+}
+
+/* Print: the detail view is the document, so drop the chrome and let the body
+   flow onto pages instead of scrolling inside a fixed box. */
+@media print {
+  .plat-detail-overlay,
+  .plat-detail-actions,
+  .plat-menu-panel {
+    display: none !important;
+  }
+
+  .plat-detail {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-height: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  .plat-detail-body,
+  .plat-popout-body {
+    overflow: visible;
+    max-height: none;
+  }
+
+  .plat-detail-body [style*='max-height'] {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+
+/* ── Data tables (bottom half of every detail view) ─────────────────── */
+
+.plat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.plat-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 9px 14px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-5);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.plat-table td {
+  padding: 10px 14px;
+  color: var(--text-2);
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: top;
+}
+
+.plat-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.plat-table tbody tr:hover td {
+  background: var(--sand);
+}
+
+.plat-table th.num,
+.plat-table td.num {
+  text-align: right;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

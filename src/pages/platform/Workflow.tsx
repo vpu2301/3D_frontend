@@ -57,23 +57,23 @@ const WorkflowPlatform = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-white">
+    <div className="min-h-screen pt-20 bg-[color:var(--paper)]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+            <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight">
               Workflow Engine
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed">
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto font-light leading-relaxed">
               Design and orchestrate complex business processes with our powerful workflow engine. 
               Connect systems, automate decisions, and scale operations with visual workflow automation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+              <Button className="bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/start-free-trial">Build Workflows</Link>
               </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
+              <Button variant="outline" className="border-[color:var(--line)] text-[color:var(--ink)] hover:bg-[color:var(--sand)] px-8 py-3 rounded-full" asChild>
                 <Link to="/watch-demo">See Demo</Link>
               </Button>
             </div>
@@ -82,11 +82,11 @@ const WorkflowPlatform = () => {
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Workflow Features</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Workflow Features</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto">
               Professional workflow automation tools for enterprise-scale operations
             </p>
           </div>
@@ -95,11 +95,11 @@ const WorkflowPlatform = () => {
             {features.map((feature, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-[#222222] w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-[28px] bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--text-2)] w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{feature.title}</h3>
+                  <p className="text-[color:var(--text-2)] leading-relaxed">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -108,27 +108,27 @@ const WorkflowPlatform = () => {
       </section>
 
       {/* Workflow Examples */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Common Workflows</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Common Workflows</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto">
               See how businesses automate key processes with our workflow engine
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {workflowExamples.map((workflow, index) => (
-              <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
-                <h3 className="text-2xl font-medium text-gray-900 mb-4">{workflow.name}</h3>
-                <div className="text-sm text-indigo-600 mb-6">Execution time: {workflow.duration}</div>
+              <div key={index} className="bg-[color:var(--paper)] p-8 rounded-[28px] shadow-lg">
+                <h3 className="text-2xl font-medium text-[color:var(--ink)] mb-4">{workflow.name}</h3>
+                <div className="text-sm text-[color:var(--blue)] mb-6">Execution time: {workflow.duration}</div>
                 <div className="space-y-4">
                   {workflow.steps.map((step, idx) => (
                     <div key={idx} className="flex items-center">
-                      <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                        <span className="text-sm font-medium text-indigo-600">{idx + 1}</span>
+                      <div className="w-8 h-8 bg-[color:var(--blue-100)] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <span className="text-sm font-medium text-[color:var(--blue)]">{idx + 1}</span>
                       </div>
-                      <span className="text-gray-700">{step}</span>
+                      <span className="text-[color:var(--ink)]">{step}</span>
                     </div>
                   ))}
                 </div>
@@ -140,93 +140,93 @@ const WorkflowPlatform = () => {
       </section>
 
       {/* Performance Metrics */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Workflow Performance</h2>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Workflow Performance</h2>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-light text-indigo-600 mb-2">99.9%</div>
-              <div className="text-gray-600">Execution reliability</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">99.9%</div>
+              <div className="text-[color:var(--text-2)]">Execution reliability</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-purple-600 mb-2">&lt;100ms</div>
-              <div className="text-gray-600">Step execution time</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">&lt;100ms</div>
+              <div className="text-[color:var(--text-2)]">Step execution time</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-blue-600 mb-2">1M+</div>
-              <div className="text-gray-600">Workflows per day</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">1M+</div>
+              <div className="text-[color:var(--text-2)]">Workflows per day</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-green-600 mb-2">24/7</div>
-              <div className="text-gray-600">Monitoring & support</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">24/7</div>
+              <div className="text-[color:var(--text-2)]">Monitoring & support</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Build Workflows in Minutes</h2>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Build Workflows in Minutes</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Workflow className="h-8 w-8 text-indigo-600" />
+              <div className="w-16 h-16 bg-[color:var(--blue-100)] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Workflow className="h-8 w-8 text-[color:var(--blue)]" />
               </div>
               <h3 className="text-lg font-medium mb-2">1. Design</h3>
-              <p className="text-gray-600">Drag and drop steps to create your workflow</p>
+              <p className="text-[color:var(--text-2)]">Drag and drop steps to create your workflow</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Settings className="h-8 w-8 text-purple-600" />
+              <div className="w-16 h-16 bg-[color:var(--blue-100)] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Settings className="h-8 w-8 text-[color:var(--blue)]" />
               </div>
               <h3 className="text-lg font-medium mb-2">2. Configure</h3>
-              <p className="text-gray-600">Set triggers, conditions, and integrations</p>
+              <p className="text-[color:var(--text-2)]">Set triggers, conditions, and integrations</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Play className="h-8 w-8 text-blue-600" />
+              <div className="w-16 h-16 bg-[color:var(--blue-100)] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Play className="h-8 w-8 text-[color:var(--blue)]" />
               </div>
               <h3 className="text-lg font-medium mb-2">3. Test</h3>
-              <p className="text-gray-600">Run tests to validate your workflow logic</p>
+              <p className="text-[color:var(--text-2)]">Run tests to validate your workflow logic</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="w-16 h-16 bg-[color:var(--blue-100)] rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="h-8 w-8 text-[color:var(--blue)]" />
               </div>
               <h3 className="text-lg font-medium mb-2">4. Deploy</h3>
-              <p className="text-gray-600">Launch and monitor your automated workflow</p>
+              <p className="text-[color:var(--text-2)]">Launch and monitor your automated workflow</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Advanced Features */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8">
+          <div className="bg-[color:var(--paper)] rounded-[28px] p-12 text-[color:var(--ink)] border border-[color:var(--line)]">
             <h3 className="text-3xl font-light mb-8 text-center">Enterprise Workflow Features</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
-                <Zap className="h-12 w-12 text-indigo-400 mx-auto mb-4" />
+                <Zap className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">High Performance</h4>
-                <p className="text-black/60">Scale to millions of workflow executions per day</p>
+                <p className="text-[color:var(--text-2)]">Scale to millions of workflow executions per day</p>
               </div>
               <div className="text-center">
-                <Users className="h-12 w-12 text-purple-400 mx-auto mb-4" />
+                <Users className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Team Collaboration</h4>
-                <p className="text-black/60">Version control and collaborative workflow development</p>
+                <p className="text-[color:var(--text-2)]">Version control and collaborative workflow development</p>
               </div>
               <div className="text-center">
-                <Shield className="h-12 w-12 text-green-400 mx-auto mb-4" />
+                <Shield className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Enterprise Security</h4>
-                <p className="text-black/60">Role-based access and audit trails for compliance</p>
+                <p className="text-[color:var(--text-2)]">Role-based access and audit trails for compliance</p>
               </div>
             </div>
           </div>
@@ -234,13 +234,13 @@ const WorkflowPlatform = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
+      <section className="py-20 bg-[color:var(--sand)] text-[color:var(--ink)] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Automate Your Workflows</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Start building powerful automation workflows that scale with your business.
           </p>
-          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Start Building
               <ArrowRight className="ml-2 h-4 w-4" />

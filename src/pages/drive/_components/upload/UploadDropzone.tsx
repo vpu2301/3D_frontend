@@ -190,17 +190,17 @@ export default function UploadDropzone({ parentId, children, triggerRef }: Props
       />
 
       {over && (
-        <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-blue-500/10 backdrop-blur-sm">
-          <div className="rounded-lg border-2 border-dashed border-blue-500 bg-white px-6 py-4 text-sm font-medium text-blue-700 shadow-lg">
+        <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-[rgba(20,22,26,0.06)] backdrop-blur-sm">
+          <div className="rounded-[12px] border border-dashed border-[var(--ink)] bg-white px-6 py-4 text-sm font-semibold text-[var(--ink)] shadow-lg">
             <UploadIcon className="mb-1 inline-block h-4 w-4" /> Drop files here to upload
           </div>
         </div>
       )}
 
       {queue.length > 0 && (
-        <div className="absolute bottom-4 right-4 z-40 w-80 rounded-lg border border-gray-200 bg-white shadow-xl">
-          <div className="flex items-center justify-between border-b border-gray-100 px-3 py-2">
-            <div className="flex items-center gap-1.5 text-sm font-medium text-gray-900">
+        <div className="absolute bottom-4 right-4 z-40 w-80 rounded-[14px] border border-[var(--line-soft)] bg-white shadow-xl">
+          <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-3.5 py-2.5">
+            <div className="flex items-center gap-1.5 text-[13.5px] font-semibold text-[var(--ink)]">
               <UploadIcon className="h-4 w-4" />
               {queue.filter((e) => e.status === 'uploading').length > 0
                 ? `Uploading ${queue.filter((e) => e.status === 'uploading').length}`
@@ -209,7 +209,7 @@ export default function UploadDropzone({ parentId, children, triggerRef }: Props
             <button
               type="button"
               onClick={() => setQueue([])}
-              className="rounded p-1 text-gray-400 hover:bg-gray-100"
+              className="rounded-[8px] p-1 text-[var(--text-5)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
               aria-label="Dismiss"
             >
               <X className="h-3.5 w-3.5" />
@@ -219,31 +219,31 @@ export default function UploadDropzone({ parentId, children, triggerRef }: Props
             {queue.map((e) => (
               <li key={e.id} className="mb-2 last:mb-0">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="truncate text-gray-900">{e.name}</span>
-                  <span className="ml-2 shrink-0 text-gray-500">{formatBytes(e.size)}</span>
+                  <span className="truncate text-[var(--ink)]">{e.name}</span>
+                  <span className="ml-2 shrink-0 text-[var(--text-4)]">{formatBytes(e.size)}</span>
                 </div>
                 {e.status === 'uploading' && (
-                  <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                  <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[var(--sand-deep)]">
                     <div
-                      className="h-full bg-emerald-500 transition-[width] duration-150"
+                      className="h-full bg-[var(--ink)] transition-[width] duration-150"
                       style={{ width: `${e.progress}%` }}
                     />
                   </div>
                 )}
                 {e.status === 'done' && (
-                  <div className="mt-0.5 flex items-center gap-1 text-[11px] text-emerald-600">
+                  <div className="mt-0.5 flex items-center gap-1 text-[11px] text-[var(--ok-fg)]">
                     <Sparkles className="h-3 w-3" />
                     Summarizing & tagging…
                   </div>
                 )}
                 {e.status === 'too-large' && (
-                  <div className="mt-0.5 flex items-center gap-1 text-[11px] text-red-600">
+                  <div className="mt-0.5 flex items-center gap-1 text-[11px] text-[var(--bad-fg)]">
                     <AlertTriangle className="h-3 w-3" />
                     {e.error}
                   </div>
                 )}
                 {e.status === 'error' && (
-                  <div className="mt-0.5 flex items-center gap-1 text-[11px] text-red-600">
+                  <div className="mt-0.5 flex items-center gap-1 text-[11px] text-[var(--bad-fg)]">
                     <AlertTriangle className="h-3 w-3" />
                     {e.error ?? 'Upload failed'}
                   </div>

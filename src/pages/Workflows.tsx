@@ -73,14 +73,16 @@ const AVATAR_COLORS = [
   'bg-amber-100 text-amber-700',
 ];
 
+const NEUTRAL_TAG = 'bg-[color:var(--sand)] text-[color:var(--text-3)] border-[color:var(--line-soft)]';
+
 const AGENT_TAG_COLORS: Record<string, string> = {
-  'Secretary':  'bg-purple-50 text-purple-700 border-purple-200',
-  'Support':    'bg-teal-50 text-teal-700 border-teal-200',
-  'Sales SDR':  'bg-blue-50 text-blue-700 border-blue-200',
-  'Sales':      'bg-blue-50 text-blue-700 border-blue-200',
-  'Executive':  'bg-amber-50 text-amber-700 border-amber-200',
-  'Project':    'bg-green-50 text-green-700 border-green-200',
-  'All Agents': 'bg-gray-50 text-gray-600 border-gray-200',
+  'Secretary':  NEUTRAL_TAG,
+  'Support':    NEUTRAL_TAG,
+  'Sales SDR':  NEUTRAL_TAG,
+  'Sales':      NEUTRAL_TAG,
+  'Executive':  NEUTRAL_TAG,
+  'Project':    NEUTRAL_TAG,
+  'All Agents': NEUTRAL_TAG,
 };
 
 /* ─── Category definitions ────────────────────────────────────────── */
@@ -602,13 +604,13 @@ function AssignAgentModal({ workflowName, open, onClose, onAssign }: AssignAgent
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
       <DialogContent className="sm:max-w-[460px] p-0 overflow-hidden">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b" style={{ borderColor: 'var(--line-soft)' }}>
           <DialogTitle className="flex items-center gap-2 text-base font-semibold">
-            <Bot className="h-4 w-4 text-green-600" />
+            <Bot className="h-4 w-4" style={{ color: 'var(--text-4)' }} />
             {t('workflows.assignToAgent')}
           </DialogTitle>
-          <p className="text-xs text-gray-500 mt-0.5">
-            {t('workflows.workflowLabel')} <span className="font-medium text-gray-700">{workflowName}</span>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--text-4)' }}>
+            {t('workflows.workflowLabel')} <span className="font-medium" style={{ color: 'var(--text-2)' }}>{workflowName}</span>
           </p>
         </DialogHeader>
 
@@ -616,10 +618,10 @@ function AssignAgentModal({ workflowName, open, onClose, onAssign }: AssignAgent
           <button
             onClick={() => { setMode('all'); setSelectedId(null); }}
             className={cn(
-              'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors',
+              'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-[12px] border text-sm font-medium transition-colors',
               mode === 'all'
-                ? 'border-green-500 bg-green-50 text-green-700'
-                : 'border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                ? 'border-[color:var(--ink)] bg-[rgba(20,22,26,0.06)] text-[color:var(--ink)]'
+                : 'border-[color:var(--line)] text-[color:var(--text-4)] hover:border-[color:var(--ink)] hover:text-[color:var(--ink)]'
             )}
           >
             <Users className="h-4 w-4" />
@@ -628,10 +630,10 @@ function AssignAgentModal({ workflowName, open, onClose, onAssign }: AssignAgent
           <button
             onClick={() => setMode('specific')}
             className={cn(
-              'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors',
+              'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-[12px] border text-sm font-medium transition-colors',
               mode === 'specific'
-                ? 'border-green-500 bg-green-50 text-green-700'
-                : 'border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                ? 'border-[color:var(--ink)] bg-[rgba(20,22,26,0.06)] text-[color:var(--ink)]'
+                : 'border-[color:var(--line)] text-[color:var(--text-4)] hover:border-[color:var(--ink)] hover:text-[color:var(--ink)]'
             )}
           >
             <Bot className="h-4 w-4" />
@@ -649,45 +651,43 @@ function AssignAgentModal({ workflowName, open, onClose, onAssign }: AssignAgent
                 disabled={disabled}
                 onClick={() => setSelectedId(agent.id)}
                 className={cn(
-                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border text-left transition-colors',
+                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-[12px] border text-left transition-colors',
                   disabled
-                    ? 'border-gray-100 bg-gray-50/50 opacity-50 cursor-default'
+                    ? 'border-[color:var(--line-soft)] bg-[color:var(--sand)] opacity-50 cursor-default'
                     : isSelected
-                    ? 'border-green-400 bg-green-50'
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 cursor-pointer'
+                    ? 'border-[color:var(--ink)] bg-[rgba(20,22,26,0.06)]'
+                    : 'border-[color:var(--line)] hover:border-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.02)] cursor-pointer'
                 )}
               >
                 <span className={cn('w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0', AVATAR_COLORS[i])}>
                   {agent.avatar}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 leading-none">{agent.name}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{agent.role}</p>
+                  <p className="text-sm font-medium leading-none" style={{ color: 'var(--ink)' }}>{agent.name}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-4)' }}>{agent.role}</p>
                 </div>
                 {!disabled && (
                   isSelected
-                    ? <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
-                    : <Circle className="h-4 w-4 text-gray-300 flex-shrink-0" />
+                    ? <CheckCircle2 className="h-4 w-4 text-[color:var(--ink)] flex-shrink-0" />
+                    : <Circle className="h-4 w-4 text-[color:var(--text-5)] flex-shrink-0" />
                 )}
                 {disabled && mode === 'all' && (
-                  <CheckCircle2 className="h-4 w-4 text-green-400 flex-shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-[color:var(--text-5)] flex-shrink-0" />
                 )}
               </button>
             );
           })}
         </div>
 
-        <DialogFooter className="px-6 py-4 border-t border-gray-100 flex gap-2">
-          <Button variant="outline" size="sm" className="flex-1" onClick={onClose} disabled={done}>
+        <DialogFooter className="px-6 py-4 border-t flex gap-2" style={{ borderColor: 'var(--line-soft)' }}>
+          <Button variant="outline" size="sm" className="plat-btn-ghost flex-1 !justify-center !border-[color:var(--line)]" onClick={onClose} disabled={done}>
             {t('common.cancel')}
           </Button>
           <Button
             size="sm"
             className={cn(
-              'flex-1 transition-all',
-              done
-                ? 'bg-green-500 hover:bg-green-500'
-                : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600'
+              'plat-btn flex-1 !justify-center transition-all',
+              done && '!bg-[color:var(--ok-fg)]'
             )}
             disabled={!canConfirm || done}
             onClick={handleAssign}
@@ -758,23 +758,24 @@ const Workflows = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col bg-white">
+          <SidebarInset className="flex-1 flex flex-col">
             <main className="flex-1 p-6 overflow-y-auto">
 
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-2xl font-light text-gray-900">{t('workflows.pageTitle')}</h1>
-                  <p className="text-sm text-gray-500">{t('workflows.pageSubtitle')}</p>
+                  <p className="plat-crumb">3days.workflows</p>
+                  <h1 className="text-2xl mt-1">{t('workflows.pageTitle')}</h1>
+                  <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>{t('workflows.pageSubtitle')}</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => navigate('/workflows/create')}
-                  className="flex h-9 items-center gap-1.5 rounded-full bg-[#bdd8ec] px-3.5 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
+                  className="plat-btn !h-9 !px-4 !text-xs"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   {t('workflows.createWorkflow')}
@@ -782,7 +783,7 @@ const Workflows = () => {
               </div>
 
               {/* Tab nav */}
-              <div className="flex items-center gap-1 border-b border-gray-100 pb-3 mb-6">
+              <div className="flex items-center gap-1.5 border-b pb-3 mb-6" style={{ borderColor: 'var(--line-soft)' }}>
                 {([
                   { key: 'templates' as TabKey,    label: t('workflows.tabTemplates'),    icon: LayoutTemplate },
                   { key: 'my-workflows' as TabKey, label: t('workflows.tabMyWorkflows'), icon: Workflow },
@@ -791,10 +792,10 @@ const Workflows = () => {
                     key={key}
                     onClick={() => setActiveTab(key)}
                     className={cn(
-                      'flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors',
+                      'flex h-8 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium transition-colors',
                       activeTab === key
-                        ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
-                        : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900'
+                        ? 'border-transparent bg-[color:var(--ink)] text-white'
+                        : 'border-[color:var(--line)] text-[color:var(--text-2)] hover:bg-[rgba(20,22,26,0.04)] hover:text-[color:var(--ink)]'
                     )}
                   >
                     <Icon className="h-3.5 w-3.5" />
@@ -808,16 +809,16 @@ const Workflows = () => {
                 <div>
                   {/* Subtitle + search row */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
-                    <p className="text-sm text-gray-500 flex-1">
+                    <p className="text-sm flex-1" style={{ color: 'var(--text-4)' }}>
                       {t('workflows.templatesSubtitle')}
                     </p>
                     <div className="relative w-full sm:w-64 flex-shrink-0">
-                      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+                      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[color:var(--text-5)]" />
                       <input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search templates…"
-                        className="h-9 w-full rounded-full border border-transparent bg-[#f1f3f4] pl-9 pr-3 text-xs text-gray-900 placeholder:text-gray-500 transition-colors focus:border-[#8fc4e4] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#8fc4e4]"
+                        className="h-9 w-full rounded-[10px] border border-[color:var(--line)] bg-white pl-9 pr-3 text-xs text-[color:var(--ink)] placeholder:text-[color:var(--text-5)] transition-colors focus:border-[color:var(--ink)] focus:outline-none"
                       />
                     </div>
                   </div>
@@ -831,14 +832,14 @@ const Workflows = () => {
                         className={cn(
                           'flex h-8 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0',
                           activeCategory === cat.key
-                            ? 'bg-[#bdd8ec] text-gray-800 border-transparent hover:bg-[#a5c8e0]'
-                            : 'bg-[#f1f3f4] text-gray-600 border-transparent hover:bg-gray-200 hover:text-gray-800'
+                            ? 'bg-[color:var(--ink)] text-white border-transparent'
+                            : 'bg-transparent text-[color:var(--text-2)] border-[color:var(--line)] hover:bg-[rgba(20,22,26,0.04)] hover:text-[color:var(--ink)]'
                         )}
                       >
                         {cat.label}
                         <span className={cn(
                           'text-[10px] px-1.5 py-0 rounded-full font-semibold',
-                          activeCategory === cat.key ? 'bg-white/40 text-gray-800' : 'bg-white text-gray-500'
+                          activeCategory === cat.key ? 'bg-white/20 text-white' : 'bg-[color:var(--sand)] text-[color:var(--text-4)]'
                         )}>
                           {cat.key === 'all' ? ALL_TEMPLATES.length : cat.count}
                         </span>
@@ -848,18 +849,18 @@ const Workflows = () => {
 
                   {/* Results count */}
                   {(searchQuery || activeCategory !== 'all') && (
-                    <p className="text-xs text-gray-400 mb-3">
+                    <p className="text-xs mb-3" style={{ color: 'var(--text-5)' }}>
                       {filteredTemplates.length} template{filteredTemplates.length !== 1 ? 's' : ''} found
-                      {searchQuery && <> for "<span className="text-gray-600 font-medium">{searchQuery}</span>"</>}
+                      {searchQuery && <> for "<span className="font-medium" style={{ color: 'var(--text-2)' }}>{searchQuery}</span>"</>}
                     </p>
                   )}
 
                   {/* Template grid */}
                   {filteredTemplates.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-16 text-center">
-                      <Search className="h-10 w-10 text-gray-200 mb-3" />
-                      <p className="text-sm font-medium text-gray-500">No templates match your search</p>
-                      <button onClick={() => { setSearchQuery(''); setActiveCategory('all'); }} className="text-xs text-green-600 hover:text-green-700 mt-2">
+                      <Search className="h-10 w-10 text-[color:var(--text-5)] mb-3" strokeWidth={1.5} />
+                      <p className="text-sm font-medium" style={{ color: 'var(--text-4)' }}>No templates match your search</p>
+                      <button onClick={() => { setSearchQuery(''); setActiveCategory('all'); }} className="text-xs mt-2 text-[color:var(--text-3)] hover:text-[color:var(--ink)] underline underline-offset-2">
                         Clear filters
                       </button>
                     </div>
@@ -871,42 +872,42 @@ const Workflows = () => {
                           return (
                             <div
                               key={tpl.id}
-                              className="group bg-white border border-gray-200/70 rounded-xl p-4 hover:shadow-md hover:border-green-200 transition-all duration-200 cursor-pointer flex flex-col gap-3"
+                              className="group bg-white border border-[color:var(--line-soft)] rounded-[14px] p-4 hover:border-[color:var(--line)] transition-colors duration-200 cursor-pointer flex flex-col gap-3"
                               onClick={() => navigate('/workflows/create', { state: { templateId: tpl.id } })}
                             >
                               {/* Icon + name + category */}
                               <div className="flex items-start gap-3">
-                                <div className="w-10 h-10 bg-[#141413]/6 border border-[#c8c6be] flex items-center justify-center flex-shrink-0 group-hover:bg-[#141413]/10 transition-colors" style={{ borderRadius: '9px' }}>
-                                  <Icon className="w-[18px] h-[18px] text-black/45 group-hover:text-black/75 transition-colors" />
+                                <div className="plat-item-icon !h-10 !w-10 !rounded-[10px] group-hover:bg-[rgba(20,22,26,0.07)] transition-colors">
+                                  <Icon className="w-[18px] h-[18px]" strokeWidth={1.75} />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-start gap-2 flex-wrap">
-                                    <h3 className="text-sm font-medium text-gray-900 leading-tight">{tpl.name}</h3>
-                                    <Badge className={`text-[10px] px-1.5 py-0 font-normal ${tpl.categoryColor} border-0 flex-shrink-0`}>
+                                    <h3 className="text-sm font-medium leading-tight" style={{ color: 'var(--ink)' }}>{tpl.name}</h3>
+                                    <Badge className="plat-pill plat-pill-mute !text-[10px] !px-2 !py-0 !font-medium !border-0 flex-shrink-0">
                                       {tpl.categoryLabel}
                                     </Badge>
                                   </div>
-                                  <p className="text-[11px] text-gray-500 mt-1 leading-relaxed line-clamp-2">{tpl.description}</p>
+                                  <p className="text-[11px] mt-1 leading-relaxed line-clamp-2" style={{ color: 'var(--text-4)' }}>{tpl.description}</p>
                                 </div>
                               </div>
 
                               {/* Trigger line */}
                               <div className="flex items-center gap-1.5">
-                                <Zap className="h-3 w-3 text-gray-300 flex-shrink-0" />
-                                <span className="text-[10px] text-gray-400 truncate">{tpl.trigger}</span>
+                                <Zap className="h-3 w-3 text-[color:var(--text-5)] flex-shrink-0" />
+                                <span className="text-[10px] truncate" style={{ color: 'var(--text-5)' }}>{tpl.trigger}</span>
                               </div>
 
                               {/* Footer: nodes + agents + use-template hover */}
                               <div className="flex items-center justify-between gap-2 mt-auto">
                                 <div className="flex items-center gap-2 flex-wrap min-w-0">
-                                  <span className="text-[11px] text-gray-400 flex-shrink-0">{tpl.nodes} nodes</span>
+                                  <span className="text-[11px] flex-shrink-0" style={{ color: 'var(--text-5)' }}>{tpl.nodes} nodes</span>
                                   <div className="flex gap-1 flex-wrap">
                                     {tpl.agents.map((agent) => (
                                       <span
                                         key={agent}
                                         className={cn(
                                           'text-[10px] px-1.5 py-0.5 rounded-full font-medium border',
-                                          AGENT_TAG_COLORS[agent] ?? 'bg-gray-50 text-gray-600 border-gray-200'
+                                          AGENT_TAG_COLORS[agent] ?? NEUTRAL_TAG
                                         )}
                                       >
                                         {agent}
@@ -914,7 +915,7 @@ const Workflows = () => {
                                     ))}
                                   </div>
                                 </div>
-                                <span className="text-xs text-green-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0">
+                                <span className="text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0" style={{ color: 'var(--ink)' }}>
                                   {t('workflows.useTemplate')} <ChevronRight className="h-3 w-3" />
                                 </span>
                               </div>
@@ -928,7 +929,7 @@ const Workflows = () => {
                         <div className="flex justify-center mt-6">
                           <button
                             onClick={() => setShowAll(v => !v)}
-                            className="flex items-center gap-1.5 text-sm text-green-600 hover:text-green-700 font-medium transition-colors"
+                            className="flex items-center gap-1.5 text-sm text-[color:var(--text-2)] hover:text-[color:var(--ink)] font-medium transition-colors"
                           >
                             {showAll
                               ? t('workflows.showLess')
@@ -944,22 +945,25 @@ const Workflows = () => {
 
               {/* ── My Workflows tab ── */}
               {activeTab === 'my-workflows' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="plat-panel !p-0 overflow-hidden">
                   {workflows.map((workflow) => (
-                    <Card key={workflow.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-                      <CardHeader className="pb-3">
+                    <Card
+                      key={workflow.id}
+                      className="!rounded-none !border-x-0 !border-t-0 !border-b !border-[color:var(--line-soft)] !shadow-none !bg-transparent last:!border-b-0"
+                    >
+                      <CardHeader className="p-4 pb-2">
                         <CardTitle className="flex items-center justify-between text-sm">
                           <div className="flex items-center space-x-2">
-                            <div className="w-10 h-10 bg-[#141413]/6 border border-[#c8c6be] flex items-center justify-center flex-shrink-0" style={{ borderRadius: '9px' }}>
-                              <Workflow className="w-[18px] h-[18px] text-black/45" />
+                            <div className="plat-item-icon !h-10 !w-10 !rounded-[10px]">
+                              <Workflow className="w-[18px] h-[18px]" strokeWidth={1.75} />
                             </div>
-                            <span className="font-medium">{workflow.name}</span>
+                            <span className="text-[15px] font-semibold">{workflow.name}</span>
                           </div>
 
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8">
-                                <MoreVertical className="h-4 w-4 text-gray-500" />
+                              <Button variant="ghost" size="icon" className="hover:bg-[rgba(20,22,26,0.05)] h-8 w-8">
+                                <MoreVertical className="h-4 w-4" style={{ color: 'var(--text-4)' }} />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-44">
@@ -967,14 +971,14 @@ const Workflows = () => {
                                 className="gap-2 cursor-pointer"
                                 onClick={() => navigate('/workflows/create')}
                               >
-                                <Settings className="h-4 w-4 text-gray-500" />
+                                <Settings className="h-4 w-4" style={{ color: 'var(--text-4)' }} />
                                 {t('workflows.editWorkflow')}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="gap-2 cursor-pointer"
                                 onClick={() => setAssignTarget({ id: workflow.id, name: workflow.name })}
                               >
-                                <Bot className="h-4 w-4 text-green-600" />
+                                <Bot className="h-4 w-4" style={{ color: 'var(--text-4)' }} />
                                 {t('workflows.assignToAgent')}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
@@ -987,27 +991,23 @@ const Workflows = () => {
                         </CardTitle>
                       </CardHeader>
 
-                      <CardContent className="pt-0">
+                      <CardContent className="p-4 pt-0">
                         <div className="space-y-3">
-                          <p className="text-xs text-gray-600">{workflow.description}</p>
+                          <p className="text-xs" style={{ color: 'var(--text-3)' }}>{workflow.description}</p>
 
-                          <div className="flex items-center justify-between">
-                            <Badge
-                              variant={workflow.status === 'Active' ? 'default' : 'secondary'}
-                              className={workflow.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}
-                            >
-                              {workflow.status}
-                            </Badge>
-                          </div>
+                          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+                          <span className={workflow.status === 'Active' ? 'plat-pill plat-pill-ok' : 'plat-pill plat-pill-mute'}>
+                            {workflow.status}
+                          </span>
 
                           {(() => {
                             const a = assignments[workflow.id];
                             if (!a) return null;
                             if (a.mode === 'all') {
                               return (
-                                <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-green-50 border border-green-100 w-fit">
-                                  <Users className="h-3 w-3 text-green-600 flex-shrink-0" />
-                                  <span className="text-xs text-green-700 font-medium">{t('workflows.allAgentsLabel')}</span>
+                                <div className="plat-pill plat-pill-ok w-fit">
+                                  <Users className="h-3 w-3 flex-shrink-0" />
+                                  <span className="text-xs font-medium">{t('workflows.allAgentsLabel')}</span>
                                 </div>
                               );
                             }
@@ -1015,35 +1015,35 @@ const Workflows = () => {
                             if (!agent) return null;
                             const colorIdx = AGENTS.indexOf(agent);
                             return (
-                              <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-green-50 border border-green-100 w-fit">
-                                <Bot className="h-3 w-3 text-green-600 flex-shrink-0" />
+                              <div className="plat-pill plat-pill-ok w-fit">
+                                <Bot className="h-3 w-3 flex-shrink-0" />
                                 <span className={cn('w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-semibold flex-shrink-0', AVATAR_COLORS[colorIdx])}>
                                   {agent.avatar}
                                 </span>
-                                <span className="text-xs text-green-700 font-medium">{agent.name}</span>
+                                <span className="text-xs font-medium">{agent.name}</span>
                               </div>
                             );
                           })()}
 
                           <div className="flex items-center space-x-2">
-                            <div className="p-1 rounded bg-gray-100">
-                              <Activity className="h-3 w-3 text-blue-600" />
+                            <div className="p-1 rounded-[8px]" style={{ background: 'var(--sand)' }}>
+                              <Activity className="h-3 w-3" style={{ color: 'var(--text-4)' }} />
                             </div>
-                            <span className="text-sm text-gray-700">{t('workflows.executions')} {workflow.executions}</span>
+                            <span className="text-sm" style={{ color: 'var(--text-3)' }}>{t('workflows.executions')} {workflow.executions}</span>
                           </div>
 
                           <div className="flex items-center space-x-2">
-                            <div className="p-1 rounded bg-gray-100">
-                              <Clock className="h-3 w-3 text-green-600" />
+                            <div className="p-1 rounded-[8px]" style={{ background: 'var(--sand)' }}>
+                              <Clock className="h-3 w-3" style={{ color: 'var(--text-4)' }} />
                             </div>
-                            <span className="text-sm text-gray-700">{t('workflows.successRate')} {workflow.successRate}</span>
+                            <span className="text-sm" style={{ color: 'var(--text-3)' }}>{t('workflows.successRate')} {workflow.successRate}</span>
                           </div>
 
-                          <div className="flex space-x-2">
+                          <div className="flex space-x-2 sm:ml-auto">
                             <Button
                               variant="outline"
                               size="sm"
-                              className="flex-1 text-xs bg-[#f1f3f4] hover:bg-gray-200 border-transparent rounded-full font-medium text-gray-700"
+                              className="plat-btn-ghost !h-8 !justify-center !border-[color:var(--line)] text-xs"
                             >
                               {workflow.status === 'Active' ? (
                                 <><Pause className="h-3 w-3 mr-1" />{t('common.pause')}</>
@@ -1054,11 +1054,12 @@ const Workflows = () => {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="flex-1 text-xs bg-[#f1f3f4] hover:bg-gray-200 border-transparent rounded-full font-medium text-gray-700"
+                              className="plat-btn-ghost !h-8 !justify-center !border-[color:var(--line)] text-xs"
                               onClick={() => navigate('/workflows/create')}
                             >
                               {t('common.edit')}
                             </Button>
+                          </div>
                           </div>
                         </div>
                       </CardContent>

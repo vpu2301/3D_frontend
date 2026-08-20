@@ -153,10 +153,13 @@ export const useAccountingStore = create<AccountingState>()((set, get) => ({
 
 // ─── Derived selectors ────────────────────────────────────────────────────────
 
-export const selectPendingCases = (s: AccountingState) =>
+// NOTE: these return a fresh array each call — never pass them directly to
+// useAccountingStore() (zustand v5 requires stable snapshots). Select the raw
+// slice and memoize, or select a derived primitive like `.length`.
+export const selectPendingCases = (s: Pick<AccountingState, 'cases'>) =>
   s.cases.filter((c) => c.status === 'pending');
 
-export const selectDraftRequests = (s: AccountingState) =>
+export const selectDraftRequests = (s: Pick<AccountingState, 'requests'>) =>
   s.requests.filter((r) => r.status === 'draft');
 
 export function openItemCount(s: AccountingState, mandateId: string): number {

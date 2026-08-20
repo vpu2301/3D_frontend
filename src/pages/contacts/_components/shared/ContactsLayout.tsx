@@ -4,11 +4,11 @@ import { AppSidebar } from '@/components/dashboard/AppSidebar';
 
 export default function ContactsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col bg-white">{children}</SidebarInset>
+          <SidebarInset className="flex-1 flex flex-col bg-transparent">{children}</SidebarInset>
         </div>
       </SidebarProvider>
     </div>

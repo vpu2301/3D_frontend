@@ -31,7 +31,7 @@ import type { Priority, Task, RecurrenceRule, Attachment, AttachmentType } from 
 import TaskRow from '@/pages/todo/_components/list/TaskRow';
 import { cn } from '@/lib/utils';
 
-const PRIORITY_COLOR = ['', 'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-gray-400'];
+const PRIORITY_COLOR = ['', 'bg-[var(--bad-fg)]', 'bg-[var(--warn-fg)]', 'bg-[var(--text-5)]', 'bg-[var(--text-5)]'];
 const PRIORITY_LABEL = ['', 'P1', 'P2', 'P3', 'P4'];
 
 const ATTACHMENT_ICON = {
@@ -154,9 +154,9 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
   };
 
   return (
-    <aside className="flex h-full w-[420px] shrink-0 flex-col border-l border-gray-200 bg-white">
-      <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
-        <div className="flex min-w-0 items-center gap-2 text-xs text-gray-500">
+    <aside className="flex h-full w-[420px] shrink-0 flex-col border-l border-[var(--line-soft)]">
+      <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-4 py-3">
+        <div className="flex min-w-0 items-center gap-2 text-xs text-[var(--text-4)]">
           {task.sourceModule && (
             <button
               type="button"
@@ -165,17 +165,17 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                 else if (task.sourceModule === 'docs') navigate(`/docs/${task.sourceId}`);
                 else if (task.sourceModule === 'calendar') navigate('/calendar');
               }}
-              className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 font-medium text-blue-700 hover:bg-blue-100"
+              className="plat-pill plat-pill-mute !px-2 !py-0.5 !text-[10px] !font-medium transition-colors hover:!text-[var(--ink)]"
             >
               from {task.sourceModule} ↗
             </button>
           )}
-          {task.completed && <span className="text-emerald-600">Completed</span>}
+          {task.completed && <span style={{ color: 'var(--ok-fg)' }}>Completed</span>}
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="rounded p-1 text-gray-500 hover:bg-gray-100"
+          className="rounded-[6px] p-1 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
@@ -191,8 +191,8 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
             if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
           }}
           className={cn(
-            'w-full rounded-md border border-transparent bg-transparent text-lg font-semibold text-gray-900 placeholder:text-gray-400 hover:border-gray-200 focus:border-violet-400 focus:bg-white focus:outline-none',
-            task.completed && 'line-through text-gray-500',
+            'w-full rounded-[10px] border border-transparent bg-transparent px-2 py-1 text-lg font-semibold text-[var(--ink)] transition-colors placeholder:text-[var(--text-5)] hover:border-[var(--line)] focus:border-[var(--ink)] focus:bg-white focus:outline-none',
+            task.completed && 'text-[var(--text-5)] line-through',
           )}
           placeholder="Task title"
         />
@@ -204,7 +204,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               <button
                 type="button"
                 onClick={() => setPriorityOpen((o) => !o)}
-                className="flex items-center gap-1.5 rounded-md border border-gray-200 px-2 py-1 text-xs hover:bg-gray-50"
+                className="flex items-center gap-1.5 rounded-[10px] border border-[var(--line)] px-2 py-1 text-xs text-[var(--text-2)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
               >
                 <span className={cn('h-1.5 w-1.5 rounded-full', PRIORITY_COLOR[task.priority])} />
                 {PRIORITY_LABEL[task.priority]}
@@ -212,7 +212,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               </button>
               {priorityOpen && (
                 <div
-                  className="absolute right-0 top-full z-20 mt-1 w-32 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+                  className="absolute right-0 top-full z-20 mt-1 w-32 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-lg"
                   onMouseLeave={() => setPriorityOpen(false)}
                 >
                   {[1, 2, 3, 4].map((p) => (
@@ -224,8 +224,8 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                         setPriorityOpen(false);
                       }}
                       className={cn(
-                        'flex w-full items-center gap-1.5 rounded px-2 py-1 text-left text-xs hover:bg-gray-100',
-                        task.priority === p && 'bg-gray-100 font-medium',
+                        'flex w-full items-center gap-1.5 rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]',
+                        task.priority === p && 'bg-[rgba(20,22,26,0.06)] font-semibold',
                       )}
                     >
                       <span className={cn('h-1.5 w-1.5 rounded-full', PRIORITY_COLOR[p])} />
@@ -241,7 +241,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
           <Row label="Due">
             <div className="flex items-center gap-1">
               {task.dueAt ? (
-                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-700">
+                <span className="plat-pill plat-pill-mute !px-2 !py-0.5 !text-[11px] !font-medium">
                   {new Date(task.dueAt).toLocaleString(undefined, {
                     weekday: 'short',
                     month: 'short',
@@ -251,13 +251,13 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                   })}
                 </span>
               ) : (
-                <span className="text-xs italic text-gray-400">No due date</span>
+                <span className="text-xs italic text-[var(--text-5)]">No due date</span>
               )}
               {task.dueAt && (
                 <button
                   type="button"
                   onClick={() => updateTask(task.id, { dueAt: undefined })}
-                  className="rounded p-0.5 text-gray-400 hover:bg-gray-100"
+                  className="rounded-[6px] p-0.5 text-[var(--text-5)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                   aria-label="Clear due"
                 >
                   <X className="h-3 w-3" />
@@ -273,7 +273,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                 if (e.key === 'Enter') onParseDue();
               }}
               placeholder='"tomorrow at 3pm" or ISO'
-              className="h-7 w-full rounded-md border border-gray-200 bg-white px-2 text-xs focus:border-violet-400 focus:outline-none"
+              className="h-7 w-full rounded-[10px] border border-[var(--line)] bg-white px-2 text-xs text-[var(--ink)] transition-colors placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:outline-none"
             />
           </div>
 
@@ -283,7 +283,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               <button
                 type="button"
                 onClick={() => setProjectOpen((o) => !o)}
-                className="flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-xs hover:bg-gray-50"
+                className="flex items-center gap-1 rounded-[10px] border border-[var(--line)] px-2 py-1 text-xs text-[var(--text-2)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
               >
                 <Folder
                   className="h-3 w-3"
@@ -301,7 +301,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               </button>
               {projectOpen && (
                 <div
-                  className="absolute right-0 top-full z-20 mt-1 w-44 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+                  className="absolute right-0 top-full z-20 mt-1 w-44 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-lg"
                   onMouseLeave={() => setProjectOpen(false)}
                 >
                   <button
@@ -311,7 +311,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                       setList(task.id, null);
                       setProjectOpen(false);
                     }}
-                    className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-gray-100"
+                    className="block w-full rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]"
                   >
                     No project
                   </button>
@@ -327,8 +327,8 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                           setProjectOpen(false);
                         }}
                         className={cn(
-                          'flex w-full items-center gap-1.5 rounded px-2 py-1 text-left text-xs hover:bg-gray-100',
-                          task.projectId === p.id && 'bg-gray-100 font-medium',
+                          'flex w-full items-center gap-1.5 rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]',
+                          task.projectId === p.id && 'bg-[rgba(20,22,26,0.06)] font-semibold',
                         )}
                       >
                         <span className="h-2 w-2 rounded-full" style={{ backgroundColor: p.color ?? '#6b7280' }} />
@@ -347,7 +347,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               <select
                 value={task.listId ?? ''}
                 onChange={(e) => setList(task.id, e.target.value || null)}
-                className="rounded-md border border-gray-200 bg-white px-2 py-1 text-xs"
+                className="rounded-[10px] border border-[var(--line)] bg-white px-2 py-1 text-xs text-[var(--ink)]"
               >
                 <option value="">No list</option>
                 {Object.values(listsMap)
@@ -368,14 +368,14 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               {task.tags.map((t) => (
                 <span
                   key={t}
-                  className="group inline-flex items-center gap-0.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-[11px] text-gray-700"
+                  className="plat-pill plat-pill-mute group !gap-0.5 !px-1.5 !py-0.5 !text-[10px] !font-medium"
                 >
                   <Hash className="h-2.5 w-2.5" />
                   {t}
                   <button
                     type="button"
                     onClick={() => removeTag(task.id, t)}
-                    className="ml-0.5 text-gray-400 opacity-0 hover:text-red-500 group-hover:opacity-100"
+                    className="ml-0.5 text-[var(--text-5)] opacity-0 transition-opacity group-hover:opacity-100"
                   >
                     <X className="h-2.5 w-2.5" />
                   </button>
@@ -391,7 +391,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                   }
                 }}
                 placeholder="add tag…"
-                className="h-6 w-20 rounded-full border border-gray-200 bg-white px-2 text-[11px] focus:border-violet-400 focus:outline-none"
+                className="h-6 w-20 rounded-full border border-[var(--line)] bg-white px-2 text-[11px] text-[var(--ink)] transition-colors placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:outline-none"
               />
             </div>
           </Row>
@@ -404,7 +404,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               value={task.estimate ?? ''}
               onChange={(e) => updateTask(task.id, { estimate: e.target.value ? Number(e.target.value) : undefined })}
               placeholder="minutes"
-              className="h-7 w-24 rounded-md border border-gray-200 bg-white px-2 text-xs focus:border-violet-400 focus:outline-none"
+              className="h-7 w-24 rounded-[10px] border border-[var(--line)] bg-white px-2 text-xs text-[var(--ink)] transition-colors placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:outline-none"
             />
           </Row>
 
@@ -414,7 +414,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               <button
                 type="button"
                 onClick={() => setRecurOpen((o) => !o)}
-                className="flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-xs hover:bg-gray-50"
+                className="flex items-center gap-1 rounded-[10px] border border-[var(--line)] px-2 py-1 text-xs text-[var(--text-2)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
               >
                 <Repeat className="h-3 w-3" />
                 {task.recurrence ? describeRecurrence(task.recurrence) : 'No repeat'}
@@ -422,15 +422,15 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               </button>
               {recurOpen && (
                 <div
-                  className="absolute right-0 top-full z-20 mt-1 w-44 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+                  className="absolute right-0 top-full z-20 mt-1 w-44 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-lg"
                   onMouseLeave={() => setRecurOpen(false)}
                 >
-                  <button type="button" onClick={() => setRecur(undefined)} className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-gray-100">No repeat</button>
-                  <button type="button" onClick={() => setRecur({ freq: 'daily', interval: 1 })} className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-gray-100">Daily</button>
-                  <button type="button" onClick={() => setRecur({ freq: 'weekly', interval: 1, byday: ['mo','tu','we','th','fr'] })} className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-gray-100">Every weekday</button>
-                  <button type="button" onClick={() => setRecur({ freq: 'weekly', interval: 1 })} className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-gray-100">Weekly</button>
-                  <button type="button" onClick={() => setRecur({ freq: 'monthly', interval: 1 })} className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-gray-100">Monthly</button>
-                  <button type="button" onClick={() => setRecur({ freq: 'yearly', interval: 1 })} className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-gray-100">Yearly</button>
+                  <button type="button" onClick={() => setRecur(undefined)} className="block w-full rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]">No repeat</button>
+                  <button type="button" onClick={() => setRecur({ freq: 'daily', interval: 1 })} className="block w-full rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]">Daily</button>
+                  <button type="button" onClick={() => setRecur({ freq: 'weekly', interval: 1, byday: ['mo','tu','we','th','fr'] })} className="block w-full rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]">Every weekday</button>
+                  <button type="button" onClick={() => setRecur({ freq: 'weekly', interval: 1 })} className="block w-full rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]">Weekly</button>
+                  <button type="button" onClick={() => setRecur({ freq: 'monthly', interval: 1 })} className="block w-full rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]">Monthly</button>
+                  <button type="button" onClick={() => setRecur({ freq: 'yearly', interval: 1 })} className="block w-full rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]">Yearly</button>
                 </div>
               )}
             </div>
@@ -440,7 +440,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
         {/* Subtasks */}
         <div className="mt-6">
           <div className="mb-2 flex items-center justify-between">
-            <div className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <div className="plat-eyebrow">
               Subtasks ({subtasks.filter((t) => t.completed).length}/{subtasks.length})
             </div>
             <div className="flex items-center gap-1">
@@ -448,7 +448,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                 type="button"
                 onClick={onBreakDown}
                 disabled={breakingDown}
-                className="flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[11px] font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50"
+                className="plat-btn-ghost !h-7 !gap-1 !px-3 !text-[11px] disabled:opacity-50"
               >
                 {breakingDown ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
                 Break down with AI
@@ -456,18 +456,18 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               <button
                 type="button"
                 onClick={onAddSubtask}
-                className="flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-[11px] text-gray-700 hover:bg-gray-50"
+                className="plat-btn-ghost !h-7 !gap-1 !px-3 !text-[11px]"
               >
                 <Plus className="h-3 w-3" /> Subtask
               </button>
             </div>
           </div>
           {subtasks.length === 0 ? (
-            <div className="rounded-md border border-dashed border-gray-200 px-3 py-4 text-center text-xs italic text-gray-400">
+            <div className="rounded-[12px] border border-dashed border-[var(--line)] px-3 py-4 text-center text-xs italic text-[var(--text-5)]">
               No subtasks yet.
             </div>
           ) : (
-            <div className="overflow-hidden rounded-md border border-gray-200 bg-white">
+            <div className="plat-list">
               {subtasks.map((s) => (
                 <TaskRow key={s.id} task={s} showProject={false} showList={false} />
               ))}
@@ -478,21 +478,21 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
         {/* Attachments */}
         <div className="mt-6">
           <div className="mb-2 flex items-center justify-between">
-            <div className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <div className="plat-eyebrow">
               Attachments ({task.attachments.length})
             </div>
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setAttachOpen((o) => !o)}
-                className="flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-[11px] text-gray-700 hover:bg-gray-50"
+                className="plat-btn-ghost !h-7 !gap-1 !px-3 !text-[11px]"
               >
                 <Paperclip className="h-3 w-3" /> Attach
                 <ChevronDown className="h-3 w-3" />
               </button>
               {attachOpen && (
                 <div
-                  className="absolute right-0 top-full z-20 mt-1 w-40 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+                  className="absolute right-0 top-full z-20 mt-1 w-40 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-lg"
                   onMouseLeave={() => setAttachOpen(false)}
                 >
                   {(['doc', 'note', 'drive', 'event'] as AttachmentType[]).map((t) => (
@@ -500,7 +500,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                       key={t}
                       type="button"
                       onClick={() => onAttachLink(t)}
-                      className="flex w-full items-center gap-1.5 rounded px-2 py-1 text-left text-xs hover:bg-gray-100"
+                      className="flex w-full items-center gap-1.5 rounded-[8px] px-2 py-1 text-left text-xs transition-colors hover:bg-[rgba(20,22,26,0.05)]"
                     >
                       {(() => {
                         const Icon = ATTACHMENT_ICON[t];
@@ -514,11 +514,11 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
             </div>
           </div>
           {task.attachments.length === 0 ? (
-            <div className="rounded-md border border-dashed border-gray-200 px-3 py-3 text-center text-xs italic text-gray-400">
+            <div className="rounded-[12px] border border-dashed border-[var(--line)] px-3 py-3 text-center text-xs italic text-[var(--text-5)]">
               Link a Doc, Note, Drive file, or Calendar event.
             </div>
           ) : (
-            <ul className="space-y-1">
+            <ul className="overflow-hidden rounded-[12px] border border-[var(--line-soft)]">
               {task.attachments.map((a, i) => {
                 const Icon = ATTACHMENT_ICON[a.type];
                 const route =
@@ -532,16 +532,16 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                 return (
                   <li
                     key={`${a.type}-${a.targetId}-${i}`}
-                    className="group flex items-center justify-between gap-2 rounded-md border border-gray-100 px-2 py-1.5 text-xs hover:bg-gray-50"
+                    className="group flex items-center justify-between gap-2 border-b border-[var(--line-soft)] px-3 py-2 text-xs transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]"
                   >
                     <button
                       type="button"
                       onClick={() => navigate(route)}
-                      className="flex min-w-0 items-center gap-1.5 hover:text-blue-700"
+                      className="flex min-w-0 items-center gap-1.5 text-[var(--text-2)] transition-colors hover:text-[var(--ink)]"
                     >
-                      <Icon className="h-3 w-3 text-gray-500" />
+                      <Icon className="h-3 w-3" style={{ color: 'var(--text-4)' }} />
                       <span className="truncate">{a.label ?? a.targetId}</span>
-                      <span className="text-[10px] uppercase tracking-wider text-gray-400">
+                      <span className="plat-eyebrow !text-[9px]">
                         {a.type}
                       </span>
                     </button>
@@ -550,7 +550,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
                       onClick={() => removeAttachment(task.id, a.type, a.targetId)}
                       className="opacity-0 group-hover:opacity-100"
                     >
-                      <X className="h-3 w-3 text-gray-400 hover:text-red-500" />
+                      <X className="h-3 w-3 text-[var(--text-5)] transition-colors hover:text-[var(--bad-fg)]" />
                     </button>
                   </li>
                 );
@@ -561,14 +561,14 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
 
         {/* Activity */}
         <div className="mt-6">
-          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Activity</div>
+          <div className="plat-eyebrow mb-2">Activity</div>
           <ul className="space-y-2">
             {task.activity.map((a) => (
               <li key={a.id} className="flex items-start gap-2 text-[11px]">
-                <div className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400" />
+                <div className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--text-5)]" />
                 <div>
-                  <div className="capitalize text-gray-700">{a.type}</div>
-                  <div className="text-[10px] text-gray-500">{new Date(a.at).toLocaleString()}</div>
+                  <div className="capitalize text-[var(--text-2)]">{a.type}</div>
+                  <div className="text-[10px] text-[var(--text-4)]">{new Date(a.at).toLocaleString()}</div>
                 </div>
               </li>
             ))}
@@ -576,7 +576,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-gray-200 px-4 py-2">
+      <div className="flex items-center justify-between border-t border-[var(--line-soft)] px-4 py-2">
         <button
           type="button"
           onClick={() => {
@@ -585,11 +585,12 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
               onClose();
             }
           }}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-red-600 hover:bg-red-50"
+          className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs transition-colors hover:bg-[rgba(179,56,46,0.08)]"
+          style={{ color: 'var(--bad-fg)' }}
         >
           <Trash2 className="h-3.5 w-3.5" /> Trash
         </button>
-        <div className="text-[10px] text-gray-400">
+        <div className="text-[10px] text-[var(--text-5)]">
           Created {new Date(task.createdAt).toLocaleDateString()}
         </div>
       </div>
@@ -600,7 +601,7 @@ export default function TaskDetailPane({ taskId, onClose }: { taskId: string; on
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="w-[80px] shrink-0 text-xs uppercase tracking-wider text-gray-500">{label}</div>
+      <div className="plat-eyebrow w-[80px] shrink-0">{label}</div>
       <div className="flex flex-1 items-center justify-between">{children}</div>
     </div>
   );

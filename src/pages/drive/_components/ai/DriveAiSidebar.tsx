@@ -90,16 +90,16 @@ export default function DriveAiSidebar() {
   };
 
   return (
-    <aside className="flex h-full w-96 shrink-0 flex-col border-l border-gray-200 bg-white">
-      <div className="flex items-center justify-between border-b border-gray-200 px-3 py-2.5">
-        <div className="flex items-center gap-1.5 font-medium">
-          <Sparkles className="h-4 w-4 text-blue-500" />
+    <aside className="flex h-full w-96 shrink-0 flex-col border-l border-[var(--line-soft)]">
+      <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-4 py-3">
+        <div className="flex items-center gap-2 text-[13.5px] font-semibold text-[var(--ink)]">
+          <Sparkles className="h-4 w-4 text-[var(--text-4)]" />
           Ask across Drive
         </div>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="rounded p-1 hover:bg-gray-100"
+          className="rounded-[8px] p-1 text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
@@ -108,12 +108,12 @@ export default function DriveAiSidebar() {
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-3">
         {messages.length === 0 ? (
-          <div className="rounded-md bg-gray-50 p-3 text-sm text-gray-600">
+          <div className="rounded-[12px] border border-[var(--line-soft)] bg-white p-3.5 text-[13px] text-[var(--text-2)]">
             Ask anything across {files.length} files in your Drive.
-            <ul className="mt-2 space-y-1 text-xs">
-              <li className="text-blue-700">"Find all contracts mentioning Acme"</li>
-              <li className="text-blue-700">"What was decided in last week's meetings?"</li>
-              <li className="text-blue-700">"Berlin trip photos"</li>
+            <ul className="mt-2 space-y-1 text-xs text-[var(--text-4)]">
+              <li>"Find all contracts mentioning Acme"</li>
+              <li>"What was decided in last week's meetings?"</li>
+              <li>"Berlin trip photos"</li>
             </ul>
           </div>
         ) : (
@@ -121,8 +121,10 @@ export default function DriveAiSidebar() {
             <div key={m.id} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
               <div
                 className={cn(
-                  'max-w-[90%] rounded-lg px-3 py-2 text-sm',
-                  m.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900',
+                  'max-w-[90%] rounded-[12px] px-3 py-2 text-[13.5px] leading-relaxed',
+                  m.role === 'user'
+                    ? 'bg-[var(--ink)] text-white'
+                    : 'border border-[var(--line-soft)] bg-white text-[var(--ink)]',
                 )}
               >
                 <div className="whitespace-pre-wrap">
@@ -141,7 +143,7 @@ export default function DriveAiSidebar() {
                           key={fid}
                           type="button"
                           onClick={() => setPreviewId(fid)}
-                          className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-blue-700 shadow-sm hover:bg-blue-50"
+                          className="inline-flex items-center gap-1 rounded-full border border-[var(--line-soft)] bg-white px-2 py-0.5 text-[10px] font-medium text-[var(--text-2)] hover:border-[var(--ink)] hover:text-[var(--ink)]"
                         >
                           <Icon className={cn('h-2.5 w-2.5', fileKindColor(kind))} />
                           <span className="max-w-[160px] truncate">{f.name}</span>
@@ -157,7 +159,7 @@ export default function DriveAiSidebar() {
       </div>
 
       <form
-        className="border-t border-gray-200 p-3"
+        className="border-t border-[var(--line-soft)] p-3"
         onSubmit={(e) => {
           e.preventDefault();
           send();
@@ -175,12 +177,12 @@ export default function DriveAiSidebar() {
             }}
             placeholder="Ask anything about your Drive…"
             rows={2}
-            className="flex-1 resize-none rounded-md border border-gray-200 bg-white p-2 text-sm focus:border-blue-400 focus:outline-none"
+            className="flex-1 resize-none rounded-[10px] border border-[var(--line)] bg-white p-2.5 text-[13.5px] text-[var(--ink)] placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:outline-none"
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="flex h-9 w-9 items-center justify-center rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--ink)] text-white transition-opacity hover:opacity-85 disabled:opacity-35"
           >
             <Send className="h-4 w-4" />
           </button>

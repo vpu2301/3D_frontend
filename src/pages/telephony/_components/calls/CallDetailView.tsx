@@ -57,7 +57,7 @@ function fmtDate(ms: number): string {
 
 const STATUS_META: Record<CallStatus, { label: string; cls: string; dot: string }> = {
   live:             { label: 'Live',             cls: 'bg-green-50 text-green-700 border-green-200',  dot: 'bg-green-500 animate-pulse' },
-  completed:        { label: 'Completed',        cls: 'bg-gray-100 text-gray-600 border-gray-200',   dot: 'bg-gray-400' },
+  completed:        { label: 'Completed',        cls: 'bg-[var(--sand-deep)] text-[var(--text-3)] border-[var(--line)]',   dot: 'bg-[var(--text-5)]' },
   failed:           { label: 'Failed',           cls: 'bg-red-50 text-red-600 border-red-200',       dot: 'bg-red-400' },
   aborted:          { label: 'Aborted',          cls: 'bg-red-50 text-red-500 border-red-200',       dot: 'bg-red-300' },
   pending_approval: { label: 'Pending approval', cls: 'bg-blue-50 text-blue-600 border-blue-200',   dot: 'bg-blue-400' },
@@ -111,17 +111,17 @@ function StateMachineTimeline({ call }: { call: MockCall }) {
             <span
               className={cn(
                 'rounded-full px-2 py-0.5 text-[10px] font-medium transition-all',
-                done   ? 'bg-[#dde9f4] text-gray-600'
+                done   ? 'bg-[rgba(20,22,26,0.06)] text-[var(--text-3)]'
                 : failed ? 'bg-red-100 text-red-600'
                 : isNow && call.status === 'live' ? 'bg-green-100 text-green-700 ring-1 ring-green-300'
                 : isNow ? 'bg-amber-100 text-amber-700'
-                : 'bg-gray-100 text-gray-400',
+                : 'bg-[var(--sand-deep)] text-[var(--text-5)]',
               )}
             >
               {done ? '✓ ' : ''}{label}
             </span>
             {i < stages.length - 1 && (
-              <span className="text-gray-200 text-[10px]">›</span>
+              <span className="text-[var(--text-5)] text-[10px]">›</span>
             )}
           </div>
         );
@@ -137,15 +137,15 @@ function TranscriptBubble({ turn, agentLabel }: { turn: MockCall['transcript'][0
   return (
     <div className={cn('mb-4 flex flex-col', isAgent ? 'items-start' : 'items-end')}>
       <div className="mb-1 flex items-center gap-2 px-1">
-        <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+        <span className="plat-eyebrow">
           {isAgent ? agentLabel : 'Gesprächspartner'}
         </span>
-        <span className="text-[10px] text-gray-300">{fmtOffset(turn.timestampSec)}</span>
+        <span className="text-[10px] text-[var(--text-5)]">{fmtOffset(turn.timestampSec)}</span>
       </div>
       <div
         className={cn(
-          'max-w-[78%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed text-gray-900',
-          isAgent ? 'rounded-tl-none bg-[#dde9f4]' : 'rounded-tr-none bg-gray-100',
+          'max-w-[78%] rounded-[14px] px-3.5 py-2.5 text-sm leading-relaxed text-[var(--ink)]',
+          isAgent ? 'rounded-tl-none bg-[rgba(20,22,26,0.06)]' : 'rounded-tr-none bg-[var(--sand-deep)]',
         )}
       >
         {turn.text}
@@ -157,12 +157,12 @@ function TranscriptBubble({ turn, agentLabel }: { turn: MockCall['transcript'][0
 function TypingIndicator({ label }: { label: string }) {
   return (
     <div className="mb-4 flex flex-col items-start">
-      <span className="mb-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-gray-400">{label}</span>
-      <div className="flex items-center gap-1 rounded-2xl rounded-tl-none bg-[#dde9f4] px-4 py-3">
+      <span className="plat-eyebrow mb-1 px-1">{label}</span>
+      <div className="flex items-center gap-1 rounded-[14px] rounded-tl-none bg-[rgba(20,22,26,0.06)] px-4 py-3">
         {[0, 150, 300].map((d) => (
           <span
             key={d}
-            className="h-1.5 w-1.5 rounded-full bg-gray-500 animate-bounce"
+            className="h-1.5 w-1.5 rounded-full bg-[var(--text-4)] animate-bounce"
             style={{ animationDelay: `${d}ms` }}
           />
         ))}
@@ -173,7 +173,7 @@ function TypingIndicator({ label }: { label: string }) {
 
 function AwaitingBanner() {
   return (
-    <div className="my-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+    <div className="my-3 rounded-[14px] border border-amber-200 bg-amber-50 px-4 py-3">
       <p className="mb-2 text-xs font-medium text-amber-800">
         ⏸ Awaiting your confirmation:
         <span className="ml-1 font-semibold">"Soll ich den Termin für Donnerstag 14:00 Uhr bestätigen?"</span>
@@ -193,10 +193,10 @@ function AwaitingBanner() {
 // ─── Generated / linked documents ─────────────────────────────────────────────
 
 const DOC_TYPE_META: Record<GeneratedDoc['type'], { icon: React.ComponentType<{ className?: string }>; color: string }> = {
-  calendar_event: { icon: CalendarDays, color: 'text-blue-500 bg-blue-50' },
-  crm_note:       { icon: BookUser,     color: 'text-rose-500 bg-rose-50' },
-  document:       { icon: FileText,     color: 'text-sky-500 bg-sky-50' },
-  note:           { icon: StickyNote,   color: 'text-amber-500 bg-amber-50' },
+  calendar_event: { icon: CalendarDays, color: 'text-[var(--ink)] bg-[var(--sand)]' },
+  crm_note:       { icon: BookUser,     color: 'text-[var(--ink)] bg-[var(--sand)]' },
+  document:       { icon: FileText,     color: 'text-[var(--ink)] bg-[var(--sand)]' },
+  note:           { icon: StickyNote,   color: 'text-[var(--ink)] bg-[var(--sand)]' },
 };
 
 const ACTION_LABEL: Record<GeneratedDoc['action'], string> = {
@@ -214,16 +214,16 @@ function DocLink({ doc }: { doc: GeneratedDoc }) {
     <button
       type="button"
       onClick={() => navigate(doc.href)}
-      className="flex w-full items-start gap-3 rounded-xl border border-gray-100 bg-gray-50 p-3 text-left transition-colors hover:border-[#8fc4e4] hover:bg-[#f0f7fc]"
+      className="flex w-full items-start gap-3 rounded-[14px] border border-[var(--line-soft)] bg-[var(--sand)] p-3 text-left transition-colors hover:border-[var(--ink)] hover:bg-[rgba(20,22,26,0.03)]"
     >
-      <div className={cn('mt-0.5 shrink-0 rounded-lg p-1.5', meta.color)}>
+      <div className={cn('mt-0.5 shrink-0 rounded-[10px] p-1.5', meta.color)}>
         <Icon className="h-3.5 w-3.5" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-medium text-gray-800">{doc.label}</p>
-        <p className="mt-0.5 text-[10px] text-gray-400">{ACTION_LABEL[doc.action]} by agent</p>
+        <p className="truncate text-xs font-medium text-[var(--ink)]">{doc.label}</p>
+        <p className="mt-0.5 text-[10px] text-[var(--text-5)]">{ACTION_LABEL[doc.action]} by agent</p>
       </div>
-      <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-300" />
+      <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--text-5)]" />
     </button>
   );
 }
@@ -236,9 +236,9 @@ function OutcomeChip({ outcome }: { outcome: MockCall['outcome'] }) {
     booked:             { label: '✓ Booked',           cls: 'bg-green-100 text-green-700' },
     info_collected:     { label: '✓ Info collected',   cls: 'bg-blue-100 text-blue-700' },
     voicemail:          { label: '📬 Voicemail',        cls: 'bg-amber-100 text-amber-700' },
-    no_answer:          { label: '— No answer',        cls: 'bg-gray-100 text-gray-600' },
+    no_answer:          { label: '— No answer',        cls: 'bg-[var(--sand-deep)] text-[var(--text-3)]' },
     failed:             { label: '✗ Failed',           cls: 'bg-red-100 text-red-600' },
-    user_aborted:       { label: '✗ Aborted',          cls: 'bg-gray-100 text-gray-500' },
+    user_aborted:       { label: '✗ Aborted',          cls: 'bg-[var(--sand-deep)] text-[var(--text-4)]' },
     callback_requested: { label: '↩ Callback',         cls: 'bg-sky-100 text-sky-700' },
   };
   const m = map[outcome];
@@ -253,13 +253,13 @@ function LeftPanel({ call, onBack }: { call: MockCall; onBack: () => void }) {
   const [objectiveOpen, setObjectiveOpen] = useState(true);
 
   return (
-    <aside className="flex h-full w-64 shrink-0 flex-col overflow-y-auto border-r border-gray-100 bg-white">
+    <aside className="flex h-full w-64 shrink-0 flex-col overflow-y-auto border-r border-[var(--line-soft)]">
       <div className="space-y-5 p-4">
         {/* Back */}
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1.5 text-xs text-gray-400 transition-colors hover:text-gray-800"
+          className="flex items-center gap-1.5 text-xs text-[var(--text-5)] transition-colors hover:text-[var(--ink)]"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back to calls
         </button>
@@ -267,28 +267,28 @@ function LeftPanel({ call, onBack }: { call: MockCall; onBack: () => void }) {
         {/* Counterparty */}
         <div>
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-lg">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--sand-deep)] text-lg">
               {COUNTRY_FLAGS[call.counterpartyCountry] ?? '🌐'}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-gray-900">
+              <p className="truncate text-sm font-semibold text-[var(--ink)]">
                 {call.counterpartyName ?? call.counterpartyPhone}
               </p>
               {call.counterpartyName && (
-                <p className="truncate text-xs text-gray-400">{call.counterpartyPhone}</p>
+                <p className="truncate text-xs text-[var(--text-5)]">{call.counterpartyPhone}</p>
               )}
             </div>
           </div>
-          <div className="mt-2 flex items-center gap-1.5 text-xs text-gray-500">
+          <div className="mt-2 flex items-center gap-1.5 text-xs text-[var(--text-4)]">
             {call.direction === 'outbound'
-              ? <ArrowUpRight className="h-3.5 w-3.5 text-gray-400" />
-              : <ArrowDownLeft className="h-3.5 w-3.5 text-gray-400" />}
+              ? <ArrowUpRight className="h-3.5 w-3.5 text-[var(--text-5)]" />
+              : <ArrowDownLeft className="h-3.5 w-3.5 text-[var(--text-5)]" />}
             <span className="capitalize">{call.direction} call</span>
             {call.startedAt > 0 && (
               <>
-                <span className="text-gray-300">·</span>
+                <span className="text-[var(--text-5)]">·</span>
                 <span>{fmtDate(call.startedAt)}</span>
-                <span className="text-gray-300">·</span>
+                <span className="text-[var(--text-5)]">·</span>
                 <span>{fmtTime(call.startedAt)}</span>
               </>
             )}
@@ -297,17 +297,17 @@ function LeftPanel({ call, onBack }: { call: MockCall; onBack: () => void }) {
 
         {/* Agent */}
         <div>
-          <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">Agent</p>
-          <span className="rounded-full bg-[#dde9f4] px-2.5 py-1 text-xs font-medium text-gray-800">
+          <p className="plat-eyebrow mb-1.5">Agent</p>
+          <span className="rounded-full bg-[rgba(20,22,26,0.06)] px-2.5 py-1 text-xs font-medium text-[var(--ink)]">
             {call.agentPersona}
           </span>
         </div>
 
-        <hr className="border-gray-100" />
+        <hr className="border-[var(--line-soft)]" />
 
         {/* State machine */}
         <div>
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400">Progress</p>
+          <p className="plat-eyebrow mb-2">Progress</p>
           <StateMachineTimeline call={call} />
         </div>
 
@@ -319,11 +319,11 @@ function LeftPanel({ call, onBack }: { call: MockCall; onBack: () => void }) {
             { icon: MessageSquare, label: 'Turns',          value: String(call.transcript.length) },
             { icon: Zap,           label: 'Interventions',  value: call.hasUserIntervention ? '1' : '0' },
           ].map(({ icon: Icon, label, value }) => (
-            <div key={label} className="rounded-lg border border-gray-100 bg-gray-50 p-2.5">
-              <div className="mb-0.5 flex items-center gap-1 text-[10px] text-gray-400">
+            <div key={label} className="rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] p-2.5">
+              <div className="mb-0.5 flex items-center gap-1 text-[10px] text-[var(--text-5)]">
                 <Icon className="h-3 w-3" /> {label}
               </div>
-              <p className="text-sm font-semibold tabular-nums text-gray-800">{value}</p>
+              <p className="text-sm font-semibold tabular-nums text-[var(--ink)]">{value}</p>
             </div>
           ))}
         </div>
@@ -331,7 +331,7 @@ function LeftPanel({ call, onBack }: { call: MockCall; onBack: () => void }) {
         {/* Outcome */}
         {call.outcome && (
           <div>
-            <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">Outcome</p>
+            <p className="plat-eyebrow mb-1.5">Outcome</p>
             <OutcomeChip outcome={call.outcome} />
           </div>
         )}
@@ -341,7 +341,7 @@ function LeftPanel({ call, onBack }: { call: MockCall; onBack: () => void }) {
           <button
             type="button"
             onClick={() => setObjectiveOpen((v) => !v)}
-            className="flex w-full items-center justify-between text-[10px] font-semibold uppercase tracking-wide text-gray-400 hover:text-gray-600"
+            className="plat-eyebrow flex w-full items-center justify-between hover:text-[var(--text-3)]"
           >
             Objective
             {objectiveOpen
@@ -349,17 +349,17 @@ function LeftPanel({ call, onBack }: { call: MockCall; onBack: () => void }) {
               : <ChevronDown className="h-3.5 w-3.5" />}
           </button>
           {objectiveOpen && (
-            <p className="mt-2 text-xs leading-relaxed text-gray-700">{call.objective}</p>
+            <p className="mt-2 text-xs leading-relaxed text-[var(--text-2)]">{call.objective}</p>
           )}
         </div>
 
         {/* Tags */}
         {call.tags.length > 0 && (
           <div>
-            <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">Tags</p>
+            <p className="plat-eyebrow mb-1.5">Tags</p>
             <div className="flex flex-wrap gap-1">
               {call.tags.map((t) => (
-                <span key={t} className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] text-gray-500">
+                <span key={t} className="rounded-full bg-[var(--sand-deep)] px-2 py-0.5 text-[10px] text-[var(--text-4)]">
                   {t}
                 </span>
               ))}
@@ -393,20 +393,20 @@ function CenterPanel({ call }: { call: MockCall }) {
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
       {/* Transcript header */}
-      <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-5 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Transcript</p>
+      <div className="flex shrink-0 items-center justify-between border-b border-[var(--line-soft)] px-5 py-3">
+        <p className="plat-eyebrow">Transcript</p>
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onCopy}
-            className="flex items-center gap-1.5 text-xs text-gray-400 transition-colors hover:text-gray-700"
+            className="flex items-center gap-1.5 text-xs text-[var(--text-5)] transition-colors hover:text-[var(--text-2)]"
           >
             <Copy className="h-3.5 w-3.5" />
             {copied ? 'Copied!' : 'Copy'}
           </button>
           <button
             type="button"
-            className="flex items-center gap-1.5 text-xs text-gray-400 transition-colors hover:text-gray-700"
+            className="flex items-center gap-1.5 text-xs text-[var(--text-5)] transition-colors hover:text-[var(--text-2)]"
           >
             <Download className="h-3.5 w-3.5" /> Export PDF
           </button>
@@ -416,7 +416,7 @@ function CenterPanel({ call }: { call: MockCall }) {
       {/* Scrollable transcript body */}
       <div className="flex-1 overflow-y-auto px-5 py-4">
         {/* EU AI Act label */}
-        <div className="mb-5 flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2">
+        <div className="mb-5 flex items-center gap-2 rounded-[14px] border border-amber-200 bg-amber-50 px-3 py-2">
           <Sparkles className="h-3.5 w-3.5 shrink-0 text-amber-500" />
           <p className="text-[11px] text-amber-800">
             KI-generierte Kommunikation — EU AI Act Art. 12 · Pincer Cloud
@@ -426,9 +426,9 @@ function CenterPanel({ call }: { call: MockCall }) {
         {/* Empty */}
         {call.transcript.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <MessageSquare className="mb-3 h-10 w-10 text-gray-200" />
-            <p className="text-sm text-gray-400">No transcript available</p>
-            <p className="mt-1 text-xs text-gray-300">
+            <MessageSquare className="mb-3 h-10 w-10 text-[var(--text-5)]" />
+            <p className="text-sm text-[var(--text-5)]">No transcript available</p>
+            <p className="mt-1 text-xs text-[var(--text-5)]">
               {call.status === 'pending_approval' || call.status === 'scheduled' || call.status === 'queued'
                 ? 'Call has not started yet'
                 : 'Transcript will appear here once the call begins'}
@@ -463,7 +463,7 @@ function LivePanel({ call }: { call: MockCall }) {
   const [whisper, setWhisper] = useState('');
   const budget = 2.0;
   const pct = Math.min((call.costEur / budget) * 100, 100);
-  const barColor = pct >= 95 ? 'bg-red-500' : pct >= 75 ? 'bg-amber-400' : 'bg-[#bdd8ec]';
+  const barColor = pct >= 95 ? 'bg-red-500' : pct >= 75 ? 'bg-amber-400' : 'bg-[var(--ink)]';
 
   return (
     <div className="space-y-4">
@@ -476,28 +476,28 @@ function LivePanel({ call }: { call: MockCall }) {
       </button>
 
       {/* Cost ticker */}
-      <div className="rounded-xl border border-gray-100 bg-gray-50 p-3">
-        <p className="mb-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">Live cost</p>
-        <p className="text-2xl font-light tabular-nums text-gray-900">€{call.costEur.toFixed(2)}</p>
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-200">
+      <div className="rounded-[14px] border border-[var(--line-soft)] bg-[var(--sand)] p-3">
+        <p className="plat-eyebrow mb-0.5">Live cost</p>
+        <p className="plat-num" style={{ fontSize: 26 }}>€{call.costEur.toFixed(2)}</p>
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[var(--sand-deep)]">
           <div className={cn('h-1.5 rounded-full transition-all', barColor)} style={{ width: `${pct}%` }} />
         </div>
-        <p className="mt-1 text-[10px] text-gray-400">Budget: €{budget.toFixed(2)} max</p>
+        <p className="mt-1 text-[10px] text-[var(--text-5)]">Budget: €{budget.toFixed(2)} max</p>
       </div>
 
       {/* Whisper */}
       <div>
-        <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">Whisper to agent</p>
+        <p className="plat-eyebrow mb-1.5">Whisper to agent</p>
         <textarea
           value={whisper}
           onChange={(e) => setWhisper(e.target.value)}
           placeholder="Give the agent a hint…"
           rows={3}
-          className="w-full resize-none rounded-xl border border-gray-200 p-2.5 text-sm outline-none placeholder:text-gray-300 focus:border-[#8fc4e4]"
+          className="w-full resize-none rounded-[14px] border border-[var(--line)] p-2.5 text-sm outline-none placeholder:text-[var(--text-5)] focus:border-[var(--ink)]"
         />
         <button
           type="button"
-          className="mt-1.5 flex items-center gap-1.5 rounded-full bg-[#bdd8ec] px-3 py-1.5 text-xs font-medium text-gray-800 hover:bg-[#a5c8e0] ml-auto"
+          className="mt-1.5 flex items-center gap-1.5 rounded-full bg-[var(--ink)] px-3 py-1.5 text-xs font-medium text-white hover:opacity-85 ml-auto"
         >
           <Send className="h-3 w-3" /> Send
         </button>
@@ -514,26 +514,26 @@ function CompletedPanel({ call }: { call: MockCall }) {
       {/* Actions */}
       <button
         type="button"
-        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-full border border-gray-200 text-sm text-gray-600 transition-colors hover:bg-gray-50"
+        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-full border border-[var(--line)] text-sm text-[var(--text-3)] transition-colors hover:bg-[var(--sand)]"
       >
         <Flag className="h-3.5 w-3.5" /> Flag for review
       </button>
       <button
         type="button"
-        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-full bg-[#bdd8ec] text-sm font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
+        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-full bg-[var(--ink)] text-sm font-medium text-white transition-colors hover:opacity-85"
       >
         <Download className="h-3.5 w-3.5" /> Export transcript
       </button>
 
       {/* Training toggle */}
-      <div className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-3 py-2.5">
-        <span className="text-xs text-gray-600">Add to training set</span>
+      <div className="flex items-center justify-between rounded-[14px] border border-[var(--line-soft)] bg-[var(--sand)] px-3 py-2.5">
+        <span className="text-xs text-[var(--text-3)]">Add to training set</span>
         <button
           type="button"
           onClick={() => setTraining((v) => !v)}
           className={cn(
             'relative h-5 w-9 rounded-full transition-colors',
-            training ? 'bg-[#5aacee]' : 'bg-gray-200',
+            training ? 'bg-[var(--ink)]' : 'bg-[var(--sand-deep)]',
           )}
         >
           <span
@@ -551,13 +551,13 @@ function CompletedPanel({ call }: { call: MockCall }) {
 function PendingPanel({ call }: { call: MockCall }) {
   return (
     <div className="space-y-3">
-      <div className="rounded-xl border border-gray-100 bg-gray-50 p-3">
-        <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-gray-400">Objective</p>
-        <p className="text-sm text-gray-700">{call.objective}</p>
+      <div className="rounded-[14px] border border-[var(--line-soft)] bg-[var(--sand)] p-3">
+        <p className="plat-eyebrow mb-1">Objective</p>
+        <p className="text-sm text-[var(--text-2)]">{call.objective}</p>
       </div>
-      <div className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-3 py-2">
-        <span className="text-xs text-gray-500">Est. cost</span>
-        <span className="text-sm font-medium text-gray-800">€0.40 – €0.80</span>
+      <div className="flex items-center justify-between rounded-[14px] border border-[var(--line-soft)] bg-[var(--sand)] px-3 py-2">
+        <span className="text-xs text-[var(--text-4)]">Est. cost</span>
+        <span className="text-sm font-medium text-[var(--ink)]">€0.40 – €0.80</span>
       </div>
       <div className="flex items-center gap-2 text-xs text-amber-600">
         <Clock className="h-3.5 w-3.5 shrink-0" />
@@ -586,7 +586,7 @@ function RightPanel({ call }: { call: MockCall }) {
   const hasDocs    = (call.generatedDocs?.length ?? 0) > 0;
 
   return (
-    <aside className="flex h-full w-64 shrink-0 flex-col overflow-y-auto border-l border-gray-100 bg-white">
+    <aside className="flex h-full w-64 shrink-0 flex-col overflow-y-auto border-l border-[var(--line-soft)]">
       <div className="space-y-5 p-4">
         {isLive    && <LivePanel call={call} />}
         {isPending && <PendingPanel call={call} />}
@@ -595,7 +595,7 @@ function RightPanel({ call }: { call: MockCall }) {
         {/* Generated / linked documents */}
         {hasDocs && (
           <div>
-            <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+            <p className="plat-eyebrow mb-2.5">
               Generated by agent
             </p>
             <div className="space-y-2">
@@ -608,9 +608,9 @@ function RightPanel({ call }: { call: MockCall }) {
 
         {/* No docs placeholder for completed calls */}
         {isDone && !hasDocs && (
-          <div className="rounded-xl border border-dashed border-gray-200 p-4 text-center">
-            <FileText className="mx-auto mb-2 h-6 w-6 text-gray-200" />
-            <p className="text-xs text-gray-400">No documents generated</p>
+          <div className="rounded-[14px] border border-dashed border-[var(--line)] p-4 text-center">
+            <FileText className="mx-auto mb-2 h-6 w-6 text-[var(--text-5)]" />
+            <p className="text-xs text-[var(--text-5)]">No documents generated</p>
           </div>
         )}
       </div>
@@ -622,21 +622,21 @@ function RightPanel({ call }: { call: MockCall }) {
 
 function DetailHeader({ call, onBack }: { call: MockCall; onBack: () => void }) {
   return (
-    <div className="flex shrink-0 items-center gap-3 border-b border-gray-100 bg-white px-4 py-3">
+    <div className="flex shrink-0 items-center gap-3 border-b border-[var(--line-soft)] px-4 py-3">
       <button
         type="button"
         onClick={onBack}
-        className="flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1.5 text-xs text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-800"
+        className="flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] hover:text-[var(--ink)]"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Back
       </button>
 
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-gray-900">
+          <p className="truncate text-sm font-semibold text-[var(--ink)]">
             {call.counterpartyName ?? call.counterpartyPhone}
           </p>
-          <p className="text-[11px] text-gray-400">
+          <p className="text-[11px] text-[var(--text-5)]">
             {call.direction === 'outbound' ? '↗ Outbound' : '↘ Inbound'} · {call.agentPersona}
             {call.startedAt > 0 && ` · ${fmtDate(call.startedAt)}`}
           </p>
@@ -645,7 +645,7 @@ function DetailHeader({ call, onBack }: { call: MockCall; onBack: () => void }) 
         {call.outcome && <OutcomeChip outcome={call.outcome} />}
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-gray-400">
+      <div className="flex items-center gap-2 text-xs text-[var(--text-5)]">
         {call.durationSec > 0 && (
           <span className="flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" /> {fmtDuration(call.durationSec)}
@@ -673,13 +673,13 @@ export default function CallDetailView({ callSid, onBack }: CallDetailViewProps)
 
   if (!call) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 text-gray-400">
+      <div className="flex flex-1 flex-col items-center justify-center gap-3 text-[var(--text-5)]">
         <XCircle className="h-10 w-10 opacity-30" />
         <p className="text-sm">Call not found</p>
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800"
+          className="flex items-center gap-1 text-xs text-[var(--text-4)] hover:text-[var(--ink)]"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </button>
@@ -688,7 +688,7 @@ export default function CallDetailView({ callSid, onBack }: CallDetailViewProps)
   }
 
   return (
-    <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-white">
+    <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
       <DetailHeader call={call} onBack={onBack} />
       <div className="flex flex-1 min-h-0 overflow-hidden">
         <LeftPanel call={call} onBack={onBack} />

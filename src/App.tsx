@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import PublicLayout from './components/PublicLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import CompanyHome from './pages/company/CompanyHome';
 import Chat from './pages/Chat';
 import AIEmployees from './pages/AIEmployees';
 import Teams from './pages/Teams';
@@ -36,6 +37,7 @@ import Home from './pages/Home';
 import Features from './pages/Features';
 import About from './pages/About';
 import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
 import NotFound from './pages/NotFound';
 import Pricing from './pages/Pricing';
 import Contact from './pages/Contact';
@@ -55,6 +57,10 @@ const NotesHome = lazy(() => import('./pages/notes/NotesHome'));
 const NotesDaily = lazy(() => import('./pages/notes/NotesDaily'));
 const NotesGraph = lazy(() => import('./pages/notes/NotesGraph'));
 const NotesTrash = lazy(() => import('./pages/notes/NotesTrash'));
+const NotesOpenItems = lazy(() => import('./pages/notes/NotesOpenItems'));
+const NotesSearch = lazy(() => import('./pages/notes/NotesSearch'));
+const NotesMatter = lazy(() => import('./pages/notes/NotesMatter'));
+const NotesSavedView = lazy(() => import('./pages/notes/NotesSavedView'));
 const DriveHome = lazy(() => import('./pages/drive/DriveHome'));
 const DriveSpaces = lazy(() => import('./pages/drive/DriveSpaces'));
 const DriveTrash = lazy(() => import('./pages/drive/DriveTrash'));
@@ -143,6 +149,9 @@ import SystemStatus from './pages/support/SystemStatus';
 
 // Notes — global quick-capture (mounted at root for Cmd+Shift+N from anywhere)
 import QuickCapture from './pages/notes/_components/quick-capture/QuickCapture';
+// Voice — live in-call approvals, mounted at root because the owner is rarely
+// on the Voice page when the agent asks and the callee is on hold (S11 §6.5).
+import VoiceApprovalHost from './components/voice/VoiceApprovalHost';
 
 function App() {
   return (
@@ -163,7 +172,6 @@ function App() {
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/watch-demo" element={<WatchDemo />} />
               <Route path="/schedule-demo" element={<ScheduleDemo />} />
-              <Route path="/signup" element={<Signup />} />
               <Route path="/get-started" element={<GetStarted />} />
               <Route path="/start-free-trial" element={<StartFreeTrial />} />
               <Route path="/skills-hub" element={<SkillsHub />} />
@@ -236,11 +244,17 @@ function App() {
               <Route path="/support/status" element={<SystemStatus />} />
             </Route>
 
-            {/* Login — no layout wrapper */}
+            {/* Auth screens — no layout wrapper; signup is login's twin */}
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* Protected routes — require authentication, use platform layout */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            {/* Company Brain (platform) — /company belongs to the marketing site */}
+            {(['', '/memory', '/library', '/photos', '/sync'] as const).map((sub) => (
+              <Route key={sub} path={`/company-brain${sub}`} element={<ProtectedRoute><CompanyHome /></ProtectedRoute>} />
+            ))}
             <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
             <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
             <Route path="/staff" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
@@ -355,6 +369,46 @@ function App() {
                 <ProtectedRoute>
                   <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading graph…</div>}>
                     <NotesGraph />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/search"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading search…</div>}>
+                    <NotesSearch />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/matter/:key"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading matter…</div>}>
+                    <NotesMatter />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/view/:id"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading view…</div>}>
+                    <NotesSavedView />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notes/open"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Loading open items…</div>}>
+                    <NotesOpenItems />
                   </Suspense>
                 </ProtectedRoute>
               }
@@ -503,7 +557,7 @@ function App() {
             />
 
             {/* Telephony (mocked) */}
-            {(['', '/calls', '/calls/live', '/calls/pending-approval', '/numbers', '/usage', '/policies', '/audit', '/settings'] as const).map((sub) => (
+            {(['', '/calls', '/calls/live', '/calls/pending-approval', '/messages', '/planned', '/numbers', '/usage', '/policies', '/audit', '/settings'] as const).map((sub) => (
               <Route
                 key={sub}
                 path={`/telephony${sub}`}
@@ -528,7 +582,7 @@ function App() {
             />
 
             {/* Pincer Close — accounting operator workspace (mocked) */}
-            {(['', '/radar', '/queue', '/requests', '/audit'] as const).map((sub) => (
+            {(['', '/radar', '/queue', '/requests', '/audit', '/workflows', '/workflows/:id'] as const).map((sub) => (
               <Route
                 key={`accounting${sub}`}
                 path={`/accounting${sub}`}
@@ -589,6 +643,7 @@ function App() {
           </Routes>
           <Toaster />
           <QuickCapture />
+          <VoiceApprovalHost />
         </div>
       </Router>
     </ThemeProvider>

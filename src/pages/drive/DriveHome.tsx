@@ -166,12 +166,15 @@ export default function DriveHome() {
         <DriveMiniRail />
         <UploadDropzone parentId={folderId} triggerRef={uploadTriggerRef}>
           <div className="flex flex-1 flex-col overflow-hidden">
-            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-3">
+            <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 py-4">
               <div>
-                <Breadcrumb folderId={folderId} />
-                <h1 className="mt-1 text-2xl font-light text-gray-900">
+                <p className="plat-crumb">3days.drive</p>
+                <div className="mt-1.5">
+                  <Breadcrumb folderId={folderId} />
+                </div>
+                <h1 className="mt-1 text-[26px] leading-tight">
                   {heading}{' '}
-                  <span className="text-gray-400">({visible.length})</span>
+                  <span style={{ color: 'var(--text-5)' }}>({visible.length})</span>
                 </h1>
               </div>
             </div>
@@ -189,8 +192,8 @@ export default function DriveHome() {
                   ))}
                 </div>
               ) : (
-                <div className="overflow-hidden rounded-md border border-gray-200 bg-white">
-                  <div className="grid grid-cols-[20px_minmax(0,2fr)_minmax(0,2fr)_120px_100px_28px] items-center gap-3 border-b border-gray-200 bg-gray-50 px-3 py-2 text-[11px] font-medium uppercase tracking-wider text-gray-500">
+                <div className="plat-list">
+                  <div className="plat-eyebrow grid grid-cols-[20px_minmax(0,2fr)_minmax(0,2fr)_120px_100px_28px] items-center gap-3 border-b border-[var(--line-soft)] px-3 py-2.5">
                     <span />
                     <span>Name</span>
                     <span>Summary</span>
@@ -226,15 +229,11 @@ function EmptyState({ onUploadClick }: { onUploadClick: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center">
       <div className="mb-3 text-5xl">📂</div>
-      <h3 className="text-base font-medium text-gray-900">Nothing here yet</h3>
-      <p className={cn('mt-1 max-w-xs text-sm text-gray-500')}>
+      <h3 className="text-[17px]">Nothing here yet</h3>
+      <p className={cn('mt-1 max-w-xs text-sm')} style={{ color: 'var(--text-4)' }}>
         Drag files anywhere on this surface, or click Upload.
       </p>
-      <button
-        type="button"
-        onClick={onUploadClick}
-        className="mt-3 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800"
-      >
+      <button type="button" onClick={onUploadClick} className="plat-btn mt-4">
         Upload files
       </button>
     </div>

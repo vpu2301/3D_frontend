@@ -416,15 +416,15 @@ const PricingCalculator = () => {
   };
 
   return (
-    <Card className="w-full max-w-6xl mx-auto bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
+    <Card className="w-full max-w-6xl mx-auto bg-[color:var(--paper)] backdrop-blur-sm border-0 shadow-2xl">
       <CardHeader className="text-center pb-8">
-        <div className="w-16 h-16 bg-[#111111] rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <div className="w-16 h-16 bg-[color:var(--ink)] rounded-[28px] flex items-center justify-center mx-auto mb-6">
           <Calculator className="h-8 w-8 text-white" />
         </div>
-        <CardTitle className="text-4xl font-light text-gray-900 mb-4">
+        <CardTitle className="text-4xl font-light text-[color:var(--ink)] mb-4">
           AI Worker Pricing Calculator
         </CardTitle>
-        <p className="text-xl text-gray-600 font-light">
+        <p className="text-xl text-[color:var(--text-2)] font-light">
           Configure your AI workers with AI Employee support from $0-$599 per worker per month
         </p>
       </CardHeader>
@@ -433,11 +433,11 @@ const PricingCalculator = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Configuration Section */}
           <div className="space-y-8">
-            <h3 className="text-2xl font-medium text-gray-900 mb-6">Configure Your AI Workers</h3>
+            <h3 className="text-2xl font-medium text-[color:var(--ink)] mb-6">Configure Your AI Workers</h3>
             
             <div className="space-y-6">
               <div>
-                <Label className="block text-lg font-medium text-gray-700 mb-3">
+                <Label className="block text-lg font-medium text-[color:var(--ink)] mb-3">
                   <UserCheck className="inline-block w-5 h-5 mr-2" />
                   AI Worker Assignment Type
                 </Label>
@@ -448,10 +448,10 @@ const PricingCalculator = () => {
                       <button
                         key={value}
                         onClick={() => setAssignmentType(value)}
-                        className={`p-4 rounded-lg border text-left transition-all duration-200 ${
+                        className={`p-4 rounded-[16px] border text-left transition-all duration-200 ${
                           assignmentType === value
-                            ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
-                            : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                            ? 'border-[color:var(--line)] bg-[color:var(--blue-100)] text-[color:var(--blue)] shadow-md'
+                            : 'border-[color:var(--line)] hover:border-[color:var(--line)] hover:shadow-sm'
                         }`}
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -461,25 +461,25 @@ const PricingCalculator = () => {
                           </div>
                           <div className="flex gap-2">
                             {assignment.allowsFree && (
-                              <div className="text-sm text-green-600 font-medium">
+                              <div className="text-sm text-[color:var(--blue)] font-medium">
                                 Free option
                               </div>
                             )}
                             {assignment.minimumCost && (
-                              <div className="text-sm text-blue-600 font-medium">
+                              <div className="text-sm text-[color:var(--blue)] font-medium">
                                 Starting from ${assignment.minimumCost}
                               </div>
                             )}
                             {value !== 'personal' && (
-                              <div className="text-sm text-[#111111] font-medium">
+                              <div className="text-sm text-[color:var(--ink)] font-medium">
                                 Higher computational cost
                               </div>
                             )}
                           </div>
                         </div>
-                        <div className="text-sm text-gray-600 mb-2">{assignment.description}</div>
-                        <div className="text-xs text-gray-500">
-                          <div className="font-medium mb-1 text-blue-600">
+                        <div className="text-sm text-[color:var(--text-2)] mb-2">{assignment.description}</div>
+                        <div className="text-xs text-[color:var(--text-2)]">
+                          <div className="font-medium mb-1 text-[color:var(--blue)]">
                             <Bot className="inline-block w-3 h-3 mr-1" />
                             {assignment.supportDescription}
                           </div>
@@ -492,7 +492,7 @@ const PricingCalculator = () => {
 
               {(assignmentType === 'team' || assignmentType === 'enterprise') && (
                 <div>
-                  <Label className="block text-lg font-medium text-gray-700 mb-3">
+                  <Label className="block text-lg font-medium text-[color:var(--ink)] mb-3">
                     Team/Organization Size
                   </Label>
                   <Slider
@@ -503,12 +503,12 @@ const PricingCalculator = () => {
                     step={1}
                     className="mb-3"
                   />
-                  <div className="flex justify-between text-sm text-gray-500">
+                  <div className="flex justify-between text-sm text-[color:var(--text-2)]">
                     <span>{assignmentType === 'team' ? '10' : '100'}</span>
-                    <span className="font-medium text-lg text-gray-900">{teamSize[0]} employees</span>
+                    <span className="font-medium text-lg text-[color:var(--ink)]">{teamSize[0]} employees</span>
                     <span>{assignmentType === 'team' ? '100' : '1000+'}</span>
                   </div>
-                  <p className="text-sm text-gray-500 mt-2">
+                  <p className="text-sm text-[color:var(--text-2)] mt-2">
                     {assignmentType === 'team' 
                       ? 'Team/Department Pro is for 10-100 employees (minimum $299/month)' 
                       : 'Enterprise tier is for 100+ employees with enhanced computational resources'
@@ -518,7 +518,7 @@ const PricingCalculator = () => {
               )}
 
               <div>
-                <Label className="block text-lg font-medium text-gray-700 mb-3">
+                <Label className="block text-lg font-medium text-[color:var(--ink)] mb-3">
                   Number of AI Workers
                 </Label>
                 <Slider
@@ -529,12 +529,12 @@ const PricingCalculator = () => {
                   step={1}
                   className="mb-3"
                 />
-                <div className="flex justify-between text-sm text-gray-500">
+                <div className="flex justify-between text-sm text-[color:var(--text-2)]">
                   <span>1</span>
-                  <span className="font-medium text-lg text-gray-900">
+                  <span className="font-medium text-lg text-[color:var(--ink)]">
                     {workers[0]} workers
                     {tier === 'free' && workers[0] > 2 && (
-                      <span className="text-red-500 ml-2">(Free tier: max 2)</span>
+                      <span className="text-[color:var(--blue)] ml-2">(Free tier: max 2)</span>
                     )}
                   </span>
                   <span>{tier === 'free' ? '2 (free limit)' : '200+'}</span>
@@ -542,7 +542,7 @@ const PricingCalculator = () => {
               </div>
 
               <div>
-                <Label className="block text-lg font-medium text-gray-700 mb-3">
+                <Label className="block text-lg font-medium text-[color:var(--ink)] mb-3">
                   Monthly Usage Hours (per worker)
                 </Label>
                 <Slider
@@ -553,17 +553,17 @@ const PricingCalculator = () => {
                   step={tier === 'free' ? 1 : 10}
                   className="mb-3"
                 />
-                <div className="flex justify-between text-sm text-gray-500">
+                <div className="flex justify-between text-sm text-[color:var(--text-2)]">
                   <span>{tier === 'free' ? '1h' : '40h'}</span>
-                  <span className="font-medium text-lg text-gray-900">
+                  <span className="font-medium text-lg text-[color:var(--ink)]">
                     {hours[0]}h/month
                     {tier === 'free' && hours[0] > 20 && (
-                      <span className="text-red-500 ml-2">(Free tier: max 20h)</span>
+                      <span className="text-[color:var(--blue)] ml-2">(Free tier: max 20h)</span>
                     )}
                   </span>
                   <span>{tier === 'free' ? '20h (free limit)' : '400h+'}</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-[color:var(--text-2)] mt-2">
                   {tier === 'free' 
                     ? '20 hours maximum in free tier'
                     : `160 hours included in base price. Excess: $${assignmentType === 'personal' ? '12' : assignmentType === 'team' ? '15' : '18'}/hour`
@@ -572,7 +572,7 @@ const PricingCalculator = () => {
               </div>
 
               <div>
-                <Label className="block text-lg font-medium text-gray-700 mb-3">
+                <Label className="block text-lg font-medium text-[color:var(--ink)] mb-3">
                   Required Integrations
                 </Label>
                 <Slider
@@ -583,17 +583,17 @@ const PricingCalculator = () => {
                   step={1}
                   className="mb-3"
                 />
-                <div className="flex justify-between text-sm text-gray-500">
+                <div className="flex justify-between text-sm text-[color:var(--text-2)]">
                   <span>1</span>
-                  <span className="font-medium text-lg text-gray-900">
+                  <span className="font-medium text-lg text-[color:var(--ink)]">
                     {integrations[0]} integrations
                     {tier === 'free' && integrations[0] > 1 && (
-                      <span className="text-red-500 ml-2">(Free tier: 1 only)</span>
+                      <span className="text-[color:var(--blue)] ml-2">(Free tier: 1 only)</span>
                     )}
                   </span>
                   <span>{tier === 'free' ? '1 (free limit)' : '50+'}</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-[color:var(--text-2)] mt-2">
                   {tier === 'free'
                     ? '1 basic integration included in free tier'
                     : `5 integrations included, additional at $${assignmentType === 'personal' ? '50' : assignmentType === 'team' ? '75' : '100'}/month each`
@@ -602,7 +602,7 @@ const PricingCalculator = () => {
               </div>
 
               <div>
-                <Label className="block text-lg font-medium text-gray-700 mb-3">
+                <Label className="block text-lg font-medium text-[color:var(--ink)] mb-3">
                   <Bot className="inline-block w-5 h-5 mr-2" />
                   AI Employee Support Tier
                 </Label>
@@ -614,23 +614,23 @@ const PricingCalculator = () => {
                         console.log('Setting tier to:', value);
                         setTier(value);
                       }}
-                      className={`p-4 rounded-lg border text-left transition-all duration-200 ${
+                      className={`p-4 rounded-[16px] border text-left transition-all duration-200 ${
                         tier === value
-                          ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
-                          : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                          ? 'border-[color:var(--line)] bg-[color:var(--blue-100)] text-[color:var(--blue)] shadow-md'
+                          : 'border-[color:var(--line)] hover:border-[color:var(--line)] hover:shadow-sm'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="font-medium">{tierData.label}</div>
                         <div className={`text-sm font-semibold ${
-                          tier === value ? 'text-blue-600' : 'text-gray-500'
+                          tier === value ? 'text-[color:var(--blue)]' : 'text-[color:var(--text-2)]'
                         }`}>
                           {tierData.price}
                         </div>
                       </div>
-                      <div className="text-sm text-gray-600 mb-2">{tierData.description}</div>
-                      <div className="text-xs text-gray-500">
-                        <div className="font-medium mb-1 text-blue-600">
+                      <div className="text-sm text-[color:var(--text-2)] mb-2">{tierData.description}</div>
+                      <div className="text-xs text-[color:var(--text-2)]">
+                        <div className="font-medium mb-1 text-[color:var(--blue)]">
                           <Bot className="inline-block w-3 h-3 mr-1" />
                           {tierData.aiSupport}
                         </div>
@@ -638,7 +638,7 @@ const PricingCalculator = () => {
                           <div key={idx}>• {feature}</div>
                         ))}
                         {tierData.features.length > 2 && (
-                          <div className="text-blue-600 font-medium mt-1">
+                          <div className="text-[color:var(--blue)] font-medium mt-1">
                             +{tierData.features.length - 2} more features
                           </div>
                         )}
@@ -649,34 +649,34 @@ const PricingCalculator = () => {
               </div>
 
               <div>
-                <Label className="block text-lg font-medium text-gray-700 mb-3">
+                <Label className="block text-lg font-medium text-[color:var(--ink)] mb-3">
                   Deployment Option
                 </Label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => setDeployment('cloud')}
-                    className={`p-3 rounded-lg border text-center ${
+                    className={`p-3 rounded-[16px] border text-center ${
                       deployment === 'cloud'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-[color:var(--line)] bg-[color:var(--blue-100)] text-[color:var(--blue)]'
+                        : 'border-[color:var(--line)] hover:border-[color:var(--line)]'
                     }`}
                   >
                     <div className="font-medium">Cloud</div>
-                    <div className="text-sm text-gray-500">Standard</div>
+                    <div className="text-sm text-[color:var(--text-2)]">Standard</div>
                   </button>
                   <button
                     onClick={() => setDeployment('on-premise')}
                     disabled={tier === 'free'}
-                    className={`p-3 rounded-lg border text-center ${
+                    className={`p-3 rounded-[16px] border text-center ${
                       deployment === 'on-premise'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        ? 'border-[color:var(--line)] bg-[color:var(--blue-100)] text-[color:var(--blue)]'
                         : tier === 'free'
-                        ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-[color:var(--line)] bg-[color:var(--sand)] text-[color:var(--text-4)] cursor-not-allowed'
+                        : 'border-[color:var(--line)] hover:border-[color:var(--line)]'
                     }`}
                   >
                     <div className="font-medium">On-Premise</div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-[color:var(--text-2)]">
                       {tier === 'free' ? 'Not available' : '+20%'}
                     </div>
                   </button>
@@ -691,11 +691,11 @@ const PricingCalculator = () => {
                     checked={customFeatures}
                     onChange={(e) => setCustomFeatures(e.target.checked)}
                     disabled={tier === 'free'}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded disabled:opacity-50"
+                    className="h-4 w-4 text-[color:var(--blue)] border-[color:var(--line)] rounded disabled:opacity-50"
                   />
-                  <Label htmlFor="customFeatures" className={`text-lg font-medium ${tier === 'free' ? 'text-gray-400' : 'text-gray-700'}`}>
+                  <Label htmlFor="customFeatures" className={`text-lg font-medium ${tier === 'free' ? 'text-[color:var(--text-4)]' : 'text-[color:var(--ink)]'}`}>
                     Custom AI Worker Development (+30%)
-                    {tier === 'free' && <span className="text-sm text-gray-400 ml-2">(Not available in free tier)</span>}
+                    {tier === 'free' && <span className="text-sm text-[color:var(--text-4)] ml-2">(Not available in free tier)</span>}
                   </Label>
                 </div>
               </div>
@@ -704,45 +704,45 @@ const PricingCalculator = () => {
 
           {/* Results Section */}
           <div className="space-y-8">
-            <h3 className="text-2xl font-medium text-gray-900 mb-6">Your AI Worker Quote</h3>
+            <h3 className="text-2xl font-medium text-[color:var(--ink)] mb-6">Your AI Worker Quote</h3>
             
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl mb-6">
-              <div className="text-sm text-gray-600 mb-1">Configuration Summary</div>
-              <div className="text-2xl font-medium text-gray-900 mb-2">{selectedAssignment.label}</div>
-              <div className="text-lg font-medium text-blue-600 mb-2">
+            <div className="bg-gradient-to-r from-[color:var(--blue-100)] to-[color:var(--blue-100)] p-6 rounded-[28px] mb-6">
+              <div className="text-sm text-[color:var(--text-2)] mb-1">Configuration Summary</div>
+              <div className="text-2xl font-medium text-[color:var(--ink)] mb-2">{selectedAssignment.label}</div>
+              <div className="text-lg font-medium text-[color:var(--blue)] mb-2">
                 Support Tier: {tiers[tier].label} ({tiers[tier].price})
               </div>
               {(assignmentType === 'team' || assignmentType === 'enterprise') && (
-                <div className="text-sm text-gray-600 mb-2">
+                <div className="text-sm text-[color:var(--text-2)] mb-2">
                   Team Size: {pricing.teamSize} employees
                 </div>
               )}
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-[color:var(--text-2)]">
                 <Bot className="inline-block w-4 h-4 mr-1" />
                 {selectedAssignment.supportDescription}
               </div>
               {pricing.assignmentDiscount > 0 && !shouldHidePricing() && (
-                <div className="text-sm text-green-600 font-medium mt-2">
+                <div className="text-sm text-[color:var(--blue)] font-medium mt-2">
                   {pricing.assignmentDiscount}% volume discount applied
                 </div>
               )}
               {pricing.isFree && (
-                <div className="text-sm text-green-600 font-medium mt-2">
+                <div className="text-sm text-[color:var(--blue)] font-medium mt-2">
                   🎉 Free tier - Limited functionality
                 </div>
               )}
             </div>
 
             {shouldHidePricing() ? (
-              <div className="bg-white p-8 rounded-2xl text-[#111111] text-center border border-black/8">
+              <div className="bg-[color:var(--paper)] p-8 rounded-[28px] text-[color:var(--ink)] text-center border border-[color:var(--line)]">
                 <h4 className="text-2xl font-medium mb-4">Enterprise Pricing</h4>
-                <p className="text-black/60 mb-6">
+                <p className="text-[color:var(--text-2)] mb-6">
                   Custom pricing tailored to your organization's specific needs and scale.
                 </p>
-                <div className="text-lg text-black/70 mb-6">
+                <div className="text-lg text-[color:var(--text-2)] mb-6">
                   Get a personalized quote with:
                 </div>
-                <ul className="text-left text-black/60 mb-8 space-y-2 max-w-md mx-auto">
+                <ul className="text-left text-[color:var(--text-2)] mb-8 space-y-2 max-w-md mx-auto">
                   <li>• Custom volume discounts</li>
                   <li>• Dedicated infrastructure</li>
                   <li>• White-glove AI Employee service</li>
@@ -751,32 +751,32 @@ const PricingCalculator = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="bg-white p-6 rounded-2xl border border-gray-100">
-                  <div className="text-sm text-gray-600 mb-1">Cost Per AI Worker</div>
-                  <div className="text-4xl font-light text-gray-900">
+                <div className="bg-[color:var(--paper)] p-6 rounded-[28px] border border-[color:var(--line)]">
+                  <div className="text-sm text-[color:var(--text-2)] mb-1">Cost Per AI Worker</div>
+                  <div className="text-4xl font-light text-[color:var(--ink)]">
                     {pricing.isFree ? 'FREE' : `$${pricing.perWorkerCost}`}
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">per month</div>
+                  <div className="text-sm text-[color:var(--text-2)] mt-1">per month</div>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                  <div className="text-sm text-gray-600 mb-1">Total Monthly Cost</div>
-                  <div className="text-3xl font-light text-gray-900">
+                <div className="bg-[color:var(--sand)] p-6 rounded-[28px] border border-[color:var(--line)]">
+                  <div className="text-sm text-[color:var(--text-2)] mb-1">Total Monthly Cost</div>
+                  <div className="text-3xl font-light text-[color:var(--ink)]">
                     {pricing.isFree ? 'FREE' : `$${pricing.monthlyTotal.toLocaleString()}`}
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">
+                  <div className="text-sm text-[color:var(--text-2)] mt-1">
                     {pricing.isFree ? 'Limited to 2 workers, 20h each' : `${workers[0]} workers × $${pricing.perWorkerCost}`}
                   </div>
                   {assignmentType === 'team' && !pricing.isFree && pricing.monthlyTotal === 299 && (
-                    <div className="text-sm text-blue-600 mt-1">Minimum team pricing applied</div>
+                    <div className="text-sm text-[color:var(--blue)] mt-1">Minimum team pricing applied</div>
                   )}
                 </div>
 
                 {!pricing.isFree && (
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
-                    <div className="text-sm text-gray-600 mb-1">Annual Total (10% discount)</div>
-                    <div className="text-3xl font-light text-gray-900">${pricing.annualTotal.toLocaleString()}</div>
-                    <div className="text-sm text-green-600 mt-1">Save ${pricing.annualSavings.toLocaleString()}/year</div>
+                  <div className="bg-gradient-to-r from-[color:var(--blue-100)] to-[color:var(--blue-100)] p-6 rounded-[28px] border border-[color:var(--line)]">
+                    <div className="text-sm text-[color:var(--text-2)] mb-1">Annual Total (10% discount)</div>
+                    <div className="text-3xl font-light text-[color:var(--ink)]">${pricing.annualTotal.toLocaleString()}</div>
+                    <div className="text-sm text-[color:var(--blue)] mt-1">Save ${pricing.annualSavings.toLocaleString()}/year</div>
                   </div>
                 )}
               </div>
@@ -784,18 +784,18 @@ const PricingCalculator = () => {
 
             <div className="space-y-3 mt-8">
               {shouldShowContactSales() ? (
-                <Button className="w-full bg-[#111111] hover:bg-[#222222] text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
+                <Button className="w-full bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
                   <Phone className="mr-2 h-4 w-4" />
                   Contact Sales for Enterprise Quote
                 </Button>
               ) : (
-                <Button className="w-full bg-[#111111] hover:from-blue-600 hover:to-purple-600 text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
+                <Button className="w-full bg-[color:var(--ink)] hover:from-[color:var(--blue)] hover:to-[color:var(--blue)] text-white text-lg py-4 rounded-full transition-all duration-300 hover:scale-105">
                   {pricing.isFree ? 'Start Free Trial' : 'Get This Quote'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               )}
               {!shouldHidePricing() && (
-                <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 py-4 rounded-full">
+                <Button variant="outline" className="w-full border-[color:var(--line)] text-[color:var(--ink)] hover:bg-[color:var(--sand)] py-4 rounded-full">
                   Schedule AI Employee Consultation
                 </Button>
               )}
@@ -805,45 +805,45 @@ const PricingCalculator = () => {
 
         {/* AI Employee Support Features Comparison Table */}
         <div className="mt-16">
-          <h3 className="text-2xl font-medium text-gray-900 mb-6 text-center">
+          <h3 className="text-2xl font-medium text-[color:var(--ink)] mb-6 text-center">
             <Bot className="inline-block w-6 h-6 mr-2" />
             Complete AI Employee Support Comparison
-            <span className="block text-lg font-normal text-gray-600 mt-2">
+            <span className="block text-lg font-normal text-[color:var(--text-2)] mt-2">
               {selectedAssignment.label}
               {(assignmentType === 'team' || assignmentType === 'enterprise') && ` - ${pricing.teamSize} employees`}
             </span>
           </h3>
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <div className="bg-[color:var(--paper)] rounded-[28px] border border-[color:var(--line)] overflow-hidden">
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="font-medium text-gray-900">AI Employee Features</TableHead>
+                <TableRow className="bg-[color:var(--sand)]">
+                  <TableHead className="font-medium text-[color:var(--ink)]">AI Employee Features</TableHead>
                   {selectedAssignment.allowsFree && (
-                    <TableHead className="font-medium text-gray-900 text-center">Free ($0)</TableHead>
+                    <TableHead className="font-medium text-[color:var(--ink)] text-center">Free ($0)</TableHead>
                   )}
-                  <TableHead className="font-medium text-gray-900 text-center">Basic (Base)</TableHead>
-                  <TableHead className="font-medium text-gray-900 text-center">Standard (+20%)</TableHead>
-                  <TableHead className="font-medium text-gray-900 text-center">Premium (+50%)</TableHead>
-                  <TableHead className="font-medium text-gray-900 text-center">Enterprise (+80%)</TableHead>
+                  <TableHead className="font-medium text-[color:var(--ink)] text-center">Basic (Base)</TableHead>
+                  <TableHead className="font-medium text-[color:var(--ink)] text-center">Standard (+20%)</TableHead>
+                  <TableHead className="font-medium text-[color:var(--ink)] text-center">Premium (+50%)</TableHead>
+                  <TableHead className="font-medium text-[color:var(--ink)] text-center">Enterprise (+80%)</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {featureMatrix.map((feature, index) => (
-                  <TableRow key={index} className="hover:bg-gray-50">
-                    <TableCell className="font-medium text-gray-900">{feature.category}</TableCell>
+                  <TableRow key={index} className="hover:bg-[color:var(--sand)]">
+                    <TableCell className="font-medium text-[color:var(--ink)]">{feature.category}</TableCell>
                     {selectedAssignment.allowsFree && (
-                      <TableCell className="text-center text-gray-700">{feature.free}</TableCell>
+                      <TableCell className="text-center text-[color:var(--ink)]">{feature.free}</TableCell>
                     )}
-                    <TableCell className="text-center text-gray-700">{feature.basic}</TableCell>
-                    <TableCell className="text-center text-gray-700">{feature.standard}</TableCell>
-                    <TableCell className="text-center text-gray-700">{feature.premium}</TableCell>
-                    <TableCell className="text-center text-gray-700">{feature.enterprise}</TableCell>
+                    <TableCell className="text-center text-[color:var(--ink)]">{feature.basic}</TableCell>
+                    <TableCell className="text-center text-[color:var(--ink)]">{feature.standard}</TableCell>
+                    <TableCell className="text-center text-[color:var(--ink)]">{feature.premium}</TableCell>
+                    <TableCell className="text-center text-[color:var(--ink)]">{feature.enterprise}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
-          <p className="text-sm text-gray-500 text-center mt-4">
+          <p className="text-sm text-[color:var(--text-2)] text-center mt-4">
             <Bot className="inline-block w-4 h-4 mr-1" />
             All tiers include access to our AI worker platform and AI Employee support
           </p>

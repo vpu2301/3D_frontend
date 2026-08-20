@@ -71,24 +71,24 @@ export default function DailyPlanCard({ todayTaskIds }: Props) {
   };
 
   return (
-    <div className="mx-6 mt-4 rounded-lg border border-blue-200 bg-blue-50/60 p-4">
+    <div className="plat-panel mx-6 mt-4 !p-4">
       <div className="flex items-start justify-between">
-        <div className="flex items-center gap-2 text-sm font-medium text-blue-900">
-          <Sparkles className="h-4 w-4 text-blue-600" />
+        <div className="flex items-center gap-2 text-sm font-medium text-[var(--ink)]">
+          <Sparkles className="h-4 w-4" style={{ color: 'var(--text-4)' }} />
           AI plan for today
         </div>
         <button
           type="button"
           onClick={() => setDismissed(true)}
-          className="rounded p-1 text-blue-400 hover:bg-blue-100 hover:text-blue-700"
+          className="rounded-[6px] p-1 text-[var(--text-5)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           aria-label="Dismiss"
         >
           <X className="h-3.5 w-3.5" />
         </button>
       </div>
       {!plan ? (
-        <div className="mt-2 flex items-center gap-2">
-          <p className="flex-1 text-xs text-blue-800">
+        <div className="mt-2 flex items-center gap-3">
+          <p className="flex-1 text-xs text-[var(--text-3)]">
             Let AI propose an order for today's {todayTaskIds.length} tasks based on priority,
             deadlines, and free time on your calendar.
           </p>
@@ -96,7 +96,7 @@ export default function DailyPlanCard({ todayTaskIds }: Props) {
             type="button"
             onClick={generate}
             disabled={loading || todayTaskIds.length === 0}
-            className="flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            className="plat-btn !h-8 !px-4 !text-xs"
           >
             {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
             Generate
@@ -104,20 +104,23 @@ export default function DailyPlanCard({ todayTaskIds }: Props) {
         </div>
       ) : (
         <div className="mt-2">
-          <p className="text-xs italic text-blue-800">{plan.rationale}</p>
-          <ol className="mt-2 space-y-1">
+          <p className="text-xs italic text-[var(--text-4)]">{plan.rationale}</p>
+          <ol className="mt-2 overflow-hidden rounded-[12px] border border-[var(--line-soft)]">
             {plan.orderedTaskIds.map((id, i) => {
               const t = tasksMap[id];
               const block = plan.blocks.find((b) => b.taskId === id);
               if (!t) return null;
               return (
-                <li key={id} className="flex items-center justify-between rounded bg-white/80 px-2 py-1 text-xs">
-                  <span className="flex items-center gap-2">
-                    <span className="font-mono text-blue-500">{i + 1}.</span>
+                <li
+                  key={id}
+                  className="flex items-center justify-between border-b border-[var(--line-soft)] px-3 py-2 text-xs last:border-b-0"
+                >
+                  <span className="flex items-center gap-2 text-[var(--ink)]">
+                    <span style={{ fontFamily: 'var(--mono)', color: 'var(--text-5)' }}>{i + 1}.</span>
                     {t.title}
                   </span>
                   {block && (
-                    <span className="text-blue-700">
+                    <span className="text-[var(--text-4)]">
                       {new Date(block.startAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       {' – '}
                       {new Date(block.endAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -127,30 +130,30 @@ export default function DailyPlanCard({ todayTaskIds }: Props) {
               );
             })}
           </ol>
-          <div className="mt-3 flex items-center justify-end gap-1">
+          <div className="mt-3 flex items-center justify-end gap-1.5">
             <button
               type="button"
               onClick={generate}
-              className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-blue-700 hover:bg-blue-100"
+              className="plat-btn-ghost !h-7 !px-3 !text-xs"
             >
               <RefreshCw className="h-3 w-3" /> Regenerate
             </button>
             <button
               type="button"
               onClick={() => setPlan(null)}
-              className="rounded-md px-2 py-1 text-xs text-blue-700 hover:bg-blue-100"
+              className="plat-btn-ghost !h-7 !px-3 !text-xs"
             >
               Reject
             </button>
             <button
               type="button"
               onClick={accept}
-              className="flex items-center gap-1 rounded-md bg-blue-600 px-2 py-1 text-xs font-medium text-white hover:bg-blue-700"
+              className="plat-btn !h-7 !px-4 !text-xs"
             >
               <Check className="h-3 w-3" /> Accept plan
             </button>
           </div>
-          <p className="mt-2 text-[10px] italic text-blue-500">
+          <p className="mt-2 text-[10px] italic text-[var(--text-5)]">
             Note: calendar event creation is deferred — this version only reorders today and
             stamps a scheduled time on each task.
           </p>

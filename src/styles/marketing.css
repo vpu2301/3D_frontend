@@ -1,0 +1,844 @@
+/* ==========================================================================
+   Marketing design system — 3days.ai
+   Tokens, type and primitives transcribed from the Claude Design bundle
+   (~/Desktop/3D-website: `3days Website.dc.html` + `web/src/styles/global.css`).
+
+   Everything is scoped to `.site3d`, the wrapper PublicLayout puts around the
+   public pages, so the logged-in platform keeps its own look untouched.
+   The site's structure and content are unchanged — this only restyles them.
+   ========================================================================== */
+
+/* ── Plus Jakarta Sans (SIL Open Font License) ───────────────────────────
+   Self-hosted from the Fontsource package (public/fonts/jakarta/LICENSE.txt).
+   Two variable subsets: `latin` for everyday copy and `latin-ext` for the
+   accented characters the German / Polish / Portuguese locales need — the
+   browser downloads the second one only when a page actually uses those
+   glyphs. Scoped to `.site3d`; the platform keeps Sora. */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/jakarta/plus-jakarta-sans-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/jakarta/plus-jakarta-sans-latin-ext-wght-normal.woff2') format('woff2-variations');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ── Excon (Fontshare / ITF Free Font License) ───────────────────────────
+   Self-hosted, as the FFL permits (public/fonts/excon/LICENSE.txt). One
+   variable file covers 100–900, so the 400/600/700 scale the site uses costs
+   a single 30 KB request. Scoped to `.site3d` — the platform keeps Sora. */
+@font-face {
+  font-family: 'Excon';
+  src: url('/fonts/excon/Excon-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Supreme (Fontshare / ITF Free Font License) ─────────────────────────
+   Self-hosted, as the FFL permits (public/fonts/supreme/LICENSE.txt). One
+   variable file covers 100–800, so the 400/500/600 scale the site uses costs
+   a single 30 KB request. Scoped to `.site3d` — the platform keeps Sora. */
+@font-face {
+  font-family: 'Supreme';
+  src: url('/fonts/supreme/Supreme-Variable.woff2') format('woff2-variations');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/geist/GeistMono-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Chillax (Fontshare / ITF Free Font License) ─────────────────────────
+   Self-hosted, which the FFL explicitly permits and recommends (see
+   public/fonts/chillax/LICENSE.txt). One variable file covers the whole
+   200–700 axis, so the normal→semibold range the site uses costs a single
+   request instead of three static weights.
+
+   Scoped to `.site3d` only — the logged-in platform keeps Sora/Manrope. */
+@font-face {
+  font-family: 'Chillax';
+  src:
+    url('/fonts/chillax/Chillax-Variable.woff2') format('woff2-variations'),
+    url('/fonts/chillax/Chillax-Variable.woff') format('woff-variations');
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.site3d {
+  /* neutral surfaces: light grey page, white cards, grey fills inside them */
+  --bg: #f1f2f4;
+  --paper: #ffffff;
+  --sand: #f4f5f7;
+  --sand-deep: #e9ebef;
+  --ink: #14161a;
+
+  --blue: #3e52d9;
+  --blue-deep: #22307f;
+  --blue-100: #e5eafb;
+  --blue-200: #bfcef8;
+  --blue-300: #b9c8f7;
+  --blue-400: #a6baf5;
+
+  --text-1: #4a5057;
+  --text-2: #5a6067;
+  --text-3: #6b7178;
+  --text-4: #7a8087;
+  --text-5: #9aa0a6;
+
+  --on-dark-1: #b8bec5;
+  --on-dark-2: #a8aeb5;
+  --on-dark-3: #8e949b;
+
+  --ok-bg: #e6f5ea;
+  --ok-fg: #1e7a3c;
+  --warn-bg: #fdf0e4;
+  --warn-fg: #9a5312;
+
+  --line: rgba(20, 22, 26, 0.1);
+  --line-soft: rgba(20, 22, 26, 0.07);
+
+  --sans: 'Plus Jakarta Sans', 'Excon', system-ui, sans-serif;
+  --display: 'Plus Jakarta Sans', 'Excon', system-ui, sans-serif;
+  --mono: 'Geist Mono', 'IBM Plex Mono', monospace;
+
+  --card-radius: 28px;
+  --panel-radius: 32px;
+  --tile-radius: 16px;
+
+  --lift: 0 26px 56px -30px rgba(20, 22, 26, 0.35);
+  --lift-soft: 0 18px 40px -26px rgba(20, 22, 26, 0.35);
+  --pill-shadow: 0 10px 28px -18px rgba(20, 22, 26, 0.32);
+
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.dark .site3d {
+  --bg: #101215;
+  --paper: #181b1f;
+  --sand: #1e2227;
+  --sand-deep: #23272d;
+  --ink: #eceef1;
+
+  --blue: #93a4f5;
+  --blue-deep: #b9c8f7;
+  --blue-100: #1c2340;
+  --blue-200: #2b3768;
+  --blue-300: #b9c8f7;
+
+  --text-1: #b6bcc4;
+  --text-2: #a3a9b1;
+  --text-3: #8e949b;
+  --text-4: #7a8087;
+  --text-5: #6b7178;
+
+  --ok-bg: #14301f;
+  --warn-bg: #33230f;
+
+  --line: rgba(236, 238, 241, 0.12);
+  --line-soft: rgba(236, 238, 241, 0.08);
+
+  --lift: 0 26px 56px -30px rgba(0, 0, 0, 0.7);
+  --lift-soft: 0 18px 40px -26px rgba(0, 0, 0, 0.6);
+  --pill-shadow: 0 10px 28px -18px rgba(0, 0, 0, 0.8);
+}
+
+/* ── Type ─────────────────────────────────────────────────────────────────
+   Sora carries every heading; Manrope carries body copy. Sizes stay with the
+   pages' own utility classes — only family, weight and tracking come from here. */
+
+/* Family only. Weight is set per level below, so a `.font-display` utility on
+   a heading can never outrank the level's own weight. */
+.site3d h1,
+.site3d h2,
+.site3d h3,
+.site3d h4,
+.site3d .font-display {
+  font-family: var(--display);
+}
+
+/* Body stays standard; the levels that carry a page go bold. Supreme reads
+   light at 600, so the headline levels take 700 to land with real weight. */
+.site3d :is(h1, h2) {
+  font-weight: 700;
+}
+
+.site3d :is(h3, h4) {
+  font-weight: 600;
+}
+
+.site3d h1 { letter-spacing: -0.04em; line-height: 1.02; }
+.site3d h2 { letter-spacing: -0.035em; line-height: 1.04; }
+.site3d h3 { letter-spacing: -0.025em; line-height: 1.1; }
+.site3d h4 { letter-spacing: -0.02em; }
+
+.site3d ::selection {
+  background: var(--blue-200);
+  color: var(--ink);
+}
+
+/* Mono eyebrow: the bundle's section labels. */
+.site3d .m-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.site3d .m-eyebrow-muted {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-5);
+}
+
+/* ── Header pill ──────────────────────────────────────────────────────── */
+
+.site3d .m-header {
+  position: sticky;
+  top: 14px;
+  z-index: 60;
+  padding: 0 24px;
+  /* The pill floats over the page, so a hero's artwork runs to the very top
+     edge of the window rather than starting below the bar. */
+  margin-bottom: -70px;
+}
+
+/* Pages that don't lead with hero art still have to clear the floating pill. */
+.site3d header + *:not(:has(.m-hero)) {
+  padding-top: 70px;
+}
+
+.site3d .m-navbar {
+  background: var(--paper);
+  border-radius: 999px;
+  box-shadow: var(--pill-shadow);
+  height: 56px;
+  padding: 0 8px 0 22px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.site3d .m-wordmark {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+}
+
+.site3d .m-wordmark span { color: var(--blue); }
+
+/* Wordmark and eyebrows sitting on artwork */
+.site3d .m-wordmark.is-light { color: #fff; }
+.site3d .m-eyebrow.is-light { color: rgba(255, 255, 255, 0.6); }
+
+.site3d .m-nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: var(--text-1);
+  background: transparent;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.site3d .m-nav-tab:hover { color: var(--ink); }
+
+.site3d .m-nav-tab.is-open,
+.site3d .m-nav-tab.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.site3d .m-menu {
+  background: var(--paper);
+  border-radius: 26px;
+  box-shadow: 0 26px 60px -26px rgba(20, 22, 26, 0.38);
+  padding: 18px;
+}
+
+.dark .site3d .m-menu { box-shadow: 0 26px 60px -26px rgba(0, 0, 0, 0.75); }
+
+.site3d .m-menu-item {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--tile-radius);
+  color: var(--ink);
+  transition: background 0.16s ease;
+}
+
+.site3d .m-menu-item:hover { background: var(--sand); color: var(--ink); }
+
+.site3d .m-menu-num {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────── */
+
+.site3d .m-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease,
+    border-color 0.18s ease;
+}
+
+/* Pill with the dark circular arrow — the bundle's signature CTA. */
+.site3d .m-btn-primary {
+  background: var(--blue-200);
+  color: var(--ink);
+  padding: 6px 6px 6px 22px;
+}
+
+.site3d .m-btn-primary:hover {
+  background: var(--blue-400);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.site3d .m-arrow {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/* Form submit: ink pill with a light circular arrow — the bundle's login CTA. */
+.site3d .m-btn-submit {
+  background: var(--ink);
+  color: #fff;
+  padding: 6px 6px 6px 22px;
+  justify-content: space-between;
+}
+
+.site3d .m-btn-submit:hover { background: var(--blue); color: #fff; }
+.site3d .m-btn-submit:disabled { opacity: 0.6; cursor: default; }
+
+.site3d .m-btn-submit .m-arrow {
+  background: var(--blue-200);
+  color: var(--ink);
+}
+
+/* Segmented switch (shadcn Tabs) in the marketing language. */
+.site3d .m-switch {
+  background: var(--sand);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px;
+}
+
+.site3d .m-switch-item {
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.site3d .m-switch-item:hover { color: var(--ink); }
+
+.site3d .m-switch-item[data-state='active'] {
+  background: var(--ink);
+  color: #fff;
+  box-shadow: none;
+}
+
+.site3d .m-btn-dark {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 26px;
+}
+
+.site3d .m-btn-dark:hover { background: var(--blue); color: var(--paper); }
+
+.site3d .m-btn-soft {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 14px 26px;
+}
+
+.site3d .m-btn-soft:hover { border-color: var(--ink); }
+
+.site3d .m-btn-ghost {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 15px 28px;
+}
+
+.site3d .m-btn-ghost:hover { background: rgba(255, 255, 255, 0.26); color: #fff; }
+
+.site3d .m-btn-light {
+  background: var(--blue-200);
+  color: var(--ink);
+  padding: 15px 28px;
+}
+
+.site3d .m-btn-light:hover { background: #fff; }
+
+/* ── Cards & panels ───────────────────────────────────────────────────── */
+
+.site3d .m-card {
+  background: var(--paper);
+  border-radius: var(--card-radius);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.site3d .m-card:hover { box-shadow: var(--lift); transform: translateY(-2px); }
+
+.site3d .m-panel {
+  background: var(--paper);
+  border-radius: var(--panel-radius);
+}
+
+.site3d .m-tile {
+  background: var(--sand);
+  border-radius: var(--tile-radius);
+}
+
+.site3d .m-dark-panel {
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--panel-radius);
+}
+
+.site3d .m-badge-ok {
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+
+.site3d .m-badge-warn {
+  background: var(--warn-bg);
+  color: var(--warn-fg);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+
+/* ── Hero art ─────────────────────────────────────────────────────────────
+   The hero runs an abstract aurora field generated for this brand: an ink
+   ground with blooms in --blue drifting on a 16-second period (every time term
+   is periodic, so the loop has no seam), a faint grid for structure and fine
+   grain. The poster frame is the element's own background, so it shows while
+   the clip loads and stands in whenever the video is suppressed. A soft wash
+   and a left-weighted scrim keep the white headline legible. */
+
+.site3d .m-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.site3d .m-hero-art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #14161a;
+  background-image: url('/hero-poster.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.site3d .m-hero-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Chrome paints a black box for one frame otherwise. */
+  background: #14161a;
+  /* Background art, not a player: no taps, no click-to-pause. */
+  pointer-events: none;
+}
+
+/* Safari paints an overlay play button on a video it refused to autoplay —
+   this is decoration, so every native control stays hidden. */
+.site3d .m-hero-video::-webkit-media-controls,
+.site3d .m-hero-video::-webkit-media-controls-start-playback-button,
+.site3d .m-hero-video::-webkit-media-controls-overlay-play-button,
+.site3d .m-hero-video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  opacity: 0 !important;
+}
+
+/* The video background is the design and stays on for everyone — it is
+   muted, 1MB, and loops. (Earlier reduced-motion/mobile rules hid it, which
+   read as "the video is broken" rather than as a preference.) */
+
+.site3d .m-hero-art::before,
+.site3d .m-hero-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.site3d .m-hero-art::before { z-index: 1; }
+.site3d .m-hero-art::after { z-index: 2; }
+
+/* Cool wash: pulls the photo towards the brand blue without flattening it. */
+.site3d .m-hero-art::before {
+  background: linear-gradient(168deg, rgba(10, 13, 20, 0.30) 0%, rgba(10, 13, 20, 0.04) 46%, rgba(10, 13, 20, 0.22) 100%);
+  mix-blend-mode: multiply;
+}
+
+/* Reading scrim: heavier on the left, where the headline sits. */
+.site3d .m-hero-art::after {
+  background:
+    linear-gradient(100deg, rgba(8, 11, 18, 0.55) 0%, rgba(8, 11, 18, 0.22) 46%, rgba(8, 11, 18, 0) 78%),
+    linear-gradient(180deg, rgba(8, 11, 18, 0.22) 0%, rgba(8, 11, 18, 0) 34%, rgba(8, 11, 18, 0.28) 100%);
+}
+
+/* Glass badge that sits on the hero art */
+.site3d .m-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 999px;
+  padding: 7px 16px 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Cards that sit on top of the hero art keep ink type — only the loose copy
+   around them goes white. */
+.site3d .m-on-art :is([class^="bg-[color:var(--paper)]"], [class*=" bg-[color:var(--paper)]"]),
+.site3d .m-on-art :is([class^="bg-[color:var(--sand)]"], [class*=" bg-[color:var(--sand)]"]),
+.site3d .m-on-art :is([class^="bg-[color:var(--bg)]"], [class*=" bg-[color:var(--bg)]"]) {
+  color: var(--ink);
+}
+
+.site3d .m-on-art :is([class^="bg-[color:var(--paper)]"], [class*=" bg-[color:var(--paper)]"]) :where(p, span, div, h1, h2, h3, h4),
+.site3d .m-on-art :is([class^="bg-[color:var(--sand)]"], [class*=" bg-[color:var(--sand)]"]) :where(p, span, div, h1, h2, h3, h4),
+.site3d .m-on-art :is([class^="bg-[color:var(--bg)]"], [class*=" bg-[color:var(--bg)]"]) :where(p, span, div, h1, h2, h3, h4) {
+  color: inherit;
+}
+
+/* Anything sitting on the hero art reads in white. */
+.site3d .m-on-art,
+.site3d .m-on-art h1,
+.site3d .m-on-art h2,
+.site3d .m-on-art h3 {
+  color: #fff;
+}
+
+.site3d .m-on-art p { color: rgba(255, 255, 255, 0.9); }
+
+/* ── Dark blocks ──────────────────────────────────────────────────────────
+   Sections that sit on --ink need light type and blue-300 numerals. */
+
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) {
+  color: #fff;
+}
+
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) h1,
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) h2,
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) h3,
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) h4 {
+  color: #fff;
+}
+
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) p,
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) li {
+  color: var(--on-dark-2);
+}
+
+/* A solid dark button on a dark block flips to paper. */
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) a:is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]),
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) button:is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* …but a light card nested inside one keeps ink type. */
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) :is([class^="bg-[color:var(--paper)]"], [class*=" bg-[color:var(--paper)]"]),
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) :is([class^="bg-[color:var(--sand)]"], [class*=" bg-[color:var(--sand)]"]) {
+  color: var(--ink);
+}
+
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) :is([class^="bg-[color:var(--paper)]"], [class*=" bg-[color:var(--paper)]"]) :where(h1, h2, h3, h4),
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) :is([class^="bg-[color:var(--sand)]"], [class*=" bg-[color:var(--sand)]"]) :where(h1, h2, h3, h4) {
+  color: var(--ink);
+}
+
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) :is([class^="bg-[color:var(--paper)]"], [class*=" bg-[color:var(--paper)]"]) :where(p, li),
+.site3d :is([class^="bg-[color:var(--ink)]"], [class*=" bg-[color:var(--ink)]"]) :is([class^="bg-[color:var(--sand)]"], [class*=" bg-[color:var(--sand)]"]) :where(p, li) {
+  color: var(--text-2);
+}
+
+/* Frosted chip from the previous design, re-cut as a white card. */
+.site3d .glass-strong {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.dark .site3d .glass-strong { background: rgba(24, 27, 31, 0.94); }
+
+.site3d .m-on-art .glass-strong,
+.site3d .m-on-art .glass-strong :where(p, span, div) {
+  color: var(--ink);
+}
+
+.site3d .border-crafted {
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.site3d .shadow-layered { box-shadow: var(--lift); }
+
+/* ── Legacy component classes from the previous design ────────────────────
+   `.pricing-card`, `.standard-button` and friends are still used across the
+   pages; inside the marketing shell they speak the new system. */
+
+.site3d .pricing-card,
+.site3d .glass {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--card-radius);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.site3d .pricing-card:hover {
+  background: var(--paper);
+  box-shadow: var(--lift);
+  transform: translateY(-2px);
+}
+
+.site3d .standard-button,
+.site3d .pricing-button {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-weight: 600;
+}
+
+.site3d .standard-button:hover,
+.site3d .pricing-button:hover {
+  background: var(--blue);
+  transform: none;
+}
+
+.site3d .standard-button.variant-outline {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.site3d .standard-button.variant-outline:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.site3d .standard-button.variant-secondary {
+  background: var(--sand);
+  color: var(--ink);
+}
+
+.site3d .standard-button.variant-ghost { color: var(--ink); }
+.site3d .standard-button.variant-ghost:hover { background: var(--sand); }
+
+.site3d .gradient-warm,
+.site3d .gradient-warm-alt,
+.site3d .gradient-cool-warm,
+.site3d .pricing-gradient,
+.site3d .pricing-page-bg,
+.site3d .pricing-section-bg,
+.site3d .section-with-shapes,
+.site3d .mesh-warm {
+  background-color: var(--bg);
+  background-image: none;
+}
+
+.site3d .gradient-dark,
+.site3d .pricing-dark-section {
+  background-color: var(--ink);
+  color: #fff;
+}
+
+.site3d .pricing-title { color: var(--ink); font-family: var(--display); }
+.site3d .pricing-text { color: var(--text-2); }
+.site3d .hover-lift:hover { box-shadow: var(--lift); }
+
+/* The previous version's dotted canvas backdrop would fight the flat page. */
+.site3d + canvas,
+canvas.dots-background {
+  opacity: 0.35;
+}
+
+/* ── Auth art panel ──────────────────────────────────────────────────────
+   The signed-out pages put the form on a large colour panel, the way the
+   reference layout does. Built from layered gradients rather than an image:
+   it stays crisp at any size, costs nothing to load, and is tinted with the
+   brand blue instead of a stock photograph.
+
+   The faceted look comes from four overlapping triangles (linear-gradients
+   clipped by their own colour stops) over a deep blue base. */
+.site3d .m-auth-art {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 42%),
+    linear-gradient(215deg, rgba(10, 16, 60, 0.42) 0%, rgba(10, 16, 60, 0) 55%),
+    radial-gradient(120% 90% at 18% 12%, #6274ee 0%, rgba(98, 116, 238, 0) 60%),
+    radial-gradient(140% 120% at 88% 92%, #22307f 0%, rgba(34, 48, 127, 0) 62%),
+    linear-gradient(160deg, #4c60e2 0%, #3e52d9 46%, #2f3fae 100%);
+}
+
+/* Two facets that catch the light. Both are blue-tinted — a white or grey
+   overlay here reads as a washed-out wedge rather than a lit plane. */
+.site3d .m-auth-art::before,
+.site3d .m-auth-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Lit plane, upper left. */
+.site3d .m-auth-art::before {
+  background: linear-gradient(150deg, #7183f2 0%, rgba(113, 131, 242, 0) 70%);
+  opacity: 0.55;
+  clip-path: polygon(0 0, 58% 0, 22% 100%, 0 100%);
+}
+
+/* Shadowed plane, lower right. */
+.site3d .m-auth-art::after {
+  background: linear-gradient(320deg, #1b2569 0%, rgba(27, 37, 105, 0) 72%);
+  opacity: 0.7;
+  clip-path: polygon(100% 14%, 100% 100%, 30% 100%);
+}
+
+/* Wordmark lockup: heavy name + spaced light descriptor, as in the reference. */
+.site3d .m-lockup {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.site3d .m-lockup .name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 30px;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.site3d .m-lockup .kind {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: 0.24em;
+  color: var(--text-4);
+}
+
+/* ── Weight scale ───────────────────────────────────────────────────────
+   Standard is the default; weight is an accent spent on the few elements
+   that carry a section. Utility classes map onto the same scale so a page
+   cannot invent a grade of its own.
+
+     400  body, labels, captions, nav
+     500  medium emphasis
+     600  h3/h4, primary CTA, wordmark, .font-semibold
+     700  h1/h2, .font-bold and heavier                                    */
+
+/* Utilities never apply to headings: the level decides, so an `h1` reads the
+   same weight on every page regardless of which class a page happened to put
+   on it, and an `h3` can't accidentally match the headline. */
+.site3d :is(.font-bold, .font-extrabold, .font-black, strong, b):not(:is(h1, h2, h3, h4)) {
+  font-weight: 700;
+}
+
+.site3d .font-semibold:not(:is(h1, h2, h3, h4)) {
+  font-weight: 600;
+}
+
+.site3d .font-medium:not(:is(h1, h2, h3, h4)) {
+  font-weight: 500;
+}
+
+/* Buttons and the wordmark: enough weight to read as an action, not a shout. */
+.site3d :is(.m-btn-submit, .m-btn, .m-wordmark, .m-lockup .name),
+.site3d .font-accent {
+  font-weight: 600;
+}

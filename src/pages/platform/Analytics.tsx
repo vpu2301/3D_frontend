@@ -46,23 +46,23 @@ const Analytics = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-white">
+    <div className="min-h-screen pt-20 bg-[color:var(--paper)]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+            <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight">
               Analytics Dashboard
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed">
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto font-light leading-relaxed">
               Transform raw data into actionable insights. Monitor, analyze, and optimize your 
               automation performance with comprehensive analytics and real-time reporting.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+              <Button className="bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/start-free-trial">Explore Analytics</Link>
               </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
+              <Button variant="outline" className="border-[color:var(--line)] text-[color:var(--ink)] hover:bg-[color:var(--sand)] px-8 py-3 rounded-full" asChild>
                 <Link to="/watch-demo">View Demo</Link>
               </Button>
             </div>
@@ -71,13 +71,13 @@ const Analytics = () => {
       </section>
 
       {/* Metrics Section */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
             {metrics.map((metric, index) => (
               <div key={index} className="text-center">
-                <div className="text-4xl font-light text-blue-600 mb-2">{metric.value}</div>
-                <div className="text-gray-600">{metric.label}</div>
+                <div className="text-4xl font-light text-[color:var(--blue)] mb-2">{metric.value}</div>
+                <div className="text-[color:var(--text-2)]">{metric.label}</div>
               </div>
             ))}
           </div>
@@ -85,11 +85,11 @@ const Analytics = () => {
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Powerful Analytics Features</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Powerful Analytics Features</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto">
               Everything you need to understand and optimize your automation performance
             </p>
           </div>
@@ -98,11 +98,11 @@ const Analytics = () => {
             {features.map((feature, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-[28px] bg-[color:var(--ink)] w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{feature.title}</h3>
+                  <p className="text-[color:var(--text-2)] leading-relaxed">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -111,14 +111,14 @@ const Analytics = () => {
       </section>
 
       {/* Dashboard Preview */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8">
+          <div className="bg-[color:var(--paper)] rounded-[28px] p-12 text-[color:var(--ink)] border border-[color:var(--line)]">
             <h3 className="text-3xl font-light mb-8 text-center">Analytics in Action</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h4 className="text-xl font-medium mb-4">Real-time Monitoring</h4>
-                <ul className="space-y-3 text-black/60">
+                <ul className="space-y-3 text-[color:var(--text-2)]">
                   <li>• Live performance metrics and KPIs</li>
                   <li>• Instant alerts for anomalies</li>
                   <li>• Resource utilization tracking</li>
@@ -127,7 +127,7 @@ const Analytics = () => {
               </div>
               <div>
                 <h4 className="text-xl font-medium mb-4">Advanced Reporting</h4>
-                <ul className="space-y-3 text-black/60">
+                <ul className="space-y-3 text-[color:var(--text-2)]">
                   <li>• Customizable dashboard views</li>
                   <li>• Automated report generation</li>
                   <li>• Historical trend analysis</li>
@@ -140,13 +140,13 @@ const Analytics = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
+      <section className="py-20 bg-[color:var(--sand)] text-[color:var(--ink)] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Start Analyzing Today</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Unlock the power of data-driven automation optimization.
           </p>
-          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Try Analytics Free
               <ArrowRight className="ml-2 h-4 w-4" />

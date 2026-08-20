@@ -67,7 +67,7 @@ export default function TaskListCard({
   return (
     <div
       className={cn(
-        'flex w-80 shrink-0 flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md',
+        'plat-list flex w-80 shrink-0 flex-col',
         className,
       )}
     >
@@ -76,18 +76,18 @@ export default function TaskListCard({
           {href ? (
             <Link
               to={href}
-              className="truncate text-base font-medium text-gray-900 hover:underline"
+              className="truncate text-[15.5px] font-semibold text-[var(--ink)] hover:underline"
             >
               {title}
             </Link>
           ) : (
-            <h3 className="truncate text-base font-medium text-gray-900">{title}</h3>
+            <h3 className="truncate text-[15.5px] text-[var(--ink)]">{title}</h3>
           )}
-          <span className="shrink-0 text-[11px] text-gray-400">{open.length}</span>
+          <span className="shrink-0 text-[11px] text-[var(--text-5)]">{open.length}</span>
         </div>
         <button
           type="button"
-          className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          className="rounded-full p-1.5 text-[var(--text-5)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           aria-label="More"
         >
           <MoreHorizontal className="h-4 w-4" />
@@ -112,13 +112,13 @@ export default function TaskListCard({
               }
             }}
             placeholder='Add a task — try "tomorrow 3pm !1 #work"'
-            className="h-9 w-full rounded-full border border-[#8fc4e4] bg-white px-4 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#8fc4e4]"
+            className="h-9 w-full rounded-[10px] border border-[var(--line)] bg-white px-3 text-sm text-[var(--ink)] transition-colors placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:outline-none"
           />
         ) : (
           <button
             type="button"
             onClick={() => setAdding(true)}
-            className="flex w-full items-center gap-2 rounded-full px-4 py-2 text-left text-sm font-medium text-[#1a73e8] transition-colors hover:bg-[#dde9f4]"
+            className="flex w-full items-center gap-2 rounded-[10px] px-3 py-2 text-left text-sm font-medium text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.04)] hover:text-[var(--ink)]"
           >
             <Plus className="h-4 w-4" /> Add a task
           </button>
@@ -127,7 +127,7 @@ export default function TaskListCard({
 
       <div className="max-h-[60vh] flex-1 overflow-y-auto">
         {open.length === 0 && completed.length === 0 ? (
-          <div className="flex flex-col items-center justify-center px-4 py-8 text-center text-xs text-gray-500">
+          <div className="flex flex-col items-center justify-center px-4 py-8 text-center text-xs text-[var(--text-4)]">
             <p>{emptyMessage ?? 'No tasks yet.'}</p>
           </div>
         ) : (
@@ -140,7 +140,7 @@ export default function TaskListCard({
                 <button
                   type="button"
                   onClick={() => setShowCompleted((s) => !s)}
-                  className="flex w-full items-center gap-1 border-t border-gray-50 px-5 py-2 text-left text-[11px] text-gray-500 transition-colors hover:bg-gray-50"
+                  className="flex w-full items-center gap-1 border-t border-[var(--line-soft)] px-4 py-2 text-left text-[11px] text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.02)] hover:text-[var(--ink)]"
                 >
                   {showCompleted ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
                   Completed ({completed.length})

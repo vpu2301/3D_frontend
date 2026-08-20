@@ -12,7 +12,7 @@ const HowItWorks = () => {
       description: "Select from our library of pre-trained AI employees or create a custom one tailored to your specific needs.",
       icon: Bot,
       features: ["50+ ready-to-use templates", "Custom training available", "Department-specific specializations"],
-      color: "from-blue-500 to-indigo-500"
+      color: "from-[color:var(--blue)] to-[color:var(--blue)]"
     },
     {
       step: 2,
@@ -20,7 +20,7 @@ const HowItWorks = () => {
       description: "Set up your AI employee's capabilities, permissions, and workflows. Define what tasks they can handle autonomously.",
       icon: Settings,
       features: ["Drag-and-drop workflow builder", "Permission management", "Integration setup"],
-      color: "from-green-500 to-emerald-500"
+      color: "from-[color:var(--blue)] to-[color:var(--blue)]"
     },
     {
       step: 3,
@@ -28,7 +28,7 @@ const HowItWorks = () => {
       description: "Launch your AI employee and watch them handle tasks 24/7. Monitor performance and optimize as needed.",
       icon: Zap,
       features: ["Real-time monitoring", "Performance analytics", "Continuous learning"],
-      color: "from-purple-500 to-[#222222]"
+      color: "from-[color:var(--blue)] to-[color:var(--text-2)]"
     }
   ];
 
@@ -36,47 +36,47 @@ const HowItWorks = () => {
     {
       category: "Customer Service",
       tasks: ["Answer customer inquiries", "Process support tickets", "Handle refunds and returns", "Escalate complex issues"],
-      color: "bg-blue-100 text-blue-800",
+      color: "bg-[color:var(--blue-100)] text-[color:var(--blue)]",
       icon: Target
     },
     {
       category: "Sales & Marketing",
       tasks: ["Qualify leads", "Send follow-up emails", "Schedule meetings", "Update CRM records"],
-      color: "bg-green-100 text-green-800",
+      color: "bg-[color:var(--blue-100)] text-[color:var(--blue)]",
       icon: Rocket
     },
     {
       category: "Data Processing",
       tasks: ["Extract data from documents", "Generate reports", "Analyze trends", "Update databases"],
-      color: "bg-purple-100 text-purple-800",
+      color: "bg-[color:var(--blue-100)] text-[color:var(--blue)]",
       icon: Bot
     },
     {
       category: "HR & Operations",
       tasks: ["Screen resumes", "Schedule interviews", "Onboard new hires", "Process expense reports"],
-      color: "bg-[#1b1b1b] text-orange-800",
+      color: "bg-[color:var(--ink)] text-[color:var(--blue)]",
       icon: Lightbulb
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f5ede3] via-white to-purple-50 dark:from-[#181512] dark:via-[#1c1916] dark:to-[#1c1916]">
+    <div className="min-h-screen bg-gradient-to-br from-[color:var(--sand)] via-[color:var(--paper)] to-[color:var(--blue-100)] dark:from-[color:var(--bg)] dark:via-[color:var(--paper)] dark:to-[color:var(--paper)]">
       <main className="pt-16 p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">How It Works</h1>
-            <p className="text-gray-600">Transform your business operations in three simple steps</p>
+            <h1 className="text-3xl font-bold text-[color:var(--ink)]">How It Works</h1>
+            <p className="text-[color:var(--text-2)]">Transform your business operations in three simple steps</p>
           </div>
 
           {/* Demo Section */}
           <section className="mb-12">
-            <Card className="bg-gradient-to-r from-blue-500 via-purple-500 to-[#222222] text-white border-0">
+            <Card className="bg-gradient-to-r from-[color:var(--blue)] via-[color:var(--blue)] to-[color:var(--text-2)] text-white border-0">
               <CardContent className="p-8 text-center">
                 <h2 className="text-2xl font-light mb-4">See It In Action</h2>
                 <p className="text-lg mb-6 opacity-90">
                   Watch how AI employees integrate seamlessly into your existing workflows
                 </p>
-                <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 rounded-full">
+                <Button size="lg" className="bg-[color:var(--paper)] text-[color:var(--ink)] hover:bg-[color:var(--sand)] rounded-full">
                   <Play className="mr-2 h-5 w-5" />
                   Watch 2-Minute Demo
                 </Button>
@@ -87,8 +87,8 @@ const HowItWorks = () => {
           {/* Steps Section */}
           <section className="mb-12">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-light text-gray-900 mb-4">Three Steps to AI Automation</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
+              <h2 className="text-2xl font-light text-[color:var(--ink)] mb-4">Three Steps to AI Automation</h2>
+              <p className="text-[color:var(--text-2)] max-w-2xl mx-auto">
                 Get started in minutes, not months
               </p>
             </div>
@@ -98,22 +98,22 @@ const HowItWorks = () => {
                 <Card key={step.step} className="border-0 shadow-sm hover:shadow-lg transition-all duration-300">
                   <CardHeader className="text-center">
                     <div className="flex justify-center mb-4">
-                      <div className={`p-4 rounded-2xl bg-gradient-to-r ${step.color} w-fit`}>
+                      <div className={`p-4 rounded-[28px] bg-gradient-to-r ${step.color} w-fit`}>
                         <step.icon className="h-8 w-8 text-white" />
                       </div>
                     </div>
-                    <div className="bg-[#f5ede3] text-[#111111] rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mx-auto mb-2">
+                    <div className="bg-[color:var(--sand)] text-[color:var(--ink)] rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mx-auto mb-2">
                       {step.step}
                     </div>
                     <CardTitle className="text-xl mb-2">{step.title}</CardTitle>
                   </CardHeader>
                   <CardContent className="text-center">
-                    <p className="text-gray-600 mb-6">{step.description}</p>
+                    <p className="text-[color:var(--text-2)] mb-6">{step.description}</p>
                     <div className="space-y-2">
                       {step.features.map((feature, index) => (
                         <div key={index} className="flex items-center justify-center text-sm">
-                          <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                          <span className="text-gray-700">{feature}</span>
+                          <CheckCircle className="h-4 w-4 text-[color:var(--blue)] mr-2" />
+                          <span className="text-[color:var(--ink)]">{feature}</span>
                         </div>
                       ))}
                     </div>
@@ -126,8 +126,8 @@ const HowItWorks = () => {
           {/* Capabilities Section */}
           <section className="mb-12">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-light text-gray-900 mb-4">What Can AI Employees Do?</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
+              <h2 className="text-2xl font-light text-[color:var(--ink)] mb-4">What Can AI Employees Do?</h2>
+              <p className="text-[color:var(--text-2)] max-w-2xl mx-auto">
                 From simple tasks to complex workflows, our AI handles it all
               </p>
             </div>
@@ -137,8 +137,8 @@ const HowItWorks = () => {
                 <Card key={index} className="border-0 shadow-sm hover:shadow-lg transition-all duration-300">
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <div className="p-2 rounded-lg bg-gray-100 mr-3">
-                        <capability.icon className="h-5 w-5 text-gray-600" />
+                      <div className="p-2 rounded-[16px] bg-[color:var(--sand)] mr-3">
+                        <capability.icon className="h-5 w-5 text-[color:var(--text-2)]" />
                       </div>
                       {capability.category}
                       <Badge className={`ml-auto ${capability.color} border-0`}>
@@ -150,8 +150,8 @@ const HowItWorks = () => {
                     <div className="space-y-2">
                       {capability.tasks.map((task, taskIndex) => (
                         <div key={taskIndex} className="flex items-center text-sm">
-                          <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                          <span className="text-gray-700">{task}</span>
+                          <CheckCircle className="h-4 w-4 text-[color:var(--blue)] mr-2 flex-shrink-0" />
+                          <span className="text-[color:var(--ink)]">{task}</span>
                         </div>
                       ))}
                     </div>
@@ -164,37 +164,37 @@ const HowItWorks = () => {
           {/* Benefits Section */}
           <section className="mb-12">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-light text-gray-900 mb-4">Why Businesses Choose 3days.ai</h2>
+              <h2 className="text-2xl font-light text-[color:var(--ink)] mb-4">Why Businesses Choose 3days.ai</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="text-center border-0 shadow-sm">
                 <CardContent className="p-6">
-                  <div className="bg-blue-100 p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-blue-600">80%</span>
+                  <div className="bg-[color:var(--blue-100)] p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    <span className="text-2xl font-bold text-[color:var(--blue)]">80%</span>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Time Saved</h3>
-                  <p className="text-gray-600 text-sm">Automate repetitive tasks and focus on high-value work</p>
+                  <h3 className="text-lg font-medium text-[color:var(--ink)] mb-2">Time Saved</h3>
+                  <p className="text-[color:var(--text-2)] text-sm">Automate repetitive tasks and focus on high-value work</p>
                 </CardContent>
               </Card>
 
               <Card className="text-center border-0 shadow-sm">
                 <CardContent className="p-6">
-                  <div className="bg-green-100 p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-green-600">24/7</span>
+                  <div className="bg-[color:var(--blue-100)] p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    <span className="text-2xl font-bold text-[color:var(--blue)]">24/7</span>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Always Working</h3>
-                  <p className="text-gray-600 text-sm">AI employees never sleep, take breaks, or call in sick</p>
+                  <h3 className="text-lg font-medium text-[color:var(--ink)] mb-2">Always Working</h3>
+                  <p className="text-[color:var(--text-2)] text-sm">AI employees never sleep, take breaks, or call in sick</p>
                 </CardContent>
               </Card>
 
               <Card className="text-center border-0 shadow-sm">
                 <CardContent className="p-6">
-                  <div className="bg-purple-100 p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-purple-600">ROI</span>
+                  <div className="bg-[color:var(--blue-100)] p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    <span className="text-2xl font-bold text-[color:var(--blue)]">ROI</span>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Immediate ROI</h3>
-                  <p className="text-gray-600 text-sm">See returns from day one with our quick setup process</p>
+                  <h3 className="text-lg font-medium text-[color:var(--ink)] mb-2">Immediate ROI</h3>
+                  <p className="text-[color:var(--text-2)] text-sm">See returns from day one with our quick setup process</p>
                 </CardContent>
               </Card>
             </div>
@@ -202,17 +202,17 @@ const HowItWorks = () => {
 
           {/* CTA Section */}
           <section className="text-center">
-            <Card className="bg-white text-[#111111] border border-black/8">
+            <Card className="bg-[color:var(--paper)] text-[color:var(--ink)] border border-[color:var(--line)]">
               <CardContent className="p-8">
                 <h2 className="text-2xl font-light mb-4">Ready to Get Started?</h2>
-                <p className="text-lg text-black/60 mb-6 font-light">
+                <p className="text-lg text-[color:var(--text-2)] mb-6 font-light">
                   Join thousands of companies that are already transforming their operations with AI employees.
                 </p>
                 <div className="space-x-4">
-                  <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full">
+                  <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full">
                     Start Free Trial
                   </Button>
-                  <Button size="lg" variant="outline" className="border-black/15 bg-white/70 text-[#111111] hover:bg-white rounded-full">
+                  <Button size="lg" variant="outline" className="border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink)] hover:bg-[color:var(--paper)] rounded-full">
                     Schedule Demo
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>

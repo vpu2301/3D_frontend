@@ -2,11 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import {
-  Send, Mic, MicOff, Bot,
+  Send, Mic, MicOff,
   Paperclip, X, FileText, Image, Plus, Link2, Unlink,
   ShieldAlert, Check, AlertCircle, Loader2, Wrench,
-  Users, ChevronDown,
+  Users, ChevronDown, Megaphone, BarChart3, CalendarRange, Wallet,
 } from 'lucide-react';
+import '@/styles/platform.css';
 import { useToast } from '@/hooks/use-toast';
 import {
   isConnected as pincerConnected,
@@ -18,7 +19,9 @@ import {
   respondApproval,
   PincerError,
   type PincerMessage,
+  getUserId,
 } from '@/lib/pincerClient';
+import { listConversations, type Conversation } from '@/lib/api/conversations';
 import { cleanAssistantText, renderAssistantText, renderTextWithLinks } from '@/lib/formatChat';
 
 type ChainStep =
@@ -56,10 +59,10 @@ interface ChatHistory {
 }
 
 const SUGGESTIONS = [
-  { title: 'Create a marketing plan',   sub: 'for my new product launch'         },
-  { title: 'Analyze sales data',        sub: 'and generate a summary report'     },
-  { title: 'Draft a project timeline',  sub: 'with milestones and deliverables'  },
-  { title: 'Prepare a budget overview', sub: 'for Q2 planning session'           },
+  { title: 'Create a marketing plan',   sub: 'for my new product launch',        icon: Megaphone     },
+  { title: 'Analyze sales data',        sub: 'and generate a summary report',    icon: BarChart3     },
+  { title: 'Draft a project timeline',  sub: 'with milestones and deliverables', icon: CalendarRange },
+  { title: 'Prepare a budget overview', sub: 'for Q2 planning session',          icon: Wallet        },
 ];
 
 const AGENTS = [
@@ -87,6 +90,29 @@ const Chat = () => {
   const [isStreaming, setIsStreaming]     = useState(false);
   const [pincerOn, setPincerOn]           = useState<boolean>(() => pincerConnected());
   const [showAgentMenu, setShowAgentMenu] = useState(false);
+  // Dismissed prompt suggestions survive reloads — "closed" should stay closed.
+  const [dismissedSuggestions, setDismissedSuggestions] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('chat.suggestions.dismissed') ?? '[]');
+    } catch {
+      return [];
+    }
+  });
+
+  const restoreSuggestions = () => {
+    localStorage.removeItem('chat.suggestions.dismissed');
+    setDismissedSuggestions([]);
+  };
+
+  const dismissSuggestion = (title: string | 'ALL') => {
+    setDismissedSuggestions(prev => {
+      const next = title === 'ALL' ? SUGGESTIONS.map(x => x.title) : [...prev, title];
+      localStorage.setItem('chat.suggestions.dismissed', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const visibleSuggestions = SUGGESTIONS.filter(x => !dismissedSuggestions.includes(x.title));
 
   const fileInputRef   = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -96,13 +122,42 @@ const Chat = () => {
 
   const hasStarted = messages.some(m => m.sender === 'user');
 
+  // Real conversation history from /api/conversations (the memory backend's
+  // stored exchanges). Kept in a ref keyed by id so selecting one renders
+  // instantly without a second request.
+  const convByIdRef = useRef<Map<string, Conversation>>(new Map());
+  const liveMessagesRef = useRef<ChatMessage[] | null>(null);
+
+  const refreshHistory = async () => {
+    if (!pincerConnected()) {
+      setChatHistory([]);
+      return;
+    }
+    try {
+      const { conversations } = await listConversations(getUserId(), 20);
+      convByIdRef.current = new Map(conversations.map(c => [c.id, c]));
+      setChatHistory(
+        conversations.map(c => {
+          const user = c.messages.find(m => m.role === 'user')?.content ?? c.preview;
+          const assistant = c.messages.find(m => m.role === 'assistant')?.content ?? '';
+          return {
+            id: c.id,
+            title: user.length > 44 ? `${user.slice(0, 44)}…` : user || 'Conversation',
+            lastMessage: assistant.length > 60 ? `${assistant.slice(0, 60)}…` : assistant,
+            timestamp: new Date(c.created_at),
+            messageCount: c.messages.length,
+          };
+        }),
+      );
+    } catch {
+      /* history is a nicety — never block the chat on it */
+    }
+  };
+
   // Boot: show welcome and, if Pincer is connected, hydrate past thread.
   useEffect(() => {
     setMessages([WELCOME_MESSAGE]);
-    setChatHistory([
-      { id: 'chat-1', title: 'Project Planning Discussion', lastMessage: 'Thanks for the help with the timeline!', timestamp: new Date(Date.now() - 86400000),  messageCount: 12 },
-      { id: 'chat-2', title: 'Budget Analysis',             lastMessage: 'Can you review these numbers?',          timestamp: new Date(Date.now() - 172800000), messageCount: 8  },
-    ]);
+    void refreshHistory();
 
     if (!pincerConnected()) return;
 
@@ -168,6 +223,11 @@ const Chat = () => {
     if (isStreaming) return;
     if (!message.trim() && attachments.length === 0) return;
 
+    // Typing while viewing a past exchange always continues the live thread.
+    if (currentChatId !== 'current') {
+      setCurrentChatId('current');
+      liveMessagesRef.current = null;
+    }
     const atts = attachments.map(f => ({ name: f.name, type: f.type, size: f.size, url: URL.createObjectURL(f) }));
     const userText = message;
     const userMsg: ChatMessage = { id: messages.length + 1, text: userText, sender: 'user', timestamp: new Date(), attachments: atts.length ? atts : undefined };
@@ -324,6 +384,8 @@ const Chat = () => {
     } finally {
       setIsStreaming(false);
       abortRef.current = null;
+      // The finished exchange is now in memory — pick it up for the sidebar.
+      void refreshHistory();
     }
   };
 
@@ -361,15 +423,34 @@ const Chat = () => {
   const startNewChat = () => {
     abortRef.current?.abort();
     if (pincerOn) resetUserId();
+    liveMessagesRef.current = null;
     setCurrentChatId('current');
     setMessages([WELCOME_MESSAGE]);
+    void refreshHistory();
   };
 
   const selectChat = (id: string) => {
-    setCurrentChatId(id);
-    if (id !== 'current') {
-      setMessages([{ id: 1, text: `Loading conversation: ${chatHistory.find(c => c.id === id)?.title}...`, sender: 'assistant', timestamp: new Date() }]);
+    if (id === currentChatId) return;
+    if (id === 'current') {
+      setCurrentChatId('current');
+      setMessages(liveMessagesRef.current ?? [WELCOME_MESSAGE]);
+      liveMessagesRef.current = null;
+      return;
     }
+    const conv = convByIdRef.current.get(id);
+    if (!conv) return;
+    // Park the live thread so "Current chat" restores it untouched.
+    if (currentChatId === 'current') liveMessagesRef.current = messages;
+    setCurrentChatId(id);
+    const at = new Date(conv.created_at);
+    setMessages(
+      conv.messages.map((m, i) => ({
+        id: i + 1,
+        text: m.content,
+        sender: m.role === 'assistant' ? ('assistant' as const) : ('user' as const),
+        timestamp: at,
+      })),
+    );
   };
 
   const disconnectPincer = () => {
@@ -398,7 +479,10 @@ const Chat = () => {
         <ChevronDown className="h-3 w-3" />
       </button>
       {showAgentMenu && (
-        <div className="absolute bottom-full right-0 mb-2 min-w-[150px] rounded-xl border border-gray-200 bg-white shadow-lg py-1 z-20">
+        <div className="absolute bottom-full right-0 mb-2 min-w-[170px] rounded-xl border border-gray-200 bg-white shadow-lg py-1 z-20">
+          <div className="px-3 pb-1 pt-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-600">
+            Demo roster — inserts text only
+          </div>
           {AGENTS.map(a => (
             <button
               key={a.label}
@@ -435,7 +519,10 @@ const Chat = () => {
       )}
 
       {/* Textarea card */}
-      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm focus-within:border-[#8fc4e4] focus-within:shadow-md transition-all duration-200">
+      <div
+        className="plat-field-shell rounded-[14px] border bg-white transition-colors duration-200"
+        style={{ borderColor: 'var(--line)' }}
+      >
         <textarea
           ref={textareaRef}
           value={message}
@@ -464,9 +551,9 @@ const Chat = () => {
             <button
               onClick={handleSend}
               disabled={isStreaming || (!message.trim() && attachments.length === 0)}
-              className={`flex items-center justify-center h-9 w-9 rounded-lg transition-all duration-150 ${
+              className={`flex items-center justify-center h-9 w-9 rounded-full transition-all duration-150 ${
                 !isStreaming && (message.trim() || attachments.length > 0)
-                  ? 'bg-gray-900 text-white hover:bg-gray-700 shadow-sm'
+                  ? 'bg-[#14161a] text-white hover:opacity-85'
                   : 'bg-gray-100 text-gray-300 cursor-not-allowed'
               }`}
             >
@@ -498,14 +585,14 @@ const Chat = () => {
   );
 
   return (
-    <SidebarProvider>
+    <SidebarProvider className="plat">
       <AppSidebar
         chatHistory={chatHistory}
         currentChatId={currentChatId}
         onSelectChat={selectChat}
         onNewChat={startNewChat}
       />
-      <SidebarInset className="flex flex-row overflow-hidden h-screen bg-white">
+      <SidebarInset className="flex flex-row overflow-hidden h-screen bg-transparent">
 
         {/* ────────────── Main chat column ────────────── */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
@@ -515,12 +602,10 @@ const Chat = () => {
             <div className="flex-1 flex flex-col items-center justify-center overflow-y-auto px-6 py-16">
               <div className="w-full max-w-2xl flex flex-col items-center gap-8">
 
-                {/* Icon + greeting */}
+                {/* Greeting */}
                 <div className="flex flex-col items-center gap-3 text-center">
-                  <div className="flex items-center justify-center h-14 w-14 rounded-2xl bg-[#bdd8ec]">
-                    <Bot className="h-7 w-7 text-gray-700" />
-                  </div>
-                  <h1 className="text-[1.65rem] font-semibold text-gray-900 tracking-tight">How can I help you today?</h1>
+                  <p className="plat-crumb">3days.chat</p>
+                  <h1 className="text-[2rem] text-gray-900">How can I help you today?</h1>
                   <p className="text-sm text-gray-500">Chat with your AI employees or ask anything</p>
                   {pincerBadge}
                 </div>
@@ -530,19 +615,63 @@ const Chat = () => {
                   {inputBar}
                 </div>
 
-                {/* Quick command buttons — underneath the input */}
-                <div className="grid grid-cols-2 gap-2.5 w-full">
-                  {SUGGESTIONS.map((s, i) => (
-                    <button
-                      key={i}
-                      onClick={() => { setMessage(s.title + ' ' + s.sub); textareaRef.current?.focus(); }}
-                      className="text-left p-4 rounded-xl border border-gray-200 hover:border-[#8fc4e4] hover:bg-blue-50/30 transition-all duration-150 group"
-                    >
-                      <p className="text-sm font-medium text-gray-800 mb-0.5 group-hover:text-gray-900">{s.title}</p>
-                      <p className="text-xs text-gray-400">{s.sub}</p>
-                    </button>
-                  ))}
-                </div>
+                {/* All suggestions hidden → a quiet way to bring them back */}
+                {visibleSuggestions.length === 0 && dismissedSuggestions.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={restoreSuggestions}
+                    className="text-xs text-gray-400 transition-colors hover:text-gray-600"
+                  >
+                    Show suggestions
+                  </button>
+                )}
+
+                {/* Prompt suggestions — squircle-icon list rows (reference nav style) */}
+                {visibleSuggestions.length > 0 && (
+                  <div className="w-full">
+                    <div className="mb-2 flex items-center justify-between px-3">
+                      <p className="plat-eyebrow">Suggestions</p>
+                      <button
+                        type="button"
+                        onClick={() => dismissSuggestion('ALL')}
+                        className="text-[11px] text-gray-400 transition-colors hover:text-gray-600"
+                      >
+                        Hide all
+                      </button>
+                    </div>
+                    <div className="space-y-1">
+                      {visibleSuggestions.map(item => {
+                        const Icon = item.icon;
+                        return (
+                          <div key={item.title} className="group flex items-center">
+                            <button
+                              type="button"
+                              onClick={() => { setMessage(item.title + ' ' + item.sub); textareaRef.current?.focus(); }}
+                              className="plat-item min-w-0 flex-1"
+                            >
+                              <span className="plat-item-icon !h-11 !w-11 !rounded-[10px]">
+                                <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                              </span>
+                              <span className="min-w-0">
+                                <span className="plat-item-title block truncate text-[14px]">{item.title}</span>
+                                <span className="plat-item-sub block truncate text-xs">{item.sub}</span>
+                              </span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => dismissSuggestion(item.title)}
+                              className="mr-2 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md text-gray-300 opacity-0 transition-all hover:bg-gray-200/60 hover:text-gray-600 group-hover:opacity-100"
+                              aria-label={`Dismiss suggestion: ${item.title}`}
+                              title="Dismiss"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -550,18 +679,12 @@ const Chat = () => {
             /* ── Active chat state ── */
             <>
               {/* Header */}
-              <div className="flex items-center justify-between px-5 h-14 shrink-0">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-[#bdd8ec]">
-                    <Bot className="h-4 w-4 text-gray-700" />
-                  </div>
-                  <span className="text-sm font-semibold text-gray-800">AI Chat</span>
+              <div className="flex items-center justify-between px-6 h-14 shrink-0 border-b" style={{ borderColor: 'var(--line-soft)' }}>
+                <div className="flex items-center gap-3">
+                  <span className="plat-crumb">3days.chat</span>
                   {pincerBadge}
                 </div>
-                <button
-                  onClick={startNewChat}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 border border-transparent hover:border-gray-200 transition-all"
-                >
+                <button onClick={startNewChat} className="plat-btn-ghost !h-8">
                   <Plus className="h-3.5 w-3.5" />
                   New chat
                 </button>
@@ -610,7 +733,7 @@ const Chat = () => {
                             );
                           })()
                         ) : (
-                          <div className="bg-gray-100 text-gray-900 text-sm px-4 py-2.5 rounded-2xl rounded-tr-md leading-relaxed shadow-sm whitespace-pre-wrap break-words">
+                          <div className="text-sm px-4 py-2.5 rounded-[12px] rounded-tr-md leading-relaxed whitespace-pre-wrap break-words" style={{ background: 'var(--sand-deep)', color: 'var(--ink)' }}>
                             {renderTextWithLinks(msg.text)}
                           </div>
                         )}
@@ -638,7 +761,7 @@ const Chat = () => {
               </div>
 
               {/* Bottom bar */}
-              <div className="shrink-0 bg-white px-4 pt-3 pb-4">
+              <div className="shrink-0 px-4 pt-3 pb-4">
                 <div className="max-w-2xl mx-auto space-y-2.5">
                   {inputBar}
                 </div>

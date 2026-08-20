@@ -33,26 +33,26 @@ const SuccessStories = () => {
   ];
 
   return (
-    <div className="min-h-screen dark:bg-[#181512]">
+    <div className="min-h-screen dark:bg-[color:var(--bg)]">
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-emerald-50 to-green-100 pt-20 pb-16">
+      <section className="bg-gradient-to-br from-[color:var(--blue-100)] to-[color:var(--blue-100)] pt-20 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex justify-center mb-6">
-              <div className="bg-emerald-600 p-4 rounded-2xl">
+              <div className="bg-[color:var(--blue)] p-4 rounded-[28px]">
                 <Star className="h-12 w-12 text-white" />
               </div>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold text-[color:var(--ink)] mb-6">
               Customer Success
-              <span className="text-emerald-600 block">Stories</span>
+              <span className="text-[color:var(--blue)] block">Stories</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-[color:var(--text-2)] mb-8 max-w-3xl mx-auto">
               Discover how leading companies are transforming their operations and achieving remarkable results with 3days.ai.
             </p>
-            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700" asChild>
+            <Button size="lg" className="bg-[color:var(--blue)] hover:bg-[color:var(--blue)]" asChild>
               <Link to="/get-started">Start Your Success Story <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </Button>
           </div>
@@ -66,27 +66,27 @@ const SuccessStories = () => {
             {stories.map((story, index) => (
               <div key={index} className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12`}>
                 <div className="flex-1">
-                  <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+                  <div className="bg-[color:var(--paper)] p-8 rounded-[28px] shadow-lg border border-[color:var(--line)]">
                     <div className="flex items-center mb-6">
-                      <div className="w-12 h-12 bg-[#111111] rounded-lg flex items-center justify-center text-white font-bold mr-4">
+                      <div className="w-12 h-12 bg-[color:var(--ink)] rounded-[16px] flex items-center justify-center text-white font-bold mr-4">
                         {story.logo}
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900">{story.company}</h3>
-                        <p className="text-gray-600">{story.industry}</p>
+                        <h3 className="text-xl font-semibold text-[color:var(--ink)]">{story.company}</h3>
+                        <p className="text-[color:var(--text-2)]">{story.industry}</p>
                       </div>
                     </div>
-                    <blockquote className="text-lg text-gray-700 mb-6 italic">
+                    <blockquote className="text-lg text-[color:var(--ink)] mb-6 italic">
                       "{story.quote}"
                     </blockquote>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-emerald-50 p-4 rounded-lg">
-                        <p className="text-sm text-emerald-600 font-medium">Key Result</p>
-                        <p className="text-lg font-semibold text-gray-900">{story.results}</p>
+                      <div className="bg-[color:var(--blue-100)] p-4 rounded-[16px]">
+                        <p className="text-sm text-[color:var(--blue)] font-medium">Key Result</p>
+                        <p className="text-lg font-semibold text-[color:var(--ink)]">{story.results}</p>
                       </div>
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <p className="text-sm text-blue-600 font-medium">Annual Savings</p>
-                        <p className="text-lg font-semibold text-gray-900">{story.savings}</p>
+                      <div className="bg-[color:var(--blue-100)] p-4 rounded-[16px]">
+                        <p className="text-sm text-[color:var(--blue)] font-medium">Annual Savings</p>
+                        <p className="text-lg font-semibold text-[color:var(--ink)]">{story.savings}</p>
                       </div>
                     </div>
                   </div>
@@ -94,18 +94,18 @@ const SuccessStories = () => {
                 <div className="flex-1">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="text-center">
-                      <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <TrendingUp className="h-8 w-8 text-blue-600" />
+                      <div className="bg-[color:var(--blue-100)] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <TrendingUp className="h-8 w-8 text-[color:var(--blue)]" />
                       </div>
                       <h4 className="text-lg font-semibold mb-2">Productivity Boost</h4>
-                      <p className="text-gray-600">Average 3x improvement in task completion speed</p>
+                      <p className="text-[color:var(--text-2)]">Average 3x improvement in task completion speed</p>
                     </div>
                     <div className="text-center">
-                      <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Clock className="h-8 w-8 text-green-600" />
+                      <div className="bg-[color:var(--blue-100)] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Clock className="h-8 w-8 text-[color:var(--blue)]" />
                       </div>
                       <h4 className="text-lg font-semibold mb-2">Time Savings</h4>
-                      <p className="text-gray-600">Reclaim 3+ days per week for strategic work</p>
+                      <p className="text-[color:var(--text-2)]">Reclaim 3+ days per week for strategic work</p>
                     </div>
                   </div>
                 </div>
@@ -116,15 +116,15 @@ const SuccessStories = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-[#f5ede3] py-20">
+      <section className="bg-[color:var(--sand)] py-20">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#111111] mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-[color:var(--ink)] mb-6">
             Ready to Write Your Success Story?
           </h2>
-          <p className="text-xl text-black/60 mb-8">
+          <p className="text-xl text-[color:var(--text-2)] mb-8">
             Join hundreds of companies already transforming their operations with AI automation.
           </p>
-          <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700" asChild>
+          <Button size="lg" className="bg-[color:var(--blue)] hover:bg-[color:var(--blue)]" asChild>
             <Link to="/get-started">Get Started Today</Link>
           </Button>
         </div>

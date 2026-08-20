@@ -131,11 +131,11 @@ export default function ContactsHome() {
     <ContactsLayout>
       <div className="flex flex-1 overflow-hidden">
         <ContactsMiniRail />
-        <main className="flex flex-1 flex-col overflow-hidden bg-white">
+        <main className="flex flex-1 flex-col overflow-hidden">
           {/* Top search bar */}
-          <div className="flex items-center gap-3 border-b border-gray-100 px-6 pt-4 pb-3">
+          <div className="flex items-center gap-3 border-b border-[var(--line-soft)] px-6 pt-4 pb-3">
             <div className="relative flex-1 max-w-3xl">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-5)]" />
               <input
                 value={query}
                 onChange={(e) => {
@@ -146,7 +146,7 @@ export default function ContactsHome() {
                   if (e.key === 'Enter' && query.trim()) onAskAi();
                 }}
                 placeholder="Search"
-                className="h-10 w-full rounded-full border border-transparent bg-[#f1f3f4] pl-11 pr-10 text-sm text-gray-900 placeholder:text-gray-500 transition-colors focus:border-[#8fc4e4] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#8fc4e4]"
+                className="h-10 w-full rounded-[10px] border border-[var(--line-soft)] bg-white pl-11 pr-10 text-sm text-[var(--ink)] placeholder:text-[var(--text-5)] transition-colors focus:border-[var(--ink)] focus:outline-none"
               />
               {query && (
                 <button
@@ -155,7 +155,7 @@ export default function ContactsHome() {
                     setQuery('');
                     setShowAi(false);
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-500 hover:bg-gray-200"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                   aria-label="Clear"
                 >
                   <X className="h-3.5 w-3.5" />
@@ -166,7 +166,7 @@ export default function ContactsHome() {
               <button
                 type="button"
                 onClick={onAskAi}
-                className="flex h-9 items-center gap-1 rounded-full bg-[#bdd8ec] px-3 text-xs font-medium text-gray-800 hover:bg-[#a5c8e0]"
+                className="plat-btn h-9 shrink-0 px-4"
                 title="Ask AI across contacts"
               >
                 <Sparkles className="h-3.5 w-3.5" /> Ask
@@ -176,11 +176,11 @@ export default function ContactsHome() {
 
           {/* AI answer panel */}
           {showAi && aiAnswer && (
-            <div className="border-b border-gray-100 bg-blue-50/40 px-6 py-3">
-              <div className="mb-1 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-widest text-blue-700">
+            <div className="border-b border-[var(--line-soft)] px-6 py-3.5">
+              <div className="plat-eyebrow mb-1.5 flex items-center gap-1.5">
                 <Sparkles className="h-3 w-3" /> AI answer
               </div>
-              <div className="whitespace-pre-wrap text-sm text-gray-800">{aiAnswer}</div>
+              <div className="whitespace-pre-wrap text-sm text-[var(--text-1)]">{aiAnswer}</div>
               {aiCited.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
                   {aiCited.map((id) => {
@@ -191,7 +191,7 @@ export default function ContactsHome() {
                         key={id}
                         type="button"
                         onClick={() => navigate(`/contacts/contact/${id}`)}
-                        className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-blue-700 shadow-sm hover:bg-blue-50"
+                        className="inline-flex items-center gap-1 rounded-full border border-[var(--line-soft)] bg-white px-2 py-0.5 text-[10px] font-medium text-[var(--text-2)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
                       >
                         <ContactAvatar contact={c} size={14} />
                         {displayName(c)}
@@ -204,20 +204,21 @@ export default function ContactsHome() {
           )}
 
           {/* Page heading */}
-          <div className="px-6 pt-6 pb-3">
-            <h1 className="text-2xl font-light text-gray-900">
-              {heading} <span className="text-gray-400">({visible.length})</span>
+          <div className="px-6 pt-6 pb-4">
+            <p className="plat-crumb">3days.contacts</p>
+            <h1 className="mt-1 text-[26px] leading-tight">
+              {heading} <span style={{ color: 'var(--text-5)' }}>({visible.length})</span>
             </h1>
             {tagFilter && (
-              <div className="mt-1 flex items-center gap-1 text-xs">
-                <span className="text-gray-500">Filtered by</span>
-                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-blue-700">
+              <div className="mt-1.5 flex items-center gap-1.5 text-xs">
+                <span style={{ color: 'var(--text-4)' }}>Filtered by</span>
+                <span className="rounded-full bg-[var(--sand-deep)] px-2 py-0.5 text-[var(--text-2)]">
                   #{tagFilter}
                 </span>
                 <button
                   type="button"
                   onClick={() => navigate('/contacts')}
-                  className="text-blue-600 hover:underline"
+                  className="font-semibold text-[var(--ink)] hover:underline"
                 >
                   Clear
                 </button>
@@ -227,8 +228,10 @@ export default function ContactsHome() {
 
           {/* Table */}
           <div className="flex-1 overflow-y-auto px-6 pb-6">
-            <div>
-              <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,1fr)_148px] items-center gap-4 border-b border-gray-200 px-3 pb-2 text-[12px] text-gray-500">
+            {/* One panel, hairline-divided rows. `overflow: visible` undoes the
+                .plat-list clip so a row's More-actions menu is not cut off. */}
+            <div className="plat-list" style={{ overflow: 'visible' }}>
+              <div className="plat-eyebrow grid grid-cols-[minmax(0,1.5fr)_minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,1fr)_148px] items-center gap-4 border-b border-[var(--line-soft)] px-4 py-2.5">
                 <span>Name</span>
                 <span>Email</span>
                 <span>Phone number</span>
@@ -238,7 +241,7 @@ export default function ContactsHome() {
                   <button
                     type="button"
                     onClick={() => window.print()}
-                    className="rounded-full p-1.5 text-gray-500 hover:bg-gray-100"
+                    className="rounded-full p-1.5 text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                     title="Print"
                   >
                     <Printer className="h-4 w-4" />
@@ -246,7 +249,7 @@ export default function ContactsHome() {
                   <button
                     type="button"
                     onClick={onExport}
-                    className="rounded-full p-1.5 text-gray-500 hover:bg-gray-100"
+                    className="rounded-full p-1.5 text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                     title="Export CSV"
                   >
                     <UploadCloud className="h-4 w-4" />
@@ -254,7 +257,7 @@ export default function ContactsHome() {
                   <button
                     type="button"
                     onClick={() => navigate('/contacts/timeline')}
-                    className="rounded-full p-1.5 text-gray-500 hover:bg-gray-100"
+                    className="rounded-full p-1.5 text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                     title="More"
                   >
                     <MoreHorizontal className="h-4 w-4" />
@@ -263,27 +266,27 @@ export default function ContactsHome() {
               </div>
 
               {visible.length === 0 ? (
-                <div className="px-3 py-16 text-center text-sm text-gray-500">
+                <div className="px-4 py-16 text-center text-sm text-[var(--text-4)]">
                   No contacts here yet.
                 </div>
               ) : (
                 <>
-                  <div className="px-3 pb-2 pt-3 text-[11px] text-gray-400">Contacts</div>
+                  <div className="plat-eyebrow border-b border-[var(--line-soft)] px-4 py-2">Contacts</div>
                   <div>
                     {visible.slice(0, visibleCount).map((c) => (
                       <ContactTableRow key={c.id} contact={c} />
                     ))}
                   </div>
                   {visibleCount < visible.length && (
-                    <div className="flex flex-col items-center gap-1 py-6">
+                    <div className="flex flex-col items-center gap-1.5 border-t border-[var(--line-soft)] py-6">
                       <button
                         type="button"
                         onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
-                        className="rounded-full border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-[#8fc4e4] hover:bg-[#dde9f4]"
+                        className="plat-btn-ghost"
                       >
                         Load more
                       </button>
-                      <span className="text-[11px] text-gray-400">
+                      <span className="text-[11px] text-[var(--text-5)]">
                         Showing {visibleCount} of {visible.length}
                       </span>
                     </div>
@@ -378,26 +381,26 @@ function ContactTableRow({ contact }: { contact: Contact }) {
       onKeyDown={(e) => {
         if (e.key === 'Enter') navigate(`/contacts/contact/${contact.id}`);
       }}
-      className="group relative grid cursor-pointer grid-cols-[minmax(0,1.5fr)_minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,1fr)_148px] items-center gap-4 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50"
+      className="group relative grid cursor-pointer grid-cols-[minmax(0,1.5fr)_minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,1fr)_148px] items-center gap-4 border-b border-[var(--line-soft)] px-4 py-2.5 transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]"
     >
       <div className="flex min-w-0 items-center gap-3">
         <ContactAvatar contact={contact} size={32} />
-        <span className="truncate text-sm text-gray-900">{displayName(contact)}</span>
+        <span className="truncate text-sm font-medium text-[var(--ink)]">{displayName(contact)}</span>
       </div>
-      <div className="truncate text-sm text-gray-700">{email ?? ''}</div>
-      <div className="truncate text-sm text-gray-700">{phone ?? ''}</div>
-      <div className="truncate text-sm text-gray-700">{role}</div>
+      <div className="truncate text-sm text-[var(--text-2)]">{email ?? ''}</div>
+      <div className="truncate text-sm text-[var(--text-2)]">{phone ?? ''}</div>
+      <div className="truncate text-sm text-[var(--text-2)]">{role}</div>
       <div className="flex flex-wrap items-center gap-1 truncate">
         {labels.slice(0, 2).map((l) => (
           <span
             key={l}
-            className="inline-flex max-w-full truncate rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-gray-600"
+            className="inline-flex max-w-full truncate rounded-full bg-[var(--sand-deep)] px-2 py-0.5 text-[11px] text-[var(--text-3)]"
           >
             {l}
           </span>
         ))}
         {labels.length > 2 && (
-          <span className="text-[10px] text-gray-400">+{labels.length - 2}</span>
+          <span className="text-[10px] text-[var(--text-5)]">+{labels.length - 2}</span>
         )}
       </div>
       <div className="flex items-center justify-end gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
@@ -407,14 +410,14 @@ function ContactTableRow({ contact }: { contact: Contact }) {
             e.stopPropagation();
             star(contact.id);
           }}
-          className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+          className="rounded-full p-1.5 text-[var(--text-5)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
           aria-label={contact.starred ? 'Unstar' : 'Star'}
           title={contact.starred ? 'Unstar' : 'Star'}
         >
           <Star
             className={cn(
               'h-4 w-4',
-              contact.starred ? 'fill-yellow-400 text-yellow-400' : '',
+              contact.starred ? 'fill-amber-400 text-amber-400' : '',
             )}
           />
         </button>
@@ -424,7 +427,7 @@ function ContactTableRow({ contact }: { contact: Contact }) {
             e.stopPropagation();
             onRename();
           }}
-          className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+          className="rounded-full p-1.5 text-[var(--text-5)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
           aria-label="Rename"
           title="Rename"
         >
@@ -436,7 +439,7 @@ function ContactTableRow({ contact }: { contact: Contact }) {
             e.stopPropagation();
             onShare();
           }}
-          className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+          className="rounded-full p-1.5 text-[var(--text-5)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
           aria-label="Share"
           title="Share"
         >
@@ -449,7 +452,7 @@ function ContactTableRow({ contact }: { contact: Contact }) {
               e.stopPropagation();
               setMenuOpen((o) => !o);
             }}
-            className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-full p-1.5 text-[var(--text-5)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
             aria-label="More actions"
             title="More"
           >
@@ -457,7 +460,7 @@ function ContactTableRow({ contact }: { contact: Contact }) {
           </button>
           {menuOpen && (
             <div
-              className="absolute right-0 top-full z-20 mt-1 w-44 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+              className="absolute right-0 top-full z-20 mt-1 w-44 rounded-[12px] border border-[var(--line)] bg-white p-1 shadow-lg"
               onClick={(e) => e.stopPropagation()}
               onMouseLeave={() => setMenuOpen(false)}
             >
@@ -467,7 +470,7 @@ function ContactTableRow({ contact }: { contact: Contact }) {
                   setMenuOpen(false);
                   onPrint();
                 }}
-                className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-gray-700 hover:bg-gray-100"
+                className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-[13px] text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
                 <Printer className="h-3.5 w-3.5" /> Print
               </button>
@@ -477,18 +480,18 @@ function ContactTableRow({ contact }: { contact: Contact }) {
                   setMenuOpen(false);
                   onExport();
                 }}
-                className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-gray-700 hover:bg-gray-100"
+                className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-[13px] text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
                 <Download className="h-3.5 w-3.5" /> Export vCard
               </button>
-              <div className="my-1 border-t border-gray-100" />
+              <div className="my-1 border-t border-[var(--line-soft)]" />
               <button
                 type="button"
                 onClick={() => {
                   setMenuOpen(false);
                   onDelete();
                 }}
-                className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-red-600 hover:bg-red-50"
+                className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-[13px] text-[var(--bad-fg)] hover:bg-[rgba(179,56,46,0.07)]"
               >
                 <Trash2 className="h-3.5 w-3.5" /> Delete
               </button>

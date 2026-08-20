@@ -49,10 +49,10 @@ function ToolButton({ active, disabled, onClick, title, children }: ToolButtonPr
       title={title}
       aria-label={title}
       className={cn(
-        'flex h-7 w-7 items-center justify-center rounded transition-colors',
-        active && !disabled && 'bg-blue-100 text-blue-700',
-        !active && !disabled && 'text-gray-700 hover:bg-gray-100',
-        disabled && 'cursor-not-allowed text-gray-300',
+        'flex h-7 w-7 items-center justify-center rounded-[10px] transition-colors',
+        active && !disabled && 'bg-[rgba(20,22,26,0.06)] text-[var(--ink)]',
+        !active && !disabled && 'text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
+        disabled && 'cursor-not-allowed text-[var(--text-5)] opacity-50',
       )}
     >
       {children}
@@ -61,7 +61,7 @@ function ToolButton({ active, disabled, onClick, title, children }: ToolButtonPr
 }
 
 function Divider() {
-  return <div className="mx-1 h-5 w-px bg-gray-200" />;
+  return <div className="mx-1 h-5 w-px bg-[var(--line-soft)]" />;
 }
 
 export default function EditorFormatBar({ editor, onAskAi }: Props) {
@@ -86,7 +86,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
   }, [editor]);
 
   if (!editor) {
-    return <div className="flex h-9 items-center border-t border-gray-100 px-3" />;
+    return <div className="flex h-9 items-center border-t border-[var(--line-soft)] px-3" />;
   }
 
   const currentStyle = editor.isActive('heading', { level: 1 })
@@ -100,7 +100,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
   const fontLabel = font === 'sans' ? 'Sans' : font === 'serif' ? 'Serif' : 'Mono';
 
   return (
-    <div className="flex h-9 items-center gap-0.5 border-t border-gray-100 bg-white px-2">
+    <div className="flex h-9 items-center gap-0.5 border-t border-[var(--line-soft)] bg-white px-2">
       <ToolButton
         title="Undo"
         onClick={() => editor.chain().focus().undo().run()}
@@ -127,7 +127,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
             setFontOpen(false);
             setModeOpen(false);
           }}
-          className="flex h-7 items-center gap-1 rounded px-2 text-xs text-gray-700 hover:bg-gray-100"
+          className="flex h-7 items-center gap-1 rounded-[10px] px-2 text-xs text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Paragraph styles"
         >
           <span className="w-20 truncate text-left">{currentStyle}</span>
@@ -135,7 +135,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
         </button>
         {styleOpen && (
           <div
-            className="absolute left-0 top-full z-20 mt-1 w-44 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+            className="absolute left-0 top-full z-20 mt-1 w-44 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.1)]"
             onMouseLeave={() => setStyleOpen(false)}
           >
             <button
@@ -144,7 +144,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
                 editor.chain().focus().setParagraph().run();
                 setStyleOpen(false);
               }}
-              className="block w-full rounded px-2 py-1 text-left text-sm hover:bg-gray-100"
+              className="block w-full rounded-[8px] px-2 py-1 text-left text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             >
               Normal text
             </button>
@@ -154,7 +154,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
                 editor.chain().focus().toggleHeading({ level: 1 }).run();
                 setStyleOpen(false);
               }}
-              className="block w-full rounded px-2 py-1 text-left text-2xl font-semibold hover:bg-gray-100"
+              className="block w-full rounded-[8px] px-2 py-1 text-left text-2xl font-semibold text-[var(--ink)] hover:bg-[rgba(20,22,26,0.05)]"
             >
               Heading 1
             </button>
@@ -164,7 +164,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
                 editor.chain().focus().toggleHeading({ level: 2 }).run();
                 setStyleOpen(false);
               }}
-              className="block w-full rounded px-2 py-1 text-left text-xl font-semibold hover:bg-gray-100"
+              className="block w-full rounded-[8px] px-2 py-1 text-left text-xl font-semibold text-[var(--ink)] hover:bg-[rgba(20,22,26,0.05)]"
             >
               Heading 2
             </button>
@@ -174,7 +174,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
                 editor.chain().focus().toggleHeading({ level: 3 }).run();
                 setStyleOpen(false);
               }}
-              className="block w-full rounded px-2 py-1 text-left text-base font-semibold hover:bg-gray-100"
+              className="block w-full rounded-[8px] px-2 py-1 text-left text-base font-semibold text-[var(--ink)] hover:bg-[rgba(20,22,26,0.05)]"
             >
               Heading 3
             </button>
@@ -193,7 +193,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
             setStyleOpen(false);
             setModeOpen(false);
           }}
-          className="flex h-7 items-center gap-1 rounded px-2 text-xs text-gray-700 hover:bg-gray-100"
+          className="flex h-7 items-center gap-1 rounded-[10px] px-2 text-xs text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Font"
         >
           <span className="w-12 truncate text-left">{fontLabel}</span>
@@ -201,7 +201,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
         </button>
         {fontOpen && (
           <div
-            className="absolute left-0 top-full z-20 mt-1 w-32 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+            className="absolute left-0 top-full z-20 mt-1 w-32 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.1)]"
             onMouseLeave={() => setFontOpen(false)}
           >
             <button
@@ -210,7 +210,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
                 setFont('sans');
                 setFontOpen(false);
               }}
-              className="block w-full rounded px-2 py-1 text-left font-sans text-sm hover:bg-gray-100"
+              className="block w-full rounded-[8px] px-2 py-1 text-left font-sans text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             >
               Sans
             </button>
@@ -220,7 +220,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
                 setFont('serif');
                 setFontOpen(false);
               }}
-              className="block w-full rounded px-2 py-1 text-left font-serif text-sm hover:bg-gray-100"
+              className="block w-full rounded-[8px] px-2 py-1 text-left font-serif text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             >
               Serif
             </button>
@@ -230,7 +230,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
                 setFont('mono');
                 setFontOpen(false);
               }}
-              className="block w-full rounded px-2 py-1 text-left font-mono text-sm hover:bg-gray-100"
+              className="block w-full rounded-[8px] px-2 py-1 text-left font-mono text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             >
               Mono
             </button>
@@ -245,7 +245,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
         <button
           type="button"
           onClick={() => setFontSize(Math.max(10, fontSize - 1))}
-          className="flex h-6 w-6 items-center justify-center rounded text-gray-700 hover:bg-gray-100"
+          className="flex h-6 w-6 items-center justify-center rounded-[8px] text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Decrease size"
           aria-label="Decrease size"
         >
@@ -257,12 +257,12 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
           onChange={(e) =>
             setFontSize(Math.max(10, Math.min(36, Number(e.target.value) || 16)))
           }
-          className="h-6 w-9 rounded border border-gray-200 bg-white text-center text-xs"
+          className="h-6 w-9 rounded-[8px] border border-[var(--line-soft)] bg-white text-center text-xs text-[var(--ink)] focus:border-[var(--ink)] focus:outline-none"
         />
         <button
           type="button"
           onClick={() => setFontSize(Math.min(36, fontSize + 1))}
-          className="flex h-6 w-6 items-center justify-center rounded text-gray-700 hover:bg-gray-100"
+          className="flex h-6 w-6 items-center justify-center rounded-[8px] text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           title="Increase size"
           aria-label="Increase size"
         >
@@ -384,7 +384,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
       <button
         type="button"
         onClick={onAskAi}
-        className="flex h-7 items-center gap-1 rounded bg-blue-50 px-2 text-xs font-medium text-blue-700 hover:bg-blue-100"
+        className="flex h-7 items-center gap-1.5 rounded-full border border-[var(--line)] px-3 text-xs font-semibold text-[var(--text-2)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
         title="Ask AI (⌘J)"
       >
         <Sparkles className="h-3.5 w-3.5" /> Ask AI
@@ -400,7 +400,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
               setStyleOpen(false);
               setFontOpen(false);
             }}
-            className="flex h-7 items-center gap-1 rounded px-2 text-xs text-gray-700 hover:bg-gray-100"
+            className="flex h-7 items-center gap-1 rounded-[10px] px-2 text-xs text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             title="View / Edit mode"
           >
             {suggestingMode ? (
@@ -416,7 +416,7 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
           </button>
           {modeOpen && (
             <div
-              className="absolute right-0 top-full z-20 mt-1 w-40 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+              className="absolute right-0 top-full z-20 mt-1 w-40 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.1)]"
               onMouseLeave={() => setModeOpen(false)}
             >
               <button
@@ -426,8 +426,8 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
                   setModeOpen(false);
                 }}
                 className={cn(
-                  'flex w-full items-center gap-2 rounded px-2 py-1 text-left text-sm hover:bg-gray-100',
-                  !suggestingMode && 'bg-gray-100',
+                  'flex w-full items-center gap-2 rounded-[8px] px-2 py-1 text-left text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
+                  !suggestingMode && 'bg-[rgba(20,22,26,0.06)] font-semibold text-[var(--ink)]',
                 )}
               >
                 <Edit3 className="h-3.5 w-3.5" /> Editing
@@ -439,8 +439,8 @@ export default function EditorFormatBar({ editor, onAskAi }: Props) {
                   setModeOpen(false);
                 }}
                 className={cn(
-                  'flex w-full items-center gap-2 rounded px-2 py-1 text-left text-sm hover:bg-gray-100',
-                  suggestingMode && 'bg-gray-100',
+                  'flex w-full items-center gap-2 rounded-[8px] px-2 py-1 text-left text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
+                  suggestingMode && 'bg-[rgba(20,22,26,0.06)] font-semibold text-[var(--ink)]',
                 )}
               >
                 <Eye className="h-3.5 w-3.5" /> Suggesting

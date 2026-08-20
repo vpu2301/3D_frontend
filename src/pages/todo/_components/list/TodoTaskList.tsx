@@ -47,8 +47,8 @@ function formatDue(ts: number): { label: string; overdue: boolean } {
 }
 
 const PRIORITY_DOT: Record<number, string> = {
-  1: 'bg-red-400',
-  2: 'bg-orange-400',
+  1: 'bg-[var(--bad-fg)]',
+  2: 'bg-[var(--warn-fg)]',
   3: '',
   4: '',
 };
@@ -74,8 +74,8 @@ function TaskRow({ task, listName, projectName, onToggle, onSelect, onStar, sele
     <div
       onClick={() => onSelect(task.id)}
       className={cn(
-        'group flex cursor-pointer items-start gap-3 rounded-lg px-4 py-2.5 transition-colors',
-        selected ? 'bg-[#dde9f4]' : 'hover:bg-gray-50',
+        'group flex cursor-pointer items-start gap-3 border-b border-[var(--line-soft)] px-4 py-2.5 transition-colors last:border-b-0',
+        selected ? 'bg-[rgba(20,22,26,0.06)]' : 'hover:bg-[rgba(20,22,26,0.02)]',
         task.completed && 'opacity-55',
       )}
     >
@@ -87,9 +87,9 @@ function TaskRow({ task, listName, projectName, onToggle, onSelect, onStar, sele
         title={task.completed ? 'Mark incomplete' : 'Mark complete'}
       >
         {task.completed ? (
-          <CheckCircle2 className="h-[18px] w-[18px] text-[#5aacee]" />
+          <CheckCircle2 className="h-[18px] w-[18px] text-[var(--ink)]" />
         ) : (
-          <Circle className="h-[18px] w-[18px] text-gray-300 transition-colors hover:text-[#5aacee]" />
+          <Circle className="h-[18px] w-[18px] text-[var(--text-5)] transition-colors hover:text-[var(--ink)]" />
         )}
       </button>
 
@@ -99,8 +99,8 @@ function TaskRow({ task, listName, projectName, onToggle, onSelect, onStar, sele
           {dot && <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', dot)} />}
           <span
             className={cn(
-              'truncate text-sm text-gray-900',
-              task.completed && 'text-gray-400 line-through',
+              'truncate text-sm text-[var(--ink)]',
+              task.completed && 'text-[var(--text-5)] line-through',
             )}
           >
             {task.title}
@@ -110,12 +110,15 @@ function TaskRow({ task, listName, projectName, onToggle, onSelect, onStar, sele
         {(due || label) && (
           <div className="mt-0.5 flex items-center gap-2">
             {due && (
-              <span className={cn('text-xs', due.overdue ? 'text-red-500' : 'text-gray-400')}>
+              <span
+                className={cn('text-xs', due.overdue && 'font-semibold')}
+                style={{ color: due.overdue ? 'var(--bad-fg)' : 'var(--text-4)' }}
+              >
                 {due.label}
               </span>
             )}
             {label && (
-              <span className="rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-500">
+              <span className="plat-pill plat-pill-mute !px-1.5 !py-0.5 !text-[10px] !font-medium">
                 {label}
               </span>
             )}
@@ -138,7 +141,7 @@ function TaskRow({ task, listName, projectName, onToggle, onSelect, onStar, sele
             'h-4 w-4',
             task.priority <= 2
               ? 'fill-amber-400 text-amber-400'
-              : 'text-gray-300 hover:text-amber-400',
+              : 'text-[var(--text-5)] hover:text-amber-400',
           )}
         />
       </button>
@@ -162,7 +165,7 @@ function AddForm({ onAdd, onCancel }: AddFormProps) {
   const submit = () => { if (title.trim()) onAdd(title.trim()); };
 
   return (
-    <div className="mx-4 mb-3 rounded-xl border border-[#8fc4e4] bg-white p-3 shadow-sm">
+    <div className="mx-4 mb-3 rounded-[12px] border border-[var(--line)] bg-white p-3 shadow-sm">
       <input
         ref={ref}
         type="text"
@@ -173,19 +176,19 @@ function AddForm({ onAdd, onCancel }: AddFormProps) {
           if (e.key === 'Enter') submit();
           if (e.key === 'Escape') onCancel();
         }}
-        className="w-full text-sm outline-none placeholder:text-gray-400"
+        className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--text-5)]"
       />
       <div className="mt-2.5 flex items-center justify-between">
         <div className="flex items-center gap-1">
           <button
             type="button"
-            className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-gray-500 transition-colors hover:bg-gray-100"
+            className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)]"
           >
             <Calendar className="h-3 w-3" /> Date
           </button>
           <button
             type="button"
-            className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-gray-500 transition-colors hover:bg-gray-100"
+            className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)]"
           >
             <Tag className="h-3 w-3" /> List
           </button>
@@ -194,7 +197,7 @@ function AddForm({ onAdd, onCancel }: AddFormProps) {
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-full px-3 py-1 text-xs text-gray-500 transition-colors hover:bg-gray-100"
+            className="rounded-full px-3 py-1 text-xs text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)]"
           >
             Cancel
           </button>
@@ -202,7 +205,7 @@ function AddForm({ onAdd, onCancel }: AddFormProps) {
             type="button"
             onClick={submit}
             disabled={!title.trim()}
-            className="rounded-full bg-[#bdd8ec] px-3 py-1 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0] disabled:opacity-40"
+            className="plat-btn !h-7 !px-4 !text-xs"
           >
             Add
           </button>
@@ -234,19 +237,20 @@ function Section({
   if (tasks.length === 0) return null;
 
   return (
-    <div className="mb-1">
+    <div className="mb-5">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-4 py-1.5 text-xs font-semibold text-gray-500 transition-colors hover:text-gray-700"
+        className="plat-eyebrow mb-2 flex items-center gap-2 px-6 py-1 transition-colors hover:text-[var(--text-3)]"
       >
         {open ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
         {title}
-        <span className="font-normal text-gray-400">{tasks.length}</span>
+        <span>{tasks.length}</span>
       </button>
 
-      {open &&
-        tasks.map((task) => (
+      {open && (
+      <div className="plat-list mx-4">
+      {tasks.map((task) => (
           <TaskRow
             key={task.id}
             task={task}
@@ -258,6 +262,8 @@ function Section({
             selected={selectedId === task.id}
           />
         ))}
+      </div>
+      )}
     </div>
   );
 }
@@ -486,13 +492,14 @@ export default function TodoTaskList() {
   const showAddTrigger = view !== 'completed';
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden bg-white">
+    <div className="flex flex-1 flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-100 px-6 pt-5 pb-4">
+      <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 pt-5 pb-4">
         <div>
-          <h1 className="text-2xl font-light text-gray-900">{viewTitle}</h1>
+          <p className="plat-crumb">3days.todo</p>
+          <h1 className="mt-1.5 text-[22px]">{viewTitle}</h1>
           {activeCount > 0 && (
-            <p className="mt-0.5 text-xs text-gray-400">
+            <p className="mt-0.5 text-xs" style={{ color: 'var(--text-5)' }}>
               {activeCount} task{activeCount !== 1 ? 's' : ''}
             </p>
           )}
@@ -502,7 +509,7 @@ export default function TodoTaskList() {
             <button
               type="button"
               onClick={() => setTriageOpen(true)}
-              className="flex h-8 items-center gap-1.5 rounded-full bg-[#bdd8ec] px-3 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
+              className="plat-btn !h-8 !px-4 !text-xs"
             >
               <Sparkles className="h-3.5 w-3.5" /> AI triage
             </button>
@@ -510,9 +517,9 @@ export default function TodoTaskList() {
           <button
             type="button"
             onClick={() => setAskOpen(!askOpen)}
-            className="flex h-8 items-center gap-1.5 rounded-full border border-gray-200 px-3 text-xs text-gray-600 transition-colors hover:bg-gray-50"
+            className="plat-btn-ghost !h-8 !px-4"
           >
-            <Sparkles className="h-3.5 w-3.5 text-violet-500" /> Ask AI
+            <Sparkles className="h-3.5 w-3.5" style={{ color: 'var(--text-4)' }} /> Ask AI
           </button>
         </div>
       </div>
@@ -524,9 +531,9 @@ export default function TodoTaskList() {
           <button
             type="button"
             onClick={() => setAddOpen(true)}
-            className="group mb-2 flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600"
+            className="group mx-4 mb-3 flex items-center gap-3 rounded-[10px] px-3 py-2 text-sm text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.04)] hover:text-[var(--ink)]"
           >
-            <Plus className="h-4 w-4 transition-colors group-hover:text-[#5aacee]" />
+            <Plus className="h-4 w-4 transition-colors group-hover:text-[var(--ink)]" />
             Add a task
           </button>
         )}
@@ -537,11 +544,13 @@ export default function TodoTaskList() {
         {/* Task sections */}
         {sections.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
-              <CheckCircle2 className="h-7 w-7 text-gray-300" />
+            <div className="plat-item-icon mb-3 !h-14 !w-14">
+              <CheckCircle2 className="h-7 w-7" style={{ color: 'var(--text-4)' }} />
             </div>
-            <p className="text-sm font-medium text-gray-500">All clear</p>
-            <p className="mt-1 text-xs text-gray-400">
+            <p className="text-sm font-medium" style={{ color: 'var(--text-2)' }}>
+              All clear
+            </p>
+            <p className="mt-1 text-xs" style={{ color: 'var(--text-5)' }}>
               {view === 'today' ? 'Nothing due today' : 'No tasks here yet'}
             </p>
           </div>

@@ -46,17 +46,24 @@ function NavRow({ icon: Icon, iconStyle, label, count, badgeColor, active, onCli
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full items-center gap-3 rounded-r-full py-2 pl-5 pr-4 text-left text-sm transition-colors',
-        active ? 'bg-[#dde9f4] text-gray-900' : 'text-gray-700 hover:bg-gray-100',
+        'flex w-full items-center gap-3 rounded-[10px] py-2 pl-3 pr-3 text-left text-[13.5px] transition-colors',
+        active
+          ? 'bg-[rgba(20,22,26,0.07)] font-semibold text-[var(--ink)]'
+          : 'font-medium text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
       )}
     >
-      <Icon className="h-4 w-4 shrink-0 text-gray-500" style={iconStyle} />
+      <Icon
+        className={cn('h-4 w-4 shrink-0', active ? 'text-[var(--ink)]' : 'text-[var(--text-4)]')}
+        style={iconStyle}
+      />
       <span className="flex-1 truncate">{label}</span>
       {count !== undefined && count > 0 && (
         <span
           className={cn(
-            'shrink-0 rounded-full px-1.5 text-[10px] font-medium leading-tight',
-            badgeColor === 'red' ? 'bg-red-500 text-white' : 'text-gray-500',
+            'shrink-0 rounded-full px-1.5 text-[10px] font-semibold leading-tight',
+            badgeColor === 'red'
+              ? 'bg-[var(--ink)] py-0.5 text-white'
+              : 'text-[var(--text-4)]',
           )}
         >
           {count}
@@ -113,18 +120,18 @@ export default function MailMiniRail() {
   };
 
   return (
-    <aside className="flex h-full w-60 shrink-0 flex-col bg-white">
-      <div className="px-4 pt-3 pb-4">
+    <aside className="flex h-full w-60 shrink-0 flex-col border-r border-[var(--line-soft)] bg-transparent">
+      <div className="px-4 pt-4 pb-4">
         <button
           type="button"
           onClick={onCompose}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#bdd8ec] px-4 py-2.5 text-sm font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
+          className="plat-btn w-full justify-center"
         >
           <Plus className="h-4 w-4" /> Compose
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-3">
+      <div className="flex-1 overflow-y-auto px-2">
         <div className="space-y-0.5">
           <NavRow
             icon={InboxIcon}
@@ -173,7 +180,7 @@ export default function MailMiniRail() {
         <button
           type="button"
           onClick={() => setMoreOpen((o) => !o)}
-          className="mt-1 flex w-full items-center gap-1 px-5 py-1.5 text-[11px] text-gray-500 hover:text-gray-700"
+          className="mt-1 flex w-full items-center gap-1 px-3 py-1.5 text-[11px] font-medium text-[var(--text-4)] transition-colors hover:text-[var(--ink)]"
         >
           {moreOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
           {moreOpen ? 'Less' : 'More'}
@@ -218,7 +225,7 @@ export default function MailMiniRail() {
           </div>
         )}
 
-        <div className="mb-1.5 mt-6 flex items-center justify-between px-5 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+        <div className="plat-eyebrow mb-1.5 mt-6 flex items-center justify-between px-3">
           <button
             type="button"
             onClick={() => setSmartOpen((o) => !o)}
@@ -242,7 +249,7 @@ export default function MailMiniRail() {
           </div>
         )}
 
-        <div className="mb-1.5 mt-6 flex items-center justify-between px-5 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+        <div className="plat-eyebrow mb-1.5 mt-6 flex items-center justify-between px-3">
           <button
             type="button"
             onClick={() => setLabelsOpen((o) => !o)}
@@ -275,7 +282,7 @@ export default function MailMiniRail() {
           </div>
         )}
 
-        <div className="mb-1.5 mt-6 px-5 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+        <div className="plat-eyebrow mb-1.5 mt-6 px-3">
           Fix &amp; manage
         </div>
         <div className="space-y-0.5">

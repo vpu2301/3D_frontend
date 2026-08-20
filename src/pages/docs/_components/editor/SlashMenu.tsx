@@ -211,7 +211,7 @@ export default function SlashMenu({ editor, position, query, onClose, triggerFro
     return (
       <div
         ref={containerRef}
-        className="fixed z-50 w-72 rounded-md border border-zinc-200 bg-white p-3 text-xs text-zinc-500 shadow-lg dark:border-zinc-700 dark:bg-zinc-900"
+        className="fixed z-50 w-72 rounded-[12px] border border-[var(--line-soft)] bg-white p-3 text-xs text-[var(--text-4)] shadow-[0_8px_24px_rgba(20,22,26,0.12)]"
         style={{ left: position.x, top: position.y }}
       >
         No matching commands. Press Esc.
@@ -232,13 +232,13 @@ export default function SlashMenu({ editor, position, query, onClose, triggerFro
   return (
     <div
       ref={containerRef}
-      className="fixed z-50 max-h-80 w-72 overflow-y-auto rounded-md border border-zinc-200 bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900"
+      className="fixed z-50 max-h-80 w-72 overflow-y-auto rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.12)]"
       style={{ left: position.x, top: position.y }}
       role="listbox"
     >
       {grouped.map((g) => (
         <div key={g.group}>
-          <div className="px-2 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wider text-zinc-400">
+          <div className="plat-eyebrow px-2 pb-1 pt-2">
             {g.group}
           </div>
           {g.items.map((item) => {
@@ -252,16 +252,16 @@ export default function SlashMenu({ editor, position, query, onClose, triggerFro
                 key={item.id}
                 onMouseEnter={() => setActive(i)}
                 onClick={() => commit(item)}
-                className={`flex w-full items-start gap-2 rounded px-2 py-1.5 text-left ${
-                  isActive ? 'bg-zinc-100 dark:bg-zinc-800' : ''
+                className={`flex w-full items-start gap-2 rounded-[8px] px-2 py-1.5 text-left transition-colors ${
+                  isActive ? 'bg-[rgba(20,22,26,0.06)]' : ''
                 }`}
                 role="option"
                 aria-selected={isActive}
               >
-                <Icon className="mt-0.5 h-4 w-4 text-zinc-500" />
+                <Icon className={`mt-0.5 h-4 w-4 ${isActive ? 'text-[var(--ink)]' : 'text-[var(--text-4)]'}`} />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm">{item.label}</div>
-                  <div className="truncate text-[11px] text-zinc-500">{item.hint}</div>
+                  <div className="text-sm font-medium text-[var(--ink)]">{item.label}</div>
+                  <div className="truncate text-[11px] text-[var(--text-4)]">{item.hint}</div>
                 </div>
               </button>
             );

@@ -114,14 +114,14 @@ export default function InlineAiPrompt({
 
   return (
     <div
-      className="fixed z-50 w-[420px] rounded-lg border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+      className="fixed z-50 w-[420px] rounded-[14px] border border-[var(--line-soft)] bg-white shadow-[0_16px_48px_rgba(20,22,26,0.16)]"
       style={{
         left: Math.min(position.x, window.innerWidth - 440),
         top: Math.min(position.y, window.innerHeight - 280),
       }}
     >
-      <div className="flex items-center justify-between border-b border-zinc-100 px-3 py-2 dark:border-zinc-800">
-        <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-blue-700 dark:text-blue-300">
+      <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-3 py-2.5">
+        <div className="plat-eyebrow flex items-center gap-1.5 text-[var(--text-3)]">
           <Sparkles className="h-3.5 w-3.5" />
           {preset ? `AI: ${preset.replace(/-/g, ' ')}` : 'Ask AI'}
         </div>
@@ -131,7 +131,7 @@ export default function InlineAiPrompt({
             abortRef.current?.abort();
             onClose();
           }}
-          className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -146,7 +146,7 @@ export default function InlineAiPrompt({
           }}
         >
           {selectionRange && (
-            <div className="mb-2 line-clamp-3 rounded-md bg-zinc-50 p-2 text-[11px] italic text-zinc-500 dark:bg-zinc-800/60">
+            <div className="mb-2 line-clamp-3 rounded-[10px] bg-[var(--sand)] p-2 text-[11px] italic text-[var(--text-4)]">
               "{selectionText}"
             </div>
           )}
@@ -162,14 +162,14 @@ export default function InlineAiPrompt({
             }}
             rows={2}
             placeholder="Tell AI what to do…"
-            className="w-full resize-none rounded-md border border-zinc-200 bg-white p-2 text-sm focus:border-blue-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900"
+            className="w-full resize-none rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] p-2 text-sm text-[var(--ink)] placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:bg-white focus:outline-none"
           />
           <div className="mt-2 flex items-center justify-between">
-            <div className="text-[11px] text-zinc-400">Enter to run · Shift+Enter for newline</div>
+            <div className="text-[11px] text-[var(--text-5)]">Enter to run · Shift+Enter for newline</div>
             <button
               type="submit"
               disabled={!prompt.trim()}
-              className="flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+              className="plat-btn h-8 px-3.5 text-xs"
             >
               <Send className="h-3 w-3" /> Run
             </button>
@@ -179,19 +179,19 @@ export default function InlineAiPrompt({
 
       {(phase === 'streaming' || phase === 'review') && (
         <div className="p-3">
-          <div className="max-h-72 overflow-y-auto whitespace-pre-wrap rounded-md bg-zinc-50 p-3 text-sm leading-relaxed dark:bg-zinc-800/60">
+          <div className="max-h-72 overflow-y-auto whitespace-pre-wrap rounded-[10px] bg-[var(--sand)] p-3 text-sm leading-relaxed text-[var(--ink)]">
             {output || (
-              <span className="flex items-center gap-2 text-zinc-500">
+              <span className="flex items-center gap-2 text-[var(--text-4)]">
                 <Loader2 className="h-3.5 w-3.5 animate-spin" /> Thinking…
               </span>
             )}
           </div>
-          {error && <div className="mt-2 text-xs text-red-600">⚠️ {error}</div>}
+          {error && <div className="mt-2 text-xs text-[var(--bad-fg)]">⚠️ {error}</div>}
           <div className="mt-3 flex items-center justify-between">
             <button
               type="button"
               onClick={retry}
-              className="flex items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              className="flex items-center gap-1 rounded-[8px] px-2 py-1 text-xs font-medium text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             >
               <RefreshCw className="h-3 w-3" /> Retry
             </button>
@@ -204,7 +204,7 @@ export default function InlineAiPrompt({
                     setOutput('');
                     setPrompt('');
                   }}
-                  className="rounded-md px-2 py-1 text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  className="rounded-[8px] px-2 py-1 text-xs font-medium text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                 >
                   Refine
                 </button>
@@ -212,7 +212,7 @@ export default function InlineAiPrompt({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-md px-2 py-1 text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="rounded-[8px] px-2 py-1 text-xs font-medium text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
                 Reject
               </button>
@@ -220,7 +220,7 @@ export default function InlineAiPrompt({
                 type="button"
                 onClick={accept}
                 disabled={phase === 'streaming' || !output}
-                className="flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                className="plat-btn h-8 px-3.5 text-xs"
               >
                 <Check className="h-3 w-3" /> Accept
               </button>

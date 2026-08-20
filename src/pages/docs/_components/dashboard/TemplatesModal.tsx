@@ -36,18 +36,18 @@ export default function TemplatesModal() {
       onClick={() => setTemplatesOpen(false)}
     >
       <div
-        className="w-full max-w-3xl rounded-xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+        className="w-full max-w-3xl rounded-[14px] border border-[var(--line-soft)] bg-white p-6 shadow-[0_16px_48px_rgba(20,22,26,0.16)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold">Start with a template</h2>
-            <p className="text-sm text-zinc-500">Pick a starting point. You can customize anything.</p>
+            <h2 className="text-lg font-semibold text-[var(--ink)]">Start with a template</h2>
+            <p className="text-sm text-[var(--text-4)]">Pick a starting point. You can customize anything.</p>
           </div>
           <button
             type="button"
             onClick={() => setTemplatesOpen(false)}
-            className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            className="rounded-[8px] p-1 text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           >
             <X className="h-4 w-4" />
           </button>
@@ -61,19 +61,19 @@ export default function TemplatesModal() {
                 type="button"
                 key={t.id}
                 onClick={() => onPick(t)}
-                className="flex flex-col items-start gap-2 rounded-lg border border-zinc-200 bg-white p-4 text-left transition-all hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950"
+                className="flex flex-col items-start gap-2 rounded-[12px] border border-[var(--line-soft)] bg-white p-4 text-left transition-colors hover:border-[var(--ink)]"
               >
-                <div className="flex h-9 w-9 items-center justify-center rounded-md bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
+                <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-[var(--sand)] text-[var(--ink)]">
                   <Icon className="h-5 w-5" />
                 </div>
-                <div className="font-medium">{t.name}</div>
-                <div className="text-xs text-zinc-500">{t.description}</div>
+                <div className="font-semibold text-[var(--ink)]">{t.name}</div>
+                <div className="text-xs text-[var(--text-4)]">{t.description}</div>
                 {t.suggestedPrompts.length > 0 && (
                   <div className="mt-1 flex flex-wrap gap-1">
                     {t.suggestedPrompts.slice(0, 1).map((p) => (
                       <span
                         key={p}
-                        className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                        className="rounded-full bg-[var(--sand-deep)] px-2 py-0.5 text-[10px] text-[var(--text-3)]"
                       >
                         ✨ {p}
                       </span>

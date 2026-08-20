@@ -1,7 +1,6 @@
 import { addDays, addMonths, startOfWeek } from 'date-fns';
 import { ChevronLeft, ChevronRight, MessageSquare, Plus, RefreshCw } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { calendarStore, useCalendar } from '../_hooks/use-calendar-store';
@@ -84,26 +83,29 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
   }
 
   return (
-    <div className="flex h-full w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col">
       {/* Top chrome */}
-      <header className="flex items-center justify-between border-b border-gray-200/70 bg-white px-4 py-2.5">
-        <div className="flex items-center gap-3">
-          <h1 className="text-lg font-semibold text-gray-900">Calendar</h1>
+      <header className="flex items-center justify-between border-b border-[var(--line-soft)] px-5 py-2.5">
+        <div className="flex items-center gap-4">
+          <div className="leading-tight">
+            <p className="plat-crumb" style={{ color: 'var(--text-4)' }}>3days.calendar</p>
+            <h1 className="text-[18px]" style={{ color: 'var(--ink)' }}>Calendar</h1>
+          </div>
           <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 px-2.5 text-xs"
+            <button
+              type="button"
+              className="plat-btn-ghost"
+              style={{ height: 30, padding: '0 13px' }}
               onClick={() => calendarStore.setAnchor(new Date().toISOString())}
               aria-label="Jump to today (T)"
             >
               Today
-            </Button>
+            </button>
             <div className="flex items-center">
               <button
                 type="button"
                 aria-label="Previous"
-                className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 transition hover:bg-gray-100"
+                className="flex h-8 w-8 items-center justify-center rounded-[10px] text-[var(--text-4)] transition hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                 onClick={() => shift(-1)}
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -111,13 +113,13 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
               <button
                 type="button"
                 aria-label="Next"
-                className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 transition hover:bg-gray-100"
+                className="flex h-8 w-8 items-center justify-center rounded-[10px] text-[var(--text-4)] transition hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                 onClick={() => shift(1)}
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
-            <p className="ml-1 text-sm font-medium text-gray-800">
+            <p className="ml-1 text-sm font-medium text-[var(--ink)]">
               {formatRange(range.start, range.end, view)}
             </p>
           </div>
@@ -126,7 +128,7 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
         <div className="flex items-center gap-2">
           {/* View switcher */}
           <div
-            className="inline-flex items-center rounded-full border border-gray-200 bg-white p-0.5"
+            className="inline-flex items-center rounded-full border border-[var(--line)] p-0.5"
             role="tablist"
             aria-label="Calendar view"
           >
@@ -139,8 +141,8 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
                     aria-selected={view === v}
                     onClick={() => navigate(`/calendar/${v}`)}
                     className={cn(
-                      'rounded-full px-2.5 py-1 text-xs font-medium text-gray-600 transition',
-                      view === v && 'bg-[#dde9f4] text-gray-900',
+                      'rounded-full px-2.5 py-1 text-xs font-medium text-[var(--text-3)] transition',
+                      view === v && 'bg-[rgba(20,22,26,0.07)] text-[var(--ink)]',
                     )}
                   >
                     {VIEW_LABELS[v]}
@@ -158,9 +160,9 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
               <button
                 type="button"
                 aria-label="Sync status"
-                className="flex h-8 items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 text-xs text-gray-600"
+                className="flex h-8 items-center gap-1.5 rounded-[10px] border border-[var(--line)] px-2.5 text-xs text-[var(--text-3)]"
               >
-                <RefreshCw className="h-3.5 w-3.5 text-emerald-500" />
+                <RefreshCw className="h-3.5 w-3.5 text-[var(--ok-fg)]" />
                 <span>{tz}</span>
               </button>
             </TooltipTrigger>
@@ -173,7 +175,8 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
             type="button"
             onClick={onCreate}
             aria-label="New event (C)"
-            className="flex h-8 items-center gap-1.5 rounded-full bg-[#bdd8ec] px-4 text-sm font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
+            className="plat-btn"
+            style={{ height: 32, padding: '0 16px' }}
           >
             <Plus className="h-3.5 w-3.5" />
             New
@@ -185,8 +188,8 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
             aria-label="Toggle AI chat"
             aria-pressed={chatOpen}
             className={cn(
-              'flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition hover:bg-gray-100',
-              chatOpen && 'bg-[#dde9f4] text-gray-900',
+              'flex h-8 w-8 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-3)] transition hover:bg-[rgba(20,22,26,0.05)]',
+              chatOpen && 'border-[var(--ink)] bg-[rgba(20,22,26,0.06)] text-[var(--ink)]',
             )}
           >
             <MessageSquare className="h-4 w-4" />
@@ -196,7 +199,7 @@ export function CalendarShell({ children, onCreate }: CalendarShellProps) {
 
       {/* Body: left rail + main + chat sidebar */}
       <div className="flex flex-1 overflow-hidden">
-        <aside className="hidden w-60 shrink-0 flex-col border-r border-gray-100 bg-white lg:flex">
+        <aside className="hidden w-60 shrink-0 flex-col border-r border-[var(--line-soft)] lg:flex">
           <div className="p-3">
             <MiniMonth />
           </div>

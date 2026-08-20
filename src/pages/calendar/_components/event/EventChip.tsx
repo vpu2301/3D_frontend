@@ -45,7 +45,7 @@ export function EventChip({
         type="button"
         onClick={onClick}
         className={cn(
-          'group flex w-full items-center gap-1 truncate rounded px-1 py-0.5 text-left text-[11px]',
+          'group flex w-full items-center gap-1.5 truncate rounded-[6px] px-1.5 py-0.5 text-left text-[11px]',
           palette.chipBg,
           palette.chipText,
           'hover:brightness-95',
@@ -63,20 +63,19 @@ export function EventChip({
         type="button"
         onClick={onClick}
         className={cn(
-          'flex w-full items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-2 text-left transition hover:bg-gray-50',
-          selected && 'ring-2 ring-offset-1',
-          selected && palette.ring,
+          'flex w-full items-center gap-3 border-b border-[var(--line-soft)] px-4 py-2.5 text-left transition last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]',
+          selected && 'bg-[rgba(20,22,26,0.04)]',
         )}
       >
-        <span className={cn('h-8 w-1 rounded-full', palette.dot)} />
+        <span className={cn('h-8 w-[3px] rounded-full', palette.dot)} />
         <div className="flex-1 min-w-0">
-          <p className="truncate text-sm font-medium text-gray-900">{event.title}</p>
-          <p className="text-xs text-gray-500">
+          <p className="truncate text-sm font-medium text-[var(--ink)]">{event.title}</p>
+          <p className="text-xs text-[var(--text-4)]">
             {format(start, 'h:mm a')} – {format(end, 'h:mm a')}
             {event.location ? ` · ${event.location}` : ''}
           </p>
         </div>
-        {event.conferencing && <Video className="h-3.5 w-3.5 text-gray-400" />}
+        {event.conferencing && <Video className="h-3.5 w-3.5 text-[var(--text-5)]" />}
       </button>
     );
   }
@@ -87,7 +86,7 @@ export function EventChip({
         type="button"
         onClick={onClick}
         className={cn(
-          'flex h-5 items-center gap-1 truncate rounded px-1.5 text-[11px]',
+          'flex h-5 items-center gap-1.5 truncate rounded-[6px] px-1.5 text-[11px]',
           palette.chipBg,
           palette.chipText,
           palette.chipBorder,
@@ -111,14 +110,14 @@ export function EventChip({
       onClick={onClick}
       data-event-id={event.id}
       className={cn(
-        'absolute overflow-hidden rounded-md border text-left text-[11px] leading-tight transition',
+        'absolute overflow-hidden rounded-[8px] border text-left text-[11px] leading-tight transition',
         'select-none cursor-grab active:cursor-grabbing',
         event.isFocusBlock ? palette.focusHatch : palette.chipBg,
         palette.chipText,
         palette.chipBorder,
-        selected && `ring-2 ${palette.ring}`,
-        dragging && 'opacity-70 shadow-lg',
-        conflict && 'ring-2 ring-rose-300',
+        selected && `ring-1 ${palette.ring}`,
+        dragging && 'opacity-70 shadow-md',
+        conflict && 'ring-1 ring-[var(--bad-fg)]',
       )}
       style={{
         top: topPx,
@@ -130,7 +129,7 @@ export function EventChip({
       <div className="flex h-full flex-col px-1.5 py-1">
         <div className="flex items-center gap-1">
           {event.isFocusBlock && (
-            <span className="rounded bg-white/70 px-1 text-[9px] font-semibold uppercase tracking-wide">
+            <span className="rounded-[4px] bg-white/70 px-1 text-[9px] font-semibold uppercase tracking-wide">
               Focus
             </span>
           )}

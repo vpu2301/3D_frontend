@@ -77,25 +77,25 @@ const ReportGeneration = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[color:var(--sand)] to-[color:var(--paper)] dark:from-[color:var(--bg)] dark:to-[color:var(--paper)]">
       <Header />
       
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-6">
+            <div className="inline-flex items-center px-4 py-2 bg-[color:var(--blue-100)] text-[color:var(--blue)] rounded-full text-sm font-medium mb-6">
               <FileText className="h-4 w-4 mr-2" />
               Automated Report Generation
             </div>
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+            <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight">
               Automate Report Generation
             </h1>
-            <p className="text-xl text-gray-600 mb-8 font-light max-w-3xl mx-auto">
+            <p className="text-xl text-[color:var(--text-2)] mb-8 font-light max-w-3xl mx-auto">
               Transform your reporting process with AI-powered automation that creates professional reports instantly from your data
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+              <Button size="lg" className="bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/get-started">Start Automating</Link>
               </Button>
               <Button size="lg" variant="outline" className="px-8 py-3 rounded-full" asChild>
@@ -107,22 +107,22 @@ const ReportGeneration = () => {
       </section>
 
       {/* Benefits */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Why Automate Report Generation?</h2>
-            <p className="text-xl text-gray-600">Transform manual reporting into intelligent automation</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Why Automate Report Generation?</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Transform manual reporting into intelligent automation</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-500 to-[#222222] w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-[28px] bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--text-2)] w-fit mx-auto mb-6">
                     <benefit.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{benefit.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{benefit.title}</h3>
+                  <p className="text-[color:var(--text-2)] leading-relaxed">{benefit.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -131,23 +131,23 @@ const ReportGeneration = () => {
       </section>
 
       {/* Features */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Report Generation Features</h2>
-            <p className="text-xl text-gray-600">Everything you need for professional automated reporting</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Report Generation Features</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Everything you need for professional automated reporting</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
+              <div key={index} className="bg-[color:var(--paper)] p-8 rounded-[28px] shadow-lg">
                 <div className="flex items-center mb-6">
-                  <div className="p-3 rounded-2xl bg-[#111111] mr-4">
+                  <div className="p-3 rounded-[28px] bg-[color:var(--ink)] mr-4">
                     <feature.icon className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900">{feature.title}</h3>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)]">{feature.title}</h3>
                 </div>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                <p className="text-[color:var(--text-2)] leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -155,21 +155,21 @@ const ReportGeneration = () => {
       </section>
 
       {/* Report Types */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Types of Reports</h2>
-            <p className="text-xl text-gray-600">Generate any type of business report automatically</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Types of Reports</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Generate any type of business report automatically</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {reportTypes.map((type, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-3xl text-center">
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-[#222222] w-fit mx-auto mb-6">
+              <div key={index} className="bg-[color:var(--sand)] p-6 rounded-[28px] text-center">
+                <div className="p-4 rounded-[28px] bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--text-2)] w-fit mx-auto mb-6">
                   <type.icon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">{type.title}</h3>
-                <p className="text-gray-600">{type.description}</p>
+                <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{type.title}</h3>
+                <p className="text-[color:var(--text-2)]">{type.description}</p>
               </div>
             ))}
           </div>
@@ -177,13 +177,13 @@ const ReportGeneration = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-light text-gray-900 mb-6">Ready to Automate Your Reports?</h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Ready to Automate Your Reports?</h2>
+          <p className="text-xl text-[color:var(--text-2)] mb-8">
             Start generating professional reports automatically and save hours every week
           </p>
-          <Button size="lg" className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+          <Button size="lg" className="bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] text-white px-8 py-3 rounded-full" asChild>
             <Link to="/get-started">
               Start Automating Reports
               <ArrowRight className="ml-2 h-4 w-4" />

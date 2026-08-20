@@ -87,6 +87,11 @@ const navigationItems = [
     icon: Users,
   },
   {
+    title: "Company",
+    url: "/company-brain",
+    icon: Brain,
+  },
+  {
     title: "Workflows",
     url: "/workflows",
     icon: Workflow,
@@ -149,17 +154,17 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
   };
 
   return (
-    <Sidebar className="border-r [&>[data-sidebar=sidebar]]:bg-white" collapsible="icon">
+    <Sidebar className="border-r" collapsible="icon">
       <SidebarHeader className="p-4">
         <div 
           className="flex items-center space-x-2 cursor-pointer hover:bg-accent rounded-lg p-2 -m-2 transition-colors"
           onClick={handleLogoClick}
         >
-          <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center flex-shrink-0">
+          <div className="w-6 h-6 bg-[#14161a] rounded-[7px] flex items-center justify-center flex-shrink-0">
             <Brain className="w-3 h-3 text-white" />
           </div>
           {state === "expanded" && (
-            <span className="font-medium text-gray-900 truncate">3Days.ai</span>
+            <span className="plat-display text-[15px] text-[#14161a] truncate">3Days.ai</span>
           )}
         </div>
       </SidebarHeader>
@@ -212,11 +217,11 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
                     onClick={() => onSelectChat?.('current')}
                     className={`w-full text-left px-2 py-1.5 rounded-md transition-colors text-xs flex items-center gap-1.5 ${
                       currentChatId === 'current'
-                        ? 'bg-accent font-medium text-gray-900'
-                        : 'hover:bg-accent/60 text-gray-700'
+                        ? 'bg-[rgba(20,22,26,0.06)] font-semibold text-[#14161a]'
+                        : 'hover:bg-[rgba(20,22,26,0.04)] text-[#5a6067]'
                     }`}
                   >
-                    <span className="h-1.5 w-1.5 rounded-full bg-green-400 shrink-0" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#14161a] shrink-0" />
                     <span className="truncate">Current Chat</span>
                   </button>
 
@@ -229,8 +234,8 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
                           onClick={() => onSelectChat?.(chat.id)}
                           className={`w-full text-left px-2 py-1.5 rounded-md transition-colors text-xs truncate ${
                             currentChatId === chat.id
-                              ? 'bg-accent font-medium text-gray-900'
-                              : 'hover:bg-accent/60 text-gray-700'
+                              ? 'bg-[rgba(20,22,26,0.06)] font-semibold text-[#14161a]'
+                              : 'hover:bg-[rgba(20,22,26,0.04)] text-[#5a6067]'
                           }`}
                         >
                           {chat.title}
@@ -246,13 +251,13 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
 
       </SidebarContent>
       
-      <SidebarFooter className="p-3 border-t">
+      <SidebarFooter className="p-3 border-t border-[color:var(--line-soft)]">
         <div className="flex items-center gap-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className={`flex items-center gap-2 hover:bg-accent px-2 ${state === "collapsed" ? "justify-center w-full" : ""}`}>
                 <Avatar className="h-7 w-7 flex-shrink-0">
-                  <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                  <AvatarFallback className="bg-[#e9ebef] text-[#14161a] text-xs font-semibold">
                     {getInitials(userEmail)}
                   </AvatarFallback>
                 </Avatar>
@@ -281,14 +286,14 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
               <DropdownMenuSeparator />
               <div className="px-2 py-1.5">
                 <div className="flex items-center gap-2 mb-1">
-                  <Zap className="h-3.5 w-3.5 text-yellow-500" />
+                  <Zap className="h-3.5 w-3.5 text-[#7a8087]" />
                   <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Current Plan</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-gray-800">Pro</span>
                   <button
                     onClick={() => navigate('/billing')}
-                    className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                    className="text-xs text-[#14161a] hover:opacity-70 font-semibold underline underline-offset-2"
                   >
                     Upgrade
                   </button>
@@ -312,7 +317,7 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
                     >
                       <span>{lang.label}</span>
                       {selectedLanguage === lang.code && (
-                        <Check className="h-3.5 w-3.5 text-blue-600" />
+                        <Check className="h-3.5 w-3.5 text-[#14161a]" />
                       )}
                     </DropdownMenuItem>
                   ))}
@@ -342,11 +347,11 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
                     <Bell className="h-4 w-4 text-gray-600" />
                     <span className="text-sm font-semibold text-gray-900">Notifications</span>
                     {unreadCount > 0 && (
-                      <span className="bg-red-100 text-red-600 text-xs font-medium px-1.5 py-0.5 rounded-full">{unreadCount}</span>
+                      <span className="bg-[#e9ebef] text-[#14161a] text-xs font-semibold px-1.5 py-0.5 rounded-full">{unreadCount}</span>
                     )}
                   </div>
                   {unreadCount > 0 && (
-                    <button onClick={markAllRead} className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-medium">
+                    <button onClick={markAllRead} className="flex items-center gap-1 text-xs text-[#5a6067] hover:text-[#14161a] font-semibold">
                       <CheckCheck className="h-3.5 w-3.5" />Mark all read
                     </button>
                   )}
@@ -359,10 +364,10 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
                       <button
                         key={n.id}
                         onClick={() => markRead(n.id)}
-                        className={`w-full text-left px-4 py-3 border-b border-gray-50 last:border-b-0 hover:bg-gray-50 transition-colors ${!n.read ? 'bg-blue-50/40' : ''}`}
+                        className={`w-full text-left px-4 py-3 border-b border-gray-50 last:border-b-0 hover:bg-gray-50 transition-colors ${!n.read ? 'bg-[rgba(20,22,26,0.03)]' : ''}`}
                       >
                         <div className="flex items-start gap-2">
-                          <div className={`mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${!n.read ? 'bg-blue-500' : 'bg-transparent'}`} />
+                          <div className={`mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${!n.read ? 'bg-[#14161a]' : 'bg-transparent'}`} />
                           <div className="min-w-0 flex-1">
                             <p className={`text-xs font-medium truncate ${!n.read ? 'text-gray-900' : 'text-gray-600'}`}>{n.title}</p>
                             <p className="text-xs text-gray-500 truncate mt-0.5">{n.body}</p>

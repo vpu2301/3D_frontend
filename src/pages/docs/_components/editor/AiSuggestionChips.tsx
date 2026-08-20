@@ -45,9 +45,9 @@ export default function AiSuggestionChips({ editor, onAskAi }: Props) {
             key={c.label}
             type="button"
             onClick={c.run}
-            className="flex h-9 items-center gap-2 rounded-full border border-gray-200 bg-white px-4 text-sm text-gray-700 shadow-sm transition-all hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+            className="plat-btn-ghost h-9"
           >
-            <Icon className="h-4 w-4 text-blue-500" />
+            <Icon className="h-4 w-4 text-[var(--text-4)]" />
             {c.label}
           </button>
         );

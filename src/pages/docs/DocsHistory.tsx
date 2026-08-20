@@ -27,7 +27,7 @@ export default function DocsHistory() {
   if (!doc) {
     return (
       <DocsLayout>
-        <div className="flex h-full items-center justify-center text-sm text-zinc-500">
+        <div className="flex h-full items-center justify-center text-sm text-[var(--text-3)]">
           Document not found.
         </div>
       </DocsLayout>
@@ -37,22 +37,27 @@ export default function DocsHistory() {
   return (
     <DocsLayout>
       <div className="flex h-full flex-col">
-        <header className="flex items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+        <header className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 py-4">
           <div className="flex items-center gap-3">
             <Link
               to={`/docs/${doc.id}`}
-              className="rounded-md p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              className="rounded-[10px] p-1.5 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             >
               <ArrowLeft className="h-4 w-4" />
             </Link>
-            <h1 className="text-xl font-semibold">Version history</h1>
-            <span className="text-sm text-zinc-500">— {doc.title}</span>
+            <div>
+              <div className="plat-crumb">3days.docs</div>
+              <div className="mt-1 flex items-baseline gap-2">
+                <h1 className="text-[22px] font-semibold tracking-[-0.03em] text-[var(--ink)]">Version history</h1>
+                <span className="text-sm text-[var(--text-4)]">— {doc.title}</span>
+              </div>
+            </div>
           </div>
         </header>
         <div className="flex flex-1 overflow-hidden">
-          <aside className="w-64 shrink-0 overflow-y-auto border-r border-zinc-200 dark:border-zinc-800">
+          <aside className="w-64 shrink-0 overflow-y-auto border-r border-[var(--line-soft)]">
             {doc.snapshots.length === 0 ? (
-              <div className="p-4 text-sm text-zinc-500">
+              <div className="p-4 text-sm text-[var(--text-3)]">
                 No snapshots yet — they're taken every 2 minutes while you edit, or when you press Cmd/Ctrl+S.
               </div>
             ) : (
@@ -64,19 +69,19 @@ export default function DocsHistory() {
                       <button
                         type="button"
                         onClick={() => setSelected(s.id)}
-                        className={`block w-full border-b border-zinc-100 px-4 py-3 text-left text-sm dark:border-zinc-800 ${
+                        className={`block w-full border-b border-[var(--line-soft)] px-4 py-3 text-left text-sm transition-colors ${
                           active
-                            ? 'bg-blue-50 dark:bg-blue-950/30'
-                            : 'hover:bg-zinc-50 dark:hover:bg-zinc-900'
+                            ? 'bg-[rgba(20,22,26,0.06)]'
+                            : 'hover:bg-[rgba(20,22,26,0.02)]'
                         }`}
                       >
-                        <div className="font-medium">
+                        <div className="font-semibold text-[var(--ink)]">
                           {i === 0 ? 'Latest snapshot' : `Snapshot ${doc.snapshots.length - i}`}
                         </div>
-                        <div className="text-xs text-zinc-500">
+                        <div className="text-xs text-[var(--text-3)]">
                           {new Date(s.takenAt).toLocaleString()}
                         </div>
-                        <div className="text-[11px] text-zinc-400">{s.wordCount} words</div>
+                        <div className="text-[11px] text-[var(--text-5)]">{s.wordCount} words</div>
                       </button>
                     </li>
                   );
@@ -87,10 +92,10 @@ export default function DocsHistory() {
           <div className="flex flex-1 flex-col">
             {snap ? (
               <>
-                <div className="flex items-center justify-between border-b border-zinc-200 px-6 py-3 dark:border-zinc-800">
+                <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 py-3">
                   <div className="text-sm">
-                    <span className="font-medium">{new Date(snap.takenAt).toLocaleString()}</span>
-                    <span className="ml-2 text-zinc-500">vs. current</span>
+                    <span className="font-semibold text-[var(--ink)]">{new Date(snap.takenAt).toLocaleString()}</span>
+                    <span className="ml-2 text-[var(--text-4)]">vs. current</span>
                   </div>
                   <button
                     type="button"
@@ -99,7 +104,7 @@ export default function DocsHistory() {
                       await restoreSnapshot(doc.id, snap.id);
                       navigate(`/docs/${doc.id}`);
                     }}
-                    className="flex items-center gap-1 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900"
+                    className="plat-btn h-9"
                   >
                     <RotateCcw className="h-4 w-4" /> Restore this version
                   </button>
@@ -109,7 +114,7 @@ export default function DocsHistory() {
                 </div>
               </>
             ) : (
-              <div className="flex flex-1 items-center justify-center text-sm text-zinc-500">
+              <div className="flex flex-1 items-center justify-center text-sm text-[var(--text-3)]">
                 Select a snapshot to view the diff.
               </div>
             )}

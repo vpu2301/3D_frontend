@@ -12,12 +12,12 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5">
-      <div className="mb-4 flex items-center gap-2">
-        <div className="rounded-lg bg-gray-100 p-1.5">
-          <Icon className="h-4 w-4 text-gray-600" />
+    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-5">
+      <div className="mb-4 flex items-center gap-2.5">
+        <div className="rounded-[10px] bg-[var(--sand)] p-1.5">
+          <Icon className="h-4 w-4 text-[var(--ink)]" />
         </div>
-        <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
+        <h2 className="text-sm">{title}</h2>
       </div>
       {children}
     </div>
@@ -35,8 +35,8 @@ function Field({
 }) {
   return (
     <div className="mb-4 last:mb-0">
-      <label className="mb-1 block text-xs font-medium text-gray-600">{label}</label>
-      {hint && <p className="mb-1.5 text-[11px] text-gray-400">{hint}</p>}
+      <label className="mb-1 block text-xs font-medium text-[var(--text-3)]">{label}</label>
+      {hint && <p className="mb-1.5 text-[11px] text-[var(--text-5)]">{hint}</p>}
       {children}
     </div>
   );
@@ -53,13 +53,13 @@ function Toggle({
 }) {
   return (
     <div className="flex items-center justify-between py-2">
-      <span className="text-sm text-gray-700">{label}</span>
+      <span className="text-sm text-[var(--text-2)]">{label}</span>
       <button
         type="button"
         onClick={() => onChange(!checked)}
         className={cn(
           'relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors',
-          checked ? 'bg-[#5aacee]' : 'bg-gray-200',
+          checked ? 'bg-[var(--ink)]' : 'bg-[var(--sand-deep)]',
         )}
       >
         <span
@@ -94,9 +94,9 @@ function NumberInput({
         min={min}
         max={max}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-24 rounded-lg border border-gray-200 px-3 py-1.5 text-sm outline-none focus:border-[#8fc4e4]"
+        className="w-24 rounded-[10px] border border-[var(--line)] px-3 py-1.5 text-sm outline-none focus:border-[var(--ink)]"
       />
-      {suffix && <span className="text-xs text-gray-500">{suffix}</span>}
+      {suffix && <span className="text-xs text-[var(--text-4)]">{suffix}</span>}
     </div>
   );
 }
@@ -129,12 +129,13 @@ export default function PoliciesView() {
   };
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden bg-white">
+    <div className="flex flex-1 flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-100 px-6 pt-5 pb-4">
+      <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 pt-5 pb-4">
         <div>
-          <h1 className="text-2xl font-light text-gray-900">Call Policies</h1>
-          <p className="mt-0.5 text-xs text-gray-400">Safety rails & compliance settings for your tenant</p>
+          <p className="plat-crumb" style={{ color: 'var(--text-4)' }}>3days.telephony</p>
+          <h1 className="mt-1 text-[26px] text-[var(--ink)]">Call Policies</h1>
+          <p className="mt-1 text-xs text-[var(--text-4)]">Safety rails & compliance settings for your tenant</p>
         </div>
         <button
           type="button"
@@ -143,7 +144,7 @@ export default function PoliciesView() {
             'flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors',
             saved
               ? 'bg-green-500 text-white'
-              : 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]',
+              : 'bg-[var(--ink)] text-white hover:opacity-85',
           )}
         >
           <Save className="h-4 w-4" />
@@ -182,8 +183,8 @@ export default function PoliciesView() {
                   className={cn(
                     'rounded-full border px-3 py-1.5 text-xs capitalize transition-colors',
                     outboundApproval === opt
-                      ? 'border-[#8fc4e4] bg-[#dde9f4] text-gray-900'
-                      : 'border-gray-200 text-gray-600 hover:bg-gray-50',
+                      ? 'border-[var(--ink)] bg-[rgba(20,22,26,0.06)] text-[var(--ink)]'
+                      : 'border-[var(--line)] text-[var(--text-3)] hover:bg-[var(--sand)]',
                   )}
                 >
                   {opt === 'threshold' ? 'Above threshold' : opt}
@@ -197,7 +198,7 @@ export default function PoliciesView() {
             </Field>
           )}
 
-          <div className="mt-3 divide-y divide-gray-100 rounded-lg border border-gray-200">
+          <div className="mt-3 divide-y divide-[var(--line-soft)] overflow-hidden rounded-[12px] border border-[var(--line-soft)]">
             <div className="px-4">
               <Toggle checked={confirmFinancial} onChange={setConfirmFinancial} label="Pause for financial commitments" />
             </div>
@@ -215,7 +216,7 @@ export default function PoliciesView() {
 
         {/* Recording & retention */}
         <Section icon={Mic} title="Recording & retention">
-          <div className="divide-y divide-gray-100 rounded-lg border border-gray-200">
+          <div className="divide-y divide-[var(--line-soft)] overflow-hidden rounded-[12px] border border-[var(--line-soft)]">
             <div className="px-4">
               <Toggle checked={piiMasking} onChange={setPiiMasking} label="PII masking in transcripts (default: on)" />
             </div>
@@ -229,7 +230,7 @@ export default function PoliciesView() {
             </Field>
           </div>
           {!piiMasking && (
-            <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800">
+            <div className="mt-2 rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800">
               ⚠️ PII masking disabled. This requires DPO sign-off. Ensure DSGVO Art. 5(1)(e) compliance.
             </div>
           )}
@@ -240,11 +241,11 @@ export default function PoliciesView() {
           <Field label="Allowed call destinations">
             <div className="flex flex-wrap gap-2">
               {['🇩🇪 DE', '🇦🇹 AT', '🇨🇭 CH'].map((c) => (
-                <span key={c} className="rounded-full bg-[#dde9f4] border border-[#8fc4e4] px-3 py-1 text-xs text-gray-800">
+                <span key={c} className="rounded-full bg-[rgba(20,22,26,0.06)] border border-[var(--ink)] px-3 py-1 text-xs text-[var(--ink)]">
                   {c}
                 </span>
               ))}
-              <button type="button" className="rounded-full border border-dashed border-gray-300 px-3 py-1 text-xs text-gray-400 hover:border-gray-400">
+              <button type="button" className="rounded-full border border-dashed border-[var(--line)] px-3 py-1 text-xs text-[var(--text-5)] hover:border-[var(--line)]">
                 + Add country
               </button>
             </div>
@@ -253,25 +254,25 @@ export default function PoliciesView() {
             <textarea
               placeholder="+49123456789&#10;+43987654321"
               rows={3}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono outline-none placeholder:text-gray-400 focus:border-[#8fc4e4]"
+              className="w-full rounded-[10px] border border-[var(--line)] px-3 py-2 text-sm font-mono outline-none placeholder:text-[var(--text-5)] focus:border-[var(--ink)]"
             />
           </Field>
         </Section>
 
         {/* Notifications */}
         <Section icon={Bell} title="Notifications">
-          <p className="text-xs text-gray-400 mb-3">Choose when to notify which channel</p>
+          <p className="text-xs text-[var(--text-5)] mb-3">Choose when to notify which channel</p>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="pb-2 text-left font-medium text-gray-500">Event</th>
-                  <th className="pb-2 text-center font-medium text-gray-500">Email</th>
-                  <th className="pb-2 text-center font-medium text-gray-500">Telegram</th>
-                  <th className="pb-2 text-center font-medium text-gray-500">Slack</th>
+                <tr className="[&_th]:bg-[var(--sand)] [&_th]:px-3 [&_th]:py-2 [&_th:first-child]:rounded-l-[8px] [&_th:last-child]:rounded-r-[8px]">
+                  <th className="text-left font-medium text-[var(--text-4)]">Event</th>
+                  <th className="text-center font-medium text-[var(--text-4)]">Email</th>
+                  <th className="text-center font-medium text-[var(--text-4)]">Telegram</th>
+                  <th className="text-center font-medium text-[var(--text-4)]">Slack</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-[var(--line-soft)]">
                 {[
                   'Call completed',
                   'Call failed',
@@ -281,10 +282,10 @@ export default function PoliciesView() {
                   'PII revealed',
                 ].map((event) => (
                   <tr key={event}>
-                    <td className="py-2 text-gray-700">{event}</td>
+                    <td className="py-2 text-[var(--text-2)]">{event}</td>
                     {['email', 'telegram', 'slack'].map((ch) => (
                       <td key={ch} className="py-2 text-center">
-                        <input type="checkbox" defaultChecked={ch === 'email'} className="accent-[#5aacee]" />
+                        <input type="checkbox" defaultChecked={ch === 'email'} className="accent-[var(--ink)]" />
                       </td>
                     ))}
                   </tr>

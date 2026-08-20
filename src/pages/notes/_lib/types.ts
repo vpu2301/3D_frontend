@@ -18,8 +18,11 @@ export interface Reminder {
   noteId: NoteId;
   dueAt: number; // ms epoch
   location?: string;
-  /** Mock calendar mirror id when reminder mirroring is enabled. */
-  calendarEventId?: string;
+  /**
+   * Calendar Mirror event id. Null right after creation — the mirror fills it
+   * in asynchronously, which is why the badge has a "Mirroring…" state.
+   */
+  calendarEventId?: string | null;
   dismissed: boolean;
 }
 
@@ -28,6 +31,19 @@ export interface Note {
   /** Optional explicit title; usually derived from first heading or first line. */
   title?: string;
   content: JSONContent;
+  /**
+   * Server-assigned, incremented on every accepted patch. It is the
+   * `baseVersion` of the *next* patch, so it has to be stored, not derived —
+   * dropping it turns every save into a 409.
+   */
+  version: number;
+  /**
+   * First 240 chars of the server-rendered Markdown. Present on list rows
+   * fetched without `include=content`; absent once the full note is loaded.
+   */
+  snippet?: string;
+  /** Title as the server derived it. Local `deriveTitle()` still wins for instant display. */
+  derivedTitle?: string;
   notebookId?: NotebookId | null;
   tags: string[];
   pinned: boolean;

@@ -36,16 +36,16 @@ function AiOutlineView({ editor }: NodeViewProps) {
 
   return (
     <NodeViewWrapper className="my-3">
-      <div className="rounded-lg border border-violet-200 bg-violet-50/60 p-4 dark:border-violet-900 dark:bg-violet-950/30" contentEditable={false}>
-        <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-violet-700 dark:text-violet-300">
+      <div className="rounded-[12px] border border-[var(--line-soft)] bg-[var(--sand)] p-4" contentEditable={false}>
+        <div className="plat-eyebrow mb-2 flex items-center gap-1.5 text-[var(--text-3)]">
           <ListTree className="h-3.5 w-3.5" /> AI outline
         </div>
         {headings.length === 0 ? (
-          <div className="text-sm italic text-zinc-500">No headings yet — add some with /h1, /h2, /h3.</div>
+          <div className="text-sm italic text-[var(--text-4)]">No headings yet — add some with /h1, /h2, /h3.</div>
         ) : (
           <ol className="space-y-1 text-sm">
             {headings.map((h, i) => (
-              <li key={i} style={{ paddingLeft: (h.level - 1) * 16 }} className="text-zinc-700 dark:text-zinc-300">
+              <li key={i} style={{ paddingLeft: (h.level - 1) * 16 }} className="text-[var(--text-2)]">
                 {h.text}
               </li>
             ))}

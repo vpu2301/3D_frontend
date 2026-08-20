@@ -19,6 +19,11 @@ import {
 import CreateAssistantDialog from '@/components/CreateAssistantDialog';
 import { cn } from '@/lib/utils';
 
+/* Shared presentation classes (platform design system). */
+const PANEL = '!rounded-[14px] !border !border-[color:var(--line-soft)] !bg-white !shadow-none';
+const GHOST =
+  'plat-btn-ghost !rounded-full !bg-transparent !border-[color:var(--line)] !text-[color:var(--text-2)] hover:!bg-transparent hover:!border-[color:var(--ink)] hover:!text-[color:var(--ink)]';
+
 type TabKey = 'workers' | 'activity';
 
 /* ── Recent Activity data ── */
@@ -33,9 +38,9 @@ type ActivityEntry = {
 };
 
 const ACTIVITY_STATUS_STYLE: Record<string, string> = {
-  Completed:   'bg-green-100 text-green-700 border-green-200',
-  Failed:      'bg-red-100 text-red-700 border-red-200',
-  'In Progress': 'bg-blue-100 text-blue-700 border-blue-200',
+  Completed:   'plat-pill-ok',
+  Failed:      'bg-[color:var(--warn-bg)] text-[color:var(--bad-fg)]',
+  'In Progress': 'bg-[color:var(--blue-100)] text-[color:var(--blue)]',
 };
 
 const ACTIVITY_DATA: ActivityEntry[] = [
@@ -100,7 +105,7 @@ const ActivityTable = () => {
   };
 
   const SortIcon = ({ field }: { field: keyof ActivityEntry }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+    <ArrowUpDown className="h-3 w-3 ml-1 inline" style={{ color: sortField === field ? 'var(--ink)' : 'var(--text-5)' }} />
   );
 
   return (
@@ -108,23 +113,23 @@ const ActivityTable = () => {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" style={{ color: 'var(--text-5)' }} />
           <Input
             placeholder="Search activity…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="pl-9 bg-white border-gray-200"
+            className="pl-9 !rounded-[10px] !bg-white !border-[color:var(--line)]"
           />
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[130px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className={cn(GHOST, '!h-9 min-w-[130px] justify-between !text-xs')}>
               <span className="flex items-center gap-1.5">
-                <Bot className="h-3.5 w-3.5 text-gray-400" />
+                <Bot className="h-3.5 w-3.5" style={{ color: 'var(--text-5)' }} />
                 {workerFilter === 'All Workers' ? 'Worker' : workerFilter}
               </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+              <ChevronDown className="h-3.5 w-3.5 ml-2" style={{ color: 'var(--text-5)' }} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-44">
@@ -138,12 +143,12 @@ const ActivityTable = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className={cn(GHOST, '!h-9 min-w-[110px] justify-between !text-xs')}>
               <span className="flex items-center gap-1.5">
-                <Filter className="h-3.5 w-3.5 text-gray-400" />
+                <Filter className="h-3.5 w-3.5" style={{ color: 'var(--text-5)' }} />
                 {statusFilter === 'All' ? 'Status' : statusFilter}
               </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+              <ChevronDown className="h-3.5 w-3.5 ml-2" style={{ color: 'var(--text-5)' }} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -157,12 +162,12 @@ const ActivityTable = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className={cn(GHOST, '!h-9 min-w-[110px] justify-between !text-xs')}>
               <span className="flex items-center gap-1.5">
-                <Activity className="h-3.5 w-3.5 text-gray-400" />
+                <Activity className="h-3.5 w-3.5" style={{ color: 'var(--text-5)' }} />
                 {typeFilter === 'All Types' ? 'Type' : typeFilter}
               </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+              <ChevronDown className="h-3.5 w-3.5 ml-2" style={{ color: 'var(--text-5)' }} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -176,67 +181,77 @@ const ActivityTable = () => {
       </div>
 
       {/* Table */}
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
+      <Card className={cn(PANEL, 'overflow-hidden')}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('task')}>
+              <tr style={{ background: 'var(--sand)', borderBottom: '1px solid var(--line-soft)' }}>
+                <th className="text-left px-4 py-3 font-medium cursor-pointer select-none" style={{ color: 'var(--text-3)' }} onClick={() => toggleSort('task')}>
                   Task <SortIcon field="task" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('status')}>
+                <th className="text-left px-4 py-3 font-medium cursor-pointer select-none" style={{ color: 'var(--text-3)' }} onClick={() => toggleSort('status')}>
                   Status <SortIcon field="status" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('worker')}>
+                <th className="text-left px-4 py-3 font-medium cursor-pointer select-none hidden md:table-cell" style={{ color: 'var(--text-3)' }} onClick={() => toggleSort('worker')}>
                   Worker <SortIcon field="worker" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('type')}>
+                <th className="text-left px-4 py-3 font-medium cursor-pointer select-none hidden md:table-cell" style={{ color: 'var(--text-3)' }} onClick={() => toggleSort('type')}>
                   Type <SortIcon field="type" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('date')}>
+                <th className="text-left px-4 py-3 font-medium cursor-pointer select-none hidden lg:table-cell" style={{ color: 'var(--text-3)' }} onClick={() => toggleSort('date')}>
                   Time <SortIcon field="date" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Duration</th>
+                <th className="text-left px-4 py-3 font-medium hidden lg:table-cell" style={{ color: 'var(--text-3)' }}>Duration</th>
               </tr>
             </thead>
             <tbody>
               {paged.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">
+                  <td colSpan={6} className="px-4 py-12 text-center text-sm" style={{ color: 'var(--text-5)' }}>
                     No activity matches your filters.
                   </td>
                 </tr>
               ) : (
                 paged.map(entry => (
-                  <tr key={entry.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                  <tr
+                    key={entry.id}
+                    className="last:border-b-0 transition-colors hover:bg-[rgba(20,22,26,0.02)]"
+                    style={{ borderBottom: '1px solid var(--line-soft)' }}
+                  >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded bg-gray-100 flex-shrink-0">
-                          <Activity className="h-3.5 w-3.5 text-gray-500" />
+                        <div
+                          className="p-1.5 rounded-[8px] flex-shrink-0"
+                          style={{ background: 'var(--sand)', color: 'var(--text-4)' }}
+                        >
+                          <Activity className="h-3.5 w-3.5" strokeWidth={1.75} />
                         </div>
-                        <span className="font-medium text-gray-900 truncate max-w-[220px]">{entry.task}</span>
+                        <span className="font-medium truncate max-w-[220px]" style={{ color: 'var(--ink)' }}>{entry.task}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', ACTIVITY_STATUS_STYLE[entry.status])}>
+                      <span className={cn('plat-pill', ACTIVITY_STATUS_STYLE[entry.status])}>
                         {entry.status}
                       </span>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
                       <div className="flex items-center gap-2">
-                        <div className="h-6 w-6 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center flex-shrink-0">
-                          <span className="text-xs font-semibold text-gray-600">{entry.worker[0]}</span>
+                        <div
+                          className="h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{ background: 'var(--sand-deep)' }}
+                        >
+                          <span className="text-xs font-semibold" style={{ color: 'var(--text-2)' }}>{entry.worker[0]}</span>
                         </div>
-                        <span className="text-gray-700">{entry.worker}</span>
+                        <span style={{ color: 'var(--text-2)' }}>{entry.worker}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="text-gray-600 text-xs">{entry.type}</span>
+                      <span className="text-xs" style={{ color: 'var(--text-3)' }}>{entry.type}</span>
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">
+                    <td className="px-4 py-3 hidden lg:table-cell text-xs" style={{ color: 'var(--text-4)' }}>
                       {formatTimeAgo(entry.date)}
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">
+                    <td className="px-4 py-3 hidden lg:table-cell text-xs" style={{ color: 'var(--text-4)' }}>
                       {entry.duration}
                     </td>
                   </tr>
@@ -247,7 +262,10 @@ const ActivityTable = () => {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+        <div
+          className="px-4 py-3 flex items-center justify-between gap-3 flex-wrap text-xs"
+          style={{ color: 'var(--text-4)', background: 'var(--sand)', borderTop: '1px solid var(--line-soft)' }}
+        >
           <div className="flex items-center gap-3">
             <span>
               {filtered.length > 0
@@ -255,11 +273,12 @@ const ActivityTable = () => {
                 : '0 entries'}
             </span>
             <div className="flex items-center gap-1.5">
-              <span className="text-gray-400">Rows:</span>
+              <span style={{ color: 'var(--text-5)' }}>Rows:</span>
               <select
                 value={pageSize}
                 onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-                className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
+                className="h-6 rounded-[8px] bg-white text-xs px-1 focus:outline-none cursor-pointer"
+                style={{ border: '1px solid var(--line)', color: 'var(--text-2)' }}
               >
                 {[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}
               </select>
@@ -268,7 +287,8 @@ const ActivityTable = () => {
           <div className="flex items-center gap-2">
             {(search || workerFilter !== 'All Workers' || statusFilter !== 'All' || typeFilter !== 'All Types') && (
               <button
-                className="text-gray-500 hover:text-gray-900 underline underline-offset-2"
+                className="underline underline-offset-2"
+                style={{ color: 'var(--text-3)' }}
                 onClick={() => { setSearch(''); setWorkerFilter('All Workers'); setStatusFilter('All'); setTypeFilter('All Types'); setPage(1); }}
               >
                 Clear filters
@@ -276,15 +296,15 @@ const ActivityTable = () => {
             )}
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
+                <Button variant="outline" size="icon" className={cn(GHOST, 'h-7 w-7')} disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
+                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && GHOST)} onClick={() => setPage(p)}>
                     {p}
                   </Button>
                 ))}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
+                <Button variant="outline" size="icon" className={cn(GHOST, 'h-7 w-7')} disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -296,7 +316,7 @@ const ActivityTable = () => {
   );
 };
 
-/* ── Workers grid ── */
+/* ── Workers list — one panel, hairline-separated rows ── */
 const WorkersGrid = ({
   employees,
   onViewEmployee,
@@ -307,98 +327,92 @@ const WorkersGrid = ({
   onShowCreate: () => void;
 }) => (
   <>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="plat-list">
       {employees.map((employee) => (
-        <Card key={employee.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={employee.avatar} alt={employee.name} />
-                    <AvatarFallback className={`bg-gradient-to-br ${employee.bgColor} ${employee.iconColor} font-medium`}>
-                      {employee.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className={`absolute -bottom-1 -right-1 p-1 rounded-full bg-gradient-to-br ${employee.bgColor}`}>
-                    <Bot className={`h-3 w-3 ${employee.iconColor}`} />
-                  </div>
-                </div>
-                <div>
-                  <span className="font-medium">{employee.name}</span>
-                  {employee.isAssistant && (
-                    <span className="block text-xs text-gray-600 font-normal">AI Assistant</span>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8" onClick={() => onViewEmployee(employee.id)}>
-                  <Eye className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Badge variant="outline" className="text-xs">
-                  {employee.type || employee.department}
-                </Badge>
-                <div className="flex items-center space-x-1">
-                  {employee.scope === 'team' ? (
-                    <Building className="h-3 w-3 text-gray-600" />
-                  ) : (
-                    <Users className="h-3 w-3 text-gray-600" />
-                  )}
-                  <span className="text-xs text-gray-600 capitalize">{employee.scope}</span>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="p-1 rounded bg-gray-100">
-                  <Activity className="h-3 w-3 text-gray-600" />
-                </div>
-                <span className={`text-sm font-medium ${employee.status === 'Active' ? 'text-green-700' : 'text-amber-700'}`}>
-                  {employee.status}
-                </span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="p-1 rounded bg-gray-100">
-                  <MessageCircle className="h-3 w-3 text-gray-600" />
-                </div>
-                <span className="text-sm text-gray-700">Conversations: {employee.conversations}</span>
-              </div>
-              <p className="text-sm text-gray-700">Active Tasks: {employee.tasks}</p>
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"
-                  onClick={() => onViewEmployee(employee.id)}
-                >
-                  <Eye className="h-3 w-3 mr-1" />
-                  View Details
-                </Button>
-                <Button variant="outline" size="sm" className="text-xs bg-gray-50 hover:bg-gray-100 border-gray-200">
-                  <Settings className="h-3 w-3" />
-                </Button>
-              </div>
+        <div key={employee.id} className="plat-row !items-center !gap-4 !px-5 !py-4">
+          <div className="relative flex-shrink-0">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={employee.avatar} alt={employee.name} />
+              <AvatarFallback className={`bg-gradient-to-br ${employee.bgColor} ${employee.iconColor} font-medium`}>
+                {employee.name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <div
+              className="absolute -bottom-1 -right-1 p-1 rounded-full"
+              style={{ background: 'var(--sand-deep)', color: 'var(--ink)', boxShadow: '0 0 0 2px var(--paper)' }}
+            >
+              <Bot className="h-3 w-3" strokeWidth={1.75} />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="plat-row-title">{employee.name}</span>
+              {employee.isAssistant && (
+                <span className="text-xs" style={{ color: 'var(--text-4)' }}>AI Assistant</span>
+              )}
+              <span className={cn('plat-pill', employee.status === 'Active' ? 'plat-pill-ok' : 'plat-pill-warn')}>
+                {employee.status}
+              </span>
+            </div>
+            <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs" style={{ color: 'var(--text-3)' }}>
+              <Badge
+                variant="outline"
+                className="text-xs !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] !font-medium"
+              >
+                {employee.type || employee.department}
+              </Badge>
+              <span className="inline-flex items-center gap-1.5">
+                {employee.scope === 'team' ? (
+                  <Building className="h-3 w-3" style={{ color: 'var(--text-5)' }} />
+                ) : (
+                  <Users className="h-3 w-3" style={{ color: 'var(--text-5)' }} />
+                )}
+                <span className="capitalize">{employee.scope}</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <MessageCircle className="h-3 w-3" style={{ color: 'var(--text-5)' }} />
+                Conversations: {employee.conversations}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Activity className="h-3 w-3" style={{ color: 'var(--text-5)' }} />
+                Active Tasks: {employee.tasks}
+              </span>
+            </div>
+          </div>
+
+          <div className="ml-auto flex flex-shrink-0 items-center gap-1.5">
+            <Button variant="ghost" size="icon" className="h-8 w-8 !rounded-[10px]" onClick={() => onViewEmployee(employee.id)}>
+              <Eye className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8 !rounded-[10px]">
+              <Settings className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className={cn(GHOST, '!h-8 !px-3.5 !text-xs')}
+              onClick={() => onViewEmployee(employee.id)}
+            >
+              <Eye className="h-3 w-3 mr-1" />
+              View Details
+            </Button>
+            <Button variant="outline" size="sm" className={cn(GHOST, '!h-8 !px-3 !text-xs')}>
+              <Settings className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
       ))}
     </div>
 
     {employees.length === 0 && (
       <div className="text-center py-12">
-        <Bot className="h-16 w-16 text-black/50 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No AI employees yet</h3>
-        <p className="text-gray-600 mb-4">Create your first AI employee to get started</p>
+        <Bot className="h-16 w-16 mx-auto mb-4" style={{ color: 'var(--text-5)' }} strokeWidth={1.25} />
+        <h3 className="text-lg mb-2">No AI employees yet</h3>
+        <p className="mb-4 text-sm" style={{ color: 'var(--text-4)' }}>Create your first AI employee to get started</p>
         <Button
           onClick={onShowCreate}
-          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+          className="plat-btn"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add AI Employee
@@ -483,22 +497,23 @@ const AIEmployees = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col">
+          <SidebarInset className="flex-1 flex flex-col bg-transparent">
             <main className="flex-1 p-6">
 
               {/* Page header */}
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">AI Workers</h1>
-                  <p className="text-gray-600">Manage your artificial intelligence workforce and assistants</p>
+                  <p className="plat-crumb">3days.employees</p>
+                  <h1 className="mt-1 text-3xl">AI Workers</h1>
+                  <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Manage your artificial intelligence workforce and assistants</p>
                 </div>
                 <Button
                   onClick={() => setShowCreateDialog(true)}
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                  className="plat-btn"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add AI Worker
@@ -506,17 +521,16 @@ const AIEmployees = () => {
               </div>
 
               {/* Horizontal tab nav */}
-              <div className="flex border-b border-gray-200 mb-6">
+              <div className="flex mb-6" style={{ borderBottom: '1px solid var(--line-soft)' }}>
                 {TABS.map(({ key, label, icon: Icon }) => (
                   <button
                     key={key}
                     onClick={() => setActiveTab(key)}
-                    className={cn(
-                      'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
-                      activeTab === key
-                        ? 'border-gray-900 text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    )}
+                    className="flex items-center gap-2 px-5 py-3 text-sm font-medium -mb-px transition-colors"
+                    style={{
+                      borderBottom: `2px solid ${activeTab === key ? 'var(--ink)' : 'transparent'}`,
+                      color: activeTab === key ? 'var(--ink)' : 'var(--text-4)',
+                    }}
                   >
                     <Icon className="h-4 w-4" />
                     {label}

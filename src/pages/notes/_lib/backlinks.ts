@@ -1,42 +1,17 @@
-import type { Note, NoteLink, LinkType } from './types';
-
-export interface Backlink {
-  fromNoteId: string;
-  fromNoteTitle: string;
-  snippet: string;
-  /** The link record on the source note that points to the target. */
-  link: NoteLink;
-}
-
 /**
- * Compute a map of `targetId` → backlinks pointing at it across all notes.
- * Cheap (O(n*links)); recomputed on note changes.
+ * Local text derivation for notes.
+ *
+ * The backlink *computation* that used to live here is gone — the server owns
+ * link extraction and answers `GET /v1/notes/{id}/backlinks`, which is correct
+ * across the whole corpus instead of only across whatever is loaded (ADR 0003).
+ *
+ * What stays is title/snippet/tag derivation, deliberately: the list and the
+ * editor header show a title on the keystroke, before any round trip. The
+ * server derives the same fields (`derivedTitle`, `snippet`) and those win once
+ * they arrive.
  */
-export function computeBacklinks(notes: Note[]): Map<string, Backlink[]> {
-  const map = new Map<string, Backlink[]>();
-  for (const note of notes) {
-    if (note.trashed) continue;
-    for (const link of note.links ?? []) {
-      const key = `${link.type}:${link.targetId}`;
-      if (!map.has(key)) map.set(key, []);
-      map.get(key)!.push({
-        fromNoteId: note.id,
-        fromNoteTitle: deriveTitle(note),
-        snippet: deriveSnippet(note),
-        link,
-      });
-    }
-  }
-  return map;
-}
 
-export function backlinksFor(
-  map: Map<string, Backlink[]>,
-  type: LinkType,
-  targetId: string,
-): Backlink[] {
-  return map.get(`${type}:${targetId}`) ?? [];
-}
+import type { Note } from './types';
 
 /**
  * Title rules: explicit > first H1 > first non-empty line > "Untitled".

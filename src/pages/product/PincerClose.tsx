@@ -120,7 +120,7 @@ export default function PincerClose() {
 
           {/* Right: overlapping case card, breaks the grid */}
           <div className="relative lg:col-span-5">
-            <div className="shadow-layered border-crafted relative z-10 rounded-2xl bg-card p-6 lg:translate-x-8 lg:-rotate-1">
+            <div className="shadow-layered border-crafted relative z-10 rounded-[28px] bg-card p-6 lg:translate-x-8 lg:-rotate-1">
               <div className="flex items-center justify-between border-b border-border pb-4">
                 <div>
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">
@@ -154,12 +154,12 @@ export default function PincerClose() {
               </div>
             </div>
 
-            <div className="glass-strong absolute -left-6 -top-6 z-20 hidden rounded-xl px-4 py-3 lg:block">
+            <div className="glass-strong absolute -left-6 -top-6 z-20 hidden rounded-[28px] px-4 py-3 lg:block">
               <p className="text-xs uppercase tracking-widest text-muted-foreground">close time</p>
               <p className="font-display text-2xl font-bold text-foreground">−4 days</p>
             </div>
 
-            <div className="glass-strong absolute -bottom-5 right-2 z-20 hidden rounded-xl px-4 py-3 lg:block">
+            <div className="glass-strong absolute -bottom-5 right-2 z-20 hidden rounded-[28px] px-4 py-3 lg:block">
               <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <CircleAlert aria-hidden className="h-3.5 w-3.5" />
                 below 85% → human review
@@ -182,9 +182,9 @@ export default function PincerClose() {
 
         <div className="grid grid-cols-1 gap-6 pt-12 md:grid-cols-3">
           {STEPS.map((s) => (
-            <div key={s.n} className="border-crafted rounded-2xl bg-card p-6">
+            <div key={s.n} className="border-crafted rounded-[28px] bg-card p-6">
               <div className="flex items-center justify-between">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary">
+                <span className="flex h-10 w-10 items-center justify-center rounded-[28px] bg-secondary">
                   <s.icon aria-hidden className="h-5 w-5 text-foreground" />
                 </span>
                 <span className="font-display text-3xl font-bold text-border">{s.n}</span>
@@ -223,9 +223,9 @@ export default function PincerClose() {
             {SURFACES.map((f, i) => (
               <div
                 key={f.title}
-                className={`shadow-layered border-crafted rounded-2xl bg-card p-6 ${i % 2 === 1 ? 'lg:translate-y-6' : ''}`}
+                className={`shadow-layered border-crafted rounded-[28px] bg-card p-6 ${i % 2 === 1 ? 'lg:translate-y-6' : ''}`}
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary">
+                <span className="flex h-10 w-10 items-center justify-center rounded-[28px] bg-secondary">
                   <f.icon aria-hidden className="h-5 w-5 text-foreground" />
                 </span>
                 <h3 className="pt-4 text-base font-semibold text-foreground">{f.title}</h3>
@@ -238,7 +238,7 @@ export default function PincerClose() {
 
       {/* ── CTA ── */}
       <section className="mx-auto max-w-7xl px-6 py-20 lg:py-28">
-        <div className="grain shadow-layered relative overflow-hidden rounded-3xl bg-primary px-8 py-16 text-center lg:px-16">
+        <div className="grain shadow-layered relative overflow-hidden rounded-[28px] bg-primary px-8 py-16 text-center lg:px-16">
           <h2 className="font-display text-3xl font-bold lowercase tracking-tight text-primary-foreground sm:text-4xl">
             close the books. keep the evidence.
           </h2>

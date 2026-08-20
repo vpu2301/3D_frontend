@@ -12,7 +12,7 @@ function TemplatePreview({ template }: TemplatePreviewProps) {
   if (template.id === 'blank') {
     return (
       <div className="flex h-full w-full items-center justify-center bg-white">
-        <Plus className="h-10 w-10 text-blue-500" strokeWidth={1.5} />
+        <Plus className="h-10 w-10 text-[var(--text-4)]" strokeWidth={1.5} />
       </div>
     );
   }
@@ -24,7 +24,7 @@ function TemplatePreview({ template }: TemplatePreviewProps) {
 
   return (
     <div className="h-full w-full bg-white px-4 py-3">
-      <div className="mb-2 text-[9px] font-bold leading-snug text-gray-900 line-clamp-2">
+      <div className="mb-2 text-[9px] font-bold leading-snug text-[var(--ink)] line-clamp-2">
         {headingText}
       </div>
       <div className="space-y-1">
@@ -33,7 +33,7 @@ function TemplatePreview({ template }: TemplatePreviewProps) {
             return (
               <div
                 key={i}
-                className="mt-1.5 text-[7px] font-semibold text-gray-700 line-clamp-1"
+                className="mt-1.5 text-[7px] font-semibold text-[var(--text-2)] line-clamp-1"
               >
                 {child.content?.[0]?.text ?? ''}
               </div>
@@ -42,9 +42,9 @@ function TemplatePreview({ template }: TemplatePreviewProps) {
           if (child.type === 'paragraph') {
             return (
               <div key={i} className="space-y-0.5">
-                <div className="h-[3px] w-full rounded-sm bg-gray-200" />
-                <div className="h-[3px] w-[88%] rounded-sm bg-gray-200" />
-                <div className="h-[3px] w-[60%] rounded-sm bg-gray-200" />
+                <div className="h-[3px] w-full rounded-sm bg-[var(--sand-deep)]" />
+                <div className="h-[3px] w-[88%] rounded-sm bg-[var(--sand-deep)]" />
+                <div className="h-[3px] w-[60%] rounded-sm bg-[var(--sand-deep)]" />
               </div>
             );
           }
@@ -54,8 +54,8 @@ function TemplatePreview({ template }: TemplatePreviewProps) {
               <div key={i} className="space-y-0.5">
                 {items.slice(0, 3).map((_li, j) => (
                   <div key={j} className="flex items-center gap-1">
-                    <div className="h-1 w-1 rounded-full bg-gray-400" />
-                    <div className="h-[3px] flex-1 rounded-sm bg-gray-200" />
+                    <div className="h-1 w-1 rounded-full bg-[var(--text-5)]" />
+                    <div className="h-[3px] flex-1 rounded-sm bg-[var(--sand-deep)]" />
                   </div>
                 ))}
               </div>
@@ -89,13 +89,13 @@ export default function TemplateStrip() {
           onClick={() => onPick(t)}
           className="group flex w-40 shrink-0 flex-col items-start text-left"
         >
-          <div className="aspect-[3/4] w-full overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm transition-all group-hover:border-blue-400 group-hover:shadow-md">
+          <div className="aspect-[3/4] w-full overflow-hidden rounded-[12px] border border-[var(--line-soft)] bg-white transition-colors group-hover:border-[var(--ink)]">
             <TemplatePreview template={t} />
           </div>
-          <div className="mt-2 text-sm font-medium text-gray-900 group-hover:text-blue-600">
+          <div className="mt-2 text-sm font-semibold text-[var(--ink)]">
             {t.name}
           </div>
-          <div className="text-xs text-gray-500">{t.description.split('.')[0]}</div>
+          <div className="text-xs text-[var(--text-4)]">{t.description.split('.')[0]}</div>
         </button>
       ))}
     </div>

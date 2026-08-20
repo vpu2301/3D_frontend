@@ -25,9 +25,9 @@ export function MonthView({ anchor, onEventClick, onCreateDraft }: MonthViewProp
 
   return (
     <div className="flex h-full flex-col">
-      <div className="grid grid-cols-7 border-b border-gray-200/70">
+      <div className="grid grid-cols-7 border-b border-[var(--line-soft)]">
         {WEEKDAYS.map(d => (
-          <div key={d} className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+          <div key={d} className="plat-eyebrow px-2 py-2">
             {d}
           </div>
         ))}
@@ -60,16 +60,21 @@ export function MonthView({ anchor, onEventClick, onCreateDraft }: MonthViewProp
                 });
               }}
               className={cn(
-                'flex flex-col gap-0.5 border-b border-r border-gray-100 p-1 transition',
-                !inMonth && 'bg-gray-50/60',
-                onCreateDraft && 'cursor-pointer hover:bg-blue-50/40',
+                'flex flex-col gap-0.5 border-b border-r border-[var(--line-soft)] p-1 transition',
+                !inMonth && 'bg-[rgba(20,22,26,0.02)]',
+                onCreateDraft && 'cursor-pointer hover:bg-[rgba(20,22,26,0.03)]',
               )}
             >
               <span
                 className={cn(
-                  'ml-auto inline-flex h-5 w-5 items-center justify-center rounded-full text-[11px]',
-                  today ? 'bg-blue-600 font-semibold text-white' : inMonth ? 'text-gray-700' : 'text-gray-400',
+                  'ml-auto inline-flex h-[22px] w-[22px] items-center justify-center rounded-full text-[11px]',
+                  today
+                    ? 'bg-[var(--ink)] font-semibold text-white'
+                    : inMonth
+                      ? 'text-[var(--ink)]'
+                      : 'text-[var(--text-5)]',
                 )}
+                style={{ fontFamily: 'var(--display)', letterSpacing: '-0.02em' }}
               >
                 {format(day, 'd')}
               </span>

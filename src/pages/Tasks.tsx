@@ -1,241 +1,530 @@
-
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+/**
+ * Tasks on REAL backend data from the connected Pincer server.
+ *
+ *   Scheduled  → /api/schedules?include_past=true   (the cron scheduler)
+ *   Journal    → /api/audit                          (every action the agent took)
+ *   Approvals  → still mocked, visibly badged: web approvals are resolved live
+ *                over SSE inside a Chat turn (asyncio futures) — there is no
+ *                "pending approvals queue" endpoint to list from.
+ *
+ * Table chrome, filter pills and tab styling are kept from the old mocked page
+ * so the platform still reads as one system.
+ */
+import React, { useMemo, useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {
-  CheckCircle, XCircle, Clock, Bot, AlertCircle, FileText, DollarSign,
-  Users, PlayCircle, BookOpen, ClipboardList, Activity, BookMarked,
-  Search, Filter, ArrowUpDown, MoreHorizontal, ChevronDown,
-  ChevronLeft, ChevronRight, Eye
+  CheckCircle, XCircle, Clock, Bot, DollarSign, Users,
+  ClipboardList, Activity, BookMarked, Search, Filter, ArrowUpDown,
+  ChevronDown, ChevronLeft, ChevronRight, CalendarClock, MessageSquare, Plug,
+  Download, Copy, Check,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { queryClient } from '@/lib/queryClient';
+import { isConnected } from '@/lib/pincerClient';
+import {
+  useRecentAudit,
+  useSchedules,
+  type AuditEntry,
+  type ScheduledTask,
+} from '@/lib/api/dashboard';
+import { MockedSection } from '@/components/voice/MockedBadge';
 
-type TabKey = 'approvals' | 'active' | 'journal';
+type TabKey = 'scheduled' | 'journal' | 'approvals';
 
-type JournalEntry = {
-  id: number;
-  title: string;
-  assistant: string;
-  description: string;
-  status: string;
-  category: string;
-  completedDate: Date;
-  duration: string;
-  icon: React.ElementType;
-  iconColor: string;
-  bgColor: string;
+// ── Shared bits ──────────────────────────────────────────────────────
+
+const fmtUsd = (v: number | null | undefined) => {
+  if (v == null) return '—';
+  if (v > 0 && v < 0.01) return '<$0.01';
+  return `$${v.toFixed(2)}`;
 };
 
-const JOURNAL_STATUS_STYLE: Record<string, string> = {
-  Completed: 'bg-green-100 text-green-700 border-green-200',
-  Failed:    'bg-red-100 text-red-700 border-red-200',
-  Cancelled: 'bg-gray-100 text-gray-500 border-gray-200',
+const fmtDurationMs = (ms: number | null | undefined) =>
+  ms == null ? '—' : ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
+
+const fmtWhen = (iso: string | null) => {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return isNaN(d.getTime()) ? iso : d.toLocaleString();
 };
 
-const JOURNAL_CATEGORIES = ['All Categories', 'Support', 'Research', 'Finance', 'HR', 'Marketing', 'Operations'];
-const JOURNAL_STATUSES   = ['All', 'Completed', 'Failed', 'Cancelled'];
+function timeAgo(iso: string): string {
+  const t = new Date(iso).getTime();
+  if (isNaN(t)) return iso;
+  const s = Math.max(0, Math.floor((Date.now() - t) / 1000));
+  if (s < 60) return `${s}s ago`;
+  if (s < 3600) return `${Math.floor(s / 60)} min ago`;
+  if (s < 86_400) return `${Math.floor(s / 3600)}h ago`;
+  return `${Math.floor(s / 86_400)}d ago`;
+}
 
-const JournalTable = ({
-  journals,
-  formatTimeAgo,
+const searchInputCls =
+  'pl-11 h-9 !rounded-[10px] border-[color:var(--line)] bg-[color:var(--paper)] text-[13px] placeholder:text-[color:var(--text-5)] focus-visible:border-[color:var(--ink)] focus-visible:ring-0 focus-visible:ring-offset-0';
+/** Inactive filter pill: hairline outline, quiet text (rule: no saturated chrome). */
+const filterBtnCls =
+  '!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[130px] justify-between text-xs font-medium hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]';
+/** Active filter pill: ink fill, white text. */
+const filterBtnActiveCls =
+  '!rounded-full !border !border-transparent !bg-[color:var(--ink)] !text-white min-w-[130px] justify-between text-xs font-medium hover:!bg-[color:var(--ink)] hover:!opacity-90';
+const thCls =
+  'text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]';
+
+function SortHeader({
+  label, field, sortField, sortAsc, onSort, className,
 }: {
-  journals: JournalEntry[];
-  formatTimeAgo: (d: Date) => string;
-}) => {
-  const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('All Categories');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [sortField, setSortField] = useState<keyof JournalEntry>('completedDate');
-  const [sortAsc, setSortAsc] = useState(false);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-
-  const filtered = journals
-    .filter(j => {
-      const q = search.toLowerCase();
-      const matchSearch = !q || j.title.toLowerCase().includes(q) || j.assistant.toLowerCase().includes(q) || j.description.toLowerCase().includes(q);
-      const matchCat    = categoryFilter === 'All Categories' || j.category === categoryFilter;
-      const matchStatus = statusFilter === 'All' || j.status === statusFilter;
-      return matchSearch && matchCat && matchStatus;
-    })
-    .sort((a, b) => {
-      const av = String(a[sortField] ?? '').toLowerCase();
-      const bv = String(b[sortField] ?? '').toLowerCase();
-      return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
-    });
-
-  const totalPages   = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const safePage     = Math.min(page, totalPages);
-  const paged        = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
-
-  const toggleSort = (field: keyof JournalEntry) => {
-    if (sortField === field) setSortAsc(a => !a);
-    else { setSortField(field); setSortAsc(true); }
-    setPage(1);
-  };
-
-  const SortIcon = ({ field }: { field: keyof JournalEntry }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
-  );
-
+  label: string;
+  field: string;
+  sortField: string;
+  sortAsc: boolean;
+  onSort: (f: string) => void;
+  className?: string;
+}) {
   return (
-    <div className="space-y-4">
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input
-            placeholder="Search journal…"
-            value={search}
-            onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="pl-11 rounded-full border-transparent bg-[#f1f3f4] placeholder:text-gray-500 focus-visible:border-[#8fc4e4] focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-[#8fc4e4]"
-          />
-        </div>
+    <th className={cn(thCls, className)} onClick={() => onSort(field)}>
+      {label}
+      <ArrowUpDown
+        className={cn(
+          'ml-1 inline h-3 w-3',
+          sortField === field
+            ? (sortAsc ? 'rotate-180 text-[color:var(--ink)]' : 'text-[color:var(--ink)]')
+            : 'text-[color:var(--text-5)] opacity-50',
+        )}
+      />
+    </th>
+  );
+}
 
+/** Numbered pagination + page-size picker, shared by both tables. */
+function TableFooter({
+  page, totalPages, onPage, pageSize, onPageSize, totalRows,
+}: {
+  page: number;
+  totalPages: number;
+  onPage: (p: number) => void;
+  pageSize: number;
+  onPageSize: (n: number) => void;
+  totalRows: number;
+}) {
+  // Window of at most 5 page numbers around the current one.
+  const start = Math.max(1, Math.min(page - 2, totalPages - 4));
+  const nums = Array.from({ length: Math.min(5, totalPages) }, (_, i) => start + i);
+  return (
+    <div
+      className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-2.5"
+      style={{ borderColor: 'var(--line-soft)' }}
+    >
+      <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--text-4)' }}>
+        <span>{totalRows} rows</span>
+        <span>·</span>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[140px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5">
-                <BookOpen className="h-3.5 w-3.5 text-gray-400" />
-                {categoryFilter === 'All Categories' ? 'Category' : categoryFilter}
-              </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-44">
-            {JOURNAL_CATEGORIES.map(c => (
-              <DropdownMenuItem key={c} onClick={() => { setCategoryFilter(c); setPage(1); }} className={cn(categoryFilter === c && 'font-medium')}>
-                {c}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[110px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5">
-                <Filter className="h-3.5 w-3.5 text-gray-400" />
-                {statusFilter === 'All' ? 'Status' : statusFilter}
-              </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
-            </Button>
+            <button
+              type="button"
+              className="flex items-center gap-1 rounded-full border px-2.5 py-1 font-medium transition-colors hover:bg-[rgba(20,22,26,0.04)]"
+              style={{ borderColor: 'var(--line)', color: 'var(--text-2)' }}
+            >
+              {pageSize} / page
+              <ChevronDown className="h-3 w-3" style={{ color: 'var(--text-5)' }} />
+            </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            {JOURNAL_STATUSES.map(s => (
-              <DropdownMenuItem key={s} onClick={() => { setStatusFilter(s); setPage(1); }} className={cn(statusFilter === s && 'font-medium')}>
-                {s === 'All' ? 'All Statuses' : s}
+            {[10, 25, 50].map(n => (
+              <DropdownMenuItem key={n} onClick={() => onPageSize(n)} className={cn(pageSize === n && 'font-medium')}>
+                {n} / page
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      {totalPages > 1 && (
+        <div className="flex items-center gap-1">
+          <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent !bg-transparent text-[color:var(--text-4)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={page === 1} onClick={() => onPage(page - 1)}>
+            <ChevronLeft className="h-3.5 w-3.5" />
+          </Button>
+          {nums.map(n => (
+            <Button
+              key={n}
+              variant="outline"
+              size="icon"
+              className={cn(
+                'h-7 w-7 text-xs !rounded-full',
+                n === page
+                  ? '!bg-[color:var(--ink)] !text-white !border-transparent hover:!opacity-90'
+                  : '!border-transparent !bg-transparent text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]',
+              )}
+              onClick={() => onPage(n)}
+            >
+              {n}
+            </Button>
+          ))}
+          <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent !bg-transparent text-[color:var(--text-4)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={page === totalPages} onClick={() => onPage(page + 1)}>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
 
-      {/* Table */}
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
+function FilterPill({
+  value, options, onSelect, allLabel,
+}: {
+  value: string;
+  options: string[];
+  onSelect: (v: string) => void;
+  allLabel: string;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className={value === 'All' ? filterBtnCls : filterBtnActiveCls}
+        >
+          <span className="flex items-center gap-1.5">
+            <Filter className="h-3.5 w-3.5 opacity-60" />
+            {value === 'All' ? allLabel : value}
+          </span>
+          <ChevronDown className="ml-2 h-3.5 w-3.5 opacity-60" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-44">
+        {options.map(o => (
+          <DropdownMenuItem key={o} onClick={() => onSelect(o)} className={cn(value === o && 'font-medium')}>
+            {o === 'All' ? `All ${allLabel.toLowerCase()}s` : o}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+/** One labelled row inside a detail modal. */
+function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 py-2.5">
+      <span className="shrink-0 text-xs" style={{ color: 'var(--text-4)' }}>{label}</span>
+      <span className="min-w-0 text-right text-sm" style={{ color: 'var(--ink)' }}>{children}</span>
+    </div>
+  );
+}
+
+/** Pretty-printed payload with a copy button — for metadata / action JSON. */
+function JsonBlock({ label, value }: { label: string; value: unknown }) {
+  const [copied, setCopied] = useState(false);
+  const text = JSON.stringify(value, null, 2);
+  return (
+    <div className="mt-4 border-t pt-3" style={{ borderColor: 'var(--line-soft)' }}>
+      <div className="mb-2 flex items-center justify-between">
+        <span className="plat-eyebrow">{label}</span>
+        <button
+          type="button"
+          onClick={async () => {
+            await navigator.clipboard.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1200);
+          }}
+          className="flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors hover:bg-[rgba(20,22,26,0.04)]"
+          style={{ borderColor: 'var(--line)', color: 'var(--text-2)' }}
+        >
+          {copied ? <Check className="h-3 w-3" style={{ color: 'var(--ok-fg)' }} /> : <Copy className="h-3 w-3" />}
+          Copy JSON
+        </button>
+      </div>
+      <pre
+        className="max-h-56 overflow-auto rounded-[10px] p-3 font-mono text-xs leading-relaxed"
+        style={{ background: 'var(--sand)', color: 'var(--text-1)' }}
+      >
+        {text}
+      </pre>
+    </div>
+  );
+}
+
+/** Full detail for one journal (audit) entry. */
+function JournalDetailModal({ entry, onClose }: { entry: AuditEntry; onClose: () => void }) {
+  const hasMeta = entry.metadata && Object.keys(entry.metadata).length > 0;
+  return (
+    <Dialog open onOpenChange={o => !o && onClose()}>
+      <DialogContent className="max-w-xl gap-0 rounded-[14px] p-0" style={{ borderColor: 'var(--line-soft)' }}>
+        <div className="border-b px-6 py-4" style={{ borderColor: 'var(--line-soft)' }}>
+          <DialogTitle className="flex flex-wrap items-center gap-2.5 text-base font-semibold" style={{ color: 'var(--ink)' }}>
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-[10px]"
+              style={{ background: 'var(--sand)' }}
+            >
+              <Bot className="h-4 w-4" style={{ color: entry.approved ? 'var(--ink)' : 'var(--bad-fg)' }} />
+            </div>
+            {entry.tool ?? entry.action}
+            <span
+              className={cn('plat-pill', entry.approved && 'plat-pill-ok')}
+              style={
+                entry.approved
+                  ? undefined
+                  : { background: 'rgba(179,56,46,0.1)', color: 'var(--bad-fg)' }
+              }
+            >
+              {entry.approved ? 'Succeeded' : 'Failed'}
+            </span>
+          </DialogTitle>
+        </div>
+        <div className="max-h-[70vh] overflow-y-auto px-6 py-4">
+          {entry.input_summary && (
+            <div className="mb-3 rounded-[10px] px-4 py-3" style={{ background: 'var(--sand)' }}>
+              <p className="plat-eyebrow mb-1">Input</p>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{entry.input_summary}</p>
+            </div>
+          )}
+          {entry.output_summary && (
+            <div className="mb-3 rounded-[10px] px-4 py-3" style={{ background: 'var(--sand)' }}>
+              <p className="plat-eyebrow mb-1">Output</p>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{entry.output_summary}</p>
+            </div>
+          )}
+          <div className="divide-y divide-[color:var(--line-soft)]">
+            <DetailRow label="Action type">{entry.action}</DetailRow>
+            {entry.tool && <DetailRow label="Tool"><span className="font-mono text-xs">{entry.tool}</span></DetailRow>}
+            <DetailRow label="When">{fmtWhen(entry.timestamp)} <span style={{ color: 'var(--text-4)' }}>({timeAgo(entry.timestamp)})</span></DetailRow>
+            <DetailRow label="Cost">{fmtUsd(entry.cost_usd)}</DetailRow>
+            <DetailRow label="Duration">{fmtDurationMs(entry.duration_ms)}</DetailRow>
+            <DetailRow label="User"><span className="font-mono text-xs">{entry.user_id || '—'}</span></DetailRow>
+            <DetailRow label="Entry id"><span className="font-mono text-xs">{entry.id}</span></DetailRow>
+          </div>
+          {hasMeta && <JsonBlock label="Metadata" value={entry.metadata} />}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/** Full detail for one scheduled task. */
+function ScheduleDetailModal({ task, onClose }: { task: ScheduledTask; onClose: () => void }) {
+  const hasAction = task.action && Object.keys(task.action).length > 0;
+  return (
+    <Dialog open onOpenChange={o => !o && onClose()}>
+      <DialogContent className="max-w-xl gap-0 rounded-[14px] p-0" style={{ borderColor: 'var(--line-soft)' }}>
+        <div className="border-b px-6 py-4" style={{ borderColor: 'var(--line-soft)' }}>
+          <DialogTitle className="flex flex-wrap items-center gap-2.5 text-base font-semibold" style={{ color: 'var(--ink)' }}>
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-[10px]"
+              style={{ background: 'var(--sand)' }}
+            >
+              <CalendarClock className="h-4 w-4" style={{ color: 'var(--ink)' }} />
+            </div>
+            {task.name}
+            <span className={cn('plat-pill', task.enabled ? 'plat-pill-ok' : 'plat-pill-mute')}>
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ background: task.enabled ? 'var(--ok-fg)' : 'var(--text-5)' }}
+              />
+              {task.enabled ? 'Enabled' : 'Disabled'}
+            </span>
+          </DialogTitle>
+        </div>
+        <div className="max-h-[70vh] overflow-y-auto px-6 py-4">
+          <div className="divide-y divide-[color:var(--line-soft)]">
+            <DetailRow label="Kind">{task.kind === 'recurring' ? 'Recurring' : 'One-time'}</DetailRow>
+            <DetailRow label="Schedule"><span className="font-mono text-xs">{task.cron_expr}</span></DetailRow>
+            <DetailRow label="Timezone">{task.timezone}</DetailRow>
+            <DetailRow label="Delivers via">{task.channel}</DetailRow>
+            <DetailRow label="Next run">{fmtWhen(task.next_run_at)}</DetailRow>
+            <DetailRow label="Last run">{fmtWhen(task.last_run_at)}</DetailRow>
+            {task.created_at && <DetailRow label="Created">{fmtWhen(task.created_at)}</DetailRow>}
+            {task.updated_at && <DetailRow label="Updated">{fmtWhen(task.updated_at)}</DetailRow>}
+            <DetailRow label="Task id"><span className="font-mono text-xs">{String(task.id)}</span></DetailRow>
+          </div>
+          {hasAction && <JsonBlock label="Action payload — what runs when it fires" value={task.action} />}
+          <p
+            className="mt-4 rounded-[10px] px-4 py-3 text-xs leading-relaxed"
+            style={{ background: 'var(--sand)', color: 'var(--text-3)' }}
+          >
+            Schedules are managed conversationally — ask in Chat to change or cancel this task
+            ("move my morning briefing to 8am", "delete the invoice reminder").
+          </p>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ConnectStrip() {
+  return (
+    <div className="plat-panel mb-6 flex flex-wrap items-center gap-3 !py-3.5">
+      <Plug className="h-4 w-4 shrink-0" style={{ color: 'var(--text-5)' }} />
+      <p className="flex-1 text-xs" style={{ color: 'var(--text-3)' }}>
+        Not connected to a Pincer backend — scheduled tasks and the journal are empty. Connect
+        this browser with the shared bearer token to see the real data.
+      </p>
+      <Link to="/login" className="plat-btn !h-8 !px-4 !text-xs">
+        Connect (Login → Token)
+      </Link>
+    </div>
+  );
+}
+
+// ── Scheduled (REAL: /api/schedules) ─────────────────────────────────
+
+function ScheduledTable() {
+  const { data, isLoading } = useSchedules(true);
+  const [search, setSearch] = useState('');
+  const [kind, setKind] = useState('All');
+  const [status, setStatus] = useState('All');
+  const [channel, setChannel] = useState('All');
+  const [sortField, setSortField] = useState('next');
+  const [sortAsc, setSortAsc] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [selected, setSelected] = useState<ScheduledTask | null>(null);
+
+  const channels = useMemo(
+    () => ['All', ...Array.from(new Set((data?.tasks ?? []).map(t => t.channel))).sort()],
+    [data],
+  );
+
+  const onSort = (f: string) => {
+    if (sortField === f) setSortAsc(a => !a);
+    else { setSortField(f); setSortAsc(true); }
+    setPage(1);
+  };
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const key = (t: ScheduledTask) =>
+      sortField === 'name' ? t.name.toLowerCase()
+      : sortField === 'last' ? (t.last_run_at ?? '')
+      : (t.next_run_at ?? '9999');
+    return (data?.tasks ?? [])
+      .filter(t => {
+        if (kind !== 'All' && (kind === 'Recurring') !== (t.kind === 'recurring')) return false;
+        if (status !== 'All' && (status === 'Enabled') !== t.enabled) return false;
+        if (channel !== 'All' && t.channel !== channel) return false;
+        if (q && !`${t.name} ${t.channel} ${t.cron_expr}`.toLowerCase().includes(q)) return false;
+        return true;
+      })
+      .sort((a, b) => {
+        const cmp = key(a).localeCompare(key(b));
+        return sortAsc ? cmp : -cmp;
+      });
+  }, [data, search, kind, status, channel, sortField, sortAsc]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(page, totalPages);
+  const paged = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
+  const hasFilters = search !== '' || kind !== 'All' || status !== 'All' || channel !== 'All';
+  const clearFilters = () => {
+    setSearch(''); setKind('All'); setStatus('All'); setChannel('All'); setPage(1);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative min-w-[180px] flex-1">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: 'var(--text-5)' }} />
+          <Input
+            placeholder="Search scheduled tasks…"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setPage(1); }}
+            className={searchInputCls}
+          />
+        </div>
+        <FilterPill value={kind} options={['All', 'Recurring', 'One-time']} onSelect={v => { setKind(v); setPage(1); }} allLabel="Kind" />
+        <FilterPill value={status} options={['All', 'Enabled', 'Disabled']} onSelect={v => { setStatus(v); setPage(1); }} allLabel="Status" />
+        <FilterPill value={channel} options={channels} onSelect={v => { setChannel(v); setPage(1); }} allLabel="Channel" />
+        <span className="ml-auto text-xs" style={{ color: 'var(--text-4)' }}>
+          {data ? `${filtered.length} of ${data.tasks.length}` : ''}
+          {hasFilters && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="ml-2 font-medium underline-offset-2 hover:underline"
+              style={{ color: 'var(--ink)' }}
+            >
+              Clear filters
+            </button>
+          )}
+        </span>
+      </div>
+
+      <Card className="overflow-hidden rounded-[14px] border-[color:var(--line-soft)] bg-[color:var(--paper)] shadow-none">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th
-                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900"
-                  onClick={() => toggleSort('title')}
-                >
-                  Task <SortIcon field="title" />
-                </th>
-                <th
-                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900"
-                  onClick={() => toggleSort('status')}
-                >
-                  Status <SortIcon field="status" />
-                </th>
-                <th
-                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900"
-                  onClick={() => toggleSort('category')}
-                >
-                  Category <SortIcon field="category" />
-                </th>
-                <th
-                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell"
-                  onClick={() => toggleSort('assistant')}
-                >
-                  Assistant <SortIcon field="assistant" />
-                </th>
-                <th
-                  className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell"
-                  onClick={() => toggleSort('completedDate')}
-                >
-                  Completed <SortIcon field="completedDate" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Duration</th>
-                <th className="w-10 px-4 py-3" />
+              <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                <SortHeader label="Task" field="name" sortField={sortField} sortAsc={sortAsc} onSort={onSort} />
+                <th className={thCls}>Kind</th>
+                <th className={cn(thCls, 'hidden md:table-cell')}>Channel</th>
+                <SortHeader label="Next run" field="next" sortField={sortField} sortAsc={sortAsc} onSort={onSort} />
+                <SortHeader label="Last run" field="last" sortField={sortField} sortAsc={sortAsc} onSort={onSort} className="hidden lg:table-cell" />
+                <th className={thCls}>Status</th>
               </tr>
             </thead>
             <tbody>
-              {paged.length === 0 ? (
+              {isLoading ? (
+                <tr><td colSpan={6} className="px-4 py-12 text-center text-sm" style={{ color: 'var(--text-4)' }}>Loading…</td></tr>
+              ) : paged.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-gray-400 text-sm">
-                    No journal entries match your filters.
+                  <td colSpan={6} className="px-4 py-12 text-center text-sm" style={{ color: 'var(--text-4)' }}>
+                    {data?.tasks.length ? 'Nothing matches the current filters.' : 'No scheduled tasks yet — create one from Chat ("remind me…", "every morning…").'}
                   </td>
                 </tr>
               ) : (
-                paged.map(task => (
-                  <tr key={task.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                paged.map((t: ScheduledTask) => (
+                  <tr
+                    key={t.id}
+                    onClick={() => setSelected(t)}
+                    className="cursor-pointer border-b border-[color:var(--line-soft)] transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]"
+                  >
                     <td className="px-4 py-3">
-                      <div className="flex items-center space-x-3">
-                        <div className={`p-2 rounded-lg bg-gradient-to-br ${task.bgColor} flex-shrink-0`}>
-                          <task.icon className={`h-4 w-4 ${task.iconColor}`} />
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px]"
+                          style={{ background: 'var(--sand)' }}
+                        >
+                          <CalendarClock className="h-4 w-4" style={{ color: 'var(--ink)' }} />
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-gray-900 truncate">{task.title}</p>
-                          <p className="text-xs text-gray-500 truncate">{task.description}</p>
+                          <p className="truncate font-medium" style={{ color: 'var(--ink)' }}>{t.name}</p>
+                          <p className="truncate font-mono text-xs" style={{ color: 'var(--text-4)' }}>{t.cron_expr} · {t.timezone}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', JOURNAL_STATUS_STYLE[task.status] ?? 'bg-gray-100 text-gray-500 border-gray-200')}>
-                        {task.status}
+                      <span
+                        className="inline-flex rounded-full border px-2 py-0.5 text-xs font-medium"
+                        style={{ borderColor: 'var(--line)', color: 'var(--text-2)' }}
+                      >
+                        {t.kind === 'recurring' ? 'Recurring' : 'One-time'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-700">{task.category}</td>
-                    <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="flex items-center gap-1.5 text-gray-600 text-xs">
-                        <Bot className="h-3.5 w-3.5 text-gray-400" />
-                        {task.assistant}
+                    <td className="hidden px-4 py-3 md:table-cell">
+                      <span className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-3)' }}>
+                        <MessageSquare className="h-3.5 w-3.5" style={{ color: 'var(--text-5)' }} />
+                        {t.channel}
                       </span>
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell">
-                      <span className="text-xs text-gray-500 flex items-center gap-1">
-                        <Clock className="h-3 w-3 text-gray-400" />
-                        {formatTimeAgo(task.completedDate)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-xs text-gray-500">{task.duration}</td>
+                    <td className="px-4 py-3 text-xs" style={{ color: 'var(--text-2)' }}>{fmtWhen(t.next_run_at)}</td>
+                    <td className="hidden px-4 py-3 text-xs lg:table-cell" style={{ color: 'var(--text-4)' }}>{fmtWhen(t.last_run_at)}</td>
                     <td className="px-4 py-3">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Eye className="h-4 w-4 mr-2" />View Report
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <FileText className="h-4 w-4 mr-2" />Export
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <span className={cn('plat-pill', t.enabled ? 'plat-pill-ok' : 'plat-pill-mute')}>
+                        <span
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{ background: t.enabled ? 'var(--ok-fg)' : 'var(--text-5)' }}
+                        />
+                        {t.enabled ? 'Enabled' : 'Disabled'}
+                      </span>
                     </td>
                   </tr>
                 ))
@@ -243,91 +532,236 @@ const JournalTable = ({
             </tbody>
           </table>
         </div>
-
-        {/* Footer */}
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
-          <div className="flex items-center gap-3">
-            <span>
-              {filtered.length > 0
-                ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} entries`
-                : '0 entries'}
-            </span>
-            <div className="flex items-center gap-1.5">
-              <span className="text-gray-400">Rows:</span>
-              <select
-                value={pageSize}
-                onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-                className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
-              >
-                {[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}
-              </select>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {(categoryFilter !== 'All Categories' || statusFilter !== 'All' || search) && (
-              <button
-                className="text-gray-500 hover:text-gray-900 underline underline-offset-2"
-                onClick={() => { setSearch(''); setCategoryFilter('All Categories'); setStatusFilter('All'); setPage(1); }}
-              >
-                Clear filters
-              </button>
-            )}
-            {totalPages > 1 && (
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="outline" size="icon"
-                  className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700"
-                  disabled={safePage === 1}
-                  onClick={() => setPage(p => p - 1)}
-                >
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                  <Button
-                    key={p}
-                    variant="outline"
-                    size="icon"
-                    className={cn(
-                      'h-7 w-7 text-xs !rounded-full',
-                      p === safePage
-                        ? '!bg-[#bdd8ec] !text-gray-800 !border-transparent hover:!bg-[#a5c8e0]'
-                        : '!border-transparent text-gray-600 hover:!bg-gray-100 hover:!text-gray-700'
-                    )}
-                    onClick={() => setPage(p)}
-                  >
-                    {p}
-                  </Button>
-                ))}
-                <Button
-                  variant="outline" size="icon"
-                  className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700"
-                  disabled={safePage === totalPages}
-                  onClick={() => setPage(p => p + 1)}
-                >
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
+        {filtered.length > 0 && (
+          <TableFooter
+            page={safePage}
+            totalPages={totalPages}
+            onPage={setPage}
+            pageSize={pageSize}
+            onPageSize={n => { setPageSize(n); setPage(1); }}
+            totalRows={filtered.length}
+          />
+        )}
       </Card>
+
+      {selected && <ScheduleDetailModal task={selected} onClose={() => setSelected(null)} />}
     </div>
   );
-};
+}
 
-type ActiveTask = {
-  id: number;
-  title: string;
-  assistant: string;
-  description: string;
-  priority: string;
-  category: string;
-  progress: number;
-  assignedDate: Date;
-  icon: React.ElementType;
-  iconColor: string;
-  bgColor: string;
-};
+// ── Journal (REAL: /api/audit) ───────────────────────────────────────
+
+function JournalTable() {
+  // API max is 500 — deep enough for real client-side paging.
+  const { data, isLoading } = useRecentAudit(500);
+  const [search, setSearch] = useState('');
+  const [action, setAction] = useState('All');
+  const [result, setResult] = useState('All');
+  const [range, setRange] = useState('All');
+  const [sortField, setSortField] = useState('when');
+  const [sortAsc, setSortAsc] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [selected, setSelected] = useState<AuditEntry | null>(null);
+
+  const actions = useMemo(
+    () => ['All', ...Array.from(new Set((data?.entries ?? []).map(e => e.action))).sort()],
+    [data],
+  );
+
+  const RANGE_MS: Record<string, number> = {
+    'Last 24h': 24 * 3600_000,
+    'Last 7 days': 7 * 24 * 3600_000,
+    'Last 30 days': 30 * 24 * 3600_000,
+  };
+
+  const onSort = (f: string) => {
+    if (sortField === f) setSortAsc(a => !a);
+    else { setSortField(f); setSortAsc(f !== 'when'); }
+    setPage(1);
+  };
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const now = Date.now();
+    const key = (e: AuditEntry): number | string =>
+      sortField === 'cost' ? (e.cost_usd ?? -1)
+      : sortField === 'duration' ? (e.duration_ms ?? -1)
+      : e.timestamp;
+    return (data?.entries ?? [])
+      .filter(e => {
+        if (action !== 'All' && e.action !== action) return false;
+        if (result !== 'All' && (result === 'Succeeded') !== e.approved) return false;
+        if (range !== 'All' && now - new Date(e.timestamp).getTime() > RANGE_MS[range]) return false;
+        if (q) {
+          const hay = `${e.action} ${e.tool ?? ''} ${e.input_summary ?? ''} ${e.output_summary ?? ''}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        const av = key(a); const bv = key(b);
+        const cmp = typeof av === 'number' && typeof bv === 'number' ? av - bv : String(av).localeCompare(String(bv));
+        return sortAsc ? cmp : -cmp;
+      });
+  }, [data, search, action, result, range, sortField, sortAsc]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(page, totalPages);
+  const paged = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
+  const hasFilters = search !== '' || action !== 'All' || result !== 'All' || range !== 'All';
+  const clearFilters = () => {
+    setSearch(''); setAction('All'); setResult('All'); setRange('All'); setPage(1);
+  };
+
+  // Export exactly what the current filters show — the journal is an audit
+  // trail, and "give me this as a file" is a real request.
+  const exportCsv = () => {
+    const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+    const rows = [
+      ['timestamp', 'action', 'tool', 'input', 'output', 'result', 'cost_usd', 'duration_ms'],
+      ...filtered.map(e => [
+        e.timestamp, e.action, e.tool ?? '', e.input_summary ?? '', e.output_summary ?? '',
+        e.approved ? 'succeeded' : 'failed', e.cost_usd ?? '', e.duration_ms ?? '',
+      ]),
+    ];
+    const blob = new Blob([rows.map(r => r.map(esc).join(',')).join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `task-journal-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative min-w-[180px] flex-1">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: 'var(--text-5)' }} />
+          <Input
+            placeholder="Search the journal…"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setPage(1); }}
+            className={searchInputCls}
+          />
+        </div>
+        <FilterPill value={action} options={actions} onSelect={v => { setAction(v); setPage(1); }} allLabel="Action" />
+        <FilterPill value={result} options={['All', 'Succeeded', 'Failed']} onSelect={v => { setResult(v); setPage(1); }} allLabel="Result" />
+        <FilterPill value={range} options={['All', 'Last 24h', 'Last 7 days', 'Last 30 days']} onSelect={v => { setRange(v); setPage(1); }} allLabel="Time" />
+        <Button variant="outline" size="sm" className={cn(filterBtnCls, '!min-w-0')} onClick={exportCsv} disabled={!filtered.length}>
+          <span className="flex items-center gap-1.5">
+            <Download className="h-3.5 w-3.5 opacity-60" />
+            Export CSV
+          </span>
+        </Button>
+        <span className="ml-auto text-xs" style={{ color: 'var(--text-4)' }}>
+          {data ? `${filtered.length} of ${data.total} all-time` : ''}
+          {hasFilters && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="ml-2 font-medium underline-offset-2 hover:underline"
+              style={{ color: 'var(--ink)' }}
+            >
+              Clear filters
+            </button>
+          )}
+        </span>
+      </div>
+
+      <Card className="overflow-hidden rounded-[14px] border-[color:var(--line-soft)] bg-[color:var(--paper)] shadow-none">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                <th className={thCls}>Action</th>
+                <th className={cn(thCls, 'hidden md:table-cell')}>Result</th>
+                <SortHeader label="Cost" field="cost" sortField={sortField} sortAsc={sortAsc} onSort={onSort} className="hidden lg:table-cell" />
+                <SortHeader label="Duration" field="duration" sortField={sortField} sortAsc={sortAsc} onSort={onSort} className="hidden lg:table-cell" />
+                <SortHeader label="When" field="when" sortField={sortField} sortAsc={sortAsc} onSort={onSort} />
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr><td colSpan={5} className="px-4 py-12 text-center text-sm" style={{ color: 'var(--text-4)' }}>Loading…</td></tr>
+              ) : paged.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-12 text-center text-sm" style={{ color: 'var(--text-4)' }}>
+                    {data?.entries.length ? 'Nothing matches the current filters.' : 'No actions logged yet.'}
+                  </td>
+                </tr>
+              ) : (
+                paged.map((e: AuditEntry) => (
+                  <tr
+                    key={e.id}
+                    onClick={() => setSelected(e)}
+                    className="cursor-pointer border-b border-[color:var(--line-soft)] transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]"
+                  >
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px]"
+                          style={{ background: 'var(--sand)' }}
+                        >
+                          <Bot className="h-4 w-4" style={{ color: e.approved ? 'var(--ink)' : 'var(--bad-fg)' }} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate font-medium" style={{ color: 'var(--ink)' }}>
+                            {e.tool ?? e.action}
+                          </p>
+                          <p className="truncate text-xs" style={{ color: 'var(--text-3)' }}>
+                            {e.input_summary ?? e.action}
+                            {e.output_summary && <span style={{ color: 'var(--text-5)' }}> → {e.output_summary}</span>}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="hidden px-4 py-3 md:table-cell">
+                      <span
+                        className={cn('plat-pill', e.approved && 'plat-pill-ok')}
+                        style={
+                          e.approved
+                            ? undefined
+                            : { background: 'rgba(179,56,46,0.1)', color: 'var(--bad-fg)' }
+                        }
+                      >
+                        {e.approved ? 'Succeeded' : 'Failed'}
+                      </span>
+                    </td>
+                    <td className="hidden px-4 py-3 text-xs lg:table-cell" style={{ color: 'var(--text-3)' }}>{fmtUsd(e.cost_usd)}</td>
+                    <td className="hidden px-4 py-3 text-xs lg:table-cell" style={{ color: 'var(--text-3)' }}>{fmtDurationMs(e.duration_ms)}</td>
+                    <td className="px-4 py-3">
+                      <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--text-4)' }}>
+                        <Clock className="h-3 w-3" style={{ color: 'var(--text-5)' }} />
+                        {timeAgo(e.timestamp)}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        {filtered.length > 0 && (
+          <TableFooter
+            page={safePage}
+            totalPages={totalPages}
+            onPage={setPage}
+            pageSize={pageSize}
+            onPageSize={n => { setPageSize(n); setPage(1); }}
+            totalRows={filtered.length}
+          />
+        )}
+      </Card>
+
+      {selected && <JournalDetailModal entry={selected} onClose={() => setSelected(null)} />}
+    </div>
+  );
+}
+
+// ── Approvals (still mocked — badged) ────────────────────────────────
 
 type PendingTask = {
   id: number;
@@ -335,7 +769,6 @@ type PendingTask = {
   assistant: string;
   description: string;
   priority: string;
-  category: string;
   timestamp: Date;
   icon: React.ElementType;
   iconColor: string;
@@ -343,495 +776,24 @@ type PendingTask = {
 };
 
 const PRIORITY_STYLE: Record<string, string> = {
-  High:   'bg-red-100 text-red-700 border-red-200',
-  Medium: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  Low:    'bg-green-100 text-green-700 border-green-200',
+  High: 'bg-[rgba(179,56,46,0.1)] text-[color:var(--bad-fg)]',
+  Medium: 'plat-pill-warn',
+  Low: 'plat-pill-mute',
 };
 
-const TASK_CATEGORIES = ['All Categories', 'Finance', 'HR', 'Marketing', 'Support', 'Research', 'Operations'];
-const PRIORITIES      = ['All', 'High', 'Medium', 'Low'];
-
-const ActiveTasksTable = ({
-  tasks,
-  formatTimeAgo,
-}: {
-  tasks: ActiveTask[];
-  formatTimeAgo: (d: Date) => string;
-}) => {
-  const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('All Categories');
-  const [priorityFilter, setPriorityFilter] = useState('All');
-  const [sortField, setSortField] = useState<keyof ActiveTask>('assignedDate');
-  const [sortAsc, setSortAsc] = useState(false);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-
-  const filtered = tasks
-    .filter(t => {
-      const q = search.toLowerCase();
-      const matchSearch = !q || t.title.toLowerCase().includes(q) || t.assistant.toLowerCase().includes(q) || t.description.toLowerCase().includes(q);
-      const matchCat  = categoryFilter === 'All Categories' || t.category === categoryFilter;
-      const matchPri  = priorityFilter === 'All' || t.priority === priorityFilter;
-      return matchSearch && matchCat && matchPri;
-    })
-    .sort((a, b) => {
-      const av = String(a[sortField] ?? '').toLowerCase();
-      const bv = String(b[sortField] ?? '').toLowerCase();
-      return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
-    });
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const safePage   = Math.min(page, totalPages);
-  const paged      = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
-
-  const toggleSort = (field: keyof ActiveTask) => {
-    if (sortField === field) setSortAsc(a => !a);
-    else { setSortField(field); setSortAsc(true); }
-    setPage(1);
-  };
-
-  const SortIcon = ({ field }: { field: keyof ActiveTask }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
-  );
-
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input
-            placeholder="Search tasks…"
-            value={search}
-            onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="pl-11 rounded-full border-transparent bg-[#f1f3f4] placeholder:text-gray-500 focus-visible:border-[#8fc4e4] focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-[#8fc4e4]"
-          />
-        </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[140px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5">
-                <Filter className="h-3.5 w-3.5 text-gray-400" />
-                {categoryFilter === 'All Categories' ? 'Category' : categoryFilter}
-              </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-44">
-            {TASK_CATEGORIES.map(c => (
-              <DropdownMenuItem key={c} onClick={() => { setCategoryFilter(c); setPage(1); }} className={cn(categoryFilter === c && 'font-medium')}>
-                {c}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[110px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5">
-                <Filter className="h-3.5 w-3.5 text-gray-400" />
-                {priorityFilter === 'All' ? 'Priority' : priorityFilter}
-              </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            {PRIORITIES.map(p => (
-              <DropdownMenuItem key={p} onClick={() => { setPriorityFilter(p); setPage(1); }} className={cn(priorityFilter === p && 'font-medium')}>
-                {p === 'All' ? 'All Priorities' : p}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('title')}>
-                  Task <SortIcon field="title" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('priority')}>
-                  Priority <SortIcon field="priority" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('category')}>
-                  Category <SortIcon field="category" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('assistant')}>
-                  Assistant <SortIcon field="assistant" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Progress</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('assignedDate')}>
-                  Started <SortIcon field="assignedDate" />
-                </th>
-                <th className="w-10 px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {paged.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-gray-400 text-sm">
-                    No active tasks match your filters.
-                  </td>
-                </tr>
-              ) : (
-                paged.map(task => (
-                  <tr key={task.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center space-x-3">
-                        <div className={`p-2 rounded-lg bg-gradient-to-br ${task.bgColor} flex-shrink-0`}>
-                          <task.icon className={`h-4 w-4 ${task.iconColor}`} />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-medium text-gray-900 truncate">{task.title}</p>
-                          <p className="text-xs text-gray-500 truncate">{task.description}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', PRIORITY_STYLE[task.priority] ?? 'bg-gray-100 text-gray-500 border-gray-200')}>
-                        {task.priority}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-gray-700">{task.category}</td>
-                    <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="flex items-center gap-1.5 text-gray-600 text-xs">
-                        <Bot className="h-3.5 w-3.5 text-gray-400" />
-                        {task.assistant}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 hidden lg:table-cell">
-                      <div className="flex items-center gap-2 min-w-[100px]">
-                        <div className="flex-1 bg-gray-200 rounded-full h-1.5">
-                          <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${task.progress}%` }} />
-                        </div>
-                        <span className="text-xs text-gray-500 whitespace-nowrap">{task.progress}%</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 hidden lg:table-cell">
-                      <span className="text-xs text-gray-500 flex items-center gap-1">
-                        <Clock className="h-3 w-3 text-gray-400" />
-                        {formatTimeAgo(task.assignedDate)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <PlayCircle className="h-4 w-4 mr-2" />View Progress
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Eye className="h-4 w-4 mr-2" />View Details
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
-          <div className="flex items-center gap-3">
-            <span>
-              {filtered.length > 0
-                ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} tasks`
-                : '0 tasks'}
-            </span>
-            <div className="flex items-center gap-1.5">
-              <span className="text-gray-400">Rows:</span>
-              <select
-                value={pageSize}
-                onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-                className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
-              >
-                {[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}
-              </select>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {(categoryFilter !== 'All Categories' || priorityFilter !== 'All' || search) && (
-              <button
-                className="text-gray-500 hover:text-gray-900 underline underline-offset-2"
-                onClick={() => { setSearch(''); setCategoryFilter('All Categories'); setPriorityFilter('All'); setPage(1); }}
-              >
-                Clear filters
-              </button>
-            )}
-            {totalPages > 1 && (
-              <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                  <Button key={p} variant="outline" size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[#bdd8ec] !text-gray-800 !border-transparent hover:!bg-[#a5c8e0]' : '!border-transparent text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
-                    {p}
-                  </Button>
-                ))}
-                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-};
-
-const ApprovalsTable = ({
-  tasks,
-  formatTimeAgo,
-  onApprove,
-  onReject,
-}: {
-  tasks: PendingTask[];
-  formatTimeAgo: (d: Date) => string;
-  onApprove: (id: number) => void;
-  onReject: (id: number) => void;
-}) => {
-  const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('All Categories');
-  const [priorityFilter, setPriorityFilter] = useState('All');
-  const [sortField, setSortField] = useState<keyof PendingTask>('timestamp');
-  const [sortAsc, setSortAsc] = useState(false);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-
-  const filtered = tasks
-    .filter(t => {
-      const q = search.toLowerCase();
-      const matchSearch = !q || t.title.toLowerCase().includes(q) || t.assistant.toLowerCase().includes(q) || t.description.toLowerCase().includes(q);
-      const matchCat  = categoryFilter === 'All Categories' || t.category === categoryFilter;
-      const matchPri  = priorityFilter === 'All' || t.priority === priorityFilter;
-      return matchSearch && matchCat && matchPri;
-    })
-    .sort((a, b) => {
-      const av = String(a[sortField] ?? '').toLowerCase();
-      const bv = String(b[sortField] ?? '').toLowerCase();
-      return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
-    });
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const safePage   = Math.min(page, totalPages);
-  const paged      = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
-
-  const toggleSort = (field: keyof PendingTask) => {
-    if (sortField === field) setSortAsc(a => !a);
-    else { setSortField(field); setSortAsc(true); }
-    setPage(1);
-  };
-
-  const SortIcon = ({ field }: { field: keyof PendingTask }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
-  );
-
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input
-            placeholder="Search approvals…"
-            value={search}
-            onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="pl-11 rounded-full border-transparent bg-[#f1f3f4] placeholder:text-gray-500 focus-visible:border-[#8fc4e4] focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-[#8fc4e4]"
-          />
-        </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[140px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5">
-                <Filter className="h-3.5 w-3.5 text-gray-400" />
-                {categoryFilter === 'All Categories' ? 'Category' : categoryFilter}
-              </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-44">
-            {TASK_CATEGORIES.map(c => (
-              <DropdownMenuItem key={c} onClick={() => { setCategoryFilter(c); setPage(1); }} className={cn(categoryFilter === c && 'font-medium')}>
-                {c}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="!rounded-full !border-transparent bg-[#f1f3f4] text-gray-700 min-w-[110px] justify-between text-xs font-medium hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5">
-                <Filter className="h-3.5 w-3.5 text-gray-400" />
-                {priorityFilter === 'All' ? 'Priority' : priorityFilter}
-              </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            {PRIORITIES.map(p => (
-              <DropdownMenuItem key={p} onClick={() => { setPriorityFilter(p); setPage(1); }} className={cn(priorityFilter === p && 'font-medium')}>
-                {p === 'All' ? 'All Priorities' : p}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('title')}>
-                  Task <SortIcon field="title" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('priority')}>
-                  Priority <SortIcon field="priority" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('category')}>
-                  Category <SortIcon field="category" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('assistant')}>
-                  Assistant <SortIcon field="assistant" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('timestamp')}>
-                  Received <SortIcon field="timestamp" />
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paged.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">
-                    No pending approvals match your filters.
-                  </td>
-                </tr>
-              ) : (
-                paged.map(task => (
-                  <tr key={task.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center space-x-3">
-                        <div className={`p-2 rounded-lg bg-gradient-to-br ${task.bgColor} flex-shrink-0`}>
-                          <task.icon className={`h-4 w-4 ${task.iconColor}`} />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-medium text-gray-900 truncate">{task.title}</p>
-                          <p className="text-xs text-gray-500 truncate">{task.description}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', PRIORITY_STYLE[task.priority] ?? 'bg-gray-100 text-gray-500 border-gray-200')}>
-                        {task.priority}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-gray-700">{task.category}</td>
-                    <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="flex items-center gap-1.5 text-gray-600 text-xs">
-                        <Bot className="h-3.5 w-3.5 text-gray-400" />
-                        {task.assistant}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 hidden lg:table-cell">
-                      <span className="text-xs text-gray-500 flex items-center gap-1">
-                        <Clock className="h-3 w-3 text-gray-400" />
-                        {formatTimeAgo(task.timestamp)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <Button onClick={() => onApprove(task.id)} size="sm" className="bg-green-600 hover:bg-green-700 text-white h-7 px-2.5 text-xs">
-                          <CheckCircle className="h-3.5 w-3.5 mr-1" />Approve
-                        </Button>
-                        <Button onClick={() => onReject(task.id)} variant="outline" size="sm" className="border-red-200 text-red-600 hover:bg-red-50 h-7 px-2.5 text-xs">
-                          <XCircle className="h-3.5 w-3.5 mr-1" />Reject
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
-          <div className="flex items-center gap-3">
-            <span>
-              {filtered.length > 0
-                ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} approvals`
-                : '0 approvals'}
-            </span>
-            <div className="flex items-center gap-1.5">
-              <span className="text-gray-400">Rows:</span>
-              <select
-                value={pageSize}
-                onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-                className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
-              >
-                {[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}
-              </select>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {(categoryFilter !== 'All Categories' || priorityFilter !== 'All' || search) && (
-              <button
-                className="text-gray-500 hover:text-gray-900 underline underline-offset-2"
-                onClick={() => { setSearch(''); setCategoryFilter('All Categories'); setPriorityFilter('All'); setPage(1); }}
-              >
-                Clear filters
-              </button>
-            )}
-            {totalPages > 1 && (
-              <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                  <Button key={p} variant="outline" size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[#bdd8ec] !text-gray-800 !border-transparent hover:!bg-[#a5c8e0]' : '!border-transparent text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
-                    {p}
-                  </Button>
-                ))}
-                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-transparent text-gray-500 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-};
-
-const Tasks = () => {
+function ApprovalsMock() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<TabKey>('approvals');
-  const [pendingTasks, setPendingTasks] = useState([
+  const [pendingTasks, setPendingTasks] = useState<PendingTask[]>([
     {
       id: 1,
       title: 'Customer Refund Request - $150',
       assistant: 'Emma (Sales Assistant)',
       description: 'Customer requesting refund for Order #12345 due to product defect',
       priority: 'High',
-      category: 'Finance',
       timestamp: new Date(Date.now() - 1000 * 60 * 30),
       icon: DollarSign,
       iconColor: 'text-red-600',
-      bgColor: 'from-red-100 to-pink-100'
+      bgColor: 'from-red-100 to-pink-100',
     },
     {
       id: 2,
@@ -839,139 +801,131 @@ const Tasks = () => {
       assistant: 'Aria (HR Assistant)',
       description: 'Approve onboarding checklist for John Smith starting Monday',
       priority: 'Medium',
-      category: 'HR',
       timestamp: new Date(Date.now() - 1000 * 60 * 45),
       icon: Users,
       iconColor: 'text-blue-600',
-      bgColor: 'from-blue-100 to-cyan-100'
-    }
+      bgColor: 'from-blue-100 to-cyan-100',
+    },
   ]);
 
-  const [activeTasks, setActiveTasks] = useState([
-    {
-      id: 3,
-      title: 'Process Invoice #INV-2024-001',
-      assistant: 'Felix (Finance Assistant)',
-      description: 'Processing monthly vendor invoices for approval',
-      priority: 'Medium',
-      category: 'Finance',
-      progress: 75,
-      assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 2),
-      icon: FileText,
-      iconColor: 'text-green-600',
-      bgColor: 'from-green-100 to-emerald-100'
-    },
-    {
-      id: 4,
-      title: 'Generate Marketing Report',
-      assistant: 'Maya (Marketing Assistant)',
-      description: 'Creating Q1 marketing performance analysis',
-      priority: 'Low',
-      category: 'Marketing',
-      progress: 45,
-      assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 4),
-      icon: DollarSign,
-      iconColor: 'text-purple-600',
-      bgColor: 'from-purple-100 to-violet-100'
-    }
-  ]);
+  return (
+    <MockedSection
+      title="Approval queue"
+      reason="Web approvals are resolved live inside a Chat turn (SSE + in-memory futures) — the backend has no endpoint to list pending approvals, so this queue is demo data. Real approval cards appear in Chat while the agent is waiting."
+    >
+      <div className="mb-3">
+        <button
+          type="button"
+          onClick={() => navigate('/chat')}
+          className="plat-btn !h-8 !px-3.5 !text-xs"
+        >
+          <MessageSquare className="h-3.5 w-3.5" />
+          Open Chat to respond to live approvals
+        </button>
+      </div>
+      {pendingTasks.length === 0 ? (
+        <div className="py-8 text-center">
+          <CheckCircle className="mx-auto mb-3 h-12 w-12" style={{ color: 'var(--ok-fg)' }} />
+          <p className="text-sm" style={{ color: 'var(--text-3)' }}>Demo queue cleared.</p>
+        </div>
+      ) : (
+        <Card className="overflow-hidden rounded-[14px] border-[color:var(--line-soft)] bg-[color:var(--paper)] shadow-none">
+          <table className="w-full text-sm">
+            <tbody>
+              {pendingTasks.map(task => (
+                <tr key={task.id} className="border-b border-[color:var(--line-soft)] last:border-b-0">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px]"
+                        style={{ background: 'var(--sand)' }}
+                      >
+                        <task.icon className="h-4 w-4" style={{ color: 'var(--ink)' }} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate font-medium" style={{ color: 'var(--ink)' }}>{task.title}</p>
+                        <p className="truncate text-xs" style={{ color: 'var(--text-3)' }}>{task.description} · {task.assistant}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="hidden px-4 py-3 md:table-cell">
+                    <span className={cn('plat-pill', PRIORITY_STYLE[task.priority])}>
+                      {task.priority}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button onClick={() => setPendingTasks(p => p.filter(t => t.id !== task.id))} size="sm" className="plat-btn !h-7 !rounded-full !bg-[color:var(--ink)] !px-3 !text-xs !text-white hover:!opacity-90">
+                        <CheckCircle className="mr-1 h-3.5 w-3.5" />Approve
+                      </Button>
+                      <Button onClick={() => setPendingTasks(p => p.filter(t => t.id !== task.id))} variant="outline" size="sm" className="plat-btn-ghost !h-7 !rounded-full !border-[color:var(--line)] !bg-transparent !px-3 !text-xs">
+                        <XCircle className="mr-1 h-3.5 w-3.5" />Reject
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      )}
+    </MockedSection>
+  );
+}
 
-  const [taskJournals, setTaskJournals] = useState([
-    {
-      id: 5,
-      title: 'Customer Support Ticket #CS-001',
-      assistant: 'Atlas (Support Assistant)',
-      description: 'Resolved billing inquiry from premium customer',
-      status: 'Completed',
-      category: 'Support',
-      completedDate: new Date(Date.now() - 1000 * 60 * 60 * 6),
-      duration: '15 minutes',
-      icon: Users,
-      iconColor: 'text-blue-600',
-      bgColor: 'from-blue-100 to-cyan-100'
-    },
-    {
-      id: 6,
-      title: 'Research Market Trends',
-      assistant: 'Sage (Research Assistant)',
-      description: 'Analyzed competitor pricing strategies for Q2 planning',
-      status: 'Completed',
-      category: 'Research',
-      completedDate: new Date(Date.now() - 1000 * 60 * 60 * 24),
-      duration: '2 hours',
-      icon: BookOpen,
-      iconColor: 'text-indigo-600',
-      bgColor: 'from-indigo-100 to-purple-100'
-    }
-  ]);
+// ── Page ─────────────────────────────────────────────────────────────
+
+const TasksInner = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<TabKey>('scheduled');
+  const connected = isConnected();
+
+  const { data: schedules } = useSchedules(true);
+  const { data: audit } = useRecentAudit(100);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated') || sessionStorage.getItem('isAuthenticated');
-
     if (isAuthenticated !== 'true') {
       navigate('/login');
-      return;
     }
   }, [navigate]);
 
-  const handleApprove = (taskId: number) => {
-    setPendingTasks(prev => prev.filter(task => task.id !== taskId));
-  };
-
-  const handleReject = (taskId: number) => {
-    setPendingTasks(prev => prev.filter(task => task.id !== taskId));
-  };
-
-  const formatTimeAgo = (timestamp: Date) => {
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - timestamp.getTime()) / (1000 * 60));
-    
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes} minutes ago`;
-    } else {
-      const diffInHours = Math.floor(diffInMinutes / 60);
-      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
-    }
-  };
+  const tabs = [
+    { key: 'scheduled' as TabKey, label: `Scheduled${schedules ? ` (${schedules.total})` : ''}`, icon: Activity },
+    { key: 'journal' as TabKey, label: `Journal${audit ? ` (${audit.total})` : ''}`, icon: BookMarked },
+    { key: 'approvals' as TabKey, label: 'Approvals', icon: ClipboardList },
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
+    <div className="plat flex min-h-screen flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col bg-white">
-            <main className="flex-1 p-6 pb-20">
-              <div className="flex items-center justify-between mb-6">
+          <SidebarInset className="flex flex-1 flex-col bg-transparent">
+            <main className="mx-auto w-full max-w-6xl flex-1 p-6 pb-20 lg:p-8">
+              <div className="mb-6 flex items-center justify-between">
                 <div>
-                  <h1 className="text-2xl font-light text-gray-900">Tasks</h1>
-                  <p className="text-gray-600">Manage tasks, approvals, and AI assistant activities</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge variant="secondary" className="bg-orange-100 text-orange-800">
-                    {pendingTasks.length} pending approvals
-                  </Badge>
-                  <Button variant="outline" size="sm">
-                    <AlertCircle className="h-4 w-4 mr-2" />
-                    View All Notifications
-                  </Button>
+                  <p className="plat-crumb">3days.tasks</p>
+                  <h1 className="mt-1 text-2xl">Tasks</h1>
+                  <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>
+                    What your agent has scheduled, and everything it has done
+                  </p>
                 </div>
               </div>
 
+              {!connected && <ConnectStrip />}
+
               {/* Tab nav */}
-              <div className="flex items-center gap-1 border-b border-gray-100 mb-6 py-2">
-                {([
-                  { key: 'approvals' as TabKey, label: `Approvals (${pendingTasks.length})`, icon: ClipboardList },
-                  { key: 'active' as TabKey,    label: `Active Tasks (${activeTasks.length})`, icon: Activity },
-                  { key: 'journal' as TabKey,   label: `Task Journal (${taskJournals.length})`, icon: BookMarked },
-                ] as const).map(({ key, label, icon: Icon }) => (
+              <div className="mb-6 flex items-center gap-1.5 border-b py-2" style={{ borderColor: 'var(--line-soft)' }}>
+                {tabs.map(({ key, label, icon: Icon }) => (
                   <button
                     key={key}
                     onClick={() => setActiveTab(key)}
                     className={cn(
-                      'flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors',
+                      'flex h-8 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium transition-colors',
                       activeTab === key
-                        ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
-                        : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900'
+                        ? 'border-transparent bg-[color:var(--ink)] text-white hover:opacity-90'
+                        : 'border-[color:var(--line)] text-[color:var(--text-2)] hover:bg-[rgba(20,22,26,0.04)] hover:text-[color:var(--ink)]'
                     )}
                   >
                     <Icon className="h-3.5 w-3.5" />
@@ -980,25 +934,9 @@ const Tasks = () => {
                 ))}
               </div>
 
-              {activeTab === 'approvals' && (
-                pendingTasks.length === 0 ? (
-                  <div className="text-center py-12">
-                    <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">All caught up!</h3>
-                    <p className="text-gray-600">No pending approvals at the moment</p>
-                  </div>
-                ) : (
-                  <ApprovalsTable tasks={pendingTasks} formatTimeAgo={formatTimeAgo} onApprove={handleApprove} onReject={handleReject} />
-                )
-              )}
-
-              {activeTab === 'active' && (
-                <ActiveTasksTable tasks={activeTasks} formatTimeAgo={formatTimeAgo} />
-              )}
-
-              {activeTab === 'journal' && (
-                <JournalTable journals={taskJournals} formatTimeAgo={formatTimeAgo} />
-              )}
+              {activeTab === 'scheduled' && <ScheduledTable />}
+              {activeTab === 'journal' && <JournalTable />}
+              {activeTab === 'approvals' && <ApprovalsMock />}
             </main>
           </SidebarInset>
         </div>
@@ -1006,5 +944,11 @@ const Tasks = () => {
     </div>
   );
 };
+
+const Tasks = () => (
+  <QueryClientProvider client={queryClient}>
+    <TasksInner />
+  </QueryClientProvider>
+);
 
 export default Tasks;

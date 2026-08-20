@@ -7,16 +7,20 @@ interface Props {
   className?: string;
 }
 
-const PALETTE = [
-  'from-violet-400 to-blue-500',
-  'from-emerald-400 to-cyan-500',
-  'from-amber-400 to-orange-500',
-  'from-rose-400 to-pink-500',
-  'from-sky-400 to-indigo-500',
-  'from-lime-400 to-emerald-500',
+/**
+ * Quiet, low-saturation identity tints. Enough separation to tell senders
+ * apart at a glance without the rainbow gradients the platform system bans.
+ */
+const PALETTE: { bg: string; fg: string }[] = [
+  { bg: '#e6e9f6', fg: '#3b4472' },
+  { bg: '#e4efe8', fg: '#2f5a41' },
+  { bg: '#f2ebe1', fg: '#6b5330' },
+  { bg: '#f3e7ea', fg: '#6d3b45' },
+  { bg: '#e5edf2', fg: '#33505f' },
+  { bg: '#ece9f2', fg: '#4d3f6b' },
 ];
 
-function colorFor(seed: string): string {
+function colorFor(seed: string): { bg: string; fg: string } {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
   return PALETTE[hash % PALETTE.length];
@@ -30,16 +34,19 @@ function initials(name: string): string {
 
 export default function Avatar({ name, email, size = 32, className }: Props) {
   const seed = email || name;
+  const { bg, fg } = colorFor(seed);
   return (
     <div
       role="img"
       aria-label={name}
-      className={cn(
-        'flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br font-medium text-white',
-        colorFor(seed),
-        className,
-      )}
-      style={{ width: size, height: size, fontSize: Math.max(10, size * 0.4) }}
+      className={cn('flex shrink-0 items-center justify-center rounded-full font-semibold', className)}
+      style={{
+        width: size,
+        height: size,
+        fontSize: Math.max(10, size * 0.38),
+        backgroundColor: bg,
+        color: fg,
+      }}
     >
       {initials(name)}
     </div>

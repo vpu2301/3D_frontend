@@ -418,7 +418,7 @@ export default function DocsEditor() {
   if (!loaded) {
     return (
       <DocsLayout>
-        <div className="flex h-full items-center justify-center text-sm text-zinc-500">Loading…</div>
+        <div className="flex h-full items-center justify-center text-sm text-[var(--text-3)]">Loading…</div>
       </DocsLayout>
     );
   }
@@ -427,11 +427,11 @@ export default function DocsEditor() {
     return (
       <DocsLayout>
         <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-          <div className="text-lg font-semibold">Document not found</div>
+          <div className="text-lg font-semibold text-[var(--ink)]">Document not found</div>
           <button
             type="button"
             onClick={() => navigate('/docs')}
-            className="rounded-md border border-zinc-200 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
+            className="plat-btn-ghost"
           >
             Back to dashboard
           </button>
@@ -462,7 +462,7 @@ export default function DocsEditor() {
           onPatchTitle={(t) => onPatchDoc({ title: t })}
         />
         <div className="flex flex-1 overflow-hidden">
-          <div className="flex flex-1 flex-col overflow-y-auto">
+          <div className="flex flex-1 flex-col overflow-y-auto bg-white">
             <DocHeader doc={doc} onPatch={onPatchDoc} />
             {isDocEmpty && editor && (
               <div className={cn('mx-auto w-full', containerWidth)}>
