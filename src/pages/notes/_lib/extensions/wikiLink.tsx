@@ -17,9 +17,9 @@ const ROUTES: Record<LinkType, (id: string) => string> = {
 };
 
 const COLORS: Record<LinkType, string> = {
-  note: 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100',
-  doc: 'bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100',
-  event: 'bg-violet-50 text-violet-800 border-violet-200 hover:bg-violet-100',
+  note: 'bg-[var(--sand)] text-[var(--text-2)] border-[var(--line)] hover:bg-[var(--sand-deep)] hover:text-[var(--ink)]',
+  doc: 'bg-[var(--sand)] text-[var(--text-2)] border-[var(--line)] hover:bg-[var(--sand-deep)] hover:text-[var(--ink)]',
+  event: 'bg-[var(--sand)] text-[var(--text-2)] border-[var(--line)] hover:bg-[var(--sand-deep)] hover:text-[var(--ink)]',
 };
 
 function WikiLinkView({ node }: NodeViewProps) {
@@ -32,6 +32,7 @@ function WikiLinkView({ node }: NodeViewProps) {
   return (
     <NodeViewWrapper as="span" className="inline-block align-baseline">
       <button
+            data-command-exempt="inline chip inside the document; clicking it navigates, like a link"
         type="button"
         contentEditable={false}
         onClick={(e) => {

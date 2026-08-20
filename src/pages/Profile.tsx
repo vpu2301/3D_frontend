@@ -183,11 +183,7 @@ const Profile = () => {
 
   const pincerBadge = (
     <span
-      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border ${
-        pincerOn
-          ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-          : 'bg-gray-50 border-gray-200 text-gray-500'
-      }`}
+      className={`plat-pill ${pincerOn ? 'plat-pill-ok' : 'plat-pill-mute'}`}
     >
       {pincerOn ? <Link2 className="h-3 w-3" /> : <Unlink className="h-3 w-3" />}
       {pincerOn ? 'Pincer connected' : 'Demo mode'}
@@ -195,16 +191,16 @@ const Profile = () => {
   );
 
   return (
-    <SidebarProvider>
+    <SidebarProvider className="plat">
       <AppSidebar />
-      <SidebarInset className="flex flex-col overflow-hidden h-screen bg-white">
+      <SidebarInset className="flex flex-col overflow-hidden h-screen bg-transparent">
         {/* Header — mirrors Chat active-state header */}
         <div className="flex items-center justify-between px-5 h-14 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-[#bdd8ec]">
-              <User className="h-4 w-4 text-gray-700" />
-            </div>
-            <span className="text-sm font-semibold text-gray-800">Profile</span>
+            <span className="flex items-center justify-center h-7 w-7 rounded-[10px]" style={{ background: 'var(--sand)', color: 'var(--ink)' }}>
+              <User className="h-4 w-4" strokeWidth={1.75} />
+            </span>
+            <span className="text-sm font-semibold">Profile</span>
             {pincerBadge}
           </div>
         </div>
@@ -216,7 +212,7 @@ const Profile = () => {
             {/* Sticky section navigator */}
             <aside className="hidden lg:block w-56 shrink-0">
               <nav className="sticky top-0">
-                <div className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2 px-2">
+                <div className="plat-eyebrow mb-2 px-2">
                   Profile
                 </div>
                 <ul className="space-y-0.5">
@@ -227,15 +223,16 @@ const Profile = () => {
                       <li key={s.id}>
                         <button
                           onClick={() => scrollToSection(s.id)}
-                          className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                            active
-                              ? 'bg-[#bdd8ec]/40 text-gray-900'
-                              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                          }`}
+                          className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-[10px] text-xs font-medium transition-colors hover:bg-[rgba(20,22,26,0.04)]"
+                          style={{
+                            background: active ? 'rgba(20,22,26,0.06)' : 'transparent',
+                            color: active ? 'var(--ink)' : 'var(--text-3)',
+                            fontWeight: active ? 600 : 500,
+                          }}
                         >
-                          <Icon className={`h-3.5 w-3.5 ${active ? 'text-gray-800' : 'text-gray-400'}`} />
+                          <Icon className="h-3.5 w-3.5" style={{ color: active ? 'var(--ink)' : 'var(--text-5)' }} />
                           <span className="truncate">{s.label}</span>
-                          {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#5ea7d4]" />}
+                          {active && <span className="ml-auto h-1.5 w-1.5 rounded-full" style={{ background: 'var(--ink)' }} />}
                         </button>
                       </li>
                     );
@@ -246,17 +243,25 @@ const Profile = () => {
 
             <div className="flex-1 max-w-2xl space-y-6 min-w-0">
 
+            {/* Page header */}
+            <div>
+              <p className="plat-crumb">3days.profile</p>
+              <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>
+                Account, backend connection and session
+              </p>
+            </div>
+
             {/* Account card */}
-            <section id="account" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <section id="account" className="scroll-mt-4 plat-panel !p-5">
               <div className="flex items-center gap-4">
                 <Avatar className="h-14 w-14">
-                  <AvatarFallback className="bg-[#bdd8ec] text-gray-700 text-base font-medium">
+                  <AvatarFallback className="text-base font-medium" style={{ background: 'var(--sand-deep)', color: 'var(--ink)' }}>
                     {initials}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <div className="text-base font-semibold text-gray-900 truncate">{userEmail}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">Signed in via {authSource}</div>
+                  <div className="text-base font-semibold truncate">{userEmail}</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--text-4)' }}>Signed in via {authSource}</div>
                 </div>
               </div>
 
@@ -272,17 +277,17 @@ const Profile = () => {
             </section>
 
             {/* Pincer connection card */}
-            <section id="pincer" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <section id="pincer" className="scroll-mt-4 plat-panel !p-5">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Server className="h-4 w-4 text-gray-500" />
-                  <h2 className="text-sm font-semibold text-gray-800">Pincer connection</h2>
+                  <Server className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
+                  <h2 className="text-sm font-semibold">Pincer connection</h2>
                 </div>
                 {pincerOn && (
                   <button
                     onClick={fetchStatus}
                     disabled={statusLoading}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 border border-transparent hover:border-gray-200 transition-all disabled:opacity-50"
+                    className="plat-btn-ghost !h-8 !px-3 !text-xs disabled:opacity-50"
                   >
                     {statusLoading ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -295,11 +300,12 @@ const Profile = () => {
               </div>
 
               {!pincerOn ? (
-                <div className="text-sm text-gray-500">
+                <div className="text-sm" style={{ color: 'var(--text-3)' }}>
                   Not connected. Sign in with a token from the{' '}
                   <button
                     onClick={() => navigate('/login')}
-                    className="text-blue-600 hover:text-blue-700 font-medium"
+                    className="font-medium underline underline-offset-2"
+                    style={{ color: 'var(--ink)' }}
                   >
                     login page
                   </button>{' '}
@@ -324,40 +330,38 @@ const Profile = () => {
                   />
 
                   {/* Live status block */}
-                  <div className="rounded-xl border border-gray-200 bg-gray-50/60 px-4 py-3 mt-1">
+                  <div className="rounded-[12px] px-4 py-3 mt-1" style={{ background: 'var(--sand)', border: '1px solid var(--line-soft)' }}>
                     {statusLoading && !status ? (
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-3)' }}>
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
                         Pinging server…
                       </div>
                     ) : statusError ? (
-                      <div className="flex items-start gap-2 text-sm text-red-600">
+                      <div className="flex items-start gap-2 text-sm" style={{ color: 'var(--bad-fg)' }}>
                         <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
                         <span>{statusError}</span>
                       </div>
                     ) : status ? (
                       <div className="space-y-2.5">
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500">Version</span>
-                          <span className="font-mono text-gray-800">{status.version}</span>
+                          <span style={{ color: 'var(--text-3)' }}>Version</span>
+                          <span className="font-mono">{status.version}</span>
                         </div>
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500">Agent</span>
+                          <span style={{ color: 'var(--text-3)' }}>Agent</span>
                           <span
-                            className={`flex items-center gap-1.5 text-xs font-medium ${
-                              status.agent_running ? 'text-emerald-700' : 'text-gray-500'
-                            }`}
+                            className="flex items-center gap-1.5 text-xs font-medium"
+                            style={{ color: status.agent_running ? 'var(--ok-fg)' : 'var(--text-4)' }}
                           >
                             <span
-                              className={`h-1.5 w-1.5 rounded-full ${
-                                status.agent_running ? 'bg-emerald-500' : 'bg-gray-300'
-                              }`}
+                              className="h-1.5 w-1.5 rounded-full"
+                              style={{ background: status.agent_running ? 'var(--ok-fg)' : 'var(--sand-deep)' }}
                             />
                             {status.agent_running ? 'running' : 'stopped'}
                           </span>
                         </div>
-                        <div className="pt-2 border-t border-gray-200">
-                          <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                        <div className="pt-2" style={{ borderTop: '1px solid var(--line-soft)' }}>
+                          <div className="plat-eyebrow mb-2">
                             Channels
                           </div>
                           <div className="flex flex-wrap gap-1.5">
@@ -366,11 +370,7 @@ const Profile = () => {
                               return (
                                 <span
                                   key={name}
-                                  className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium border ${
-                                    on
-                                      ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-                                      : 'bg-gray-50 border-gray-200 text-gray-400'
-                                  }`}
+                                  className={`plat-pill !py-0.5 ${on ? 'plat-pill-ok' : 'plat-pill-mute'}`}
                                 >
                                   <Icon className="h-3 w-3" />
                                   {name}
@@ -387,10 +387,10 @@ const Profile = () => {
             </section>
 
             {/* Session card */}
-            <section id="session" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <section id="session" className="scroll-mt-4 plat-panel !p-5">
               <div className="flex items-center gap-2 mb-4">
-                <Hash className="h-4 w-4 text-gray-500" />
-                <h2 className="text-sm font-semibold text-gray-800">Session</h2>
+                <Hash className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
+                <h2 className="text-sm font-semibold">Session</h2>
               </div>
               <ProfileField
                 icon={Hash}
@@ -400,13 +400,13 @@ const Profile = () => {
                 onCopy={() => copy('userId', userId)}
                 copied={copied === 'userId'}
               />
-              <p className="text-xs text-gray-500 mt-3 leading-relaxed">
+              <p className="text-xs mt-3 leading-relaxed" style={{ color: 'var(--text-4)' }}>
                 The backend keys conversation state by this id. Resetting it starts a fresh thread.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <button
                   onClick={handleResetUserId}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100 border border-gray-200 transition-all"
+                  className="plat-btn-ghost"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
                   Reset user_id
@@ -414,7 +414,7 @@ const Profile = () => {
                 {pincerOn && (
                   <button
                     onClick={handleDisconnect}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100 border border-gray-200 transition-all"
+                    className="plat-btn-ghost"
                   >
                     <Unlink className="h-3.5 w-3.5" />
                     Disconnect Pincer
@@ -422,7 +422,8 @@ const Profile = () => {
                 )}
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 border border-gray-200 hover:border-red-200 transition-all"
+                  className="plat-btn-ghost"
+                  style={{ color: 'var(--bad-fg)' }}
                 >
                   <LogOut className="h-3.5 w-3.5" />
                   Log out
@@ -453,12 +454,12 @@ function ProfileField({
   copied?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50/60">
-      <Icon className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+    <div className="flex items-center gap-3 px-3 py-2.5 rounded-[12px]" style={{ background: 'var(--sand)', border: '1px solid var(--line-soft)' }}>
+      <Icon className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--text-5)' }} />
       <div className="flex-1 min-w-0">
-        <div className="text-[11px] font-medium text-gray-500 uppercase tracking-wide">{label}</div>
+        <div className="plat-eyebrow">{label}</div>
         <div
-          className={`text-sm text-gray-800 truncate ${mono ? 'font-mono' : ''}`}
+          className={`text-sm truncate ${mono ? 'font-mono' : ''}`}
           title={value}
         >
           {value}
@@ -467,10 +468,11 @@ function ProfileField({
       {onCopy && (
         <button
           onClick={onCopy}
-          className="flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors shrink-0"
+          className="flex items-center justify-center h-7 w-7 rounded-[10px] transition-colors shrink-0 hover:bg-[rgba(20,22,26,0.05)]"
+          style={{ color: 'var(--text-5)' }}
           title={copied ? 'Copied' : 'Copy'}
         >
-          {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+          {copied ? <Check className="h-3.5 w-3.5" style={{ color: 'var(--ok-fg)' }} /> : <Copy className="h-3.5 w-3.5" />}
         </button>
       )}
     </div>

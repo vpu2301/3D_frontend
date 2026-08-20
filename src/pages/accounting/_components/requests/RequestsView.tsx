@@ -29,61 +29,49 @@ export default function RequestsView() {
   );
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden bg-white">
+    <div className="flex flex-1 flex-col overflow-hidden">
       <ViewHeader title={t('requests.title')} subtitle={t('requests.subtitle')} />
 
       <div className="flex-1 overflow-y-auto p-6">
         {sorted.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center py-20 text-center">
-            <p className="text-sm font-medium text-gray-700">{t('requests.emptyTitle')}</p>
-            <p className="mt-1 max-w-xs text-xs text-gray-400">{t('requests.emptyBody')}</p>
+            <p className="text-sm font-semibold text-[var(--ink)]">{t('requests.emptyTitle')}</p>
+            <p className="mt-1 max-w-xs text-xs text-[var(--text-4)]">{t('requests.emptyBody')}</p>
           </div>
         ) : (
-          <ul className="space-y-2.5" aria-label={t('requests.title')}>
+          <ul className="plat-list" aria-label={t('requests.title')}>
             {sorted.map((r) => {
               const Icon = CHANNEL_ICON[r.channel];
               const draft = r.status === 'draft';
               return (
-                <li key={r.id}>
+                <li key={r.id} className="border-b border-[var(--line-soft)] last:border-0">
                   <button
                     type="button"
                     onClick={() => draft && setOpenRequestId(r.id)}
                     disabled={!draft}
                     title={!draft ? t('requests.readOnly') : undefined}
                     className={cn(
-                      'flex w-full items-center gap-4 rounded-xl border bg-white p-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
-                      draft
-                        ? 'border-amber-200 hover:-translate-y-0.5 hover:shadow-md'
-                        : 'cursor-default border-gray-100 opacity-70',
+                      'flex w-full items-center gap-4 px-5 py-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--ink)]/25',
+                      draft ? 'hover:bg-[rgba(20,22,26,0.02)]' : 'cursor-default opacity-70',
                     )}
                   >
-                    <span
-                      className={cn(
-                        'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
-                        draft ? 'bg-amber-50' : 'bg-gray-50',
-                      )}
-                    >
-                      <Icon aria-hidden className={cn('h-4 w-4', draft ? 'text-amber-600' : 'text-gray-400')} />
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[var(--sand)]">
+                      <Icon aria-hidden className={cn('h-4 w-4', draft ? 'text-[var(--ink)]' : 'text-[var(--text-4)]')} />
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="truncate text-sm font-medium text-gray-900">{r.title}</p>
-                        <span
-                          className={cn(
-                            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold',
-                            draft ? 'bg-amber-100 text-amber-800' : 'bg-green-50 text-green-700',
-                          )}
-                        >
+                        <p className="truncate text-[14.5px] font-medium text-[var(--ink)]">{r.title}</p>
+                        <span className={cn('plat-pill', draft ? 'plat-pill-warn' : 'plat-pill-ok')}>
                           {draft ? <FileEdit aria-hidden className="h-2.5 w-2.5" /> : <CheckCheck aria-hidden className="h-2.5 w-2.5" />}
                           {draft ? t('requests.draft') : t('requests.sent')}
                         </span>
                       </div>
-                      <p className="mt-0.5 truncate text-xs text-gray-400">
+                      <p className="mt-0.5 truncate text-xs text-[var(--text-4)]">
                         {mandateName(r.mandateId)} · {t(`requests.channel.${r.channel}`)} · {t('requests.to')}{' '}
                         {r.recipient}
                       </p>
                     </div>
-                    <span className="shrink-0 text-xs text-gray-400">
+                    <span className="shrink-0 text-xs text-[var(--text-4)]">
                       {t('requests.itemCount', { count: r.bundledItems.length })}
                     </span>
                   </button>

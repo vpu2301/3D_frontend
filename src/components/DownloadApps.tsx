@@ -5,7 +5,7 @@ import { Smartphone, Download, Apple, Zap } from 'lucide-react';
 
 const DownloadApps = () => {
   return (
-    <section className="py-20 bg-[#f5ede3] text-[#111111]">
+    <section className="py-20 bg-[color:var(--sand)] text-[color:var(--ink)]">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-light mb-6">Get 3days.ai on Mobile</h2>
@@ -18,30 +18,30 @@ const DownloadApps = () => {
           {/* Left side - App preview mockup */}
           <div className="text-center lg:text-left">
             <div className="relative inline-block">
-              <div className="w-64 h-96 bg-gradient-to-b from-gray-800 to-gray-900 rounded-3xl mx-auto lg:mx-0 p-4 shadow-2xl">
-                <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white rounded-2xl p-4 flex flex-col">
+              <div className="w-64 h-96 bg-gradient-to-b from-[color:var(--ink)] to-[color:var(--ink)] rounded-[28px] mx-auto lg:mx-0 p-4 shadow-2xl">
+                <div className="w-full h-full bg-gradient-to-b from-[color:var(--blue-100)] to-[color:var(--paper)] rounded-[28px] p-4 flex flex-col">
                   <div className="text-center mb-4">
-                    <div className="w-8 h-8 bg-[#111111] rounded-lg mx-auto mb-2 flex items-center justify-center">
-                      <div className="w-2 h-2 bg-white rounded-sm"></div>
+                    <div className="w-8 h-8 bg-[color:var(--ink)] rounded-[16px] mx-auto mb-2 flex items-center justify-center">
+                      <div className="w-2 h-2 bg-[color:var(--paper)] rounded-sm"></div>
                     </div>
-                    <h3 className="text-sm font-medium text-gray-900">3days.ai</h3>
+                    <h3 className="text-sm font-medium text-[color:var(--ink)]">3days.ai</h3>
                   </div>
                   <div className="space-y-3 flex-1">
-                    <div className="h-8 bg-blue-100 rounded-lg flex items-center px-3">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                      <div className="text-xs text-gray-700">AI Chat Active</div>
+                    <div className="h-8 bg-[color:var(--blue-100)] rounded-[16px] flex items-center px-3">
+                      <div className="w-3 h-3 bg-[color:var(--blue)] rounded-full mr-2"></div>
+                      <div className="text-xs text-[color:var(--ink)]">AI Chat Active</div>
                     </div>
-                    <div className="h-6 bg-gray-100 rounded"></div>
-                    <div className="h-6 bg-gray-100 rounded w-3/4"></div>
-                    <div className="h-8 bg-green-100 rounded-lg flex items-center px-3">
-                      <Zap className="w-3 h-3 text-green-600 mr-2" />
-                      <div className="text-xs text-gray-700">Task Approved</div>
+                    <div className="h-6 bg-[color:var(--sand)] rounded"></div>
+                    <div className="h-6 bg-[color:var(--sand)] rounded w-3/4"></div>
+                    <div className="h-8 bg-[color:var(--blue-100)] rounded-[16px] flex items-center px-3">
+                      <Zap className="w-3 h-3 text-[color:var(--blue)] mr-2" />
+                      <div className="text-xs text-[color:var(--ink)]">Task Approved</div>
                     </div>
-                    <div className="h-6 bg-gray-100 rounded w-1/2"></div>
+                    <div className="h-6 bg-[color:var(--sand)] rounded w-1/2"></div>
                   </div>
                 </div>
               </div>
-              <div className="absolute -top-4 -right-4 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+              <div className="absolute -top-4 -right-4 w-12 h-12 bg-[color:var(--blue)] rounded-full flex items-center justify-center">
                 <Download className="w-6 h-6 text-white" />
               </div>
             </div>
@@ -50,46 +50,46 @@ const DownloadApps = () => {
           {/* Right side - Download buttons and features */}
           <div className="space-y-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Card className="bg-white border-black/8 hover:bg-gray-50 transition-all duration-200">
+              <Card className="bg-[color:var(--paper)] border-[color:var(--line)] hover:bg-[color:var(--sand)] transition-all duration-200">
                 <CardContent className="p-6 text-center">
-                  <Apple className="h-12 w-12 mx-auto mb-4 text-[#111111]" />
+                  <Apple className="h-12 w-12 mx-auto mb-4 text-[color:var(--ink)]" />
                   <h3 className="text-lg font-medium mb-2">iOS App</h3>
                   <p className="text-sm opacity-80 mb-4">Download for iPhone and iPad</p>
-                  <Button className="w-full bg-[#111111] text-white hover:bg-[#222222] rounded-full">
+                  <Button className="w-full bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full">
                     App Store
                   </Button>
                 </CardContent>
               </Card>
               
-              <Card className="bg-white border-black/8 hover:bg-gray-50 transition-all duration-200">
+              <Card className="bg-[color:var(--paper)] border-[color:var(--line)] hover:bg-[color:var(--sand)] transition-all duration-200">
                 <CardContent className="p-6 text-center">
-                  <Smartphone className="h-12 w-12 mx-auto mb-4 text-[#111111]" />
+                  <Smartphone className="h-12 w-12 mx-auto mb-4 text-[color:var(--ink)]" />
                   <h3 className="text-lg font-medium mb-2">Android App</h3>
                   <p className="text-sm opacity-80 mb-4">Download for Android devices</p>
-                  <Button className="w-full bg-[#111111] text-white hover:bg-[#222222] rounded-full">
+                  <Button className="w-full bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full">
                     Google Play
                   </Button>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="bg-black/4 rounded-2xl p-6">
+            <div className="bg-black/4 rounded-[28px] p-6">
               <h4 className="text-lg font-medium mb-4">Mobile Features</h4>
               <div className="space-y-3">
                 <div className="flex items-center">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
+                  <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mr-3"></div>
                   <span className="text-sm">Real-time task notifications</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                  <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mr-3"></div>
                   <span className="text-sm">Voice commands for AI assistants</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full mr-3"></div>
+                  <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mr-3"></div>
                   <span className="text-sm">Quick approval workflows</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="w-2 h-2 bg-[#111111] rounded-full mr-3"></div>
+                  <div className="w-2 h-2 bg-[color:var(--ink)] rounded-full mr-3"></div>
                   <span className="text-sm">Offline sync capabilities</span>
                 </div>
               </div>

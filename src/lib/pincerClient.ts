@@ -71,7 +71,13 @@ function stripTrailingSlash(s: string): string {
 
 // ───────────────────── low-level fetch ─────────────────────
 
-function authHeaders(auth: PincerAuth): Record<string, string> {
+/**
+ * Exported because the Notes service (`notes_app`) authenticates the same way —
+ * shared bearer token plus the client-asserted `X-Pincer-User` (ADR 0001). It
+ * rejects a request missing *either* header, so `src/auth/apiFetch.ts` reuses
+ * this rather than re-reading the localStorage keys.
+ */
+export function authHeaders(auth: PincerAuth): Record<string, string> {
   return {
     Authorization: `Bearer ${auth.token}`,
     "X-Pincer-User": getUserId(),

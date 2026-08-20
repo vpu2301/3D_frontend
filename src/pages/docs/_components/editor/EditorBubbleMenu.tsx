@@ -58,14 +58,14 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
         return true;
       }}
     >
-      <div className="flex items-center gap-0.5 rounded-md border border-zinc-200 bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+      <div className="flex items-center gap-0.5 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.12)]">
         <button
           type="button"
           onClick={() => {
             closeAll();
             onAskAi();
           }}
-          className="flex items-center gap-1 rounded-sm bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900"
+          className="flex items-center gap-1 rounded-full bg-[var(--ink)] px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-85"
         >
           <Sparkles className="h-3.5 w-3.5" /> Ask AI
         </button>
@@ -78,13 +78,13 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
               setToneOpen(false);
               setLangOpen(false);
             }}
-            className="flex items-center gap-0.5 rounded-sm px-1.5 py-1 text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            className="flex items-center gap-0.5 rounded-[8px] px-1.5 py-1 text-xs text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           >
             <Wand2 className="h-3.5 w-3.5" />
             <ChevronDown className="h-3 w-3" />
           </button>
           {aiOpen && (
-            <div className="absolute left-0 top-full z-10 mt-1 w-44 rounded-md border bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+            <div className="absolute left-0 top-full z-10 mt-1 w-44 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.12)]">
               {[
                 { id: 'improve', label: 'Improve writing' },
                 { id: 'shorter', label: 'Make shorter' },
@@ -100,12 +100,12 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
                     closeAll();
                     onPreset(p.id as PresetAction);
                   }}
-                  className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  className="block w-full rounded-[8px] px-2 py-1 text-left text-xs text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                 >
                   {p.label}
                 </button>
               ))}
-              <div className="my-1 border-t border-zinc-100 dark:border-zinc-800" />
+              <div className="my-1 border-t border-[var(--line-soft)]" />
               <div className="relative">
                 <button
                   type="button"
@@ -113,12 +113,12 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
                     setToneOpen((o) => !o);
                     setLangOpen(false);
                   }}
-                  className="flex w-full items-center justify-between rounded px-2 py-1 text-left text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  className="flex w-full items-center justify-between rounded-[8px] px-2 py-1 text-left text-xs text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                 >
                   Change tone <ChevronDown className="h-3 w-3" />
                 </button>
                 {toneOpen && (
-                  <div className="absolute left-full top-0 ml-1 w-32 rounded-md border bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+                  <div className="absolute left-full top-0 ml-1 w-32 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.12)]">
                     {TONES.map((t) => (
                       <button
                         type="button"
@@ -127,7 +127,7 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
                           closeAll();
                           onPreset(t.id);
                         }}
-                        className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        className="block w-full rounded-[8px] px-2 py-1 text-left text-xs text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                       >
                         {t.label}
                       </button>
@@ -142,7 +142,7 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
                     setLangOpen((o) => !o);
                     setToneOpen(false);
                   }}
-                  className="flex w-full items-center justify-between rounded px-2 py-1 text-left text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  className="flex w-full items-center justify-between rounded-[8px] px-2 py-1 text-left text-xs text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                 >
                   <span className="flex items-center gap-1">
                     <Languages className="h-3 w-3" /> Translate
@@ -150,7 +150,7 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
                   <ChevronDown className="h-3 w-3" />
                 </button>
                 {langOpen && (
-                  <div className="absolute left-full top-0 ml-1 w-32 rounded-md border bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+                  <div className="absolute left-full top-0 ml-1 w-32 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.12)]">
                     {LANGS.map((l) => (
                       <button
                         type="button"
@@ -159,7 +159,7 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
                           closeAll();
                           onPreset(l.id);
                         }}
-                        className="block w-full rounded px-2 py-1 text-left text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        className="block w-full rounded-[8px] px-2 py-1 text-left text-xs text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                       >
                         {l.label}
                       </button>
@@ -171,12 +171,12 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
           )}
         </div>
 
-        <div className="mx-0.5 h-5 w-px bg-zinc-200 dark:bg-zinc-700" />
+        <div className="mx-0.5 h-5 w-px bg-[var(--line-soft)]" />
 
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`rounded-sm p-1 ${editor.isActive('bold') ? 'bg-zinc-100 dark:bg-zinc-800' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
+          className={`rounded-[8px] p-1 transition-colors ${editor.isActive('bold') ? 'bg-[rgba(20,22,26,0.06)] text-[var(--ink)]' : 'text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]'}`}
           aria-label="Bold"
         >
           <Bold className="h-3.5 w-3.5" />
@@ -184,7 +184,7 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`rounded-sm p-1 ${editor.isActive('italic') ? 'bg-zinc-100 dark:bg-zinc-800' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
+          className={`rounded-[8px] p-1 transition-colors ${editor.isActive('italic') ? 'bg-[rgba(20,22,26,0.06)] text-[var(--ink)]' : 'text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]'}`}
           aria-label="Italic"
         >
           <Italic className="h-3.5 w-3.5" />
@@ -192,7 +192,7 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={`rounded-sm p-1 ${editor.isActive('underline') ? 'bg-zinc-100 dark:bg-zinc-800' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
+          className={`rounded-[8px] p-1 transition-colors ${editor.isActive('underline') ? 'bg-[rgba(20,22,26,0.06)] text-[var(--ink)]' : 'text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]'}`}
           aria-label="Underline"
         >
           <Underline className="h-3.5 w-3.5" />
@@ -200,7 +200,7 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={`rounded-sm p-1 ${editor.isActive('strike') ? 'bg-zinc-100 dark:bg-zinc-800' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
+          className={`rounded-[8px] p-1 transition-colors ${editor.isActive('strike') ? 'bg-[rgba(20,22,26,0.06)] text-[var(--ink)]' : 'text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]'}`}
           aria-label="Strikethrough"
         >
           <Strikethrough className="h-3.5 w-3.5" />
@@ -208,7 +208,7 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleCode().run()}
-          className={`rounded-sm p-1 ${editor.isActive('code') ? 'bg-zinc-100 dark:bg-zinc-800' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
+          className={`rounded-[8px] p-1 transition-colors ${editor.isActive('code') ? 'bg-[rgba(20,22,26,0.06)] text-[var(--ink)]' : 'text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]'}`}
           aria-label="Inline code"
         >
           <Code className="h-3.5 w-3.5" />
@@ -220,18 +220,18 @@ export default function EditorBubbleMenu({ editor, onAskAi, onPreset, onComment 
             if (url) editor.chain().focus().setLink({ href: url }).run();
             else editor.chain().focus().unsetLink().run();
           }}
-          className="rounded-sm p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           aria-label="Link"
         >
           <LinkIcon className="h-3.5 w-3.5" />
         </button>
 
-        <div className="mx-0.5 h-5 w-px bg-zinc-200 dark:bg-zinc-700" />
+        <div className="mx-0.5 h-5 w-px bg-[var(--line-soft)]" />
 
         <button
           type="button"
           onClick={onComment}
-          className="flex items-center gap-1 rounded-sm px-1.5 py-1 text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="flex items-center gap-1 rounded-[8px] px-1.5 py-1 text-xs text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
         >
           <MessageCircle className="h-3.5 w-3.5" /> Comment
         </button>

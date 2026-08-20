@@ -13,28 +13,28 @@ const HelpCenter = () => {
       title: 'Getting Started',
       description: 'Learn the basics and get up and running quickly',
       articles: 12,
-      color: 'from-blue-500 to-cyan-500'
+      color: 'from-[color:var(--blue)] to-[color:var(--blue)]'
     },
     {
       icon: Video,
       title: 'Video Tutorials',
       description: 'Step-by-step video guides for all features',
       articles: 8,
-      color: 'from-purple-500 to-[#222222]'
+      color: 'from-[color:var(--blue)] to-[color:var(--text-2)]'
     },
     {
       icon: FileText,
       title: 'Documentation',
       description: 'Comprehensive technical documentation',
       articles: 25,
-      color: 'from-green-500 to-blue-500'
+      color: 'from-[color:var(--blue)] to-[color:var(--blue)]'
     },
     {
       icon: MessageCircle,
       title: 'FAQs',
       description: 'Frequently asked questions and answers',
       articles: 18,
-      color: 'from-[#111111] to-[#222222]'
+      color: 'from-[color:var(--ink)] to-[color:var(--text-2)]'
     }
   ];
 
@@ -90,25 +90,25 @@ const HelpCenter = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[color:var(--sand)] to-[color:var(--paper)] dark:from-[color:var(--bg)] dark:to-[color:var(--paper)]">
       <Header />
       
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+          <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight">
             Help Center
           </h1>
-          <p className="text-xl text-gray-600 mb-8 font-light">
+          <p className="text-xl text-[color:var(--text-2)] mb-8 font-light">
             Find answers, get support, and learn how to make the most of our platform
           </p>
           
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto mb-8">
-            <Search className="absolute left-4 top-4 h-5 w-5 text-black/50" />
+            <Search className="absolute left-4 top-4 h-5 w-5 text-[color:var(--text-2)]" />
             <Input 
               placeholder="Search for help articles, guides, and FAQs..." 
-              className="pl-12 py-4 text-lg rounded-full border-2 border-gray-200 focus:border-blue-500"
+              className="pl-12 py-4 text-lg rounded-full border-[color:var(--line)] focus:border-[color:var(--ink)]"
             />
           </div>
         </div>
@@ -118,20 +118,20 @@ const HelpCenter = () => {
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Browse by Category</h2>
-            <p className="text-xl text-gray-600">Find the help you need organized by topic</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Browse by Category</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Find the help you need organized by topic</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {categories.map((category, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer">
                 <CardContent className="p-8 text-center">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-r ${category.color} w-fit mx-auto mb-6`}>
+                  <div className={`p-4 rounded-[28px] bg-gradient-to-r ${category.color} w-fit mx-auto mb-6`}>
                     <category.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{category.title}</h3>
-                  <p className="text-gray-600 mb-4 leading-relaxed">{category.description}</p>
-                  <span className="text-sm text-blue-600 font-medium">{category.articles} articles</span>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{category.title}</h3>
+                  <p className="text-[color:var(--text-2)] mb-4 leading-relaxed">{category.description}</p>
+                  <span className="text-sm text-[color:var(--blue)] font-medium">{category.articles} articles</span>
                 </CardContent>
               </Card>
             ))}
@@ -140,27 +140,27 @@ const HelpCenter = () => {
       </section>
 
       {/* Popular Articles */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Popular Articles</h2>
-            <p className="text-xl text-gray-600">Most helpful resources from our community</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Popular Articles</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Most helpful resources from our community</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {popularArticles.map((article, index) => (
-              <div key={index} className="bg-gray-50 p-8 rounded-3xl hover:bg-gray-100 transition-colors cursor-pointer">
+              <div key={index} className="bg-[color:var(--sand)] p-8 rounded-[28px] hover:bg-[color:var(--sand)] transition-colors cursor-pointer">
                 <div className="flex justify-between items-start mb-4">
-                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                  <span className="px-3 py-1 bg-[color:var(--blue-100)] text-[color:var(--blue)] rounded-full text-sm font-medium">
                     {article.category}
                   </span>
                   <div className="flex items-center">
-                    <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                    <span className="text-sm text-gray-600">{article.rating}</span>
+                    <Star className="h-4 w-4 text-[color:var(--blue)] mr-1" />
+                    <span className="text-sm text-[color:var(--text-2)]">{article.rating}</span>
                   </div>
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-3">{article.title}</h3>
-                <div className="flex items-center text-gray-600">
+                <h3 className="text-xl font-medium text-[color:var(--ink)] mb-3">{article.title}</h3>
+                <div className="flex items-center text-[color:var(--text-2)]">
                   <Clock className="h-4 w-4 mr-2" />
                   <span className="text-sm">{article.readTime}</span>
                 </div>
@@ -171,22 +171,22 @@ const HelpCenter = () => {
       </section>
 
       {/* Support Options */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Need More Help?</h2>
-            <p className="text-xl text-gray-600">Get personalized support from our expert team</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Need More Help?</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Get personalized support from our expert team</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {supportOptions.map((option, index) => (
-              <div key={index} className="bg-white p-8 rounded-3xl shadow-lg text-center">
-                <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
+              <div key={index} className="bg-[color:var(--paper)] p-8 rounded-[28px] shadow-lg text-center">
+                <div className="p-4 rounded-[28px] bg-[color:var(--ink)] w-fit mx-auto mb-6">
                   <option.icon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">{option.title}</h3>
-                <p className="text-gray-600 mb-4">{option.description}</p>
-                <p className="text-sm text-gray-500 mb-6">{option.availability}</p>
+                <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{option.title}</h3>
+                <p className="text-[color:var(--text-2)] mb-4">{option.description}</p>
+                <p className="text-sm text-[color:var(--text-2)] mb-6">{option.availability}</p>
                 <Button variant="outline" className="w-full">{option.action}</Button>
               </div>
             ))}
@@ -195,15 +195,15 @@ const HelpCenter = () => {
       </section>
 
       {/* Community Section */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8 text-center">
-            <Users className="h-16 w-16 mx-auto mb-6 text-blue-400" />
+          <div className="bg-[color:var(--paper)] rounded-[28px] p-12 text-[color:var(--ink)] border border-[color:var(--line)] text-center">
+            <Users className="h-16 w-16 mx-auto mb-6 text-[color:var(--blue)]" />
             <h3 className="text-3xl font-light mb-6">Join Our Community</h3>
-            <p className="text-xl text-black/60 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-[color:var(--text-2)] mb-8 max-w-2xl mx-auto">
               Connect with other users, share tips, and get help from the community
             </p>
-            <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3">
+            <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full py-3">
               Join Community Forum
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

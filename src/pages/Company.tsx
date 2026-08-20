@@ -99,24 +99,24 @@ const Company = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-16 bg-white dark:bg-[#181512]">
+    <div className="min-h-screen pt-16 bg-[color:var(--paper)] dark:bg-[color:var(--bg)]">
       {/* Hero Section */}
-      <section className="py-24 px-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <section className="py-24 px-4 bg-gradient-to-br from-[color:var(--blue-100)] via-[color:var(--paper)] to-[color:var(--blue-100)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-5xl mx-auto mb-20">
-            <h1 className="text-6xl md:text-7xl font-light text-gray-900 mb-8 tracking-tight leading-tight">
+            <h1 className="text-6xl md:text-7xl font-light text-[color:var(--ink)] mb-8 tracking-tight leading-tight">
               Building the Future of
-              <span className="block font-medium text-[#111111]">
+              <span className="block font-medium text-[color:var(--ink)]">
                 Intelligent Work
               </span>
             </h1>
-            <p className="text-xl text-gray-600 mb-12 font-light leading-relaxed max-w-4xl mx-auto">
+            <p className="text-xl text-[color:var(--text-2)] mb-12 font-light leading-relaxed max-w-4xl mx-auto">
               We're on a mission to give every professional three extra days per week by automating 
               the repetitive tasks that keep them from doing their best work. Founded in 2020, 
               we've become the leading AI automation platform trusted by Fortune 500 companies worldwide.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white" asChild>
+              <Button size="lg" className="bg-[color:var(--blue)] hover:bg-[color:var(--blue)] text-white" asChild>
                 <Link to="/careers">Join Our Team <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
@@ -128,9 +128,9 @@ const Company = () => {
           {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg">
-                <div className="text-4xl lg:text-5xl font-light text-gray-900 mb-2">{stat.number}</div>
-                <div className="text-gray-600">{stat.label}</div>
+              <div key={index} className="text-center bg-[color:var(--paper)] backdrop-blur-sm p-6 rounded-[28px] shadow-lg">
+                <div className="text-4xl lg:text-5xl font-light text-[color:var(--ink)] mb-2">{stat.number}</div>
+                <div className="text-[color:var(--text-2)]">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -138,28 +138,28 @@ const Company = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-24 bg-[#f5ede3] text-[#111111] px-4">
+      <section className="py-24 bg-[color:var(--sand)] text-[color:var(--ink)] px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-5xl font-light mb-8 tracking-tight">Our Mission</h2>
-              <p className="text-xl text-black/60 mb-8 leading-relaxed">
+              <p className="text-xl text-[color:var(--text-2)] mb-8 leading-relaxed">
                 Every day, millions of professionals lose hours to repetitive, manual tasks. 
                 We believe human creativity and intelligence should be spent on work that matters—
                 strategy, innovation, and meaningful connections.
               </p>
-              <p className="text-xl text-black/60 mb-8 leading-relaxed">
+              <p className="text-xl text-[color:var(--text-2)] mb-8 leading-relaxed">
                 Our AI-powered digital workers handle the routine so you can focus on the remarkable. 
                 We're not just building software; we're reshaping how work gets done.
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-2xl font-medium mb-2">Vision</h3>
-                  <p className="text-black/50">A world where every professional has an AI workforce</p>
+                  <p className="text-[color:var(--text-2)]">A world where every professional has an AI workforce</p>
                 </div>
                 <div>
                   <h3 className="text-2xl font-medium mb-2">Impact</h3>
-                  <p className="text-black/50">10M+ hours saved for our customers</p>
+                  <p className="text-[color:var(--text-2)]">10M+ hours saved for our customers</p>
                 </div>
               </div>
             </div>
@@ -167,33 +167,33 @@ const Company = () => {
               <img 
                 src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
                 alt="Team collaboration"
-                className="rounded-3xl shadow-2xl"
+                className="rounded-[28px] shadow-2xl"
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-[#222222]/8 rounded-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-[color:var(--blue)] to-[color:var(--text-2)] rounded-[28px]"></div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Values */}
-      <section className="py-24 px-4 bg-gray-50">
+      <section className="py-24 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">Our Values</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+            <h2 className="text-5xl font-light text-[color:var(--ink)] mb-6 tracking-tight">Our Values</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto font-light">
               The principles that guide everything we do, from product development to customer relationships.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {values.map((value, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-[color:var(--paper)]">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-[28px] bg-[color:var(--ink)] w-fit mx-auto mb-6">
                     <value.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">{value.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{value.description}</p>
+                  <h3 className="text-xl font-semibold text-[color:var(--ink)] mb-4">{value.title}</h3>
+                  <p className="text-[color:var(--text-2)] leading-relaxed">{value.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -205,24 +205,24 @@ const Company = () => {
       <section className="py-24 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">Leadership Team</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+            <h2 className="text-5xl font-light text-[color:var(--ink)] mb-6 tracking-tight">Leadership Team</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto font-light">
               Experienced leaders from top tech companies building the future of work.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {team.map((member, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-[color:var(--paper)]">
                 <CardContent className="p-6 text-center">
                   <img 
                     src={`https://images.unsplash.com/${member.image}?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`}
                     alt={member.name}
-                    className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-gray-100"
+                    className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-[color:var(--line)]"
                   />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">{member.name}</h3>
-                  <p className="text-blue-600 text-sm font-medium mb-3">{member.role}</p>
-                  <p className="text-gray-600 text-sm leading-relaxed">{member.bio}</p>
+                  <h3 className="text-lg font-semibold text-[color:var(--ink)] mb-1">{member.name}</h3>
+                  <p className="text-[color:var(--blue)] text-sm font-medium mb-3">{member.role}</p>
+                  <p className="text-[color:var(--text-2)] text-sm leading-relaxed">{member.bio}</p>
                 </CardContent>
               </Card>
             ))}
@@ -231,11 +231,11 @@ const Company = () => {
       </section>
 
       {/* Timeline */}
-      <section className="py-24 px-4 bg-gray-50">
+      <section className="py-24 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">Our Journey</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+            <h2 className="text-5xl font-light text-[color:var(--ink)] mb-6 tracking-tight">Our Journey</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto font-light">
               From startup to industry leader in AI automation.
             </p>
           </div>
@@ -243,9 +243,9 @@ const Company = () => {
           <div className="max-w-4xl mx-auto">
             {milestones.map((milestone, index) => (
               <div key={index} className="flex items-center mb-8 last:mb-0">
-                <div className="w-24 text-2xl font-light text-blue-600 mr-8 flex-shrink-0">{milestone.year}</div>
-                <div className="flex-1 bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                  <p className="text-gray-800 font-medium">{milestone.event}</p>
+                <div className="w-24 text-2xl font-light text-[color:var(--blue)] mr-8 flex-shrink-0">{milestone.year}</div>
+                <div className="flex-1 bg-[color:var(--paper)] p-6 rounded-[28px] shadow-lg hover:shadow-xl transition-shadow">
+                  <p className="text-[color:var(--ink)] font-medium">{milestone.event}</p>
                 </div>
               </div>
             ))}
@@ -257,22 +257,22 @@ const Company = () => {
       <section className="py-24 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-light text-gray-900 mb-6 tracking-tight">Global Presence</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+            <h2 className="text-5xl font-light text-[color:var(--ink)] mb-6 tracking-tight">Global Presence</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto font-light">
               We're building a global team with offices in key technology hubs.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {offices.map((office, index) => (
-              <Card key={index} className="border-0 shadow-lg bg-white">
+              <Card key={index} className="border-0 shadow-lg bg-[color:var(--paper)]">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-[28px] bg-[color:var(--ink)] w-fit mx-auto mb-6">
                     <Building className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{office.city}</h3>
-                  <p className="text-blue-600 text-sm font-medium mb-3">{office.type}</p>
-                  <p className="text-gray-600 text-sm flex items-center justify-center">
+                  <h3 className="text-xl font-semibold text-[color:var(--ink)] mb-2">{office.city}</h3>
+                  <p className="text-[color:var(--blue)] text-sm font-medium mb-3">{office.type}</p>
+                  <p className="text-[color:var(--text-2)] text-sm flex items-center justify-center">
                     <MapPin className="h-4 w-4 mr-2" />
                     {office.address}
                   </p>
@@ -284,16 +284,16 @@ const Company = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-[#f5ede3] text-[#111111] px-4">
+      <section className="py-24 bg-[color:var(--sand)] text-[color:var(--ink)] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Ready to Transform Your Business?</h2>
-          <p className="text-xl mb-12 text-black/60 font-light">
+          <p className="text-xl mb-12 text-[color:var(--text-2)] font-light">
             Join thousands of companies already using 3days.ai to reclaim their time and boost productivity.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-[#111111] text-white hover:bg-[#222222] rounded-full"
+              className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full"
               asChild
             >
               <Link to="/get-started">
@@ -304,7 +304,7 @@ const Company = () => {
             <Button
               size="lg"
               variant="outline"
-              className="border-black/15 bg-white/70 text-[#111111] hover:bg-white rounded-full"
+              className="border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink)] hover:bg-[color:var(--paper)] rounded-full"
               asChild
             >
               <Link to="/schedule-demo">Schedule Demo</Link>

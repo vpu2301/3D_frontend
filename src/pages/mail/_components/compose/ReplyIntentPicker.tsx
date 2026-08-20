@@ -23,17 +23,17 @@ export default function ReplyIntentPicker({ open, onClose, onPick }: Props) {
   return (
     <div
       role="dialog"
-      className="absolute inset-x-3 bottom-12 z-20 rounded-lg border border-[#8fc4e4]/40 bg-white p-3 shadow-xl"
+      className="absolute inset-x-3 bottom-12 z-20 rounded-[14px] border border-[var(--line)] bg-white p-3 shadow-xl"
     >
       <div className="mb-2 flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-xs font-medium text-[#1a73e8]">
+        <div className="plat-eyebrow flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5" />
           Reply with AI
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="rounded p-0.5 text-gray-400 hover:bg-gray-100"
+          className="rounded-[6px] p-0.5 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
           aria-label="Close"
         >
           <X className="h-3.5 w-3.5" />
@@ -45,10 +45,10 @@ export default function ReplyIntentPicker({ open, onClose, onPick }: Props) {
             key={i.id}
             type="button"
             onClick={() => onPick(i.id)}
-            className="rounded-md border border-gray-100 bg-white px-2.5 py-2 text-left text-sm hover:border-[#8fc4e4] hover:bg-[#f8fbff]"
+            className="rounded-[12px] border border-[var(--line-soft)] bg-white px-2.5 py-2 text-left text-sm transition-colors hover:border-[var(--ink)]"
           >
-            <div className="font-medium text-gray-900">{i.label}</div>
-            <div className="text-[11px] text-gray-500">{i.hint}</div>
+            <div className="font-semibold text-[var(--ink)]">{i.label}</div>
+            <div className="text-[11px] text-[var(--text-4)]">{i.hint}</div>
           </button>
         ))}
       </div>
@@ -58,8 +58,8 @@ export default function ReplyIntentPicker({ open, onClose, onPick }: Props) {
           onChange={(e) => setFreeForm(e.target.value)}
           placeholder="Or describe the reply…"
           className={cn(
-            'flex-1 rounded-full border border-transparent bg-[#f1f3f4] px-3 py-1.5 text-sm',
-            'focus:border-[#8fc4e4] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#8fc4e4]',
+            'flex-1 rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] px-3 py-1.5 text-sm text-[var(--ink)] placeholder:text-[var(--text-5)]',
+            'focus:border-[var(--ink)] focus:bg-white focus:outline-none',
           )}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && freeForm.trim()) onPick('free-form', freeForm.trim());
@@ -69,7 +69,7 @@ export default function ReplyIntentPicker({ open, onClose, onPick }: Props) {
           type="button"
           onClick={() => freeForm.trim() && onPick('free-form', freeForm.trim())}
           disabled={!freeForm.trim()}
-          className="rounded-full bg-[#bdd8ec] px-3 py-1.5 text-sm font-medium text-gray-900 hover:bg-[#a5c8e0] disabled:opacity-50"
+          className="rounded-full bg-[var(--ink)] px-4 py-1.5 text-sm font-semibold text-white transition-opacity hover:opacity-[0.86] disabled:opacity-35"
         >
           Draft
         </button>

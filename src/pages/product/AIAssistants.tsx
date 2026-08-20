@@ -44,7 +44,7 @@ const AIAssistants = () => {
       title: 'Executive Assistant',
       description: 'Your 24/7 AI executive assistant that manages emails, schedules meetings, handles reminders, and more—freeing up hours of administrative tasks.',
       icon: Calendar,
-      color: 'from-[#111111] to-[#222222]',
+      color: 'from-[color:var(--ink)] to-[color:var(--text-2)]',
       link: '/solutions/aria'
     },
     {
@@ -52,7 +52,7 @@ const AIAssistants = () => {
       title: 'Customer Support',
       description: 'Handles routine support inquiries, escalates complex tickets, and maintains comprehensive knowledge base for instant customer assistance.',
       icon: MessageCircle,
-      color: 'from-green-500 to-blue-500',
+      color: 'from-[color:var(--blue)] to-[color:var(--blue)]',
       link: '/solutions/atlas'
     },
     {
@@ -60,7 +60,7 @@ const AIAssistants = () => {
       title: 'Finance Analyst',
       description: 'Automates invoice processing, expense approvals, and financial data analysis with near-perfect accuracy for your finance team.',
       icon: Calculator,
-      color: 'from-green-500 to-emerald-500',
+      color: 'from-[color:var(--blue)] to-[color:var(--blue)]',
       link: '/solutions/felix'
     },
     {
@@ -68,7 +68,7 @@ const AIAssistants = () => {
       title: 'Marketing Specialist',
       description: 'Transforms marketing efforts with intelligent campaign optimization, content personalization, and performance analytics.',
       icon: TrendingUp,
-      color: 'from-pink-500 to-[#222222]',
+      color: 'from-[color:var(--blue)] to-[color:var(--text-2)]',
       link: '/solutions/maya'
     },
     {
@@ -76,7 +76,7 @@ const AIAssistants = () => {
       title: 'Research Analyst',
       description: 'Delivers comprehensive research and analysis with unmatched speed and accuracy, transforming business intelligence gathering.',
       icon: Search,
-      color: 'from-indigo-500 to-teal-500',
+      color: 'from-[color:var(--blue)] to-[color:var(--blue)]',
       link: '/solutions/sage'
     },
     {
@@ -84,7 +84,7 @@ const AIAssistants = () => {
       title: 'HR Specialist',
       description: 'Revolutionizes human resources with intelligent automation for recruitment, employee engagement, and performance management that puts people first.',
       icon: UserCheck,
-      color: 'from-rose-500 to-[#222222]',
+      color: 'from-[color:var(--blue)] to-[color:var(--text-2)]',
       link: '/solutions/nova'
     },
     {
@@ -92,7 +92,7 @@ const AIAssistants = () => {
       title: 'Sales Specialist',
       description: 'Automates lead qualification, manages outreach campaigns, and optimizes your sales pipeline with intelligent insights.',
       icon: PhoneCall,
-      color: 'from-pink-500 to-rose-500',
+      color: 'from-[color:var(--blue)] to-[color:var(--blue)]',
       link: '/solutions/emma'
     }
   ];
@@ -116,23 +116,23 @@ const AIAssistants = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[color:var(--sand)] to-[color:var(--paper)] dark:from-[color:var(--bg)] dark:to-[color:var(--paper)]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+            <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight">
               AI Assistants
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed">
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto font-light leading-relaxed">
               Intelligent AI assistants that understand context, learn from interactions, and provide 
               personalized support for your team and customers with human-like conversations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+              <Button className="bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/start-free-trial">Create AI Assistant</Link>
               </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
+              <Button variant="outline" className="border-[color:var(--line)] text-[color:var(--ink)] hover:bg-[color:var(--sand)] px-8 py-3 rounded-full" asChild>
                 <Link to="/watch-demo">Try Demo</Link>
               </Button>
             </div>
@@ -141,28 +141,28 @@ const AIAssistants = () => {
       </section>
 
       {/* AI Workers Section */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Meet Our AI Workers</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Meet Our AI Workers</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto">
               Specialized AI assistants designed for specific roles and functions in your organization
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {aiWorkers.map((worker, index) => (
-              <Card key={index} className="bg-white border-gray-200/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
+              <Card key={index} className="bg-[color:var(--paper)] border-[color:var(--line)] shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-r ${worker.color} w-fit mx-auto mb-6`}>
+                  <div className={`p-4 rounded-[28px] bg-gradient-to-r ${worker.color} w-fit mx-auto mb-6`}>
                     <worker.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-2xl font-medium text-gray-900 mb-2">{worker.name}</h3>
-                  <h4 className="text-lg text-gray-600 mb-4">{worker.title}</h4>
-                  <p className="text-gray-600 leading-relaxed mb-6">{worker.description}</p>
+                  <h3 className="text-2xl font-medium text-[color:var(--ink)] mb-2">{worker.name}</h3>
+                  <h4 className="text-lg text-[color:var(--text-2)] mb-4">{worker.title}</h4>
+                  <p className="text-[color:var(--text-2)] leading-relaxed mb-6">{worker.description}</p>
                   <Button 
                     variant="outline" 
-                    className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full w-full" 
+                    className="border-[color:var(--line)] text-[color:var(--ink)] hover:bg-[color:var(--sand)] rounded-full w-full" 
                     asChild
                   >
                     <Link to={worker.link}>
@@ -178,24 +178,24 @@ const AIAssistants = () => {
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Assistant Capabilities</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Assistant Capabilities</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto">
               Advanced AI features that make conversations natural and productive
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="bg-white border-gray-200/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
+              <Card key={index} className="bg-[color:var(--paper)] border-[color:var(--line)] shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mx-auto mb-6">
+                  <div className="p-4 rounded-[28px] bg-[color:var(--ink)] w-fit mx-auto mb-6">
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{feature.title}</h3>
+                  <p className="text-[color:var(--text-2)] leading-relaxed">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -204,25 +204,25 @@ const AIAssistants = () => {
       </section>
 
       {/* Use Cases */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Popular Use Cases</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Popular Use Cases</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto">
               See how AI assistants transform different areas of your business
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {useCases.map((useCase, index) => (
-              <div key={index} className="bg-gray-50 p-8 rounded-3xl shadow-lg">
-                <h3 className="text-2xl font-medium text-gray-900 mb-4">{useCase.title}</h3>
-                <p className="text-gray-600 mb-6">{useCase.description}</p>
+              <div key={index} className="bg-[color:var(--sand)] p-8 rounded-[28px] shadow-lg">
+                <h3 className="text-2xl font-medium text-[color:var(--ink)] mb-4">{useCase.title}</h3>
+                <p className="text-[color:var(--text-2)] mb-6">{useCase.description}</p>
                 <div className="space-y-3">
                   {useCase.benefits.map((benefit, idx) => (
                     <div key={idx} className="flex items-center">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                      <span className="text-gray-700">{benefit}</span>
+                      <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mr-3"></div>
+                      <span className="text-[color:var(--ink)]">{benefit}</span>
                     </div>
                   ))}
                 </div>
@@ -233,53 +233,53 @@ const AIAssistants = () => {
       </section>
 
       {/* Performance Stats */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Assistant Performance</h2>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Assistant Performance</h2>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-light text-blue-600 mb-2">98%</div>
-              <div className="text-gray-600">User satisfaction</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">98%</div>
+              <div className="text-[color:var(--text-2)]">User satisfaction</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-purple-600 mb-2">&lt;2s</div>
-              <div className="text-gray-600">Average response time</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">&lt;2s</div>
+              <div className="text-[color:var(--text-2)]">Average response time</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-green-600 mb-2">50+</div>
-              <div className="text-gray-600">Languages supported</div>
+              <div className="text-4xl font-light text-[color:var(--blue)] mb-2">50+</div>
+              <div className="text-[color:var(--text-2)]">Languages supported</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-light text-[#111111] mb-2">24/7</div>
-              <div className="text-gray-600">Uptime availability</div>
+              <div className="text-4xl font-light text-[color:var(--ink)] mb-2">24/7</div>
+              <div className="text-[color:var(--text-2)]">Uptime availability</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Advanced Features */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8">
+          <div className="bg-[color:var(--paper)] rounded-[28px] p-12 text-[color:var(--ink)] border border-[color:var(--line)]">
             <h3 className="text-3xl font-light mb-8 text-center">Enterprise Features</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
-                <Users className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+                <Users className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Team Collaboration</h4>
-                <p className="text-black/60">Shared assistants with role-based access and permissions</p>
+                <p className="text-[color:var(--text-2)]">Shared assistants with role-based access and permissions</p>
               </div>
               <div className="text-center">
-                <Zap className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
+                <Zap className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">API Integration</h4>
-                <p className="text-black/60">Connect with your existing tools and workflows</p>
+                <p className="text-[color:var(--text-2)]">Connect with your existing tools and workflows</p>
               </div>
               <div className="text-center">
-                <Shield className="h-12 w-12 text-green-400 mx-auto mb-4" />
+                <Shield className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                 <h4 className="text-xl font-medium mb-2">Data Security</h4>
-                <p className="text-black/60">Enterprise-grade security and privacy protection</p>
+                <p className="text-[color:var(--text-2)]">Enterprise-grade security and privacy protection</p>
               </div>
             </div>
           </div>
@@ -287,13 +287,13 @@ const AIAssistants = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
+      <section className="py-20 bg-[color:var(--sand)] text-[color:var(--ink)] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">Build Your AI Assistant</h2>
           <p className="text-xl mb-12 opacity-90 font-light">
             Create intelligent assistants that understand your business and help your team succeed.
           </p>
-          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full py-3" asChild>
             <Link to="/start-free-trial">
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />

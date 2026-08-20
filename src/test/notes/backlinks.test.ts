@@ -1,6 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { computeBacklinks, deriveTitle, deriveSnippet, extractInlineTags, deriveFullText } from '@/pages/notes/_lib/backlinks';
+import {
+  deriveTitle,
+  deriveSnippet,
+  extractInlineTags,
+  deriveFullText,
+} from '@/pages/notes/_lib/backlinks';
 import type { Note } from '@/pages/notes/_lib/types';
+
+// `computeBacklinks` is gone: backlinks come from
+// `GET /v1/notes/{id}/backlinks` now, and are covered by the store/API tests
+// rather than by a pure-function test over a local map.
 
 const mk = (overrides: Partial<Note>): Note => ({
   id: 'n1',
@@ -11,6 +20,7 @@ const mk = (overrides: Partial<Note>): Note => ({
   trashed: false,
   reminders: [],
   links: [],
+  version: 1,
   createdAt: 0,
   updatedAt: 0,
   ...overrides,
@@ -43,38 +53,6 @@ describe('deriveTitle', () => {
   });
   it('returns "Untitled" for empty notes', () => {
     expect(deriveTitle(mk({}))).toBe('Untitled');
-  });
-});
-
-describe('computeBacklinks', () => {
-  it('builds a target → backlinks map', () => {
-    const a = mk({ id: 'a', title: 'A', links: [{ type: 'note', targetId: 'b' }] });
-    const b = mk({ id: 'b', title: 'B', links: [] });
-    const map = computeBacklinks([a, b]);
-    expect(map.get('note:b')).toHaveLength(1);
-    expect(map.get('note:b')![0].fromNoteId).toBe('a');
-    expect(map.get('note:a')).toBeUndefined();
-  });
-
-  it('skips trashed notes', () => {
-    const a = mk({ id: 'a', trashed: true, links: [{ type: 'note', targetId: 'b' }] });
-    const b = mk({ id: 'b' });
-    const map = computeBacklinks([a, b]);
-    expect(map.get('note:b')).toBeUndefined();
-  });
-
-  it('keys backlinks by link type', () => {
-    const a = mk({
-      id: 'a',
-      title: 'A',
-      links: [
-        { type: 'note', targetId: 'x' },
-        { type: 'doc', targetId: 'x' },
-      ],
-    });
-    const map = computeBacklinks([a]);
-    expect(map.get('note:x')).toHaveLength(1);
-    expect(map.get('doc:x')).toHaveLength(1);
   });
 });
 

@@ -40,7 +40,7 @@ export function AgendaView({
   return (
     <div className="h-full overflow-y-auto px-6 py-4">
       {grouped.size === 0 && (
-        <div className="flex h-full items-center justify-center text-sm text-gray-400">
+        <div className="flex h-full items-center justify-center text-sm text-[var(--text-4)]">
           Nothing scheduled this week.
         </div>
       )}
@@ -48,12 +48,12 @@ export function AgendaView({
         const d = new Date(k);
         return (
           <section key={k} className="mb-6">
-            <header className="sticky top-0 z-10 -mx-6 border-b border-gray-200/70 bg-white/90 px-6 py-2 backdrop-blur">
-              <h2 className="text-sm font-semibold text-gray-800">
+            <header className="sticky top-0 z-10 -mx-6 border-b border-[var(--line-soft)] bg-[rgba(252,252,253,0.9)] px-6 py-2 backdrop-blur">
+              <h2 className="text-sm">
                 {format(d, 'EEEE, MMMM d')}
               </h2>
             </header>
-            <div className="mt-2 space-y-1.5">
+            <div className="plat-list mt-3">
               {dayEvents.map(e => (
                 <EventChip
                   key={e.id}

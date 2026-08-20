@@ -103,27 +103,28 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
   };
 
   return (
-    <div className="flex h-full w-[440px] shrink-0 flex-col border-r border-gray-200 bg-white">
-      <div className="px-5 pt-5 pb-2">
-        <h1 className="text-2xl font-light text-gray-900">
-          {title} <span className="text-gray-400">({threadList.length})</span>
+    <div className="flex h-full w-[440px] shrink-0 flex-col border-r border-[var(--line-soft)] bg-transparent">
+      <div className="px-5 pt-5 pb-3">
+        <div className="plat-crumb">3days.mail</div>
+        <h1 className="mt-1.5 text-[26px] font-semibold tracking-[-0.03em] text-[var(--ink)]">
+          {title} <span className="text-[var(--text-5)]">({threadList.length})</span>
         </h1>
       </div>
 
       <div className="px-3 pb-2">
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-5)]" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search mail…"
-            className="h-8 w-full rounded-full border border-transparent bg-[#f1f3f4] pl-8 pr-7 text-xs text-gray-900 placeholder:text-gray-400 focus:border-[#8fc4e4] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#8fc4e4]"
+            className="h-9 w-full rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] pl-8 pr-7 text-xs text-[var(--ink)] placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:bg-white focus:outline-none"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-400 hover:bg-gray-100"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-[6px] p-0.5 text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.06)]"
             >
               <X className="h-3 w-3" />
             </button>
@@ -132,7 +133,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
       </div>
 
       {showCategoryTabs && (
-        <div className="flex items-center gap-1 border-b border-gray-100 px-3 pb-2">
+        <div className="flex items-center gap-1 border-b border-[var(--line-soft)] px-3 pb-2">
           {CATEGORY_LABELS.map((c) => (
             <button
               key={c.id}
@@ -141,8 +142,8 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
               className={cn(
                 'rounded-full px-3 py-1 text-xs font-medium transition-colors',
                 category === c.id
-                  ? 'bg-[#dde9f4] text-gray-900'
-                  : 'text-gray-600 hover:bg-gray-100',
+                  ? 'bg-[var(--ink)] text-white'
+                  : 'text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.05)]',
               )}
             >
               {c.label}
@@ -152,7 +153,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
       )}
 
       {selectedEmailIds.length > 0 && (
-        <div className="flex items-center justify-between gap-2 border-b border-gray-100 bg-[#dde9f4]/40 px-3 py-1.5 text-xs text-gray-700">
+        <div className="flex items-center justify-between gap-2 border-b border-[var(--line-soft)] bg-[rgba(20,22,26,0.04)] px-3 py-1.5 text-xs text-[var(--text-2)]">
           <span>{selectedEmailIds.length} selected</span>
           <div className="flex items-center gap-1">
             <button
@@ -161,7 +162,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                 archive(selectedEmailIds);
                 clearSelection();
               }}
-              className="rounded p-1 hover:bg-white"
+              className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-white hover:text-[var(--ink)]"
               title="Archive"
             >
               <Archive className="h-3.5 w-3.5" />
@@ -172,7 +173,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                 trash(selectedEmailIds);
                 clearSelection();
               }}
-              className="rounded p-1 hover:bg-white"
+              className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-white hover:text-[var(--ink)]"
               title="Delete"
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -180,7 +181,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
             <button
               type="button"
               onClick={clearSelection}
-              className="rounded p-1 hover:bg-white"
+              className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-white hover:text-[var(--ink)]"
               title="Clear"
             >
               <X className="h-3.5 w-3.5" />
@@ -192,11 +193,11 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
       <div className="flex-1 overflow-y-auto">
         {threadList.length === 0 ? (
           <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#dde9f4] text-[#1a73e8]">
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-[12px] bg-[var(--sand)] text-[var(--ink)]">
               <Sparkles className="h-7 w-7" />
             </div>
-            <p className="text-sm text-gray-700">Inbox zero.</p>
-            <p className="mt-1 text-xs text-gray-500">Nothing here — either the AI screened it out, or you handled it.</p>
+            <p className="text-sm font-medium text-[var(--ink)]">Inbox zero.</p>
+            <p className="mt-1 text-xs text-[var(--text-4)]">Nothing here — either the AI screened it out, or you handled it.</p>
           </div>
         ) : (
           threadList.map(({ thread, emails }) => {
@@ -213,9 +214,8 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                 onMouseEnter={() => setHoverId(thread.id)}
                 onMouseLeave={() => setHoverId(null)}
                 className={cn(
-                  'group relative flex cursor-pointer items-start gap-3 border-b border-gray-100 px-4 py-3 transition-colors',
-                  active ? 'bg-[#dde9f4]' : 'hover:bg-gray-50',
-                  isUnread && !active && 'bg-[#f8fbff]',
+                  'group relative flex cursor-pointer items-start gap-3 border-b border-[var(--line-soft)] px-4 py-3 transition-colors last:border-b-0',
+                  active ? 'bg-[rgba(20,22,26,0.06)]' : 'hover:bg-[rgba(20,22,26,0.02)]',
                 )}
                 onClick={() => onOpen(thread)}
               >
@@ -226,38 +226,44 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                     toggleSelected(last.id);
                   }}
                   className={cn(
-                    'mt-1 shrink-0 text-gray-400 hover:text-gray-700',
+                    'mt-1 shrink-0 text-[var(--text-5)] hover:text-[var(--ink)]',
                     (isSelected || hoverId === thread.id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
                   )}
                   aria-label={isSelected ? 'Deselect' : 'Select'}
                 >
-                  {isSelected ? <CheckSquare className="h-4 w-4 text-[#1a73e8]" /> : <Square className="h-4 w-4" />}
+                  {isSelected ? <CheckSquare className="h-4 w-4 text-[var(--ink)]" /> : <Square className="h-4 w-4" />}
                 </button>
 
                 <Avatar name={lastIncoming.from.name} email={lastIncoming.from.email} size={32} />
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
-                    <span className={cn('truncate text-sm', isUnread ? 'font-semibold text-gray-900' : 'text-gray-800')}>
+                    {isUnread && (
+                      <span
+                        aria-hidden
+                        className="mb-[1px] h-1.5 w-1.5 shrink-0 self-center rounded-full bg-[var(--ink)]"
+                      />
+                    )}
+                    <span className={cn('truncate text-sm', isUnread ? 'font-bold text-[var(--ink)]' : 'font-medium text-[var(--text-1)]')}>
                       {lastIncoming.from.name}
                     </span>
                     {emails.length > 1 && (
-                      <span className="shrink-0 text-[11px] text-gray-400">{emails.length}</span>
+                      <span className="shrink-0 text-[11px] text-[var(--text-5)]">{emails.length}</span>
                     )}
-                    <span className="ml-auto shrink-0 text-[11px] text-gray-500">
+                    <span className="ml-auto shrink-0 text-[11px] text-[var(--text-4)]">
                       {formatRelative(thread.lastMessageAt)}
                     </span>
                   </div>
                   <div className="mt-0.5 flex items-center gap-2">
-                    <span className={cn('truncate text-sm', isUnread ? 'font-medium text-gray-900' : 'text-gray-700')}>
+                    <span className={cn('truncate text-sm', isUnread ? 'font-semibold text-[var(--ink)]' : 'text-[var(--text-2)]')}>
                       {thread.subject}
                     </span>
                   </div>
-                  <p className="mt-0.5 line-clamp-1 text-xs text-gray-500">{lastIncoming.snippet}</p>
+                  <p className="mt-0.5 line-clamp-1 text-xs text-[var(--text-4)]">{lastIncoming.snippet}</p>
                   {(labelChips.length > 0 || thread.hasAttachments || tone) && (
                     <div className="mt-1 flex flex-wrap items-center gap-1">
                       {thread.hasAttachments && (
-                        <span className="inline-flex items-center gap-0.5 text-[10px] text-gray-500">
+                        <span className="inline-flex items-center gap-0.5 text-[10px] text-[var(--text-4)]">
                           <Paperclip className="h-2.5 w-2.5" />
                         </span>
                       )}
@@ -278,7 +284,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                         );
                       })}
                       {tone && tone.tone !== 'neutral' && (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] capitalize text-gray-600">
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-[var(--sand-deep)] px-1.5 py-0.5 text-[10px] font-medium capitalize text-[var(--text-3)]">
                           {tone.tone}
                         </span>
                       )}
@@ -289,7 +295,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                 {/* Hover quick actions */}
                 <div
                   className={cn(
-                    'absolute right-3 top-3 flex items-center gap-0.5 rounded-md bg-white p-0.5 shadow-sm transition-opacity',
+                    'absolute right-3 top-3 flex items-center gap-0.5 rounded-[10px] border border-[var(--line-soft)] bg-white p-0.5 shadow-sm transition-opacity',
                     hoverId === thread.id ? 'opacity-100' : 'opacity-0 pointer-events-none',
                   )}
                   onClick={(e) => e.stopPropagation()}
@@ -297,7 +303,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                   <button
                     type="button"
                     onClick={() => archive(emails.map((e) => e.id))}
-                    className="rounded p-1 text-gray-500 hover:bg-gray-100"
+                    className="rounded-[8px] p-1 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                     title="Archive"
                   >
                     <Archive className="h-3.5 w-3.5" />
@@ -305,7 +311,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                   <button
                     type="button"
                     onClick={() => snooze(emails.map((e) => e.id), Date.now() + 86_400_000)}
-                    className="rounded p-1 text-gray-500 hover:bg-gray-100"
+                    className="rounded-[8px] p-1 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                     title="Snooze 1 day"
                   >
                     <Moon className="h-3.5 w-3.5" />
@@ -313,7 +319,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                   <button
                     type="button"
                     onClick={() => trash(emails.map((e) => e.id))}
-                    className="rounded p-1 text-gray-500 hover:bg-red-50 hover:text-red-600"
+                    className="rounded-[8px] p-1 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--bad-fg)]"
                     title="Delete"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -321,7 +327,7 @@ export default function ThreadList({ predicate, title, showCategoryTabs }: Props
                   <button
                     type="button"
                     onClick={() => toggleStar(last.id)}
-                    className="rounded p-1 text-gray-500 hover:bg-gray-100"
+                    className="rounded-[8px] p-1 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                     title="Star"
                   >
                     <Star className={cn('h-3.5 w-3.5', last.isStarred && 'fill-amber-400 text-amber-400')} />

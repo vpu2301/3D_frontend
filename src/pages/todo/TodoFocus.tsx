@@ -111,31 +111,38 @@ export default function TodoFocus() {
   const seconds = Math.floor((remaining % 60_000) / 1000);
   const sessionMinutes = Math.round((Date.now() - sessionStart) / 60_000);
 
+
   return (
     <TodoLayout>
-      <main className="flex flex-1 flex-col items-center justify-center bg-gradient-to-b from-violet-50 to-white px-6 py-12">
+      <main className="flex flex-1 flex-col items-center justify-center px-6 py-12">
         <Link
           to="/todo"
-          className="absolute left-6 top-6 inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900"
+          className="absolute left-6 top-6 inline-flex items-center gap-1 text-xs text-[var(--text-4)] transition-colors hover:text-[var(--ink)]"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back to Todo
         </Link>
-        <div className="mb-2 flex items-center gap-1.5 text-xs uppercase tracking-wider text-violet-600">
-          <Crosshair className="h-3.5 w-3.5" /> Focus mode
+        <div className="mb-6 text-center">
+          <p className="plat-crumb">3days.todo</p>
+          <h1 className="mt-1.5 flex items-center justify-center gap-2 text-[22px]">
+            <Crosshair className="h-4 w-4" style={{ color: 'var(--text-4)' }} /> Focus mode
+          </h1>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white px-12 py-10 shadow-sm">
-          <div className="mb-2 text-center text-[11px] uppercase tracking-wider text-gray-500">
+        <div className="plat-panel !px-12 !py-10">
+          <div className="plat-eyebrow mb-2 text-center">
             {phase === 'focus' ? 'Focus' : 'Break'}
           </div>
-          <div className="text-center font-mono text-6xl tabular-nums text-gray-900">
+          <div
+            className="text-center text-6xl tabular-nums"
+            style={{ fontFamily: 'var(--mono)', color: 'var(--ink)' }}
+          >
             {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
           </div>
           <div className="mt-4 flex items-center justify-center gap-2">
             <button
               type="button"
               onClick={() => setRunning((r) => !r)}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-600 text-white hover:bg-violet-700"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--ink)] text-white transition-opacity hover:opacity-85"
               aria-label={running ? 'Pause' : 'Play'}
             >
               {running ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -143,7 +150,7 @@ export default function TodoFocus() {
             <button
               type="button"
               onClick={reset}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.04)] hover:text-[var(--ink)]"
               aria-label="Reset"
             >
               <RotateCcw className="h-4 w-4" />
@@ -153,41 +160,41 @@ export default function TodoFocus() {
 
         <div className="mt-8 w-full max-w-md">
           {active ? (
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-violet-600">
+            <div className="plat-panel !p-4">
+              <div className="plat-eyebrow flex items-center gap-1.5">
                 <Sparkles className="h-3 w-3" /> Next-best task
               </div>
-              <h2 className="mt-1 text-lg font-medium text-gray-900">{active.title}</h2>
-              <div className="mt-1 text-xs text-gray-500">
+              <h2 className="mt-1.5 text-lg text-[var(--ink)]">{active.title}</h2>
+              <div className="mt-1 text-xs text-[var(--text-4)]">
                 P{active.priority}
                 {active.estimate ? ` · ~${active.estimate}m` : ''}
                 {active.tags.length > 0 ? ` · ${active.tags.map((t) => `#${t}`).join(' ')}` : ''}
               </div>
-              <div className="mt-3 flex items-center gap-1">
+              <div className="mt-3 flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={onComplete}
-                  className="flex items-center gap-1 rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700"
+                  className="plat-btn !h-8 !px-4 !text-xs"
                 >
                   <Check className="h-3.5 w-3.5" /> Done
                 </button>
                 <button
                   type="button"
                   onClick={onSkip}
-                  className="flex items-center gap-1 rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+                  className="plat-btn-ghost !h-8 !px-4"
                 >
                   Skip <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
           ) : (
-            <div className="rounded-lg border border-dashed border-gray-200 px-4 py-8 text-center text-sm italic text-gray-500">
+            <div className="rounded-[14px] border border-dashed border-[var(--line)] px-4 py-8 text-center text-sm italic text-[var(--text-4)]">
               All caught up — no eligible tasks. Step away from the keyboard.
             </div>
           )}
         </div>
 
-        <div className="mt-8 text-xs text-gray-500">
+        <div className="mt-8 text-xs text-[var(--text-4)]">
           Session so far: completed {completedThisSession.length} task
           {completedThisSession.length === 1 ? '' : 's'} in {sessionMinutes} min.
         </div>

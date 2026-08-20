@@ -585,32 +585,32 @@ const Integrations = () => {
   }, [activeGroup, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[color:var(--paper)]">
       <Header />
 
       {/* Hero */}
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#141413]/6 border border-[#141413]/10 text-[#141413]/60 text-xs font-medium mb-6 dark:bg-white/6 dark:border-white/10 dark:text-white/50" style={{ borderRadius: '100px' }}>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[color:var(--sand)] border border-[color:var(--line)] text-[color:var(--text-2)] text-xs font-medium mb-6 dark:bg-[color:var(--paper)] dark:border-white/10 dark:text-white/50" style={{ borderRadius: '28px' }}>
             <Zap className="w-3 h-3" />
             500+ integrations — all in one AI layer
           </div>
-          <h1 className="text-5xl md:text-6xl font-light text-[#141413] tracking-tight mb-6 dark:text-white">
+          <h1 className="text-5xl md:text-6xl font-light text-[color:var(--ink)] tracking-tight mb-6 dark:text-white">
             {t('platform.integrations.heroTitle')}<br />
             <span className="font-semibold">{t('platform.integrations.heroTitle2')}</span>
           </h1>
-          <p className="text-lg text-[#141413]/55 max-w-2xl mx-auto mb-10 leading-relaxed dark:text-white/50">
+          <p className="text-lg text-[color:var(--text-2)] max-w-2xl mx-auto mb-10 leading-relaxed dark:text-white/50">
             {t('platform.integrations.heroSubtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/signup">
-              <button className="px-7 py-3.5 bg-[#141413] hover:bg-[#2a2a28] text-white text-sm font-medium transition-all duration-200 flex items-center gap-2" style={{ borderRadius: '6px' }}>
+              <button className="px-7 py-3.5 bg-[color:var(--ink)] hover:bg-[#2a2a28] text-white text-sm font-medium transition-all duration-200 flex items-center gap-2" style={{ borderRadius: '9999px' }}>
                 {t('platform.integrations.ctaBtn')}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
             <Link to="/schedule-demo">
-              <button className="px-7 py-3.5 border border-[#141413]/15 text-[#141413]/70 hover:text-[#141413] hover:border-[#141413]/30 text-sm font-medium transition-all duration-200 dark:border-white/15 dark:text-white/60 dark:hover:text-white" style={{ borderRadius: '6px' }}>
+              <button className="px-7 py-3.5 border border-[color:var(--line)] text-[color:var(--text-2)] hover:text-[color:var(--ink)] hover:border-[color:var(--line)] text-sm font-medium transition-all duration-200 dark:border-white/15 dark:text-white/60 dark:hover:text-white" style={{ borderRadius: '9999px' }}>
                 {t('platform.integrations.ctaBtn2')}
               </button>
             </Link>
@@ -619,12 +619,12 @@ const Integrations = () => {
       </section>
 
       {/* Stats */}
-      <section className="border-y border-[#141413]/8 dark:border-white/8">
+      <section className="border-y border-[color:var(--line)] dark:border-white/8">
         <div className="max-w-5xl mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s, i) => (
             <div key={i} className="text-center">
-              <div className="text-3xl font-light text-[#141413] dark:text-white mb-1">{s.value}</div>
-              <div className="text-sm text-[#141413]/45 dark:text-white/40">{s.label}</div>
+              <div className="text-3xl font-light text-[color:var(--ink)] dark:text-white mb-1">{s.value}</div>
+              <div className="text-sm text-[color:var(--text-2)] dark:text-white/40">{s.label}</div>
             </div>
           ))}
         </div>
@@ -634,18 +634,18 @@ const Integrations = () => {
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl font-light text-[#141413] dark:text-white mb-3">{t('platform.integrations.seeHowItWorks')}</h2>
-            <p className="text-[#141413]/50 dark:text-white/45">From zero to automated in under 10 minutes.</p>
+            <h2 className="text-3xl font-light text-[color:var(--ink)] dark:text-white mb-3">{t('platform.integrations.seeHowItWorks')}</h2>
+            <p className="text-[color:var(--text-2)] dark:text-white/45">From zero to automated in under 10 minutes.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {howItWorks.map((step, i) => (
               <div key={i} className="relative">
                 {i < howItWorks.length - 1 && (
-                  <div className="hidden md:block absolute top-6 left-full w-full h-px bg-[#141413]/10 dark:bg-white/10 z-0" style={{ width: 'calc(100% - 2rem)', left: 'calc(50% + 1.5rem)' }} />
+                  <div className="hidden md:block absolute top-6 left-full w-full h-px bg-[color:var(--sand)] dark:bg-[color:var(--paper)] z-0" style={{ width: 'calc(100% - 2rem)', left: 'calc(50% + 1.5rem)' }} />
                 )}
-                <div className="text-[10px] font-semibold text-[#141413]/25 dark:text-white/20 tracking-widest uppercase mb-4">{step.step}</div>
-                <h3 className="text-lg font-medium text-[#141413] dark:text-white mb-2">{step.title}</h3>
-                <p className="text-sm text-[#141413]/50 dark:text-white/45 leading-relaxed">{step.desc}</p>
+                <div className="text-[10px] font-semibold text-[color:var(--text-4)] dark:text-white/20 tracking-widest uppercase mb-4">{step.step}</div>
+                <h3 className="text-lg font-medium text-[color:var(--ink)] dark:text-white mb-2">{step.title}</h3>
+                <p className="text-sm text-[color:var(--text-2)] dark:text-white/45 leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -653,23 +653,23 @@ const Integrations = () => {
       </section>
 
       {/* Browse integrations */}
-      <section className="py-20 px-6 bg-white/40 dark:bg-white/3">
+      <section className="py-20 px-6 bg-[color:var(--paper)] dark:bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-light text-[#141413] dark:text-white mb-3">Browse all integrations</h2>
-            <p className="text-[#141413]/50 dark:text-white/45">Find the tools your team already uses.</p>
+            <h2 className="text-3xl font-light text-[color:var(--ink)] dark:text-white mb-3">Browse all integrations</h2>
+            <p className="text-[color:var(--text-2)] dark:text-white/45">Find the tools your team already uses.</p>
           </div>
 
           {/* Search */}
           <div className="max-w-xl mx-auto mb-8 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#141413]/35 dark:text-white/30" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[color:var(--text-4)] dark:text-white/30" />
             <input
               type="text"
               placeholder={t('platform.integrations.searchPlaceholder')}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-white border border-[#141413]/10 text-[#141413] text-sm placeholder:text-[#141413]/35 focus:outline-none focus:border-[#141413]/25 transition-colors dark:bg-white/6 dark:border-white/10 dark:text-white dark:placeholder:text-white/30 dark:focus:border-white/25"
-              style={{ borderRadius: '8px' }}
+              className="w-full pl-10 pr-4 py-3 bg-[color:var(--paper)] border border-[color:var(--line)] text-[color:var(--ink)] text-sm placeholder:text-[color:var(--text-4)] focus:outline-none focus:border-[color:var(--line)] transition-colors dark:bg-[color:var(--paper)] dark:border-white/10 dark:text-white dark:placeholder:text-white/30 dark:focus:border-white/25"
+              style={{ borderRadius: '16px' }}
             />
           </div>
 
@@ -681,10 +681,10 @@ const Integrations = () => {
                 onClick={() => { setActiveGroup(g.id); setSearchQuery(''); }}
                 className={`px-4 py-1.5 text-xs font-medium transition-all duration-150 ${
                   activeGroup === g.id
-                    ? 'bg-[#141413] text-white dark:bg-white dark:text-[#141413]'
-                    : 'bg-[#141413]/6 text-[#141413]/60 hover:bg-[#141413]/10 hover:text-[#141413] dark:bg-white/6 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white'
+                    ? 'bg-[color:var(--ink)] text-white dark:bg-[color:var(--paper)] dark:text-[color:var(--ink)]'
+                    : 'bg-[color:var(--sand)] text-[color:var(--text-2)] hover:bg-[color:var(--sand)] hover:text-[color:var(--ink)] dark:bg-[color:var(--paper)] dark:text-white/50 dark:hover:bg-[color:var(--paper)] dark:hover:text-white'
                 }`}
-                style={{ borderRadius: '100px' }}
+                style={{ borderRadius: '28px' }}
               >
                 {g.label}
               </button>
@@ -693,11 +693,11 @@ const Integrations = () => {
 
           {/* Integration items — dropdown style */}
           {filtered.length === 0 ? (
-            <div className="text-center py-16 text-[#141413]/40 dark:text-white/30">
+            <div className="text-center py-16 text-[color:var(--text-4)] dark:text-white/30">
               No integrations found for "{searchQuery}"
             </div>
           ) : activeGroup !== 'all' ? (
-            <div className="border border-[#c8c6be] bg-white dark:bg-[#1a1815] dark:border-white/18 overflow-hidden" style={{ borderRadius: '16px' }}>
+            <div className="border border-[color:var(--line)] bg-[color:var(--paper)] dark:bg-[color:var(--paper)] dark:border-white/18 overflow-hidden" style={{ borderRadius: '28px' }}>
               <div className="p-3 grid sm:grid-cols-2 gap-0.5">
                 {filtered.map(integration => {
                   const Icon = integration.icon;
@@ -705,22 +705,22 @@ const Integrations = () => {
                     <div
                       key={integration.id}
                       onClick={() => openModal(integration)}
-                      className="flex items-start gap-3.5 px-3 py-3.5 hover:bg-[#141413]/5 cursor-pointer group transition-colors dark:hover:bg-white/6"
-                      style={{ borderRadius: '11px' }}
+                      className="flex items-start gap-3.5 px-3 py-3.5 hover:bg-[color:var(--sand)] cursor-pointer group transition-colors dark:hover:bg-[color:var(--paper)]"
+                      style={{ borderRadius: '16px' }}
                     >
-                      <div className="w-10 h-10 bg-[#141413]/6 border border-[#c8c6be] flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[#141413]/10 transition-colors dark:bg-white/5 dark:border-white/15 dark:group-hover:bg-white/10" style={{ borderRadius: '9px' }}>
-                        <Icon className="w-[18px] h-[18px] text-black/45 group-hover:text-black/75 transition-colors dark:text-white/35 dark:group-hover:text-white/70" />
+                      <div className="w-10 h-10 bg-[color:var(--sand)] border border-[color:var(--line)] flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[color:var(--sand)] transition-colors dark:bg-[color:var(--paper)] dark:border-white/15 dark:group-hover:bg-[color:var(--paper)]" style={{ borderRadius: '16px' }}>
+                        <Icon className="w-[18px] h-[18px] text-[color:var(--text-2)] group-hover:text-[color:var(--text-2)] transition-colors dark:text-white/35 dark:group-hover:text-white/70" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <span className="text-[#111111] text-[14px] font-semibold group-hover:text-black transition-colors dark:text-white/85 dark:group-hover:text-white leading-tight">{integration.name}</span>
-                          {integration.badge && <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 bg-[#141413]/6 text-[#141413]/50 dark:bg-white/6 dark:text-white/40 flex-shrink-0" style={{ borderRadius: '4px' }}>{integration.badge}</span>}
-                          <span className="text-[11px] text-[#141413]/30 dark:text-white/25 ml-auto flex-shrink-0">{integration.count}</span>
+                          <span className="text-[color:var(--ink)] text-[14px] font-semibold group-hover:text-[color:var(--ink)] transition-colors dark:text-white/85 dark:group-hover:text-white leading-tight">{integration.name}</span>
+                          {integration.badge && <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 bg-[color:var(--sand)] text-[color:var(--text-2)] dark:bg-[color:var(--paper)] dark:text-white/40 flex-shrink-0" style={{ borderRadius: '9999px' }}>{integration.badge}</span>}
+                          <span className="text-[11px] text-[color:var(--text-4)] dark:text-white/25 ml-auto flex-shrink-0">{integration.count}</span>
                         </div>
-                        <div className="text-black/45 text-[12px] leading-snug dark:text-white/38 mb-1.5">{integration.desc}</div>
+                        <div className="text-[color:var(--text-2)] text-[12px] leading-snug dark:text-white/38 mb-1.5">{integration.desc}</div>
                         <div className="flex flex-wrap gap-1">
                           {integration.tools.map((tool, ti) => (
-                            <span key={ti} className="text-[11px] px-2 py-0.5 bg-[#141413]/5 text-[#141413]/50 dark:bg-white/5 dark:text-white/40" style={{ borderRadius: '4px' }}>{tool}</span>
+                            <span key={ti} className="text-[11px] px-2 py-0.5 bg-[color:var(--sand)] text-[color:var(--text-2)] dark:bg-[color:var(--paper)] dark:text-white/40" style={{ borderRadius: '9999px' }}>{tool}</span>
                           ))}
                         </div>
                       </div>
@@ -735,9 +735,9 @@ const Integrations = () => {
                 const groupItems = filtered.filter(i => i.group === group.id);
                 if (groupItems.length === 0) return null;
                 return (
-                  <div key={group.id} className="border border-[#c8c6be] bg-white dark:bg-[#1a1815] dark:border-white/18 overflow-hidden" style={{ borderRadius: '16px' }}>
-                    <div className="px-6 py-3.5 border-b border-[#141413]/8 dark:border-white/10">
-                      <span className="text-[11px] font-semibold uppercase tracking-widest text-black/35 dark:text-white/30">{group.label}</span>
+                  <div key={group.id} className="border border-[color:var(--line)] bg-[color:var(--paper)] dark:bg-[color:var(--paper)] dark:border-white/18 overflow-hidden" style={{ borderRadius: '28px' }}>
+                    <div className="px-6 py-3.5 border-b border-[color:var(--line)] dark:border-white/10">
+                      <span className="text-[11px] font-semibold uppercase tracking-widest text-[color:var(--text-2)] dark:text-white/30">{group.label}</span>
                     </div>
                     <div className="p-3 grid sm:grid-cols-2 gap-0.5">
                       {groupItems.map(integration => {
@@ -746,22 +746,22 @@ const Integrations = () => {
                           <div
                             key={integration.id}
                             onClick={() => openModal(integration)}
-                            className="flex items-start gap-3.5 px-3 py-3.5 hover:bg-[#141413]/5 cursor-pointer group transition-colors dark:hover:bg-white/6"
-                            style={{ borderRadius: '11px' }}
+                            className="flex items-start gap-3.5 px-3 py-3.5 hover:bg-[color:var(--sand)] cursor-pointer group transition-colors dark:hover:bg-[color:var(--paper)]"
+                            style={{ borderRadius: '16px' }}
                           >
-                            <div className="w-10 h-10 bg-[#141413]/6 border border-[#c8c6be] flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[#141413]/10 transition-colors dark:bg-white/5 dark:border-white/15 dark:group-hover:bg-white/10" style={{ borderRadius: '9px' }}>
-                              <Icon className="w-[18px] h-[18px] text-black/45 group-hover:text-black/75 transition-colors dark:text-white/35 dark:group-hover:text-white/70" />
+                            <div className="w-10 h-10 bg-[color:var(--sand)] border border-[color:var(--line)] flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[color:var(--sand)] transition-colors dark:bg-[color:var(--paper)] dark:border-white/15 dark:group-hover:bg-[color:var(--paper)]" style={{ borderRadius: '16px' }}>
+                              <Icon className="w-[18px] h-[18px] text-[color:var(--text-2)] group-hover:text-[color:var(--text-2)] transition-colors dark:text-white/35 dark:group-hover:text-white/70" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-0.5">
-                                <span className="text-[#111111] text-[14px] font-semibold group-hover:text-black transition-colors dark:text-white/85 dark:group-hover:text-white leading-tight">{integration.name}</span>
-                                {integration.badge && <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 bg-[#141413]/6 text-[#141413]/50 dark:bg-white/6 dark:text-white/40 flex-shrink-0" style={{ borderRadius: '4px' }}>{integration.badge}</span>}
-                                <span className="text-[11px] text-[#141413]/30 dark:text-white/25 ml-auto flex-shrink-0">{integration.count}</span>
+                                <span className="text-[color:var(--ink)] text-[14px] font-semibold group-hover:text-[color:var(--ink)] transition-colors dark:text-white/85 dark:group-hover:text-white leading-tight">{integration.name}</span>
+                                {integration.badge && <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 bg-[color:var(--sand)] text-[color:var(--text-2)] dark:bg-[color:var(--paper)] dark:text-white/40 flex-shrink-0" style={{ borderRadius: '9999px' }}>{integration.badge}</span>}
+                                <span className="text-[11px] text-[color:var(--text-4)] dark:text-white/25 ml-auto flex-shrink-0">{integration.count}</span>
                               </div>
-                              <div className="text-black/45 text-[12px] leading-snug dark:text-white/38 mb-1.5">{integration.desc}</div>
+                              <div className="text-[color:var(--text-2)] text-[12px] leading-snug dark:text-white/38 mb-1.5">{integration.desc}</div>
                               <div className="flex flex-wrap gap-1">
                                 {integration.tools.map((tool, ti) => (
-                                  <span key={ti} className="text-[11px] px-2 py-0.5 bg-[#141413]/5 text-[#141413]/50 dark:bg-white/5 dark:text-white/40" style={{ borderRadius: '4px' }}>{tool}</span>
+                                  <span key={ti} className="text-[11px] px-2 py-0.5 bg-[color:var(--sand)] text-[color:var(--text-2)] dark:bg-[color:var(--paper)] dark:text-white/40" style={{ borderRadius: '9999px' }}>{tool}</span>
                                 ))}
                               </div>
                             </div>
@@ -777,7 +777,7 @@ const Integrations = () => {
 
           {/* Result count */}
           {filtered.length > 0 && (
-            <p className="text-center text-xs text-[#141413]/35 dark:text-white/25 mt-8">
+            <p className="text-center text-xs text-[color:var(--text-4)] dark:text-white/25 mt-8">
               Showing {filtered.length} integration {filtered.length === 1 ? 'category' : 'categories'}
               {searchQuery && ` for "${searchQuery}"`}
             </p>
@@ -808,12 +808,12 @@ const Integrations = () => {
             ].map((item, i) => {
               const Icon = item.icon;
               return (
-                <div key={i} className="p-6 border border-[#141413]/8 bg-white dark:bg-white/3 dark:border-white/8" style={{ borderRadius: '10px' }}>
-                  <div className="w-9 h-9 bg-[#141413]/6 border border-[#141413]/8 flex items-center justify-center mb-4 dark:bg-white/6 dark:border-white/8" style={{ borderRadius: '7px' }}>
-                    <Icon className="w-4 h-4 text-[#141413]/50 dark:text-white/45" />
+                <div key={i} className="p-6 border border-[color:var(--line)] bg-[color:var(--paper)] dark:bg-[color:var(--paper)] dark:border-white/8" style={{ borderRadius: '16px' }}>
+                  <div className="w-9 h-9 bg-[color:var(--sand)] border border-[color:var(--line)] flex items-center justify-center mb-4 dark:bg-[color:var(--paper)] dark:border-white/8" style={{ borderRadius: '16px' }}>
+                    <Icon className="w-4 h-4 text-[color:var(--text-2)] dark:text-white/45" />
                   </div>
-                  <h3 className="text-sm font-semibold text-[#141413] dark:text-white mb-2">{item.title}</h3>
-                  <p className="text-xs text-[#141413]/50 dark:text-white/40 leading-relaxed">{item.desc}</p>
+                  <h3 className="text-sm font-semibold text-[color:var(--ink)] dark:text-white mb-2">{item.title}</h3>
+                  <p className="text-xs text-[color:var(--text-2)] dark:text-white/40 leading-relaxed">{item.desc}</p>
                 </div>
               );
             })}
@@ -822,7 +822,7 @@ const Integrations = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6 bg-[#141413] dark:bg-white/5">
+      <section className="py-24 px-6 bg-[color:var(--ink)] dark:bg-[color:var(--paper)]">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl font-light text-white mb-4">
             {t('platform.integrations.ctaTitle')}
@@ -832,13 +832,13 @@ const Integrations = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/signup">
-              <button className="px-7 py-3.5 bg-white hover:bg-white/90 text-[#141413] text-sm font-medium transition-all duration-200 flex items-center gap-2" style={{ borderRadius: '6px' }}>
+              <button className="px-7 py-3.5 bg-[color:var(--paper)] hover:bg-[color:var(--paper)] text-[color:var(--ink)] text-sm font-medium transition-all duration-200 flex items-center gap-2" style={{ borderRadius: '9999px' }}>
                 {t('platform.integrations.ctaBtn')}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
             <Link to="/contact">
-              <button className="px-7 py-3.5 border border-white/15 text-white/70 hover:text-white hover:border-white/30 text-sm font-medium transition-all duration-200" style={{ borderRadius: '6px' }}>
+              <button className="px-7 py-3.5 border border-white/15 text-white/70 hover:text-white hover:border-white/30 text-sm font-medium transition-all duration-200" style={{ borderRadius: '9999px' }}>
                 Talk to sales
               </button>
             </Link>
@@ -856,23 +856,23 @@ const Integrations = () => {
         >
           <div
             className="bg-[#f0ede6] dark:bg-[#1e1d1b] w-full max-w-lg shadow-2xl flex flex-col"
-            style={{ borderRadius: '18px', maxHeight: '88vh' }}
+            style={{ borderRadius: '28px', maxHeight: '88vh' }}
           >
             {/* Modal header */}
             <div className="flex items-start justify-between px-6 pt-6 pb-5">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white dark:bg-white/10 border border-[#141413]/10 dark:border-white/10 flex items-center justify-center flex-shrink-0" style={{ borderRadius: '10px' }}>
-                  {(() => { const Icon = modalIntegration.icon; return <Icon className="w-5 h-5 text-[#141413]/55 dark:text-white/50" />; })()}
+                <div className="w-10 h-10 bg-[color:var(--paper)] dark:bg-[color:var(--paper)] border border-[color:var(--line)] dark:border-white/10 flex items-center justify-center flex-shrink-0" style={{ borderRadius: '16px' }}>
+                  {(() => { const Icon = modalIntegration.icon; return <Icon className="w-5 h-5 text-[color:var(--text-2)] dark:text-white/50" />; })()}
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-[#141413] dark:text-white leading-tight">{modalIntegration.name}</div>
-                  <div className="text-xs text-[#141413]/45 dark:text-white/35 mt-0.5">{enabledCount} / {modalTools.length} tools enabled</div>
+                  <div className="text-sm font-semibold text-[color:var(--ink)] dark:text-white leading-tight">{modalIntegration.name}</div>
+                  <div className="text-xs text-[color:var(--text-2)] dark:text-white/35 mt-0.5">{enabledCount} / {modalTools.length} tools enabled</div>
                 </div>
               </div>
               <button
                 onClick={closeModal}
-                className="w-7 h-7 flex items-center justify-center text-[#141413]/40 hover:text-[#141413]/70 dark:text-white/30 dark:hover:text-white/60 transition-colors"
-                style={{ borderRadius: '6px' }}
+                className="w-7 h-7 flex items-center justify-center text-[color:var(--text-4)] hover:text-[color:var(--text-2)] dark:text-white/30 dark:hover:text-white/60 transition-colors"
+                style={{ borderRadius: '9999px' }}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -881,14 +881,14 @@ const Integrations = () => {
             {/* Search */}
             <div className="px-6 pb-3">
               <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#141413]/35 dark:text-white/30" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[color:var(--text-4)] dark:text-white/30" />
                 <input
                   type="text"
                   placeholder="Search tools..."
                   value={toolSearch}
                   onChange={e => setToolSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-white/6 border border-[#141413]/10 dark:border-white/10 text-[#141413] dark:text-white text-sm placeholder:text-[#141413]/35 dark:placeholder:text-white/30 focus:outline-none focus:border-[#141413]/25 dark:focus:border-white/25 transition-colors"
-                  style={{ borderRadius: '8px' }}
+                  className="w-full pl-9 pr-4 py-2.5 bg-[color:var(--paper)] dark:bg-[color:var(--paper)] border border-[color:var(--line)] dark:border-white/10 text-[color:var(--ink)] dark:text-white text-sm placeholder:text-[color:var(--text-4)] dark:placeholder:text-white/30 focus:outline-none focus:border-[color:var(--line)] dark:focus:border-white/25 transition-colors"
+                  style={{ borderRadius: '16px' }}
                 />
               </div>
             </div>
@@ -902,10 +902,10 @@ const Integrations = () => {
                     onClick={() => setToolFilter(f)}
                     className={`px-3 py-1 text-xs font-medium transition-all duration-150 capitalize ${
                       toolFilter === f
-                        ? 'bg-[#141413] text-white dark:bg-white dark:text-[#141413]'
-                        : 'bg-[#141413]/7 text-[#141413]/55 hover:bg-[#141413]/12 hover:text-[#141413] dark:bg-white/7 dark:text-white/45 dark:hover:bg-white/12 dark:hover:text-white'
+                        ? 'bg-[color:var(--ink)] text-white dark:bg-[color:var(--paper)] dark:text-[color:var(--ink)]'
+                        : 'bg-[color:var(--sand)] text-[color:var(--text-2)] hover:bg-[color:var(--sand)] hover:text-[color:var(--ink)] dark:bg-[color:var(--paper)] dark:text-white/45 dark:hover:bg-[color:var(--paper)] dark:hover:text-white'
                     }`}
-                    style={{ borderRadius: '6px' }}
+                    style={{ borderRadius: '9999px' }}
                   >
                     {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
                   </button>
@@ -914,15 +914,15 @@ const Integrations = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={enableAll}
-                  className="px-3 py-1 text-xs font-medium bg-[#141413] text-white hover:bg-[#2a2a28] dark:bg-white dark:text-[#141413] dark:hover:bg-white/90 transition-colors"
-                  style={{ borderRadius: '6px' }}
+                  className="px-3 py-1 text-xs font-medium bg-[color:var(--ink)] text-white hover:bg-[#2a2a28] dark:bg-[color:var(--paper)] dark:text-[color:var(--ink)] dark:hover:bg-[color:var(--paper)] transition-colors"
+                  style={{ borderRadius: '9999px' }}
                 >
                   Enable all
                 </button>
                 <button
                   onClick={disableAll}
-                  className="px-3 py-1 text-xs font-medium border border-[#141413]/15 text-[#141413]/60 hover:border-[#141413]/30 hover:text-[#141413] dark:border-white/15 dark:text-white/50 dark:hover:border-white/30 dark:hover:text-white transition-colors"
-                  style={{ borderRadius: '6px' }}
+                  className="px-3 py-1 text-xs font-medium border border-[color:var(--line)] text-[color:var(--text-2)] hover:border-[color:var(--line)] hover:text-[color:var(--ink)] dark:border-white/15 dark:text-white/50 dark:hover:border-white/30 dark:hover:text-white transition-colors"
+                  style={{ borderRadius: '9999px' }}
                 >
                   Disable all
                 </button>
@@ -937,17 +937,17 @@ const Integrations = () => {
                 return (
                   <div key={section}>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-[10px] font-semibold uppercase tracking-widest text-[#141413]/35 dark:text-white/30">
+                      <span className="text-[10px] font-semibold uppercase tracking-widest text-[color:var(--text-4)] dark:text-white/30">
                         {section}
                       </span>
-                      <span className="text-[10px] text-[#141413]/25 dark:text-white/20">{sectionTools.length}</span>
+                      <span className="text-[10px] text-[color:var(--text-4)] dark:text-white/20">{sectionTools.length}</span>
                     </div>
                     <div className="space-y-1.5">
                       {sectionTools.map(tool => (
                         <div
                           key={tool.id}
-                          className="flex items-center justify-between bg-white dark:bg-white/5 border border-[#141413]/6 dark:border-white/6 px-4 py-3"
-                          style={{ borderRadius: '8px' }}
+                          className="flex items-center justify-between bg-[color:var(--paper)] dark:bg-[color:var(--paper)] border border-[color:var(--line)] dark:border-white/6 px-4 py-3"
+                          style={{ borderRadius: '16px' }}
                         >
                           <div className="flex items-center gap-3 min-w-0">
                             {/* Toggle */}
@@ -955,28 +955,28 @@ const Integrations = () => {
                               onClick={() => toggleTool(tool.id)}
                               className={`relative flex-shrink-0 w-9 h-5 transition-colors duration-200 ${
                                 toolStates[tool.id]
-                                  ? 'bg-[#141413] dark:bg-white'
-                                  : 'bg-[#141413]/15 dark:bg-white/15'
+                                  ? 'bg-[color:var(--ink)] dark:bg-[color:var(--paper)]'
+                                  : 'bg-[color:var(--sand)] dark:bg-[color:var(--paper)]'
                               }`}
-                              style={{ borderRadius: '100px' }}
+                              style={{ borderRadius: '28px' }}
                               aria-label={`Toggle ${tool.name}`}
                             >
                               <span
-                                className={`absolute top-0.5 w-4 h-4 bg-white dark:bg-[#141413] shadow-sm transition-transform duration-200 ${
+                                className={`absolute top-0.5 w-4 h-4 bg-[color:var(--paper)] dark:bg-[color:var(--ink)] shadow-sm transition-transform duration-200 ${
                                   toolStates[tool.id] ? 'translate-x-[18px]' : 'translate-x-0.5'
                                 }`}
-                                style={{ borderRadius: '100px' }}
+                                style={{ borderRadius: '28px' }}
                               />
                             </button>
                             <div className="min-w-0">
-                              <div className="text-xs font-mono font-medium text-[#141413] dark:text-white truncate">{tool.name}</div>
-                              <div className="text-[11px] text-[#141413]/40 dark:text-white/35 truncate">{tool.desc}</div>
+                              <div className="text-xs font-mono font-medium text-[color:var(--ink)] dark:text-white truncate">{tool.name}</div>
+                              <div className="text-[11px] text-[color:var(--text-4)] dark:text-white/35 truncate">{tool.desc}</div>
                             </div>
                           </div>
                           {tool.requiresApproval && (
                             <span
-                              className="ml-3 flex-shrink-0 text-[10px] font-medium px-2 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
-                              style={{ borderRadius: '4px' }}
+                              className="ml-3 flex-shrink-0 text-[10px] font-medium px-2 py-0.5 bg-[color:var(--blue-100)] text-[color:var(--blue)] dark:bg-[color:var(--blue-100)] dark:text-[color:var(--blue)]"
+                              style={{ borderRadius: '9999px' }}
                             >
                               Approval
                             </span>
@@ -988,29 +988,29 @@ const Integrations = () => {
                 );
               })}
               {filteredModalTools.length === 0 && (
-                <div className="text-center py-10 text-[#141413]/35 dark:text-white/25 text-sm">
+                <div className="text-center py-10 text-[color:var(--text-4)] dark:text-white/25 text-sm">
                   No tools match "{toolSearch}"
                 </div>
               )}
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-[#141413]/8 dark:border-white/8 flex items-center justify-between">
-              <span className="text-[11px] text-[#141413]/35 dark:text-white/25">
+            <div className="px-6 py-4 border-t border-[color:var(--line)] dark:border-white/8 flex items-center justify-between">
+              <span className="text-[11px] text-[color:var(--text-4)] dark:text-white/25">
                 {filteredModalTools.length} shown · {enabledCount} total enabled
               </span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={closeModal}
-                  className="px-4 py-2 text-xs font-medium border border-[#141413]/15 text-[#141413]/60 hover:border-[#141413]/30 hover:text-[#141413] dark:border-white/15 dark:text-white/50 dark:hover:border-white/30 dark:hover:text-white transition-colors"
-                  style={{ borderRadius: '7px' }}
+                  className="px-4 py-2 text-xs font-medium border border-[color:var(--line)] text-[color:var(--text-2)] hover:border-[color:var(--line)] hover:text-[color:var(--ink)] dark:border-white/15 dark:text-white/50 dark:hover:border-white/30 dark:hover:text-white transition-colors"
+                  style={{ borderRadius: '16px' }}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={closeModal}
-                  className="px-4 py-2 text-xs font-medium bg-[#141413] text-white hover:bg-[#2a2a28] dark:bg-white dark:text-[#141413] dark:hover:bg-white/90 flex items-center gap-1.5 transition-colors"
-                  style={{ borderRadius: '7px' }}
+                  className="px-4 py-2 text-xs font-medium bg-[color:var(--ink)] text-white hover:bg-[#2a2a28] dark:bg-[color:var(--paper)] dark:text-[color:var(--ink)] dark:hover:bg-[color:var(--paper)] flex items-center gap-1.5 transition-colors"
+                  style={{ borderRadius: '16px' }}
                 >
                   <RefreshCw className="w-3 h-3" />
                   Apply

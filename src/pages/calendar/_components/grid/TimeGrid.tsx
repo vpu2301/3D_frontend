@@ -200,7 +200,7 @@ export function TimeGrid({ days, onEventClick, onCreateDraft }: Props) {
     <div className="flex h-full flex-col">
       {/* Day headers */}
       <div
-        className="grid border-b border-gray-200/70 bg-white"
+        className="grid border-b border-[var(--line-soft)]"
         style={{ gridTemplateColumns: `56px repeat(${days.length}, minmax(0, 1fr))` }}
       >
         <div />
@@ -209,17 +209,15 @@ export function TimeGrid({ days, onEventClick, onCreateDraft }: Props) {
           return (
             <div
               key={d.toISOString()}
-              className={cn(
-                'flex flex-col items-center justify-center py-2 text-xs',
-                today && 'text-blue-600',
-              )}
+              className="flex flex-col items-center justify-center py-2 text-xs"
             >
-              <span className="uppercase tracking-wide text-gray-400">{format(d, 'EEE')}</span>
+              <span className="plat-eyebrow">{format(d, 'EEE')}</span>
               <span
                 className={cn(
-                  'mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full text-base font-semibold text-gray-800',
-                  today && 'bg-blue-600 text-white',
+                  'mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-base font-semibold text-[var(--ink)]',
+                  today && 'bg-[var(--ink)] text-white',
                 )}
+                style={{ fontFamily: 'var(--display)', letterSpacing: '-0.03em' }}
               >
                 {format(d, 'd')}
               </span>
@@ -230,10 +228,10 @@ export function TimeGrid({ days, onEventClick, onCreateDraft }: Props) {
 
       {/* All-day strip */}
       <div
-        className="grid border-b border-gray-200/70 bg-white"
+        className="grid border-b border-[var(--line-soft)]"
         style={{ gridTemplateColumns: `56px repeat(${days.length}, minmax(0, 1fr))` }}
       >
-        <div className="py-1 pr-1 text-right text-[10px] uppercase tracking-wide text-gray-400">
+        <div className="plat-eyebrow py-1.5 pr-2 text-right">
           all-day
         </div>
         {days.map(d => {
@@ -241,7 +239,7 @@ export function TimeGrid({ days, onEventClick, onCreateDraft }: Props) {
             e => e.allDay && eventOverlapsDay(e, d),
           );
           return (
-            <div key={d.toISOString()} className="flex min-h-[28px] flex-wrap gap-1 border-l border-gray-100 px-1 py-1">
+            <div key={d.toISOString()} className="flex min-h-[28px] flex-wrap gap-1 border-l border-[var(--line-soft)] px-1 py-1">
               {allDay.map(e => {
                 const cal = calendars.find(c => c.id === e.calendarId);
                 return (
@@ -276,7 +274,7 @@ export function TimeGrid({ days, onEventClick, onCreateDraft }: Props) {
             {HOURS.map(h => (
               <div
                 key={h}
-                className="absolute right-2 -translate-y-1/2 text-[10px] text-gray-400"
+                className="absolute right-2 -translate-y-1/2 text-[10px] text-[var(--text-5)]"
                 style={{ top: h * 60 * PX_PER_MINUTE }}
               >
                 {h === 0 ? '' : format(new Date(2020, 0, 1, h), 'h a')}
@@ -295,14 +293,14 @@ export function TimeGrid({ days, onEventClick, onCreateDraft }: Props) {
               <div
                 key={d.toISOString()}
                 data-day-col
-                className="relative border-l border-gray-100"
+                className="relative border-l border-[var(--line-soft)]"
                 onPointerDown={ev => startCreate(ev, dayIdx)}
               >
                 {/* Hour lines */}
                 {HOURS.map(h => (
                   <div
                     key={h}
-                    className="absolute left-0 right-0 border-t border-gray-100"
+                    className="absolute left-0 right-0 border-t border-[var(--line-soft)]"
                     style={{ top: h * 60 * PX_PER_MINUTE }}
                   />
                 ))}
@@ -312,8 +310,8 @@ export function TimeGrid({ days, onEventClick, onCreateDraft }: Props) {
                     className="pointer-events-none absolute left-0 right-0 z-10 flex items-center"
                     style={{ top: nowMin * PX_PER_MINUTE }}
                   >
-                    <span className="h-2 w-2 rounded-full bg-rose-500" />
-                    <span className="h-px flex-1 bg-rose-500" />
+                    <span className="h-2 w-2 rounded-full bg-[var(--bad-fg)]" />
+                    <span className="h-px flex-1 bg-[var(--bad-fg)]" />
                   </div>
                 )}
 
@@ -353,15 +351,17 @@ export function TimeGrid({ days, onEventClick, onCreateDraft }: Props) {
                 {drag && drag.dayIndex === dayIdx && drag.mode === 'create' && (
                   <div
                     className={cn(
-                      'absolute left-1 right-1 rounded-md border-2 border-dashed',
-                      drag.focus ? 'border-violet-400 bg-violet-50/60' : 'border-blue-400 bg-blue-50/60',
+                      'absolute left-1 right-1 rounded-[8px] border border-dashed',
+                      drag.focus
+                        ? 'border-[var(--blue)] bg-[rgba(62,82,217,0.06)]'
+                        : 'border-[var(--line)] bg-[rgba(20,22,26,0.04)]',
                     )}
                     style={{
                       top: drag.startMin * PX_PER_MINUTE,
                       height: (drag.endMin - drag.startMin) * PX_PER_MINUTE,
                     }}
                   >
-                    <p className="px-1 py-0.5 text-[10px] font-medium">
+                    <p className="px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-2)]">
                       {drag.focus ? 'Focus block' : 'New event'} · {format(addMinutes(startOfDay(d), drag.startMin), 'h:mm a')}–{format(addMinutes(startOfDay(d), drag.endMin), 'h:mm a')}
                     </p>
                   </div>

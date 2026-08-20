@@ -42,7 +42,7 @@ export default function DocHeader({ doc, onPatch }: Props) {
           <button
             type="button"
             onClick={() => onPatch({ cover: undefined })}
-            className="absolute right-3 top-3 rounded-md bg-white/90 p-1 text-gray-700 opacity-0 backdrop-blur transition-opacity hover:bg-white group-hover:opacity-100"
+            className="absolute right-3 top-3 rounded-[10px] bg-white/90 p-1 text-[var(--text-2)] opacity-0 backdrop-blur transition-opacity hover:bg-white group-hover:opacity-100"
             aria-label="Remove cover"
           >
             <X className="h-4 w-4" />
@@ -65,7 +65,7 @@ export default function DocHeader({ doc, onPatch }: Props) {
             <button
               type="button"
               onClick={() => setEmojiOpen((o) => !o)}
-              className="flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-gray-400 opacity-0 transition-opacity hover:bg-gray-100 hover:text-gray-700 group-hover:opacity-100"
+              className="flex items-center gap-1 rounded-[8px] px-1.5 py-0.5 text-xs text-[var(--text-4)] opacity-0 transition-opacity hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)] group-hover:opacity-100"
             >
               <Smile className="h-3.5 w-3.5" /> Add icon
             </button>
@@ -74,7 +74,7 @@ export default function DocHeader({ doc, onPatch }: Props) {
             <button
               type="button"
               onClick={onCoverUpload}
-              className="flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-gray-400 opacity-0 transition-opacity hover:bg-gray-100 hover:text-gray-700 group-hover:opacity-100"
+              className="flex items-center gap-1 rounded-[8px] px-1.5 py-0.5 text-xs text-[var(--text-4)] opacity-0 transition-opacity hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)] group-hover:opacity-100"
             >
               <ImagePlus className="h-3.5 w-3.5" /> Add cover
             </button>
@@ -83,14 +83,14 @@ export default function DocHeader({ doc, onPatch }: Props) {
       )}
 
       {emojiOpen && (
-        <div className="absolute left-12 top-12 z-10 grid grid-cols-10 gap-1 rounded-md border border-gray-200 bg-white p-2 shadow-md">
+        <div className="absolute left-12 top-12 z-10 grid grid-cols-10 gap-1 rounded-[12px] border border-[var(--line-soft)] bg-white p-2 shadow-[0_8px_24px_rgba(20,22,26,0.12)]">
           <button
             type="button"
             onClick={() => {
               onPatch({ icon: undefined });
               setEmojiOpen(false);
             }}
-            className="col-span-2 rounded p-1 text-xs text-gray-500 hover:bg-gray-100"
+            className="col-span-2 rounded-[8px] p-1 text-xs text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           >
             Clear
           </button>
@@ -102,7 +102,7 @@ export default function DocHeader({ doc, onPatch }: Props) {
                 onPatch({ icon: e });
                 setEmojiOpen(false);
               }}
-              className="rounded p-1 text-xl hover:bg-gray-100"
+              className="rounded-[8px] p-1 text-xl transition-colors hover:bg-[rgba(20,22,26,0.05)]"
             >
               {e}
             </button>

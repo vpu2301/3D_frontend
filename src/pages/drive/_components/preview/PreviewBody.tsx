@@ -75,11 +75,11 @@ function ImagePreview({ src, alt }: { src: string; alt: string }) {
         className="max-h-[calc(90vh-100px)] max-w-full select-none object-contain transition-transform"
         style={{ transform: `scale(${scale})` }}
       />
-      <div className="flex items-center gap-1 rounded-full border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700 shadow-sm">
-        <button type="button" onClick={() => setScale((s) => Math.max(0.25, s - 0.25))} className="px-1 hover:bg-gray-100">−</button>
+      <div className="flex items-center gap-1 rounded-full border border-[var(--line)] bg-white px-2 py-1 text-xs text-[var(--text-2)] shadow-sm">
+        <button type="button" onClick={() => setScale((s) => Math.max(0.25, s - 0.25))} className="px-1 hover:text-[var(--ink)]">−</button>
         <span className="px-1">{Math.round(scale * 100)}%</span>
-        <button type="button" onClick={() => setScale((s) => Math.min(4, s + 0.25))} className="px-1 hover:bg-gray-100">+</button>
-        <button type="button" onClick={() => setScale(1)} className="ml-1 px-1 text-blue-600 hover:bg-gray-100">Fit</button>
+        <button type="button" onClick={() => setScale((s) => Math.min(4, s + 0.25))} className="px-1 hover:text-[var(--ink)]">+</button>
+        <button type="button" onClick={() => setScale(1)} className="ml-1 px-1 font-semibold text-[var(--ink)]">Fit</button>
       </div>
     </div>
   );
@@ -100,10 +100,10 @@ function TextPreview({ src, item }: { src: string; item: DriveItem }) {
   }, [src]);
 
   if (text === null) {
-    return <div className="m-auto text-sm text-gray-500">Loading…</div>;
+    return <div className="m-auto text-sm text-[var(--text-4)]">Loading…</div>;
   }
   return (
-    <pre className="m-auto h-full w-full max-w-4xl overflow-auto whitespace-pre-wrap rounded-lg border border-gray-200 bg-white p-4 font-mono text-xs leading-relaxed text-gray-900">
+    <pre className="m-auto h-full w-full max-w-4xl overflow-auto whitespace-pre-wrap rounded-[14px] border border-[var(--line-soft)] bg-white p-4 font-mono text-xs leading-relaxed text-[var(--ink)]">
       {text}
     </pre>
   );
@@ -112,10 +112,10 @@ function TextPreview({ src, item }: { src: string; item: DriveItem }) {
 function ExtractedTextFallback({ item }: { item: DriveItem }) {
   return (
     <div className="m-auto h-full w-full max-w-3xl overflow-auto p-8">
-      <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
+      <div className="mb-4 rounded-[12px] border border-[var(--line-soft)] bg-[var(--warn-bg)] p-3 text-xs text-[var(--warn-fg)]">
         Showing mock-extracted text. The original {classifyFile(item)} file isn't directly previewable in this build.
       </div>
-      <pre className="whitespace-pre-wrap rounded-lg border border-gray-200 bg-white p-6 font-mono text-sm leading-relaxed text-gray-900">
+      <pre className="whitespace-pre-wrap rounded-[14px] border border-[var(--line-soft)] bg-white p-6 font-mono text-sm leading-relaxed text-[var(--ink)]">
         {item.extractedText}
       </pre>
     </div>
@@ -129,15 +129,15 @@ function PdfFallback({ item }: { item: DriveItem }) {
 function OfficeFallback({ item, blobUrl }: { item: DriveItem; blobUrl: string }) {
   return (
     <div className="m-auto flex flex-col items-center justify-center gap-2 p-8 text-center">
-      <FileText className="h-10 w-10 text-blue-500" strokeWidth={1.4} />
-      <div className="text-sm font-medium text-gray-900">{item.name}</div>
-      <div className="max-w-sm text-xs text-gray-500">
+      <FileText className="h-10 w-10 text-[var(--text-4)]" strokeWidth={1.4} />
+      <div className="text-sm font-semibold text-[var(--ink)]">{item.name}</div>
+      <div className="max-w-sm text-xs text-[var(--text-4)]">
         Office documents aren't previewable in the mock build. Download to open in your editor.
       </div>
       <a
         href={blobUrl}
         download={item.name}
-        className="mt-2 flex items-center gap-1 rounded-md border border-gray-200 px-3 py-1.5 text-xs hover:bg-gray-50"
+        className="plat-btn-ghost mt-2"
       >
         <Download className="h-3.5 w-3.5" /> Download
       </a>
@@ -150,20 +150,20 @@ function ArchivePreview({ item }: { item: DriveItem }) {
   return (
     <div className="m-auto h-full w-full max-w-2xl overflow-auto p-8">
       <div className="mb-3 flex items-center gap-2">
-        <Archive className="h-5 w-5 text-amber-600" />
-        <h3 className="text-base font-medium text-gray-900">Archive contents</h3>
+        <Archive className="h-5 w-5 text-[var(--text-4)]" />
+        <h3 className="text-[17px]">Archive contents</h3>
       </div>
       {manifest.length === 0 ? (
-        <div className="text-xs italic text-gray-500">Archive manifest unavailable.</div>
+        <div className="text-xs italic text-[var(--text-4)]">Archive manifest unavailable.</div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+        <div className="plat-list">
           {manifest.map((m, i) => (
             <div
               key={i}
-              className="flex items-center justify-between border-b border-gray-100 px-4 py-2 text-xs last:border-0"
+              className="flex items-center justify-between border-b border-[var(--line-soft)] px-4 py-2.5 text-xs last:border-0"
             >
-              <span className="truncate text-gray-900">{m.name}</span>
-              <span className="text-gray-500">{formatBytes(m.size)}</span>
+              <span className="truncate text-[var(--ink)]">{m.name}</span>
+              <span className="text-[var(--text-4)]">{formatBytes(m.size)}</span>
             </div>
           ))}
         </div>
@@ -181,7 +181,7 @@ function SourceModulePreview({ item }: { item: DriveItem }) {
   const node = doc ?? note;
   if (!node) {
     return (
-      <div className="m-auto p-8 text-sm text-gray-500">
+      <div className="m-auto p-8 text-sm text-[var(--text-4)]">
         Source {item.sourceModule} item not loaded yet.
       </div>
     );
@@ -191,7 +191,7 @@ function SourceModulePreview({ item }: { item: DriveItem }) {
   return (
     <div className="m-auto h-full w-full max-w-3xl overflow-auto p-8">
       <div
-        className="prose prose-sm prose-zinc max-w-none rounded-lg border border-gray-200 bg-white p-6"
+        className="prose prose-sm prose-zinc max-w-none rounded-[14px] border border-[var(--line-soft)] bg-white p-6"
         dangerouslySetInnerHTML={{ __html: html.replace(/^[\s\S]*?<body>|<\/body>[\s\S]*$/g, '') }}
       />
     </div>
@@ -204,9 +204,9 @@ function NoBlobFallback({ item, note }: { item: DriveItem; note?: string }) {
   return (
     <div className="m-auto flex flex-col items-center justify-center gap-2 p-8 text-center">
       <Icon className={cn('h-12 w-12', fileKindColor(kind))} strokeWidth={1.3} />
-      <div className="text-sm font-medium text-gray-900">{item.name}</div>
-      <div className="text-xs text-gray-500">{formatBytes(item.size)}</div>
-      <div className="max-w-sm text-xs italic text-gray-500">
+      <div className="text-sm font-semibold text-[var(--ink)]">{item.name}</div>
+      <div className="text-xs text-[var(--text-4)]">{formatBytes(item.size)}</div>
+      <div className="max-w-sm text-xs italic text-[var(--text-4)]">
         {note ?? "Preview not available — this file doesn't have an attached blob."}
       </div>
     </div>

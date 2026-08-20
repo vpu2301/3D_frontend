@@ -17,28 +17,28 @@ export function ConflictChip({ targets, onMoveIt, onStackBoth, onCancel }: Props
     <div
       role="alertdialog"
       aria-live="polite"
-      className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-rose-200 bg-white px-3 py-1.5 text-xs shadow-lg"
+      className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-[12px] border border-[var(--line)] bg-white px-3 py-2 text-xs shadow-[0_10px_30px_rgba(20,22,26,0.12)]"
     >
-      <AlertTriangle className="h-3.5 w-3.5 text-rose-500" />
-      <span className="text-gray-700">Overlaps with {label}.</span>
+      <AlertTriangle className="h-3.5 w-3.5 text-[var(--bad-fg)]" />
+      <span className="text-[var(--text-1)]">Overlaps with {label}.</span>
       <button
         type="button"
         onClick={onMoveIt}
-        className="rounded-md bg-gray-900 px-2 py-1 text-[11px] font-medium text-white hover:bg-gray-800"
+        className="rounded-full bg-[var(--ink)] px-2.5 py-1 text-[11px] font-semibold text-white transition hover:opacity-85"
       >
         Move it
       </button>
       <button
         type="button"
         onClick={onStackBoth}
-        className="rounded-md border border-gray-200 bg-white px-2 py-1 text-[11px] font-medium text-gray-700 hover:bg-gray-50"
+        className="rounded-full border border-[var(--line)] px-2.5 py-1 text-[11px] font-semibold text-[var(--text-2)] transition hover:border-[var(--ink)] hover:text-[var(--ink)]"
       >
         Stack both
       </button>
       <button
         type="button"
         onClick={onCancel}
-        className="rounded-md px-2 py-1 text-[11px] font-medium text-gray-500 hover:text-gray-700"
+        className="rounded-full px-2 py-1 text-[11px] font-semibold text-[var(--text-4)] transition hover:text-[var(--ink)]"
       >
         Cancel
       </button>

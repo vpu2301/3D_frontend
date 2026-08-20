@@ -147,7 +147,7 @@ export default function ContactDetail() {
   if (!contact) {
     return (
       <ContactsLayout>
-        <div className="flex flex-1 items-center justify-center text-sm text-gray-500">
+        <div className="flex flex-1 items-center justify-center text-sm" style={{ color: 'var(--text-4)' }}>
           Contact not found.
         </div>
       </ContactsLayout>
@@ -251,8 +251,9 @@ export default function ContactDetail() {
         <main className="flex flex-1 overflow-hidden">
           {/* Main column */}
           <div className="flex flex-1 flex-col overflow-y-auto">
-            <div className="border-b border-gray-200 px-6 py-4">
-              <Link to="/contacts" className="inline-flex items-center gap-1 text-xs text-gray-500 hover:underline">
+            <div className="border-b border-[var(--line-soft)] px-6 py-4">
+              <p className="plat-crumb">3days.contacts / contact</p>
+              <Link to="/contacts" className="mt-1.5 inline-flex items-center gap-1 text-xs text-[var(--text-4)] transition-colors hover:text-[var(--ink)]">
                 <ArrowLeft className="h-3 w-3" /> Back to Contacts
               </Link>
               <div className="mt-3 flex items-start gap-4">
@@ -268,9 +269,9 @@ export default function ContactDetail() {
                         displayName: undefined,
                       });
                     }}
-                    className="text-2xl font-light text-gray-900"
+                    className="plat-display text-[26px] leading-tight text-[var(--ink)]"
                   />
-                  <div className="mt-1 flex items-center gap-2 text-sm text-gray-600">
+                  <div className="mt-1 flex items-center gap-2 text-sm text-[var(--text-3)]">
                     <InlineEditableText
                       value={contact.title ?? ''}
                       placeholder="Title"
@@ -284,7 +285,7 @@ export default function ContactDetail() {
                     />
                   </div>
                   {contact.pronouns && (
-                    <div className="text-xs text-gray-500">{contact.pronouns}</div>
+                    <div className="text-xs text-[var(--text-4)]">{contact.pronouns}</div>
                   )}
                   {groups.length > 0 && (
                     <div className="mt-1.5 flex flex-wrap gap-1">
@@ -292,7 +293,7 @@ export default function ContactDetail() {
                         <Link
                           key={g!.id}
                           to={`/contacts/group/${g!.id}`}
-                          className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-gray-700 hover:bg-gray-200"
+                          className="inline-flex items-center gap-1 rounded-full bg-[var(--sand-deep)] px-2 py-0.5 text-[11px] text-[var(--text-2)] transition-colors hover:text-[var(--ink)]"
                         >
                           {g!.emoji ? `${g!.emoji} ` : ''}
                           {g!.name}
@@ -305,25 +306,25 @@ export default function ContactDetail() {
                   {primaryEmail && (
                     <a
                       href={`mailto:${primaryEmail.value}`}
-                      className="flex h-9 items-center gap-1.5 rounded-full bg-[#f1f3f4] px-3.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                      className="plat-btn-ghost h-9"
                     >
                       <MailIcon className="h-3.5 w-3.5" /> Email
                     </a>
                   )}
                   <button
                     type="button"
-                    className="flex h-9 items-center gap-1.5 rounded-full bg-[#f1f3f4] px-3.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                    className="plat-btn-ghost h-9"
                   >
                     <CalendarPlus className="h-3.5 w-3.5" /> Schedule
                   </button>
                   <button
                     type="button"
                     onClick={() => star(contact.id)}
-                    className="rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100"
+                    className="rounded-full p-2 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
                     aria-label={contact.starred ? 'Unstar' : 'Star'}
                     title={contact.starred ? 'Unstar' : 'Star'}
                   >
-                    <Star className={cn('h-4 w-4', contact.starred && 'fill-yellow-400 text-yellow-400')} />
+                    <Star className={cn('h-4 w-4', contact.starred && 'fill-amber-400 text-amber-400')} />
                   </button>
                   <button
                     type="button"
@@ -333,7 +334,7 @@ export default function ContactDetail() {
                         navigate('/contacts');
                       }
                     }}
-                    className="rounded-full p-2 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600"
+                    className="rounded-full p-2 text-[var(--text-4)] transition-colors hover:bg-[rgba(179,56,46,0.07)] hover:text-[var(--bad-fg)]"
                     aria-label="Trash"
                     title="Move to trash"
                   >
@@ -345,7 +346,7 @@ export default function ContactDetail() {
 
             <IdentityCard contact={contact} />
 
-            <div className="border-b border-gray-100 px-6 py-2">
+            <div className="border-b border-[var(--line-soft)] px-6 py-2.5">
               <div className="flex items-center gap-1">
                 {(['about', 'mail', 'meetings', 'shared', 'timeline', 'activity'] as Tab[]).map(
                   (t) => (
@@ -354,10 +355,10 @@ export default function ContactDetail() {
                       type="button"
                       onClick={() => setTab(t)}
                       className={cn(
-                        'flex h-8 items-center rounded-full px-3.5 text-xs font-medium capitalize transition-colors',
+                        'flex h-8 items-center rounded-full px-3.5 text-xs font-semibold capitalize transition-colors',
                         tab === t
-                          ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
-                          : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900',
+                          ? 'bg-[var(--ink)] text-white'
+                          : 'text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]',
                       )}
                     >
                       {t}
@@ -376,7 +377,7 @@ export default function ContactDetail() {
                 />
               )}
               {tab === 'mail' && (
-                <div className="rounded-md border border-dashed border-gray-200 px-4 py-12 text-center text-sm text-gray-500">
+                <div className="rounded-[14px] border border-dashed border-[var(--line)] px-4 py-12 text-center text-sm text-[var(--text-4)]">
                   No Mail module wired yet — emails with this contact will land here when Mail
                   ships.
                 </div>
@@ -397,7 +398,7 @@ export default function ContactDetail() {
               )}
               {tab === 'timeline' && <InteractionList interactions={interactions} empty="No interactions yet." />}
               {tab === 'activity' && (
-                <div className="text-xs italic text-gray-500">
+                <div className="text-xs italic text-[var(--text-4)]">
                   Created {new Date(contact.createdAt).toLocaleString()} · Last updated{' '}
                   {new Date(contact.updatedAt).toLocaleString()} · Source:{' '}
                   <span className="font-medium">{contact.source}</span>
@@ -407,7 +408,7 @@ export default function ContactDetail() {
           </div>
 
           {/* Right rail */}
-          <aside className="hidden w-80 shrink-0 flex-col gap-3 overflow-y-auto border-l border-gray-200 bg-gray-50 p-4 lg:flex">
+          <aside className="hidden w-80 shrink-0 flex-col gap-3 overflow-y-auto border-l border-[var(--line-soft)] p-4 lg:flex">
             <AskAiPanel
               askInput={askInput}
               setAskInput={setAskInput}
@@ -489,7 +490,7 @@ function InlineEditableText({
         }}
         placeholder={placeholder}
         className={cn(
-          'rounded border border-rose-300 bg-white px-1.5 py-0.5 focus:outline-none',
+          'rounded-[8px] border border-[var(--ink)] bg-white px-1.5 py-0.5 focus:outline-none',
           className,
         )}
       />
@@ -500,9 +501,9 @@ function InlineEditableText({
       type="button"
       onClick={() => setEditing(true)}
       className={cn(
-        'group inline-flex items-baseline gap-1 rounded px-1.5 py-0.5 text-left hover:bg-gray-100',
+        'group inline-flex items-baseline gap-1 rounded-[8px] px-1.5 py-0.5 text-left transition-colors hover:bg-[rgba(20,22,26,0.05)]',
         className,
-        !value && 'italic text-gray-400',
+        !value && 'italic text-[var(--text-5)]',
       )}
     >
       {value || placeholder || 'Add'}
@@ -513,47 +514,47 @@ function InlineEditableText({
 
 function IdentityCard({ contact }: { contact: Contact }) {
   return (
-    <div className="grid grid-cols-1 gap-2 border-b border-gray-100 bg-white px-6 py-3 text-sm md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-2 border-b border-[var(--line-soft)] px-6 py-3.5 text-sm md:grid-cols-2">
       <div className="space-y-1">
         {contact.emails.map((e) => (
           <div key={e.value} className="flex items-center gap-2">
-            <MailIcon className="h-3.5 w-3.5 text-gray-400" />
-            <a href={`mailto:${e.value}`} className="text-gray-900 hover:text-blue-700">
+            <MailIcon className="h-3.5 w-3.5 text-[var(--text-5)]" />
+            <a href={`mailto:${e.value}`} className="text-[var(--ink)] hover:underline">
               {e.value}
             </a>
-            <span className="text-[10px] uppercase tracking-wider text-gray-400">{e.label}</span>
-            {e.primary && <span className="rounded-full bg-blue-50 px-1.5 py-0.5 text-[10px] text-blue-700">primary</span>}
+            <span className="text-[10px] uppercase tracking-wider text-[var(--text-5)]">{e.label}</span>
+            {e.primary && <span className="rounded-full bg-[var(--sand-deep)] px-1.5 py-0.5 text-[10px] text-[var(--text-3)]">primary</span>}
           </div>
         ))}
         {contact.phones.map((p) => (
           <div key={p.value} className="flex items-center gap-2">
-            <Phone className="h-3.5 w-3.5 text-gray-400" />
-            <a href={`tel:${p.value}`} className="text-gray-900 hover:text-blue-700">
+            <Phone className="h-3.5 w-3.5 text-[var(--text-5)]" />
+            <a href={`tel:${p.value}`} className="text-[var(--ink)] hover:underline">
               {p.value}
             </a>
-            <span className="text-[10px] uppercase tracking-wider text-gray-400">{p.label}</span>
+            <span className="text-[10px] uppercase tracking-wider text-[var(--text-5)]">{p.label}</span>
           </div>
         ))}
       </div>
       <div className="space-y-1">
         {contact.urls.map((u) => (
           <div key={u.value} className="flex items-center gap-2">
-            <ExternalLink className="h-3.5 w-3.5 text-gray-400" />
-            <a href={u.value} target="_blank" rel="noreferrer" className="truncate text-gray-900 hover:text-blue-700">
+            <ExternalLink className="h-3.5 w-3.5 text-[var(--text-5)]" />
+            <a href={u.value} target="_blank" rel="noreferrer" className="truncate text-[var(--ink)] hover:underline">
               {u.value}
             </a>
-            <span className="text-[10px] uppercase tracking-wider text-gray-400">{u.label}</span>
+            <span className="text-[10px] uppercase tracking-wider text-[var(--text-5)]">{u.label}</span>
           </div>
         ))}
         {contact.addresses.map((a, i) => (
           <div key={`${a.value}-${i}`} className="flex items-center gap-2">
-            <span className="text-gray-900">{a.value}</span>
-            <span className="text-[10px] uppercase tracking-wider text-gray-400">{a.label}</span>
+            <span className="text-[var(--ink)]">{a.value}</span>
+            <span className="text-[10px] uppercase tracking-wider text-[var(--text-5)]">{a.label}</span>
           </div>
         ))}
         {contact.importantDates.map((d, i) => (
-          <div key={i} className="flex items-center gap-2 text-gray-900">
-            <Bell className="h-3.5 w-3.5 text-gray-400" />
+          <div key={i} className="flex items-center gap-2 text-[var(--ink)]">
+            <Bell className="h-3.5 w-3.5 text-[var(--text-5)]" />
             {d.label}: {new Date(d.value).toLocaleDateString()}
           </div>
         ))}
@@ -575,26 +576,26 @@ function AboutTab({
     <div className="space-y-5">
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-sm font-medium text-gray-900">AI summary</h3>
+          <h3 className="text-[15px]">AI summary</h3>
           <button
             type="button"
             onClick={onGenerateSummary}
             disabled={summarizing}
-            className="flex h-8 items-center gap-1.5 rounded-full bg-[#bdd8ec] px-3 text-xs font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0] disabled:opacity-50"
+            className="plat-btn h-8 px-3.5"
           >
             {summarizing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
             {contact.aiSummary ? 'Regenerate' : 'Generate'}
           </button>
         </div>
         {contact.aiSummary ? (
-          <div className="rounded-md border border-blue-100 bg-blue-50/50 p-3 text-sm leading-relaxed text-blue-900">
+          <div className="rounded-[12px] border border-[var(--line-soft)] bg-[var(--sand)] p-3.5 text-sm leading-relaxed text-[var(--text-1)]">
             {contact.aiSummary.text}
-            <div className="mt-2 text-[10px] italic text-blue-600">
+            <div className="mt-2 text-[10px] italic text-[var(--text-4)]">
               Generated {new Date(contact.aiSummary.generatedAt).toLocaleString()}
             </div>
           </div>
         ) : (
-          <div className="rounded-md border border-dashed border-gray-200 px-3 py-6 text-center text-xs text-gray-500">
+          <div className="rounded-[12px] border border-dashed border-[var(--line)] px-3 py-6 text-center text-xs text-[var(--text-4)]">
             No summary yet — click Generate to synthesize from interactions.
           </div>
         )}
@@ -612,21 +613,21 @@ function InteractionList({
 }) {
   if (interactions.length === 0) {
     return (
-      <div className="rounded-md border border-dashed border-gray-200 px-4 py-12 text-center text-sm text-gray-500">
+      <div className="rounded-[14px] border border-dashed border-[var(--line)] px-4 py-12 text-center text-sm text-[var(--text-4)]">
         {empty}
       </div>
     );
   }
   return (
-    <ul className="space-y-2">
+    <ul className="plat-list">
       {interactions.map((i) => {
         const Icon = TYPE_ICON[i.type];
         return (
-          <li key={i.id} className="flex items-start gap-3 rounded-md border border-gray-100 bg-white p-3">
-            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
+          <li key={i.id} className="flex items-start gap-3 border-b border-[var(--line-soft)] px-4 py-3 last:border-b-0">
+            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-[var(--text-5)]" />
             <div className="min-w-0 flex-1">
-              <div className="text-sm text-gray-900">{i.summary}</div>
-              <div className="text-[11px] text-gray-500">
+              <div className="text-sm text-[var(--ink)]">{i.summary}</div>
+              <div className="text-[11px] text-[var(--text-4)]">
                 {new Date(i.occurredAt).toLocaleString()} · {i.sourceModule}
               </div>
             </div>
@@ -651,15 +652,13 @@ function AskAiPanel({
   onAsk: () => void;
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3">
+    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-3.5">
       <div className="mb-2 flex items-center gap-1.5">
-        <Sparkles className="h-3.5 w-3.5 text-blue-500" />
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-          Ask AI
-        </div>
+        <Sparkles className="h-3.5 w-3.5 text-[var(--text-4)]" />
+        <div className="plat-eyebrow">Ask AI</div>
       </div>
       {askMessages.length === 0 ? (
-        <div className="rounded-md bg-gray-50 px-2.5 py-2 text-[11px] italic text-gray-500">
+        <div className="rounded-[10px] bg-[var(--sand)] px-2.5 py-2 text-[11px] italic text-[var(--text-4)]">
           Ask anything about this contact — e.g. "What did we discuss last quarter?"
         </div>
       ) : (
@@ -668,10 +667,10 @@ function AskAiPanel({
             <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
               <div
                 className={cn(
-                  'max-w-[90%] rounded-lg px-2.5 py-1.5 text-[12px] leading-relaxed',
+                  'max-w-[90%] rounded-[10px] px-2.5 py-1.5 text-[12px] leading-relaxed',
                   m.role === 'user'
-                    ? 'bg-[#bdd8ec] text-gray-800'
-                    : 'bg-gray-100 text-gray-900',
+                    ? 'bg-[var(--ink)] text-white'
+                    : 'bg-[var(--sand)] text-[var(--ink)]',
                 )}
               >
                 <div className="whitespace-pre-wrap">
@@ -693,12 +692,12 @@ function AskAiPanel({
           value={askInput}
           onChange={(e) => setAskInput(e.target.value)}
           placeholder="Ask AI…"
-          className="h-8 flex-1 rounded-full bg-[#f1f3f4] px-3 text-xs text-gray-900 placeholder:text-gray-500 transition-colors focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#8fc4e4]"
+          className="h-8 flex-1 rounded-[10px] border border-[var(--line)] bg-white px-3 text-xs text-[var(--ink)] placeholder:text-[var(--text-5)] transition-colors focus:border-[var(--ink)] focus:outline-none"
         />
         <button
           type="submit"
           disabled={askLoading || !askInput.trim()}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#bdd8ec] text-gray-800 transition-colors hover:bg-[#a5c8e0] disabled:opacity-50"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--ink)] text-white transition-opacity hover:opacity-85 disabled:opacity-35"
           aria-label="Send"
         >
           {askLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
@@ -719,29 +718,27 @@ function RelationshipStrengthPanel({
   if (!s) return null;
   const color =
     s.label === 'strong'
-      ? '#10b981'
+      ? 'var(--ok-fg)'
       : s.label === 'active'
-        ? '#3b82f6'
+        ? 'var(--blue)'
         : s.label === 'cooling'
-          ? '#f59e0b'
-          : '#9ca3af';
+          ? 'var(--warn-fg)'
+          : 'var(--text-5)';
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3">
+    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-3.5">
       <div className="mb-2 flex items-center justify-between">
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-          Relationship
-        </div>
+        <div className="plat-eyebrow">Relationship</div>
         <button
           type="button"
           onClick={onRefresh}
-          className="rounded p-0.5 text-gray-400 hover:bg-gray-100"
+          className="rounded-[8px] p-1 text-[var(--text-5)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
           title="Recompute"
         >
           <RefreshCw className="h-3 w-3" />
         </button>
       </div>
       <div className="flex items-baseline gap-2">
-        <span className="text-2xl font-light text-gray-900">{s.score}</span>
+        <span className="plat-num text-[30px]">{s.score}</span>
         <span
           className="rounded-full px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-white"
           style={{ backgroundColor: color }}
@@ -749,17 +746,17 @@ function RelationshipStrengthPanel({
           {s.label}
         </span>
       </div>
-      <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+      <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-[var(--sand-deep)]">
         <div
           className="h-full transition-[width] duration-300"
           style={{ width: `${Math.max(2, s.score)}%`, backgroundColor: color }}
         />
       </div>
-      <ul className="mt-3 space-y-1 text-[11px] text-gray-600">
+      <ul className="mt-3 space-y-1 text-[11px]">
         {s.factors.map((f) => (
           <li key={f.label} className="flex items-center justify-between">
-            <span className="text-gray-500">{f.label}</span>
-            <span className="text-gray-800">{f.value}</span>
+            <span className="text-[var(--text-4)]">{f.label}</span>
+            <span className="font-medium text-[var(--ink)]">{f.value}</span>
           </li>
         ))}
       </ul>
@@ -771,22 +768,20 @@ function LastInteractionPanel({ interactions }: { interactions: Interaction[] })
   const last = interactions[0];
   if (!last) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-200 p-3 text-xs italic text-gray-500">
+      <div className="rounded-[14px] border border-dashed border-[var(--line)] p-3.5 text-xs italic text-[var(--text-4)]">
         No interactions yet.
       </div>
     );
   }
   const Icon = TYPE_ICON[last.type];
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3">
-      <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-        Last interaction
-      </div>
+    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-3.5">
+      <div className="plat-eyebrow mb-1.5">Last interaction</div>
       <div className="flex items-start gap-2">
-        <Icon className="mt-0.5 h-4 w-4 text-gray-400" />
+        <Icon className="mt-0.5 h-4 w-4 text-[var(--text-5)]" />
         <div className="min-w-0 flex-1">
-          <div className="text-sm text-gray-900">{last.summary}</div>
-          <div className="text-[11px] text-gray-500">
+          <div className="text-sm text-[var(--ink)]">{last.summary}</div>
+          <div className="text-[11px] text-[var(--text-4)]">
             {new Date(last.occurredAt).toLocaleString()}
           </div>
         </div>
@@ -805,28 +800,26 @@ function SuggestedActionsPanel({
   onRecompute: () => void;
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3">
+    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-3.5">
       <div className="mb-2 flex items-center justify-between">
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-          Suggested actions
-        </div>
+        <div className="plat-eyebrow">Suggested actions</div>
         <button
           type="button"
           onClick={onRecompute}
-          className="rounded p-0.5 text-gray-400 hover:bg-gray-100"
+          className="rounded-[8px] p-1 text-[var(--text-5)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
           title="Recompute"
         >
           <RefreshCw className="h-3 w-3" />
         </button>
       </div>
       {actions.length === 0 ? (
-        <div className="text-[11px] italic text-gray-500">
+        <div className="text-[11px] italic text-[var(--text-4)]">
           Nothing suggested right now — relationship looks healthy.
         </div>
       ) : (
         <ul className="space-y-2">
           {actions.map((a, i) => (
-            <li key={i} className="rounded-md border border-blue-100 bg-blue-50 px-2 py-1.5 text-xs text-blue-900">
+            <li key={i} className="rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] px-2.5 py-2 text-xs text-[var(--text-1)]">
               <div className="flex items-center gap-1 font-medium capitalize">
                 <Sparkles className="h-3 w-3" /> {a.kind.replace('-', ' ')}
               </div>
@@ -853,47 +846,45 @@ function EnrichmentPanel({
   loading: boolean;
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3">
+    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-3.5">
       <div className="mb-2 flex items-center justify-between">
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-          AI enrichment
-        </div>
+        <div className="plat-eyebrow">AI enrichment</div>
         <button
           type="button"
           onClick={onSuggest}
           disabled={loading}
-          className="flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[10px] font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50"
+          className="flex items-center gap-1 rounded-full border border-[var(--line)] px-2.5 py-1 text-[10px] font-semibold text-[var(--text-2)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)] disabled:opacity-40"
         >
           {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
           Suggest
         </button>
       </div>
       {suggestions.length === 0 ? (
-        <div className="text-[11px] italic text-gray-500">
+        <div className="text-[11px] italic text-[var(--text-4)]">
           No pending suggestions. Sources stay platform-internal — no external lookup.
         </div>
       ) : (
         <ul className="space-y-2">
           {suggestions.map((s) => (
-            <li key={s.id} className="rounded-md border border-blue-100 bg-blue-50/40 px-2 py-1.5 text-[11px]">
-              <div className="font-medium text-gray-900">
-                {s.field}: <span className="text-blue-700">{s.value}</span>
+            <li key={s.id} className="rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] px-2.5 py-2 text-[11px]">
+              <div className="font-semibold text-[var(--ink)]">
+                {s.field}: <span className="font-medium text-[var(--text-2)]">{s.value}</span>
               </div>
-              <div className="mt-0.5 italic text-gray-600">
+              <div className="mt-0.5 italic text-[var(--text-3)]">
                 Source: {s.source.module} · "{s.source.snippet}"
               </div>
               <div className="mt-1 flex items-center gap-1">
                 <button
                   type="button"
                   onClick={() => onAccept(s.id)}
-                  className="rounded bg-blue-600 px-2 py-0.5 text-[10px] font-medium text-white hover:bg-blue-700"
+                  className="rounded-full bg-[var(--ink)] px-2.5 py-1 text-[10px] font-semibold text-white transition-opacity hover:opacity-85"
                 >
                   Accept
                 </button>
                 <button
                   type="button"
                   onClick={() => onReject(s.id)}
-                  className="rounded border border-gray-200 px-2 py-0.5 text-[10px] text-gray-600 hover:bg-gray-100"
+                  className="rounded-full border border-[var(--line)] px-2.5 py-1 text-[10px] font-semibold text-[var(--text-3)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
                 >
                   Reject
                 </button>
@@ -914,15 +905,13 @@ function LinkedContactsPanel({ contact }: { contact: Contact }) {
   })).filter((l) => l.contact);
   if (links.length === 0) return null;
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3">
-      <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-        Linked contacts
-      </div>
+    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-3.5">
+      <div className="plat-eyebrow mb-2">Linked contacts</div>
       <ul className="space-y-1.5">
         {links.map((l) => (
           <li key={l.contact!.id} className="flex items-center justify-between gap-2 text-xs">
             <ContactChip contact={l.contact!} />
-            <span className="text-[10px] text-gray-500">{l.rel}</span>
+            <span className="text-[10px] text-[var(--text-4)]">{l.rel}</span>
           </li>
         ))}
       </ul>

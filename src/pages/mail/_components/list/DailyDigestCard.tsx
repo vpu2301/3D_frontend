@@ -52,12 +52,12 @@ export default function DailyDigestCard() {
   if (dismissed) return null;
   if (loading || !digest) {
     return (
-      <div className="mx-3 mt-2 mb-1 rounded-lg border border-[#8fc4e4]/30 bg-[#f8fbff] px-4 py-3">
-        <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#1a73e8]">
+      <div className="mx-3 mt-2 mb-1 rounded-[12px] border border-[var(--line-soft)] bg-white px-4 py-3">
+        <div className="plat-eyebrow flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5" />
           Daily digest
         </div>
-        <p className="mt-1 text-xs text-gray-500">{loading ? 'Reading your last 24 hours…' : 'Nothing new since yesterday.'}</p>
+        <p className="mt-1 text-xs text-[var(--text-4)]">{loading ? 'Reading your last 24 hours…' : 'Nothing new since yesterday.'}</p>
       </div>
     );
   }
@@ -65,22 +65,22 @@ export default function DailyDigestCard() {
   if (digest.totalImportant === 0 && digest.meetings === 0) return null;
 
   return (
-    <div className="mx-3 mt-2 mb-1 rounded-lg border border-[#8fc4e4]/30 bg-[#f8fbff] px-4 py-3">
+    <div className="mx-3 mt-2 mb-1 rounded-[12px] border border-[var(--line-soft)] bg-white px-4 py-3">
       <div className="mb-1 flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#1a73e8]">
+        <div className="plat-eyebrow flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5" />
           Since yesterday
         </div>
         <button
           type="button"
           onClick={dismiss}
-          className="rounded p-0.5 text-gray-400 hover:bg-white"
+          className="rounded-[6px] p-0.5 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
           aria-label="Dismiss"
         >
           <X className="h-3 w-3" />
         </button>
       </div>
-      <p className="text-sm text-gray-800">
+      <p className="text-sm text-[var(--text-1)]">
         <span className="font-medium">{digest.totalImportant}</span> important
         {digest.needReplyToday > 0 && <> · <span className="font-medium">{digest.needReplyToday}</span> need replies</>}
         {digest.meetings > 0 && <> · <span className="font-medium">{digest.meetings}</span> calendar</>}
@@ -96,7 +96,7 @@ export default function DailyDigestCard() {
                   setSelectedThreadId(h.threadId);
                   navigate(`/mail/thread/${h.threadId}`);
                 }}
-                className="text-left text-xs text-[#1a73e8] hover:underline"
+                className="text-left text-xs text-[var(--text-2)] transition-colors hover:text-[var(--ink)] hover:underline"
               >
                 · {h.reason}
               </button>

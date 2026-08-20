@@ -23,30 +23,30 @@ const Training = () => {
   ];
 
   const levelColors: Record<string, string> = {
-    Beginner: 'bg-green-100 text-green-700',
-    Intermediate: 'bg-yellow-100 text-yellow-700',
-    Advanced: 'bg-red-100 text-red-700',
-    Anfänger: 'bg-green-100 text-green-700',
-    Mittel: 'bg-yellow-100 text-yellow-700',
-    Fortgeschritten: 'bg-red-100 text-red-700',
+    Beginner: 'bg-[color:var(--blue-100)] text-[color:var(--blue)]',
+    Intermediate: 'bg-[color:var(--blue-100)] text-[color:var(--blue)]',
+    Advanced: 'bg-[color:var(--blue-100)] text-[color:var(--blue)]',
+    Anfänger: 'bg-[color:var(--blue-100)] text-[color:var(--blue)]',
+    Mittel: 'bg-[color:var(--blue-100)] text-[color:var(--blue)]',
+    Fortgeschritten: 'bg-[color:var(--blue-100)] text-[color:var(--blue)]',
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[color:var(--sand)] to-[color:var(--paper)] dark:from-[color:var(--bg)] dark:to-[color:var(--paper)]">
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight dark:text-white">
+            <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight dark:text-white">
               {t('resources.training.heroTitle')}
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed dark:text-gray-300">
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto font-light leading-relaxed dark:text-[color:var(--text-4)]">
               {t('resources.training.heroSubtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-[#111111] hover:bg-[#222222] text-white px-8 py-3 rounded-full" asChild>
+              <Button className="bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] text-white px-8 py-3 rounded-full" asChild>
                 <Link to="/get-started">{t('resources.training.heroCta1')}</Link>
               </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full" asChild>
+              <Button variant="outline" className="border-[color:var(--line)] text-[color:var(--ink)] hover:bg-[color:var(--sand)] px-8 py-3 rounded-full" asChild>
                 <Link to="/contact">{t('resources.training.heroCta2')}</Link>
               </Button>
             </div>
@@ -54,35 +54,35 @@ const Training = () => {
         </div>
       </section>
 
-      <section className="py-20 px-4 bg-white dark:bg-[#1c1916]">
+      <section className="py-20 px-4 bg-[color:var(--paper)] dark:bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('resources.training.coursesTitle')}</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-gray-300">{t('resources.training.coursesSubtitle')}</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6 dark:text-white">{t('resources.training.coursesTitle')}</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto dark:text-[color:var(--text-4)]">{t('resources.training.coursesSubtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {courses.map((course, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 dark:bg-[#222018]">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 dark:bg-[color:var(--sand)]">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-6">
-                    <div className="p-4 rounded-2xl bg-[#111111] mr-4">
+                    <div className="p-4 rounded-[28px] bg-[color:var(--ink)] mr-4">
                       <course.icon className="h-8 w-8 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-medium text-gray-900 mb-2 dark:text-white">{course.title}</h3>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                      <h3 className="text-xl font-medium text-[color:var(--ink)] mb-2 dark:text-white">{course.title}</h3>
+                      <div className="flex items-center space-x-4 text-sm text-[color:var(--text-2)] dark:text-[color:var(--text-4)]">
                         <span className="flex items-center">
                           <Clock className="h-4 w-4 mr-1" />
                           {course.duration}
                         </span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${levelColors[course.level] || 'bg-gray-100 text-gray-700'}`}>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${levelColors[course.level] || 'bg-[color:var(--sand)] text-[color:var(--ink)]'}`}>
                           {course.level}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 mb-6 dark:text-gray-300">{course.description}</p>
-                  <Button className="w-full bg-[#111111] hover:bg-[#222222] text-white">
+                  <p className="text-[color:var(--text-2)] mb-6 dark:text-[color:var(--text-4)]">{course.description}</p>
+                  <Button className="w-full bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] text-white">
                     {t('common.startCourse')}
                   </Button>
                 </CardContent>
@@ -92,32 +92,32 @@ const Training = () => {
         </div>
       </section>
 
-      <section className="py-20 px-4 bg-gray-50 dark:bg-[#181512]">
+      <section className="py-20 px-4 bg-[color:var(--sand)] dark:bg-[color:var(--bg)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6 dark:text-white">{t('resources.training.resourcesTitle')}</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-gray-300">{t('resources.training.resourcesSubtitle')}</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6 dark:text-white">{t('resources.training.resourcesTitle')}</h2>
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto dark:text-[color:var(--text-4)]">{t('resources.training.resourcesSubtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {resources.map((resource, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-lg text-center dark:bg-[#222018]">
-                <div className="p-3 rounded-2xl bg-gradient-to-r from-green-500 to-blue-500 w-fit mx-auto mb-4">
+              <div key={index} className="bg-[color:var(--paper)] p-6 rounded-[16px] shadow-lg text-center dark:bg-[color:var(--sand)]">
+                <div className="p-3 rounded-[28px] bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--blue)] w-fit mx-auto mb-4">
                   <BookOpen className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2 dark:text-white">{resource.type}</h3>
-                <p className="text-sm text-blue-600 font-medium mb-2">{resource.count}</p>
-                <p className="text-gray-600 text-sm dark:text-gray-300">{resource.description}</p>
+                <h3 className="text-lg font-medium text-[color:var(--ink)] mb-2 dark:text-white">{resource.type}</h3>
+                <p className="text-sm text-[color:var(--blue)] font-medium mb-2">{resource.count}</p>
+                <p className="text-[color:var(--text-2)] text-sm dark:text-[color:var(--text-4)]">{resource.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-[#f5ede3] text-[#111111] px-4">
+      <section className="py-20 bg-[color:var(--sand)] text-[color:var(--ink)] px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl font-light mb-8 tracking-tight">{t('resources.training.ctaTitle')}</h2>
           <p className="text-xl mb-12 opacity-90 font-light">{t('resources.training.ctaSubtitle')}</p>
-          <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
+          <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full py-3" asChild>
             <Link to="/get-started">
               {t('resources.training.ctaBtn')}
               <ArrowRight className="ml-2 h-4 w-4" />

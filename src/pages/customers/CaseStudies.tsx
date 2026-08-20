@@ -101,22 +101,22 @@ const CaseStudies = () => {
 
   const getGradient = (color: string) => {
     const gradients = {
-      blue: "from-blue-500 to-cyan-500",
-      emerald: "from-emerald-500 to-teal-500",
-      violet: "from-violet-500 to-[#222222]",
-      pink: "from-pink-500 to-rose-500",
-      indigo: "from-indigo-500 to-blue-500"
+      blue: "from-[color:var(--blue)] to-[color:var(--blue)]",
+      emerald: "from-[color:var(--blue)] to-[color:var(--blue)]",
+      violet: "from-[color:var(--blue)] to-[color:var(--text-2)]",
+      pink: "from-[color:var(--blue)] to-[color:var(--blue)]",
+      indigo: "from-[color:var(--blue)] to-[color:var(--blue)]"
     };
     return gradients[color as keyof typeof gradients] || gradients.blue;
   };
 
   const getBorderColor = (color: string) => {
     const colors = {
-      blue: "border-blue-200",
-      emerald: "border-emerald-200", 
-      violet: "border-violet-200",
-      pink: "border-pink-200",
-      indigo: "border-indigo-200"
+      blue: "border-[color:var(--line)]",
+      emerald: "border-[color:var(--line)]", 
+      violet: "border-[color:var(--line)]",
+      pink: "border-[color:var(--line)]",
+      indigo: "border-[color:var(--line)]"
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
@@ -125,20 +125,20 @@ const CaseStudies = () => {
     <div className="min-h-screen pricing-page-bg">
       {/* Hero Section */}
       <section className="pt-24 pb-16 relative overflow-hidden section-with-shapes">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--blue)]"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center max-w-4xl mx-auto animate-fade-in">
-            <div className="inline-flex items-center px-4 py-2 pricing-card text-blue-700 text-sm font-medium mb-6">
+            <div className="inline-flex items-center px-4 py-2 pricing-card text-[color:var(--blue)] text-sm font-medium mb-6">
               <CheckCircle className="h-4 w-4 mr-2" />
               Real AI Worker Success Stories
             </div>
             <h1 className="text-5xl md:text-7xl pricing-title mb-6 leading-tight">
               AI Workers
-              <span className="block text-[#111111]">
+              <span className="block text-[color:var(--ink)]">
                 Delivering Results
               </span>
             </h1>
-            <p className="text-xl pricing-text text-gray-600 mb-8 leading-relaxed">
+            <p className="text-xl pricing-text text-[color:var(--text-2)] mb-8 leading-relaxed">
               Discover how our specialized AI workers transformed operations across industries, 
               delivering unprecedented efficiency gains and cost savings.
             </p>
@@ -151,7 +151,7 @@ const CaseStudies = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 animate-slide-up">
             <h2 className="text-4xl pricing-title mb-4">Success Stories</h2>
-            <p className="text-lg pricing-text text-gray-600">Swipe through real transformations across industries</p>
+            <p className="text-lg pricing-text text-[color:var(--text-2)]">Swipe through real transformations across industries</p>
           </div>
           
           <Carousel
@@ -171,7 +171,7 @@ const CaseStudies = () => {
                       </div>
                       <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
-                          <div className="glass p-3 rounded-xl">
+                          <div className="glass p-3 rounded-[28px]">
                             <study.icon className="h-8 w-8 text-white" />
                           </div>
                           <div className="text-right">
@@ -189,36 +189,36 @@ const CaseStudies = () => {
                       <div className="space-y-6 flex-grow">
                         {/* Challenge */}
                         <div className="animate-scale-in">
-                          <h4 className="font-bold text-gray-900 mb-2 flex items-center text-sm">
-                            <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                          <h4 className="font-bold text-[color:var(--ink)] mb-2 flex items-center text-sm">
+                            <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mr-2"></div>
                             Challenge
                           </h4>
-                          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{study.challenge}</p>
+                          <p className="text-[color:var(--text-2)] text-sm leading-relaxed line-clamp-3">{study.challenge}</p>
                         </div>
                         
                         {/* Solution */}
                         <div className="animate-scale-in">
-                          <h4 className="font-bold text-gray-900 mb-2 flex items-center text-sm">
-                            <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                          <h4 className="font-bold text-[color:var(--ink)] mb-2 flex items-center text-sm">
+                            <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mr-2"></div>
                             Solution
                           </h4>
-                          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{study.solution}</p>
+                          <p className="text-[color:var(--text-2)] text-sm leading-relaxed line-clamp-3">{study.solution}</p>
                         </div>
                         
                         {/* Results */}
                         <div className="animate-scale-in">
-                          <h4 className="font-bold text-gray-900 mb-2 flex items-center text-sm">
-                            <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                          <h4 className="font-bold text-[color:var(--ink)] mb-2 flex items-center text-sm">
+                            <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mr-2"></div>
                             Results
                           </h4>
-                          <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-2">{study.results}</p>
+                          <p className="text-[color:var(--text-2)] text-sm mb-4 leading-relaxed line-clamp-2">{study.results}</p>
                           
                           {/* Metrics Grid */}
                           <div className="grid grid-cols-2 gap-2 mb-4">
                             {study.metrics.slice(0, 4).map((metric, idx) => (
                               <div key={idx} className="pricing-card p-2 border hover-lift">
-                                <div className="text-xs text-gray-600 mb-1 truncate">{metric.label}</div>
-                                <div className={`text-sm font-bold ${metric.increase ? 'text-green-600' : 'text-blue-600'}`}>
+                                <div className="text-xs text-[color:var(--text-2)] mb-1 truncate">{metric.label}</div>
+                                <div className={`text-sm font-bold ${metric.increase ? 'text-[color:var(--blue)]' : 'text-[color:var(--blue)]'}`}>
                                   {metric.value}
                                 </div>
                               </div>
@@ -226,7 +226,7 @@ const CaseStudies = () => {
                           </div>
                           
                           {/* Savings Highlight */}
-                          <div className={`bg-gradient-to-r ${getGradient(study.color)} p-4 rounded-xl text-white relative overflow-hidden hover-lift`}>
+                          <div className={`bg-gradient-to-r ${getGradient(study.color)} p-4 rounded-[28px] text-white relative overflow-hidden hover-lift`}>
                             <div className="absolute top-0 right-0 w-16 h-16 opacity-20">
                               <TrendingUp className="w-full h-full" />
                             </div>
@@ -253,48 +253,48 @@ const CaseStudies = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl pricing-title mb-6">Combined Impact Across All AI Workers</h2>
-            <p className="text-xl pricing-text text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl pricing-text text-[color:var(--text-2)] max-w-3xl mx-auto">
               Collective results from deploying our specialized AI workforce
             </p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center pricing-card p-6 hover-lift floating-shape animate-scale-in">
-              <div className="text-4xl font-bold text-blue-600 mb-2">$3.38M+</div>
-              <div className="text-gray-600 pricing-text">Total Annual Savings</div>
+              <div className="text-4xl font-bold text-[color:var(--blue)] mb-2">$3.38M+</div>
+              <div className="text-[color:var(--text-2)] pricing-text">Total Annual Savings</div>
             </div>
             <div className="text-center pricing-card p-6 hover-lift floating-shape animate-scale-in">
-              <div className="text-4xl font-bold text-green-600 mb-2">95%+</div>
-              <div className="text-gray-600 pricing-text">Average Accuracy Rate</div>
+              <div className="text-4xl font-bold text-[color:var(--blue)] mb-2">95%+</div>
+              <div className="text-[color:var(--text-2)] pricing-text">Average Accuracy Rate</div>
             </div>
             <div className="text-center pricing-card p-6 hover-lift floating-shape animate-scale-in">
-              <div className="text-4xl font-bold text-purple-600 mb-2">150x</div>
-              <div className="text-gray-600 pricing-text">Maximum Speed Improvement</div>
+              <div className="text-4xl font-bold text-[color:var(--blue)] mb-2">150x</div>
+              <div className="text-[color:var(--text-2)] pricing-text">Maximum Speed Improvement</div>
             </div>
             <div className="text-center pricing-card p-6 hover-lift floating-shape animate-scale-in">
-              <div className="text-4xl font-bold text-[#111111] mb-2">96%</div>
-              <div className="text-gray-600 pricing-text">Client Satisfaction</div>
+              <div className="text-4xl font-bold text-[color:var(--ink)] mb-2">96%</div>
+              <div className="text-[color:var(--text-2)] pricing-text">Client Satisfaction</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="bg-[#f5ede3] py-20 relative overflow-hidden">
+      <section className="bg-[color:var(--sand)] py-20 relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#111111] mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-[color:var(--ink)] mb-6">
             Ready to Deploy Your
-            <span className="block text-black/60">AI Workforce?</span>
+            <span className="block text-[color:var(--text-2)]">AI Workforce?</span>
           </h2>
-          <p className="text-xl text-black/60 mb-8 leading-relaxed">
+          <p className="text-xl text-[color:var(--text-2)] mb-8 leading-relaxed">
             Join these industry leaders and experience the transformative power of specialized AI workers
             designed for your specific business needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full px-8 py-3 text-lg" asChild>
+            <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full px-8 py-3 text-lg" asChild>
               <Link to="/get-started">Deploy AI Workers <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-black/15 bg-white/70 text-[#111111] hover:bg-white rounded-full px-8 py-3 text-lg" asChild>
+            <Button size="lg" variant="outline" className="border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink)] hover:bg-[color:var(--paper)] rounded-full px-8 py-3 text-lg" asChild>
               <Link to="/watch-demo">See Demo</Link>
             </Button>
           </div>

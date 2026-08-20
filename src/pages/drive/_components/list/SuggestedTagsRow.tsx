@@ -8,11 +8,11 @@ export default function SuggestedTagsRow({ item }: { item: DriveItem }) {
   const tags = item.suggestedTags ?? [];
   if (!tags.length) return null;
   return (
-    <div className="flex items-center gap-1.5 text-[11px] text-blue-700">
+    <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-3)]">
       <Sparkles className="h-3 w-3" />
       <span className="font-medium">Suggested:</span>
       {tags.map((t) => (
-        <span key={t} className="inline-flex items-center gap-0.5 rounded-full bg-blue-50 px-2 py-0.5 font-medium">
+        <span key={t} className="inline-flex items-center gap-0.5 rounded-full bg-[var(--sand-deep)] px-2 py-0.5 font-medium text-[var(--ink)]">
           <button type="button" onClick={() => accept(item.id, t)} className="inline-flex items-center gap-0.5 hover:underline">
             <Plus className="h-2.5 w-2.5" />
             {t}
@@ -20,7 +20,7 @@ export default function SuggestedTagsRow({ item }: { item: DriveItem }) {
           <button
             type="button"
             onClick={() => dismiss(item.id, t)}
-            className="ml-0.5 text-blue-400 hover:text-blue-700"
+            className="ml-0.5 text-[var(--text-5)] hover:text-[var(--ink)]"
             aria-label="Dismiss"
           >
             <X className="h-2.5 w-2.5" />

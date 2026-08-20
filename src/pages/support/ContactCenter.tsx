@@ -16,7 +16,7 @@ const ContactCenter = () => {
       availability: '24/7 Available',
       responseTime: 'Instant',
       action: 'Start Chat',
-      color: 'from-blue-500 to-cyan-500'
+      color: 'from-[color:var(--blue)] to-[color:var(--blue)]'
     },
     {
       icon: Phone,
@@ -25,7 +25,7 @@ const ContactCenter = () => {
       availability: 'Mon-Fri 6AM-6PM PST',
       responseTime: 'Immediate',
       action: 'Call Now',
-      color: 'from-green-500 to-blue-500'
+      color: 'from-[color:var(--blue)] to-[color:var(--blue)]'
     },
     {
       icon: Mail,
@@ -34,7 +34,7 @@ const ContactCenter = () => {
       availability: '24/7 Available',
       responseTime: 'Within 2 hours',
       action: 'Send Email',
-      color: 'from-purple-500 to-[#222222]'
+      color: 'from-[color:var(--blue)] to-[color:var(--text-2)]'
     }
   ];
 
@@ -67,14 +67,14 @@ const ContactCenter = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[color:var(--sand)] to-[color:var(--paper)] dark:from-[color:var(--bg)] dark:to-[color:var(--paper)]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+          <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight">
             Contact Center
           </h1>
-          <p className="text-xl text-gray-600 mb-8 font-light">
+          <p className="text-xl text-[color:var(--text-2)] mb-8 font-light">
             Get the help you need, when you need it. Our expert support team is here to assist you
           </p>
         </div>
@@ -86,8 +86,8 @@ const ContactCenter = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
             {supportStats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-4xl font-light text-blue-600 mb-2">{stat.value}</div>
-                <div className="text-gray-600">{stat.label}</div>
+                <div className="text-4xl font-light text-[color:var(--blue)] mb-2">{stat.value}</div>
+                <div className="text-[color:var(--text-2)]">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -95,28 +95,28 @@ const ContactCenter = () => {
       </section>
 
       {/* Contact Methods */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Get Support</h2>
-            <p className="text-xl text-gray-600">Choose the best way to reach us</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Get Support</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Choose the best way to reach us</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {contactMethods.map((method, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <CardContent className="p-8 text-center">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-r ${method.color} w-fit mx-auto mb-6`}>
+                  <div className={`p-4 rounded-[28px] bg-gradient-to-r ${method.color} w-fit mx-auto mb-6`}>
                     <method.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{method.title}</h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">{method.description}</p>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{method.title}</h3>
+                  <p className="text-[color:var(--text-2)] mb-6 leading-relaxed">{method.description}</p>
                   <div className="space-y-2 mb-6">
-                    <div className="flex items-center justify-center text-sm text-gray-500">
+                    <div className="flex items-center justify-center text-sm text-[color:var(--text-2)]">
                       <Clock className="h-4 w-4 mr-2" />
                       {method.availability}
                     </div>
-                    <div className="text-sm text-green-600 font-medium">
+                    <div className="text-sm text-[color:var(--blue)] font-medium">
                       Response: {method.responseTime}
                     </div>
                   </div>
@@ -129,39 +129,39 @@ const ContactCenter = () => {
       </section>
 
       {/* Contact Form */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Send us a Message</h2>
-            <p className="text-xl text-gray-600">Fill out the form below and we'll get back to you soon</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Send us a Message</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Fill out the form below and we'll get back to you soon</p>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl shadow-lg">
+          <div className="bg-[color:var(--paper)] p-8 rounded-[28px] shadow-lg">
             <form className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                  <label className="block text-sm font-medium text-[color:var(--ink)] mb-2">First Name</label>
                   <Input placeholder="Your first name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                  <label className="block text-sm font-medium text-[color:var(--ink)] mb-2">Last Name</label>
                   <Input placeholder="Your last name" />
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-[color:var(--ink)] mb-2">Email</label>
                   <Input type="email" placeholder="your.email@company.com" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone (Optional)</label>
+                  <label className="block text-sm font-medium text-[color:var(--ink)] mb-2">Phone (Optional)</label>
                   <Input placeholder="+1 (555) 123-4567" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                <label className="block text-sm font-medium text-[color:var(--ink)] mb-2">Subject</label>
                 <Select>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a topic" />
@@ -177,14 +177,14 @@ const ContactCenter = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                <label className="block text-sm font-medium text-[color:var(--ink)] mb-2">Message</label>
                 <Textarea 
                   placeholder="Describe your question or issue in detail..."
                   className="min-h-32"
                 />
               </div>
 
-              <Button className="w-full bg-black hover:bg-gray-800 text-white py-3">
+              <Button className="w-full bg-[color:var(--ink)] hover:bg-[color:var(--ink)] text-white py-3">
                 Send Message
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -194,29 +194,29 @@ const ContactCenter = () => {
       </section>
 
       {/* Office Locations */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Our Offices</h2>
-            <p className="text-xl text-gray-600">Visit us at one of our global locations</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Our Offices</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Visit us at one of our global locations</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {offices.map((office, index) => (
-              <div key={index} className="bg-gray-50 p-8 rounded-3xl">
+              <div key={index} className="bg-[color:var(--sand)] p-8 rounded-[28px]">
                 <div className="flex items-center mb-4">
-                  <MapPin className="h-6 w-6 text-blue-600 mr-3" />
-                  <h3 className="text-xl font-medium text-gray-900">{office.city}</h3>
+                  <MapPin className="h-6 w-6 text-[color:var(--blue)] mr-3" />
+                  <h3 className="text-xl font-medium text-[color:var(--ink)]">{office.city}</h3>
                 </div>
                 <div className="space-y-3">
-                  <p className="text-gray-600">{office.address}</p>
+                  <p className="text-[color:var(--text-2)]">{office.address}</p>
                   <div className="flex items-center">
-                    <Phone className="h-4 w-4 text-gray-400 mr-2" />
-                    <span className="text-gray-700">{office.phone}</span>
+                    <Phone className="h-4 w-4 text-[color:var(--text-4)] mr-2" />
+                    <span className="text-[color:var(--ink)]">{office.phone}</span>
                   </div>
                   <div className="flex items-center">
-                    <Clock className="h-4 w-4 text-gray-400 mr-2" />
-                    <span className="text-gray-700">{office.hours}</span>
+                    <Clock className="h-4 w-4 text-[color:var(--text-4)] mr-2" />
+                    <span className="text-[color:var(--ink)]">{office.hours}</span>
                   </div>
                 </div>
               </div>
@@ -226,20 +226,20 @@ const ContactCenter = () => {
       </section>
 
       {/* 24/7 Support CTA */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-3xl p-12 text-[#111111] text-center border border-black/8">
-            <Headphones className="h-16 w-16 mx-auto mb-6 text-[#111111]" />
+          <div className="bg-[color:var(--paper)] rounded-[28px] p-12 text-[color:var(--ink)] text-center border border-[color:var(--line)]">
+            <Headphones className="h-16 w-16 mx-auto mb-6 text-[color:var(--ink)]" />
             <h3 className="text-3xl font-light mb-6">24/7 Premium Support</h3>
-            <p className="text-xl text-black/60 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-[color:var(--text-2)] mb-8 max-w-2xl mx-auto">
               Get priority access to our expert support team with faster response times and dedicated assistance
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3">
+              <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full py-3">
                 Upgrade to Premium
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button size="lg" variant="outline" className="border-black/15 bg-white/70 text-[#111111] hover:bg-white rounded-full py-3">
+              <Button size="lg" variant="outline" className="border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink)] hover:bg-[color:var(--paper)] rounded-full py-3">
                 Learn More
               </Button>
             </div>

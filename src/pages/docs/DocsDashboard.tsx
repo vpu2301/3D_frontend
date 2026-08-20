@@ -82,12 +82,15 @@ export default function DocsDashboard() {
         />
         <main className="flex flex-1 flex-col overflow-hidden">
           {/* Page heading */}
-          <div className="border-b border-gray-100 px-8 pt-6 pb-4">
+          <div className="border-b border-[var(--line-soft)] px-8 pt-6 pb-4">
             <div className="flex items-end justify-between gap-4">
-              <h1 className="text-2xl font-light text-gray-900">
-                {heading}{' '}
-                <span className="text-gray-400">({filtered.length})</span>
-              </h1>
+              <div>
+                <div className="plat-crumb">3days.docs</div>
+                <h1 className="mt-1.5 text-[26px] font-semibold tracking-[-0.03em] text-[var(--ink)]">
+                  {heading}{' '}
+                  <span className="text-[var(--text-5)]">({filtered.length})</span>
+                </h1>
+              </div>
               <div className="w-72">
                 <SearchBar />
               </div>
@@ -97,9 +100,9 @@ export default function DocsDashboard() {
           <div className="flex-1 overflow-y-auto">
             {/* Templates strip (only when on All / Recent without a folder) */}
             {!folderId && (filter === 'all' || filter === 'recent') && !query && (
-              <section className="border-b border-gray-100 px-8 py-5">
+              <section className="border-b border-[var(--line-soft)] px-8 py-5">
                 <div className="mb-3 flex items-center justify-between">
-                  <h2 className="text-sm font-medium text-gray-700">Start a new document</h2>
+                  <h2 className="text-[15px] font-semibold text-[var(--ink)]">Start a new document</h2>
                 </div>
                 <TemplateStrip />
               </section>
@@ -114,10 +117,10 @@ export default function DocsDashboard() {
                     type="button"
                     onClick={() => setViewMode('grid')}
                     className={cn(
-                      'rounded-md p-1.5 transition-colors',
+                      'rounded-[10px] p-1.5 transition-colors',
                       viewMode === 'grid'
-                        ? 'bg-[#dde9f4] text-gray-900'
-                        : 'text-gray-500 hover:bg-gray-100',
+                        ? 'bg-[rgba(20,22,26,0.06)] text-[var(--ink)]'
+                        : 'text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
                     )}
                     aria-label="Grid view"
                   >
@@ -127,10 +130,10 @@ export default function DocsDashboard() {
                     type="button"
                     onClick={() => setViewMode('list')}
                     className={cn(
-                      'rounded-md p-1.5 transition-colors',
+                      'rounded-[10px] p-1.5 transition-colors',
                       viewMode === 'list'
-                        ? 'bg-[#dde9f4] text-gray-900'
-                        : 'text-gray-500 hover:bg-gray-100',
+                        ? 'bg-[rgba(20,22,26,0.06)] text-[var(--ink)]'
+                        : 'text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
                     )}
                     aria-label="List view"
                   >
@@ -143,10 +146,10 @@ export default function DocsDashboard() {
                   type="button"
                   onClick={() => setSortMode((m) => (m === 'recent' ? 'az' : 'recent'))}
                   className={cn(
-                    'rounded-md p-1.5 transition-colors',
+                    'rounded-[10px] p-1.5 transition-colors',
                     sortMode === 'az'
-                      ? 'bg-[#dde9f4] text-gray-900'
-                      : 'text-gray-500 hover:bg-gray-100',
+                      ? 'bg-[rgba(20,22,26,0.06)] text-[var(--ink)]'
+                      : 'text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
                   )}
                   aria-label="Sort A-Z"
                   title={sortMode === 'az' ? 'Sort by recent' : 'Sort A-Z'}
@@ -156,16 +159,16 @@ export default function DocsDashboard() {
               </div>
 
               {!loaded ? (
-                <div className="flex items-center justify-center py-20 text-sm text-gray-500">
+                <div className="flex items-center justify-center py-20 text-sm text-[var(--text-3)]">
                   Loading…
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#dde9f4] text-[#1a73e8]">
+                  <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-[12px] bg-[var(--sand)] text-[var(--ink)]">
                     <FolderOpen className="h-7 w-7" />
                   </div>
-                  <h3 className="text-base font-medium text-gray-900">No documents</h3>
-                  <p className="mt-1 max-w-sm text-sm text-gray-500">
+                  <h3 className="text-base font-semibold text-[var(--ink)]">No documents</h3>
+                  <p className="mt-1 max-w-sm text-sm text-[var(--text-3)]">
                     {query
                       ? 'No matches for your search. Try a different term.'
                       : 'Pick a template above to get started.'}
@@ -178,8 +181,8 @@ export default function DocsDashboard() {
                   ))}
                 </div>
               ) : (
-                <div className="overflow-hidden rounded-md border border-gray-200 bg-white">
-                  <div className="grid grid-cols-[20px_minmax(0,1fr)_140px_140px_28px] items-center gap-3 border-b border-gray-200 bg-gray-50 px-3 py-2 text-[11px] font-medium uppercase tracking-wider text-gray-500">
+                <div className="overflow-hidden rounded-[14px] border border-[var(--line-soft)] bg-white">
+                  <div className="plat-eyebrow grid grid-cols-[20px_minmax(0,1fr)_140px_140px_28px] items-center gap-3 border-b border-[var(--line-soft)] bg-[var(--sand)] px-4 py-2.5">
                     <span />
                     <span>Name</span>
                     <span>Owner</span>

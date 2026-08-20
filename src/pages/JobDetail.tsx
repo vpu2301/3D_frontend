@@ -61,7 +61,7 @@ const JobDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Job Not Found</h2>
+          <h2 className="text-2xl font-bold text-[color:var(--ink)] mb-4">Job Not Found</h2>
           <Button onClick={() => navigate('/careers')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Careers
@@ -88,7 +88,7 @@ const JobDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-[color:var(--sand)] py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -120,25 +120,25 @@ const JobDetail = () => {
                       <Badge variant="outline">{job.type}</Badge>
                     </div>
                   </div>
-                  <span className="text-sm text-gray-500">Posted {job.posted}</span>
+                  <span className="text-sm text-[color:var(--text-2)]">Posted {job.posted}</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t">
-                  <div className="flex items-center text-gray-600">
+                  <div className="flex items-center text-[color:var(--text-2)]">
                     <MapPin className="h-4 w-4 mr-2" />
                     {job.location}
                   </div>
-                  <div className="flex items-center text-gray-600">
+                  <div className="flex items-center text-[color:var(--text-2)]">
                     <Clock className="h-4 w-4 mr-2" />
                     {job.type}
                   </div>
-                  <div className="flex items-center text-gray-600">
+                  <div className="flex items-center text-[color:var(--text-2)]">
                     <DollarSign className="h-4 w-4 mr-2" />
                     {job.salary}
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 leading-relaxed">{job.description}</p>
+                <p className="text-[color:var(--ink)] leading-relaxed">{job.description}</p>
               </CardContent>
             </Card>
 
@@ -151,8 +151,8 @@ const JobDetail = () => {
                 <ul className="space-y-3">
                   {job.responsibilities.map((responsibility, index) => (
                     <li key={index} className="flex items-start">
-                      <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                      <span className="text-gray-700">{responsibility}</span>
+                      <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span className="text-[color:var(--ink)]">{responsibility}</span>
                     </li>
                   ))}
                 </ul>
@@ -168,8 +168,8 @@ const JobDetail = () => {
                 <ul className="space-y-3">
                   {job.requirements.map((requirement, index) => (
                     <li key={index} className="flex items-start">
-                      <div className="w-2 h-2 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                      <span className="text-gray-700">{requirement}</span>
+                      <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span className="text-[color:var(--ink)]">{requirement}</span>
                     </li>
                   ))}
                 </ul>
@@ -185,8 +185,8 @@ const JobDetail = () => {
                 <ul className="space-y-3">
                   {job.niceToHave.map((item, index) => (
                     <li key={index} className="flex items-start">
-                      <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                      <span className="text-gray-700">{item}</span>
+                      <div className="w-2 h-2 bg-[color:var(--blue)] rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span className="text-[color:var(--ink)]">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -205,7 +205,7 @@ const JobDetail = () => {
                 <Button onClick={handleApply} className="w-full" size="lg">
                   Apply Now
                 </Button>
-                <p className="text-sm text-gray-600 text-center">
+                <p className="text-sm text-[color:var(--text-2)] text-center">
                   We typically respond within 3-5 business days
                 </p>
               </CardContent>
@@ -220,7 +220,7 @@ const JobDetail = () => {
                 <ul className="space-y-2">
                   {job.benefits.map((benefit, index) => (
                     <li key={index} className="flex items-center text-sm">
-                      <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"></div>
+                      <div className="w-1.5 h-1.5 bg-[color:var(--blue)] rounded-full mr-2"></div>
                       {benefit}
                     </li>
                   ))}
@@ -237,21 +237,21 @@ const JobDetail = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-[color:var(--text-2)] mb-4">
                   We're revolutionizing the future of work with AI employees that seamlessly 
                   integrate into business operations worldwide.
                 </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Founded:</span>
+                    <span className="text-[color:var(--text-2)]">Founded:</span>
                     <span className="font-medium">2023</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Employees:</span>
+                    <span className="text-[color:var(--text-2)]">Employees:</span>
                     <span className="font-medium">50+</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Funding:</span>
+                    <span className="text-[color:var(--text-2)]">Funding:</span>
                     <span className="font-medium">Series A</span>
                   </div>
                 </div>

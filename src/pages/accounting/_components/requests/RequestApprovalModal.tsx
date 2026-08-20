@@ -64,32 +64,35 @@ export default function RequestApprovalModal({ requestId, onClose }: RequestAppr
     <Dialog open={!!requestId} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader className="text-left">
-          <DialogTitle className="font-display text-xl font-light text-gray-900">
+          <DialogTitle
+            className="text-[21px] font-semibold tracking-[-0.03em] text-[#14161a]"
+            style={{ fontFamily: "'Sora', sans-serif" }}
+          >
             {t('modal.title')}
           </DialogTitle>
-          <DialogDescription className="text-xs text-gray-400">
+          <DialogDescription className="text-xs text-[#7a8087]">
             {mandate?.name}
           </DialogDescription>
         </DialogHeader>
 
         {/* Approval reminder (§7) */}
-        <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5">
-          <Info aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600" />
-          <p className="text-xs text-amber-800">{t('modal.reminder')}</p>
+        <div className="flex items-start gap-2 rounded-[12px] border border-[#f0d9bf] bg-[#fdf0e4] px-3 py-2.5">
+          <Info aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#9a5312]" />
+          <p className="text-xs text-[#9a5312]">{t('modal.reminder')}</p>
         </div>
 
         {/* Draft as the client will receive it */}
-        <div className="rounded-xl border border-gray-200">
-          <div className="grid grid-cols-[6.5rem_1fr] gap-2 border-b border-gray-100 px-4 py-2.5 text-sm">
-            <span className="text-xs font-medium text-gray-400">{t('modal.channel')}</span>
-            <span className="text-gray-800">{channelLabel}</span>
+        <div className="overflow-hidden rounded-[14px] border border-[var(--line-soft)]">
+          <div className="grid grid-cols-[6.5rem_1fr] gap-2 border-b border-[var(--line-soft)] px-4 py-2.5 text-sm">
+            <span className="text-xs font-medium text-[#7a8087]">{t('modal.channel')}</span>
+            <span className="text-[#14161a]">{channelLabel}</span>
           </div>
-          <div className="grid grid-cols-[6.5rem_1fr] gap-2 border-b border-gray-100 px-4 py-2.5 text-sm">
-            <span className="text-xs font-medium text-gray-400">{t('modal.recipient')}</span>
-            <span className="text-gray-800">{request.recipient}</span>
+          <div className="grid grid-cols-[6.5rem_1fr] gap-2 border-b border-[var(--line-soft)] px-4 py-2.5 text-sm">
+            <span className="text-xs font-medium text-[#7a8087]">{t('modal.recipient')}</span>
+            <span className="text-[#14161a]" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{request.recipient}</span>
           </div>
-          <div className="grid grid-cols-[6.5rem_1fr] gap-2 border-b border-gray-100 px-4 py-2.5 text-sm">
-            <span className="text-xs font-medium text-gray-400">{t('modal.subject')}</span>
+          <div className="grid grid-cols-[6.5rem_1fr] gap-2 border-b border-[var(--line-soft)] px-4 py-2.5 text-sm">
+            <span className="text-xs font-medium text-[#7a8087]">{t('modal.subject')}</span>
             {editing ? (
               <div>
                 <label htmlFor="req-subject" className="sr-only">{t('modal.editLabelSubject')}</label>
@@ -97,11 +100,11 @@ export default function RequestApprovalModal({ requestId, onClose }: RequestAppr
                   id="req-subject"
                   value={titleDraft}
                   onChange={(e) => setTitleDraft(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-1 text-sm text-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                  className="w-full rounded-[10px] border border-[var(--line)] bg-[#f4f5f7] px-2 py-1 text-sm text-[#14161a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14161a]/25"
                 />
               </div>
             ) : (
-              <span className="font-medium text-gray-900">{request.title}</span>
+              <span className="font-medium text-[#14161a]">{request.title}</span>
             )}
           </div>
           <div className="px-4 py-3">
@@ -117,15 +120,18 @@ export default function RequestApprovalModal({ requestId, onClose }: RequestAppr
                 />
               </div>
             ) : (
-              <p className="text-sm leading-relaxed text-gray-700">{request.body}</p>
+              <p className="text-sm leading-relaxed text-[#4a5057]">{request.body}</p>
             )}
-            <p className="mb-1.5 mt-4 text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+            <p
+              className="mb-1.5 mt-4 text-[10px] font-medium uppercase tracking-[0.22em] text-[#9aa0a6]"
+              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            >
               {t('modal.bundledItems')}
             </p>
             <ul className="space-y-1.5">
               {request.bundledItems.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
-                  <span aria-hidden className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+                <li key={item} className="flex items-start gap-2 text-sm text-[#4a5057]">
+                  <span aria-hidden className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#9a5312]" />
                   {item}
                 </li>
               ))}
@@ -140,14 +146,14 @@ export default function RequestApprovalModal({ requestId, onClose }: RequestAppr
               <button
                 type="button"
                 onClick={saveEdit}
-                className="rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                className="inline-flex h-10 items-center rounded-full bg-[#14161a] px-5 text-[13px] font-semibold text-white transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14161a]/25"
               >
                 {t('common.save')}
               </button>
               <button
                 type="button"
                 onClick={() => setEditing(false)}
-                className="rounded-full border border-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                className="inline-flex h-10 items-center rounded-full border border-[var(--line)] px-4 text-[12.5px] font-semibold text-[#5a6067] transition-colors hover:border-[var(--ink)] hover:text-[#14161a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14161a]/25"
               >
                 {t('common.cancel')}
               </button>
@@ -160,7 +166,7 @@ export default function RequestApprovalModal({ requestId, onClose }: RequestAppr
                 disabled={!can('send')}
                 title={!can('send') ? t('common.noPermission') : undefined}
                 className={cn(
-                  'inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
+                  'inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-full bg-[#14161a] px-5 text-[13px] font-semibold text-white transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14161a]/25',
                   !can('send') && 'cursor-not-allowed opacity-40',
                 )}
               >
@@ -173,7 +179,7 @@ export default function RequestApprovalModal({ requestId, onClose }: RequestAppr
                 disabled={!can('prepare')}
                 title={!can('prepare') ? t('common.noPermission') : undefined}
                 className={cn(
-                  'inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
+                  'inline-flex h-10 items-center gap-2 rounded-full border border-[var(--line)] px-4 text-[12.5px] font-semibold text-[#5a6067] transition-colors hover:border-[var(--ink)] hover:text-[#14161a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14161a]/25',
                   !can('prepare') && 'cursor-not-allowed opacity-40',
                 )}
               >

@@ -18,15 +18,15 @@ export default function CommentsPanel({ doc }: Props) {
   if (doc.comments.length === 0) return null;
 
   return (
-    <div className="hidden w-72 shrink-0 overflow-y-auto border-l border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-800 dark:bg-zinc-950 xl:block">
+    <div className="hidden w-72 shrink-0 overflow-y-auto border-l border-[var(--line-soft)] p-3 xl:block">
       <div className="mb-2 flex items-center justify-between">
-        <div className="flex items-center gap-1 text-sm font-semibold">
+        <div className="flex items-center gap-1.5 text-sm font-semibold text-[var(--ink)]">
           <MessageCircle className="h-4 w-4" /> Comments ({doc.comments.length})
         </div>
         <button
           type="button"
           onClick={() => setShowResolved((v) => !v)}
-          className="text-[10px] text-blue-600 hover:underline dark:text-blue-400"
+          className="text-[10px] font-medium text-[var(--text-3)] transition-colors hover:text-[var(--ink)]"
         >
           {showResolved ? 'Hide resolved' : 'Show resolved'}
         </button>
@@ -35,31 +35,31 @@ export default function CommentsPanel({ doc }: Props) {
         {visible.map((thread) => (
           <div
             key={thread.id}
-            className={`rounded-md border bg-white p-2 dark:bg-zinc-900 ${
+            className={`rounded-[12px] border bg-white p-2.5 ${
               thread.resolved
-                ? 'border-zinc-200 opacity-60 dark:border-zinc-800'
-                : 'border-amber-200 dark:border-amber-900'
+                ? 'border-[var(--line-soft)] opacity-60'
+                : 'border-[var(--line)]'
             }`}
           >
             {thread.replies.map((r) => (
               <div key={r.id} className="mb-1.5 last:mb-0">
                 <div className="flex items-center gap-1">
-                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-[9px] font-medium text-white">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--ink)] text-[9px] font-semibold text-white">
                     {r.author.slice(0, 1)}
                   </div>
-                  <span className="text-xs font-medium">{r.author}</span>
-                  <span className="text-[10px] text-zinc-500">
+                  <span className="text-xs font-semibold text-[var(--ink)]">{r.author}</span>
+                  <span className="text-[10px] text-[var(--text-4)]">
                     {new Date(r.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
-                <div className="ml-6 text-xs text-zinc-700 dark:text-zinc-300">{r.body}</div>
+                <div className="ml-6 text-xs text-[var(--text-2)]">{r.body}</div>
               </div>
             ))}
             <div className="mt-1.5 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => resolve(doc.id, thread.id, !thread.resolved)}
-                className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="flex items-center gap-1 rounded-[8px] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
                 {thread.resolved ? <X className="h-3 w-3" /> : <Check className="h-3 w-3" />}
                 {thread.resolved ? 'Reopen' : 'Resolve'}
@@ -82,11 +82,11 @@ export default function CommentsPanel({ doc }: Props) {
                     setReplyText((m) => ({ ...m, [thread.id]: e.target.value }))
                   }
                   placeholder="Reply…"
-                  className="flex-1 rounded-md border border-zinc-200 bg-white px-1.5 py-1 text-xs focus:border-blue-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900"
+                  className="flex-1 rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] px-2 py-1 text-xs text-[var(--ink)] placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:bg-white focus:outline-none"
                 />
                 <button
                   type="submit"
-                  className="rounded-md bg-blue-600 p-1 text-white hover:bg-blue-700"
+                  className="rounded-[10px] bg-[var(--ink)] p-1.5 text-white transition-opacity hover:opacity-85"
                 >
                   <Send className="h-3 w-3" />
                 </button>

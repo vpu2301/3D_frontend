@@ -61,9 +61,9 @@ export default function ThreadView({ threadId, fullScreen }: Props) {
 
   if (!thread) {
     return (
-      <div className="flex flex-1 items-center justify-center text-sm text-gray-500">
+      <div className="flex flex-1 items-center justify-center text-sm text-[var(--text-4)]">
         <div className="text-center">
-          <MailPlus className="mx-auto mb-2 h-8 w-8 text-gray-300" />
+          <MailPlus className="mx-auto mb-2 h-8 w-8 text-[var(--text-5)]" />
           <p>Select a conversation</p>
         </div>
       </div>
@@ -161,20 +161,20 @@ export default function ThreadView({ threadId, fullScreen }: Props) {
   return (
     <div className="flex flex-1 flex-col overflow-hidden bg-white">
       {/* Sticky header */}
-      <header className="border-b border-gray-100 bg-white px-6 py-3">
+      <header className="border-b border-[var(--line-soft)] bg-white px-6 py-3">
         <div className="flex items-center gap-2">
           {fullScreen && (
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="rounded p-1.5 text-gray-500 hover:bg-gray-100"
+              className="rounded-[10px] p-1.5 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
               aria-label="Back"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
           )}
-          <h2 className="flex-1 truncate text-lg font-medium text-gray-900">{thread.subject}</h2>
-          <span className="shrink-0 text-[11px] text-gray-500">
+          <h2 className="flex-1 truncate text-[19px] font-semibold tracking-[-0.02em] text-[var(--ink)]">{thread.subject}</h2>
+          <span className="shrink-0 text-[11px] text-[var(--text-4)]">
             {emails.length} message{emails.length === 1 ? '' : 's'}
           </span>
         </div>
@@ -186,7 +186,7 @@ export default function ThreadView({ threadId, fullScreen }: Props) {
               key={p.email}
               type="button"
               onClick={() => p.contactId && navigate(`/contacts/contact/${p.contactId}`)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs font-medium text-[var(--text-2)] transition-colors hover:bg-[var(--sand-deep)] hover:text-[var(--ink)]"
               title={p.email}
             >
               <Avatar name={p.name} email={p.email} size={16} />
@@ -200,17 +200,17 @@ export default function ThreadView({ threadId, fullScreen }: Props) {
           <ActionButton icon={Reply} label="Reply" onClick={() => onReply(false)} primary />
           <ActionButton icon={ReplyAll} label="Reply all" onClick={() => onReply(true)} />
           <ActionButton icon={Forward} label="Forward" onClick={onForward} />
-          <span className="mx-1 h-5 w-px bg-gray-200" />
+          <span className="mx-1 h-5 w-px bg-[var(--line)]" />
           <ActionButton icon={Archive} label="Archive" onClick={onArchive} />
           <ActionButton icon={Moon} label="Snooze" onClick={onSnooze} />
           <ActionButton icon={Trash2} label="Delete" onClick={onTrash} />
-          <span className="mx-1 h-5 w-px bg-gray-200" />
+          <span className="mx-1 h-5 w-px bg-[var(--line)]" />
           <ActionButton icon={ListTodo} label="Make task" onClick={onMakeTask} />
           <ActionButton icon={CalendarPlus} label="Schedule meeting" onClick={onScheduleMeeting} />
           <button
             type="button"
             onClick={onMarkRead}
-            className="ml-auto rounded p-1.5 text-gray-500 hover:bg-gray-100"
+            className="ml-auto rounded-[10px] p-1.5 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
             title="Mark all read"
           >
             <Sparkles className="h-3.5 w-3.5" />
@@ -253,10 +253,10 @@ function ActionButton({
       type="button"
       onClick={onClick}
       className={cn(
-        'flex items-center gap-1.5 rounded-full px-3 py-1 text-xs transition-colors',
+        'flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
         primary
-          ? 'bg-[#bdd8ec] font-medium text-gray-900 hover:bg-[#a5c8e0]'
-          : 'text-gray-700 hover:bg-gray-100',
+          ? 'bg-[var(--ink)] font-semibold text-white hover:opacity-[0.86]'
+          : 'text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]',
       )}
     >
       <Icon className="h-3.5 w-3.5" />

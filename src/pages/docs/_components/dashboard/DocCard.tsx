@@ -41,12 +41,12 @@ export default function DocCard({ doc }: { doc: Doc }) {
       draggable
       onDragStart={(e) => e.dataTransfer.setData('text/doc-id', doc.id)}
       className={cn(
-        'group relative flex cursor-pointer flex-col overflow-hidden rounded-md border bg-white text-left transition-all hover:border-blue-400',
-        selected ? 'border-blue-500 ring-1 ring-blue-500' : 'border-gray-200',
+        'group relative flex cursor-pointer flex-col overflow-hidden rounded-[14px] border bg-white text-left transition-colors hover:border-[var(--line)]',
+        selected ? 'border-[var(--ink)]' : 'border-[var(--line-soft)]',
       )}
     >
       {/* Preview area — first-page mini render */}
-      <div className="relative aspect-[3/4] overflow-hidden border-b border-gray-100 bg-white">
+      <div className="relative aspect-[3/4] overflow-hidden border-b border-[var(--line-soft)] bg-white">
         {doc.cover && (
           <img
             src={doc.cover}
@@ -59,18 +59,18 @@ export default function DocCard({ doc }: { doc: Doc }) {
             const lines = preview.split('\n').filter(Boolean).slice(0, 14);
             if (lines.length === 0) {
               return (
-                <div className="text-[9px] italic text-gray-400">Empty document</div>
+                <div className="text-[9px] italic text-[var(--text-5)]">Empty document</div>
               );
             }
             return (
               <div className="space-y-1.5">
-                <div className="text-[10px] font-semibold leading-tight text-gray-900 line-clamp-2">
+                <div className="text-[10px] font-semibold leading-tight text-[var(--ink)] line-clamp-2">
                   {lines[0]}
                 </div>
                 {lines.slice(1).map((line, i) => (
                   <div
                     key={i}
-                    className="text-[8px] leading-tight text-gray-500 line-clamp-1"
+                    className="text-[8px] leading-tight text-[var(--text-4)] line-clamp-1"
                   >
                     {line}
                   </div>
@@ -83,14 +83,14 @@ export default function DocCard({ doc }: { doc: Doc }) {
 
       {/* Footer strip */}
       <div className="flex items-center gap-2 px-3 py-2.5">
-        <FileText className="h-4 w-4 shrink-0 text-blue-500" />
-        {doc.shared && <Users className="h-3.5 w-3.5 shrink-0 text-gray-400" />}
+        <FileText className="h-4 w-4 shrink-0 text-[var(--text-4)]" />
+        {doc.shared && <Users className="h-3.5 w-3.5 shrink-0 text-[var(--text-5)]" />}
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm text-gray-900">
+          <div className="truncate text-sm font-medium text-[var(--ink)]">
             {doc.icon && <span className="mr-1">{doc.icon}</span>}
             {doc.title || 'Untitled document'}
           </div>
-          <div className="text-[11px] text-gray-500">
+          <div className="text-[11px] text-[var(--text-4)]">
             Opened {formatDate(doc.updatedAt)}
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function DocCard({ doc }: { doc: Doc }) {
             e.stopPropagation();
             setMenuOpen((o) => !o);
           }}
-          className="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+          className="shrink-0 rounded-[8px] p-1 text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
           aria-label="More actions"
         >
           <MoreVertical className="h-4 w-4" />
@@ -117,10 +117,10 @@ export default function DocCard({ doc }: { doc: Doc }) {
           toggleSelected(doc.id);
         }}
         className={cn(
-          'absolute left-2 top-2 z-10 h-4 w-4 rounded border bg-white transition-opacity',
+          'absolute left-2 top-2 z-10 h-4 w-4 rounded-[4px] border bg-white transition-opacity',
           selected
-            ? 'border-blue-500 bg-blue-500 opacity-100'
-            : 'border-gray-300 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto',
+            ? 'border-[var(--ink)] bg-[var(--ink)] opacity-100'
+            : 'border-[var(--line)] opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto',
         )}
         aria-label={selected ? 'Deselect' : 'Select'}
       >
@@ -140,7 +140,7 @@ export default function DocCard({ doc }: { doc: Doc }) {
           star(doc.id, !doc.starred);
         }}
         className={cn(
-          'absolute right-1.5 top-1.5 z-10 rounded bg-white/90 p-1 backdrop-blur transition-opacity hover:bg-gray-100',
+          'absolute right-1.5 top-1.5 z-10 rounded-[8px] bg-white/90 p-1 backdrop-blur transition-opacity hover:bg-[rgba(20,22,26,0.06)]',
           doc.starred
             ? 'opacity-100'
             : 'opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto',
@@ -150,14 +150,14 @@ export default function DocCard({ doc }: { doc: Doc }) {
         <Star
           className={cn(
             'h-3.5 w-3.5',
-            doc.starred ? 'fill-yellow-400 text-yellow-400' : 'text-gray-500',
+            doc.starred ? 'fill-[var(--ink)] text-[var(--ink)]' : 'text-[var(--text-4)]',
           )}
         />
       </button>
 
       {menuOpen && (
         <div
-          className="absolute bottom-9 right-2 z-20 w-44 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+          className="absolute bottom-9 right-2 z-20 w-44 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.1)]"
           onClick={(e) => e.stopPropagation()}
           onMouseLeave={() => setMenuOpen(false)}
         >
@@ -169,7 +169,7 @@ export default function DocCard({ doc }: { doc: Doc }) {
               setMenuOpen(false);
               dup(doc.id);
             }}
-            className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-gray-700 hover:bg-gray-100"
+            className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           >
             <Copy className="h-3.5 w-3.5" /> Make a copy
           </button>
@@ -181,12 +181,12 @@ export default function DocCard({ doc }: { doc: Doc }) {
               setMenuOpen(false);
               star(doc.id, !doc.starred);
             }}
-            className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-gray-700 hover:bg-gray-100"
+            className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           >
             <Star className="h-3.5 w-3.5" />{' '}
             {doc.starred ? 'Remove star' : 'Add to starred'}
           </button>
-          <div className="my-1 border-t border-gray-100" />
+          <div className="my-1 border-t border-[var(--line-soft)]" />
           <button
             type="button"
             onClick={(e) => {
@@ -195,7 +195,7 @@ export default function DocCard({ doc }: { doc: Doc }) {
               setMenuOpen(false);
               trash(doc.id);
             }}
-            className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-red-600 hover:bg-red-50"
+            className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-sm text-[var(--bad-fg)] hover:bg-[rgba(179,56,46,0.07)]"
           >
             <Trash2 className="h-3.5 w-3.5" /> Move to trash
           </button>

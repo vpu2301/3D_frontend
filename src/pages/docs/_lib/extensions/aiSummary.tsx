@@ -25,27 +25,27 @@ function AiSummaryView({ editor, getPos, node, updateAttributes }: NodeViewProps
 
   return (
     <NodeViewWrapper className="my-3">
-      <div className="rounded-lg border border-blue-200 bg-blue-50/60 p-4 dark:border-blue-900 dark:bg-blue-950/30" contentEditable={false}>
+      <div className="rounded-[12px] border border-[var(--line-soft)] bg-[var(--sand)] p-4" contentEditable={false}>
         <div className="mb-2 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-blue-700 dark:text-blue-300">
+          <div className="plat-eyebrow flex items-center gap-1.5 text-[var(--text-3)]">
             <Sparkles className="h-3.5 w-3.5" /> AI summary
           </div>
           <button
             type="button"
             onClick={refresh}
             disabled={loading}
-            className="flex items-center gap-1 rounded px-2 py-1 text-xs hover:bg-blue-100 disabled:opacity-50 dark:hover:bg-blue-900"
+            className="flex items-center gap-1 rounded-[8px] px-2 py-1 text-xs font-medium text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)] disabled:opacity-50"
           >
             <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin' : ''}`} />
             {loading ? 'Generating…' : 'Regenerate'}
           </button>
         </div>
-        <div className="text-sm leading-relaxed text-zinc-800 dark:text-zinc-200">
+        <div className="text-sm leading-relaxed text-[var(--ink)]">
           {summary || (
             <button
               type="button"
               onClick={refresh}
-              className="text-blue-600 hover:underline dark:text-blue-400"
+              className="text-[var(--text-3)] underline decoration-[var(--line)] underline-offset-2 transition-colors hover:text-[var(--ink)]"
             >
               Click regenerate to summarize the document above.
             </button>

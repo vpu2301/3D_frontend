@@ -32,14 +32,18 @@ function NavRow({ icon: Icon, label, count, active, onClick }: NavRowProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full items-center gap-3 rounded-r-full py-2 pl-5 pr-4 text-left text-sm transition-colors',
-        active ? 'bg-[#dde9f4] text-gray-900' : 'text-gray-700 hover:bg-gray-100',
+        'flex w-full items-center gap-3 rounded-[10px] py-2 pl-3 pr-3 text-left text-[13.5px] transition-colors',
+        active
+          ? 'bg-[rgba(20,22,26,0.07)] font-semibold text-[var(--ink)]'
+          : 'font-medium text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
       )}
     >
-      <Icon className="h-4 w-4 shrink-0 text-gray-500" />
+      <Icon
+        className={cn('h-4 w-4 shrink-0', active ? 'text-[var(--ink)]' : 'text-[var(--text-4)]')}
+      />
       <span className="flex-1 truncate">{label}</span>
       {count !== undefined && count > 0 && (
-        <span className="shrink-0 text-[10px] font-medium leading-tight text-gray-500">
+        <span className="shrink-0 text-[10px] font-semibold leading-tight text-[var(--text-4)]">
           {count}
         </span>
       )}
@@ -96,18 +100,18 @@ export default function DocsMiniRail({
   };
 
   return (
-    <aside className="flex h-full w-60 shrink-0 flex-col bg-white">
+    <aside className="flex h-full w-60 shrink-0 flex-col border-r border-[var(--line-soft)]">
       <div className="px-4 pt-3 pb-4">
         <button
           type="button"
           onClick={onNew}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#bdd8ec] px-4 py-2.5 text-sm font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
+          className="plat-btn w-full justify-center"
         >
           <Plus className="h-4 w-4" /> Create doc
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-3">
+      <div className="flex-1 overflow-y-auto px-2">
         <div className="space-y-0.5">
           <NavRow
             icon={FileText}
@@ -154,7 +158,7 @@ export default function DocsMiniRail({
           />
         </div>
 
-        <div className="mb-1.5 mt-6 flex items-center justify-between px-5 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+        <div className="plat-eyebrow mb-1.5 mt-6 flex items-center justify-between px-3">
           <button
             type="button"
             onClick={() => setFoldersOpen((o) => !o)}
@@ -166,7 +170,7 @@ export default function DocsMiniRail({
           <button
             type="button"
             onClick={onNewFolder}
-            className="rounded p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-[10px] p-1 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             aria-label="New folder"
             title="New folder"
           >
@@ -176,7 +180,7 @@ export default function DocsMiniRail({
         {foldersOpen && (
           <div className="space-y-0.5">
             {Object.values(folders).length === 0 ? (
-              <div className="px-5 py-1 text-[11px] text-gray-400">No folders yet</div>
+              <div className="px-3 py-1 text-[11px] text-[var(--text-5)]">No folders yet</div>
             ) : (
               Object.values(folders)
                 .sort((a, b) => a.name.localeCompare(b.name))
@@ -200,7 +204,7 @@ export default function DocsMiniRail({
           </div>
         )}
 
-        <div className="mb-1.5 mt-6 px-5 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+        <div className="plat-eyebrow mb-1.5 mt-6 px-3">
           Fix &amp; manage
         </div>
         <div className="space-y-0.5">

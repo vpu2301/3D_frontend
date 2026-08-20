@@ -88,14 +88,15 @@ export default function DriveSpaces() {
       <div className="flex flex-1 overflow-hidden">
         <DriveMiniRail />
         <main className="flex flex-1 flex-col overflow-hidden">
-          <div className="border-b border-gray-100 px-6 py-4">
-            <Link to="/drive" className="inline-flex items-center gap-1 text-xs text-gray-500 hover:underline">
+          <div className="border-b border-[var(--line-soft)] px-6 py-4">
+            <p className="plat-crumb">3days.drive / spaces</p>
+            <Link to="/drive" className="mt-1.5 inline-flex items-center gap-1 text-xs text-[var(--text-4)] transition-colors hover:text-[var(--ink)]">
               <ArrowLeft className="h-3 w-3" /> Back to Drive
             </Link>
-            <h1 className="mt-1 flex items-center gap-2 text-2xl font-light text-gray-900">
-              <Network className="h-5 w-5 text-blue-500" /> Smart Spaces
+            <h1 className="mt-1 flex items-center gap-2 text-[26px] leading-tight">
+              <Network className="h-5 w-5 text-[var(--text-4)]" /> Smart Spaces
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="mt-1 text-xs text-[var(--text-4)]">
               AI-curated collections — files can appear in multiple spaces. Definitions are
               re-runnable.
             </p>
@@ -106,17 +107,17 @@ export default function DriveSpaces() {
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-medium text-gray-900">
+                    <h2 className="text-[19px] leading-tight">
                       {space.emoji ? `${space.emoji} ` : ''}
                       {space.name}
                     </h2>
-                    <p className="text-xs italic text-gray-500">"{space.definition}"</p>
+                    <p className="mt-1 text-xs italic text-[var(--text-4)]">"{space.definition}"</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <button
                       type="button"
                       onClick={onRecompute}
-                      className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1 text-xs hover:bg-gray-50"
+                      className="plat-btn-ghost"
                     >
                       <RefreshCw className="h-3.5 w-3.5" /> Recompute
                     </button>
@@ -124,7 +125,7 @@ export default function DriveSpaces() {
                       <button
                         type="button"
                         onClick={onDelete}
-                        className="flex items-center gap-1 rounded-md px-2.5 py-1 text-xs text-red-600 hover:bg-red-50"
+                        className="flex h-9 items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold text-[var(--bad-fg)] transition-colors hover:bg-[rgba(179,56,46,0.07)]"
                       >
                         <Trash2 className="h-3.5 w-3.5" /> Delete space
                       </button>
@@ -136,12 +137,8 @@ export default function DriveSpaces() {
             ) : (
               <div>
                 <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-base font-medium text-gray-900">All spaces</h2>
-                  <button
-                    type="button"
-                    onClick={onCreate}
-                    className="flex items-center gap-1 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800"
-                  >
+                  <h2 className="text-[18px] leading-tight">All spaces</h2>
+                  <button type="button" onClick={onCreate} className="plat-btn">
                     <Plus className="h-4 w-4" /> New space (AI)
                   </button>
                 </div>
@@ -151,14 +148,14 @@ export default function DriveSpaces() {
                       key={s.id}
                       type="button"
                       onClick={() => navigate(`/drive/spaces/${s.id}`)}
-                      className="rounded-lg border border-gray-200 bg-white p-4 text-left transition-all hover:border-blue-400 hover:shadow-md"
+                      className="rounded-[12px] border border-[var(--line-soft)] bg-white p-4 text-left transition-colors hover:border-[var(--ink)]"
                     >
-                      <div className="mb-1 flex items-center gap-2 text-base font-medium text-gray-900">
-                        {s.emoji ? <span>{s.emoji}</span> : <Sparkles className="h-4 w-4 text-blue-500" />}
+                      <div className="mb-1 flex items-center gap-2 text-[15px] font-semibold text-[var(--ink)]">
+                        {s.emoji ? <span>{s.emoji}</span> : <Sparkles className="h-4 w-4 text-[var(--text-4)]" />}
                         {s.name}
                       </div>
-                      <div className="line-clamp-2 text-xs italic text-gray-500">"{s.definition}"</div>
-                      <div className="mt-2 text-[11px] text-gray-500">{s.fileIds.length} files</div>
+                      <div className="line-clamp-2 text-xs italic text-[var(--text-4)]">"{s.definition}"</div>
+                      <div className="mt-2 text-[11px] text-[var(--text-5)]">{s.fileIds.length} files</div>
                     </button>
                   ))}
                 </div>
@@ -189,7 +186,7 @@ function SpaceFileGrid({
 }) {
   const items = fileIds.map((id) => itemsMap[id]).filter(Boolean) as DriveItem[];
   if (items.length === 0) {
-    return <div className="py-8 text-sm text-gray-500">No matching files. Try recomputing.</div>;
+    return <div className="py-8 text-sm text-[var(--text-4)]">No matching files. Try recomputing.</div>;
   }
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

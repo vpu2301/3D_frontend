@@ -31,10 +31,14 @@ type ActivityEntry = {
 };
 
 const ACTIVITY_STATUS_STYLE: Record<string, string> = {
-  Completed:     'bg-green-100 text-green-700 border-green-200',
-  Failed:        'bg-red-100 text-red-700 border-red-200',
-  'In Progress': 'bg-blue-100 text-blue-700 border-blue-200',
+  Completed:     'plat-pill plat-pill-ok',
+  Failed:        'plat-pill bg-[rgba(179,56,46,0.09)] text-[color:var(--bad-fg)]',
+  'In Progress': 'plat-pill plat-pill-mute',
 };
+
+/* Design-system helpers (see src/styles/platform.css) */
+const PLAT_FILTER_BTN =
+  '!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]';
 
 const ACTIVITY_DATA: ActivityEntry[] = [
   { id: 1,  group: 'Data Processing Agent',   task: 'Run ETL pipeline for Q1 dataset',       status: 'Completed',   category: 'Data Analysis',      date: new Date(Date.now() - 1000*60*8),   duration: '4m 12s' },
@@ -98,7 +102,7 @@ const ActivityTable = () => {
   };
 
   const SortIcon = ({ field }: { field: keyof ActivityEntry }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-[color:var(--ink)]' : 'text-[color:var(--text-5)]')} />
   );
 
   return (
@@ -106,23 +110,23 @@ const ActivityTable = () => {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-5)] pointer-events-none" />
           <Input
             placeholder="Search activity…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="pl-9 bg-white border-gray-200"
+            className="pl-9 bg-white !rounded-[10px] !border-[color:var(--line)]"
           />
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[140px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className={cn(PLAT_FILTER_BTN, 'min-w-[140px]')}>
               <span className="flex items-center gap-1.5">
-                <Bot className="h-3.5 w-3.5 text-gray-400" />
+                <Bot className="h-3.5 w-3.5 text-[color:var(--text-5)]" />
                 {groupFilter === 'All Groups' ? 'Group' : groupFilter.replace(' Agent', '')}
               </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+              <ChevronDown className="h-3.5 w-3.5 text-[color:var(--text-5)] ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-56">
@@ -136,12 +140,12 @@ const ActivityTable = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className={cn(PLAT_FILTER_BTN, 'min-w-[110px]')}>
               <span className="flex items-center gap-1.5">
-                <Filter className="h-3.5 w-3.5 text-gray-400" />
+                <Filter className="h-3.5 w-3.5 text-[color:var(--text-5)]" />
                 {statusFilter === 'All' ? 'Status' : statusFilter}
               </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+              <ChevronDown className="h-3.5 w-3.5 text-[color:var(--text-5)] ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -155,12 +159,12 @@ const ActivityTable = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[130px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className={cn(PLAT_FILTER_BTN, 'min-w-[130px]')}>
               <span className="flex items-center gap-1.5">
-                <Activity className="h-3.5 w-3.5 text-gray-400" />
+                <Activity className="h-3.5 w-3.5 text-[color:var(--text-5)]" />
                 {catFilter === 'All Categories' ? 'Category' : catFilter}
               </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+              <ChevronDown className="h-3.5 w-3.5 text-[color:var(--text-5)] ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -174,67 +178,67 @@ const ActivityTable = () => {
       </div>
 
       {/* Table */}
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
+      <Card className="plat-panel !p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('task')}>
+              <tr style={{ background: 'var(--sand)', borderBottom: '1px solid var(--line-soft)' }}>
+                <th className="text-left px-4 py-3 text-xs font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('task')}>
                   Task <SortIcon field="task" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('status')}>
+                <th className="text-left px-4 py-3 text-xs font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('status')}>
                   Status <SortIcon field="status" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('group')}>
+                <th className="text-left px-4 py-3 text-xs font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('group')}>
                   Agent Group <SortIcon field="group" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('category')}>
+                <th className="text-left px-4 py-3 text-xs font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('category')}>
                   Category <SortIcon field="category" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('date')}>
+                <th className="text-left px-4 py-3 text-xs font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden lg:table-cell" onClick={() => toggleSort('date')}>
                   Time <SortIcon field="date" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Duration</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-[color:var(--text-3)] hidden lg:table-cell">Duration</th>
               </tr>
             </thead>
             <tbody>
               {paged.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">
+                  <td colSpan={6} className="px-4 py-12 text-center text-[color:var(--text-5)] text-sm">
                     No activity matches your filters.
                   </td>
                 </tr>
               ) : (
                 paged.map(entry => (
-                  <tr key={entry.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                  <tr key={entry.id} className="border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded bg-gray-100 flex-shrink-0">
-                          <Zap className="h-3.5 w-3.5 text-gray-500" />
+                        <div className="p-1.5 rounded-[8px] flex-shrink-0" style={{ background: 'var(--sand)' }}>
+                          <Zap className="h-3.5 w-3.5 text-[color:var(--text-4)]" />
                         </div>
-                        <span className="font-medium text-gray-900 truncate max-w-[220px]">{entry.task}</span>
+                        <span className="font-medium truncate max-w-[220px]">{entry.task}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', ACTIVITY_STATUS_STYLE[entry.status])}>
+                      <span className={cn(ACTIVITY_STATUS_STYLE[entry.status])}>
                         {entry.status}
                       </span>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
                       <div className="flex items-center gap-2">
-                        <div className="p-1 rounded bg-gray-100 flex-shrink-0">
-                          <Bot className="h-3 w-3 text-gray-500" />
+                        <div className="p-1 rounded-[8px] flex-shrink-0" style={{ background: 'var(--sand)' }}>
+                          <Bot className="h-3 w-3 text-[color:var(--text-4)]" />
                         </div>
-                        <span className="text-gray-700 text-xs">{entry.group}</span>
+                        <span className="text-xs" style={{ color: 'var(--text-2)' }}>{entry.group}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="text-gray-600 text-xs">{entry.category}</span>
+                      <span className="text-xs" style={{ color: 'var(--text-3)' }}>{entry.category}</span>
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">
+                    <td className="px-4 py-3 hidden lg:table-cell text-xs" style={{ color: 'var(--text-4)' }}>
                       {formatTimeAgo(entry.date)}
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">
+                    <td className="px-4 py-3 hidden lg:table-cell text-xs" style={{ color: 'var(--text-4)' }}>
                       {entry.duration}
                     </td>
                   </tr>
@@ -245,7 +249,7 @@ const ActivityTable = () => {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+        <div className="px-4 py-3 border-t flex items-center justify-between gap-3 flex-wrap text-xs" style={{ borderColor: 'var(--line-soft)', background: 'var(--sand)', color: 'var(--text-4)' }}>
           <div className="flex items-center gap-3">
             <span>
               {filtered.length > 0
@@ -253,11 +257,11 @@ const ActivityTable = () => {
                 : '0 entries'}
             </span>
             <div className="flex items-center gap-1.5">
-              <span className="text-gray-400">Rows:</span>
+              <span style={{ color: 'var(--text-5)' }}>Rows:</span>
               <select
                 value={pageSize}
                 onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-                className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
+                className="h-6 rounded-[8px] border border-[color:var(--line)] bg-white text-[color:var(--text-2)] text-xs px-1 focus:outline-none focus:ring-1 focus:ring-[color:var(--line)] cursor-pointer"
               >
                 {[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}
               </select>
@@ -266,7 +270,7 @@ const ActivityTable = () => {
           <div className="flex items-center gap-2">
             {(search || groupFilter !== 'All Groups' || statusFilter !== 'All' || catFilter !== 'All Categories') && (
               <button
-                className="text-gray-500 hover:text-gray-900 underline underline-offset-2"
+                className="text-[color:var(--text-4)] hover:text-[color:var(--ink)] underline underline-offset-2"
                 onClick={() => { setSearch(''); setGroupFilter('All Groups'); setStatusFilter('All'); setCatFilter('All Categories'); setPage(1); }}
               >
                 Clear filters
@@ -274,15 +278,15 @@ const ActivityTable = () => {
             )}
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !text-[color:var(--text-2)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
+                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[color:var(--ink)] !text-white' : '!border-[color:var(--line)] !text-[color:var(--text-2)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]')} onClick={() => setPage(p)}>
                     {p}
                   </Button>
                 ))}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !text-[color:var(--text-2)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -304,45 +308,46 @@ const WorkerGroupsGrid = ({
 }) => (
   <>
     <div className="flex justify-end mb-5">
-      <Button
-        onClick={onShowCreate}
-        className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
-      >
+      <Button onClick={onShowCreate} className="plat-btn">
         <Plus className="h-4 w-4 mr-2" />
         Deploy Agent
       </Button>
     </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {/* One panel, hairline-separated rows — a list of agent groups is one object */}
+    <div className="plat-panel !p-0 overflow-hidden">
       {agents.map((agent) => (
-        <Card key={agent.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-          <CardHeader className="pb-3">
+        <Card
+          key={agent.id}
+          className="!rounded-none !border-x-0 !border-t-0 !border-b !border-[color:var(--line-soft)] !shadow-none !bg-transparent last:!border-b-0"
+        >
+          <CardHeader className="p-4 pb-2">
             <CardTitle className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-2">
-                <div className={`p-2 rounded-lg bg-gradient-to-br ${agent.bgColor}`}>
-                  <Bot className={`h-4 w-4 ${agent.iconColor}`} />
+              <div className="flex items-center space-x-3">
+                <div className="plat-item-icon !h-10 !w-10 !rounded-[10px]">
+                  <Bot className="h-[18px] w-[18px]" strokeWidth={1.75} />
                 </div>
-                <span className="font-medium">{agent.name}</span>
+                <span className="text-[15px] font-semibold">{agent.name}</span>
               </div>
-              <Button variant="ghost" size="icon" className="hover:bg-muted">
-                <Settings className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="hover:bg-[rgba(20,22,26,0.05)]">
+                <Settings className="h-4 w-4" style={{ color: 'var(--text-4)' }} />
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-0">
-            <div className="space-y-3">
-              <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">{agent.purpose}</span>
+          <CardContent className="p-4 pt-0">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+              <span className="plat-pill plat-pill-mute">{agent.purpose}</span>
               <div className="flex items-center space-x-2">
-                <div className="p-1 rounded bg-muted"><Activity className="h-3 w-3 text-blue-600" /></div>
-                <span className="text-sm text-muted-foreground">Executions: {agent.executions}</span>
+                <div className="p-1 rounded-[8px]" style={{ background: 'var(--sand)' }}><Activity className="h-3 w-3" style={{ color: 'var(--text-4)' }} /></div>
+                <span className="text-sm" style={{ color: 'var(--text-3)' }}>Executions: {agent.executions}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="p-1 rounded bg-muted"><Zap className="h-3 w-3 text-green-600" /></div>
-                <span className="text-sm text-muted-foreground">Efficiency: {agent.efficiency}</span>
+                <div className="p-1 rounded-[8px]" style={{ background: 'var(--sand)' }}><Zap className="h-3 w-3" style={{ color: 'var(--text-4)' }} /></div>
+                <span className="text-sm" style={{ color: 'var(--text-3)' }}>Efficiency: {agent.efficiency}</span>
               </div>
-              <div className="flex space-x-2">
-                <Button variant="outline" size="sm" className="flex-1 text-xs">Configure</Button>
-                <Button variant="outline" size="sm" className="flex-1 text-xs">Monitor</Button>
+              <div className="flex space-x-2 sm:ml-auto">
+                <Button variant="outline" size="sm" className="plat-btn-ghost !h-8 !border-[color:var(--line)] text-xs">Configure</Button>
+                <Button variant="outline" size="sm" className="plat-btn-ghost !h-8 !border-[color:var(--line)] text-xs">Monitor</Button>
               </div>
             </div>
           </CardContent>
@@ -378,7 +383,7 @@ const AIAgents = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
@@ -387,12 +392,13 @@ const AIAgents = () => {
 
               {/* Page header */}
               <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">Teams</h1>
-                <p className="text-gray-600">Autonomous AI agents for task automation</p>
+                <p className="plat-crumb">3days.agents</p>
+                <h1 className="text-3xl mt-1">Teams</h1>
+                <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Autonomous AI agents for task automation</p>
               </div>
 
               {/* Horizontal tab nav */}
-              <div className="flex border-b border-gray-200 mb-6">
+              <div className="flex border-b mb-6" style={{ borderColor: 'var(--line-soft)' }}>
                 {TABS.map(({ key, label, icon: Icon }) => (
                   <button
                     key={key}
@@ -400,8 +406,8 @@ const AIAgents = () => {
                     className={cn(
                       'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
                       activeTab === key
-                        ? 'border-gray-900 text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'border-[color:var(--ink)] text-[color:var(--ink)]'
+                        : 'border-transparent text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:border-[color:var(--line)]'
                     )}
                   >
                     <Icon className="h-4 w-4" />

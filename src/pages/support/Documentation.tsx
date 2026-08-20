@@ -119,25 +119,25 @@ const Documentation = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[color:var(--sand)] to-[color:var(--paper)] dark:from-[color:var(--bg)] dark:to-[color:var(--paper)]">
       <Header />
       
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+          <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight">
             Documentation
           </h1>
-          <p className="text-xl text-gray-600 mb-8 font-light">
+          <p className="text-xl text-[color:var(--text-2)] mb-8 font-light">
             Comprehensive guides, API references, and technical documentation to help you build amazing automations
           </p>
           
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto mb-8">
-            <Search className="absolute left-4 top-4 h-5 w-5 text-black/50" />
+            <Search className="absolute left-4 top-4 h-5 w-5 text-[color:var(--text-2)]" />
             <Input 
               placeholder="Search documentation..." 
-              className="pl-12 py-4 text-lg rounded-full border-2 border-gray-200 focus:border-blue-500"
+              className="pl-12 py-4 text-lg rounded-full border-[color:var(--line)] focus:border-[color:var(--ink)]"
             />
           </div>
         </div>
@@ -147,20 +147,20 @@ const Documentation = () => {
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Quick Start</h2>
-            <p className="text-xl text-gray-600">Get started with these popular guides</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Quick Start</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Get started with these popular guides</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {quickLinks.map((link, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer">
                 <CardContent className="p-8">
-                  <div className="p-4 rounded-2xl bg-[#111111] w-fit mb-6">
+                  <div className="p-4 rounded-[28px] bg-[color:var(--ink)] w-fit mb-6">
                     <link.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">{link.title}</h3>
-                  <p className="text-gray-600 mb-4 leading-relaxed">{link.description}</p>
-                  <span className="text-sm text-blue-600 font-medium">{link.time}</span>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)] mb-4">{link.title}</h3>
+                  <p className="text-[color:var(--text-2)] mb-4 leading-relaxed">{link.description}</p>
+                  <span className="text-sm text-[color:var(--blue)] font-medium">{link.time}</span>
                 </CardContent>
               </Card>
             ))}
@@ -169,28 +169,28 @@ const Documentation = () => {
       </section>
 
       {/* Documentation Sections */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Documentation Sections</h2>
-            <p className="text-xl text-gray-600">Explore our comprehensive documentation</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Documentation Sections</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Explore our comprehensive documentation</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sections.map((section, index) => (
-              <div key={index} className="bg-gray-50 p-8 rounded-3xl hover:bg-gray-100 transition-colors">
+              <div key={index} className="bg-[color:var(--sand)] p-8 rounded-[28px] hover:bg-[color:var(--sand)] transition-colors">
                 <div className="flex items-center mb-6">
-                  <div className="p-3 rounded-2xl bg-gradient-to-r from-green-500 to-blue-500 mr-4">
+                  <div className="p-3 rounded-[28px] bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--blue)] mr-4">
                     <section.icon className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900">{section.title}</h3>
+                  <h3 className="text-xl font-medium text-[color:var(--ink)]">{section.title}</h3>
                 </div>
-                <p className="text-gray-600 mb-6">{section.description}</p>
+                <p className="text-[color:var(--text-2)] mb-6">{section.description}</p>
                 <div className="space-y-3">
                   {section.articles.map((article, idx) => (
                     <div key={idx} className="flex items-center justify-between">
-                      <span className="text-gray-700 hover:text-blue-600 cursor-pointer">{article}</span>
-                      <ArrowRight className="h-4 w-4 text-black/50" />
+                      <span className="text-[color:var(--ink)] hover:text-[color:var(--blue)] cursor-pointer">{article}</span>
+                      <ArrowRight className="h-4 w-4 text-[color:var(--text-2)]" />
                     </div>
                   ))}
                 </div>
@@ -201,24 +201,24 @@ const Documentation = () => {
       </section>
 
       {/* Downloads Section */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Download Resources</h2>
-            <p className="text-xl text-gray-600">Useful resources and tools for developers</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Download Resources</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Useful resources and tools for developers</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {downloadResources.map((resource, index) => (
-              <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
+              <div key={index} className="bg-[color:var(--paper)] p-8 rounded-[28px] shadow-lg">
                 <div className="flex items-center justify-between mb-4">
-                  <FileText className="h-8 w-8 text-blue-600" />
-                  <span className="text-sm text-gray-500">{resource.type}</span>
+                  <FileText className="h-8 w-8 text-[color:var(--blue)]" />
+                  <span className="text-sm text-[color:var(--text-2)]">{resource.type}</span>
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-3">{resource.title}</h3>
-                <p className="text-gray-600 mb-4">{resource.description}</p>
+                <h3 className="text-xl font-medium text-[color:var(--ink)] mb-3">{resource.title}</h3>
+                <p className="text-[color:var(--text-2)] mb-4">{resource.description}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">{resource.size}</span>
+                  <span className="text-sm text-[color:var(--text-2)]">{resource.size}</span>
                   <Button variant="outline" size="sm">
                     <Download className="h-4 w-4 mr-2" />
                     Download
@@ -231,22 +231,22 @@ const Documentation = () => {
       </section>
 
       {/* API Reference CTA */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-3xl p-12 text-[#111111] border border-black/8 text-center">
-            <Code className="h-16 w-16 mx-auto mb-6 text-blue-400" />
+          <div className="bg-[color:var(--paper)] rounded-[28px] p-12 text-[color:var(--ink)] border border-[color:var(--line)] text-center">
+            <Code className="h-16 w-16 mx-auto mb-6 text-[color:var(--blue)]" />
             <h3 className="text-3xl font-light mb-6">Complete API Reference</h3>
-            <p className="text-xl text-black/60 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-[color:var(--text-2)] mb-8 max-w-2xl mx-auto">
               Detailed API documentation with examples, SDKs, and interactive testing
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-[#111111] text-white hover:bg-[#222222] rounded-full py-3" asChild>
+              <Button size="lg" className="bg-[color:var(--ink)] text-white hover:bg-[color:var(--text-2)] rounded-full py-3" asChild>
                 <Link to="/platform/api">
                   View API Docs
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 rounded-full py-3">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-[color:var(--paper)] hover:text-[color:var(--ink)] rounded-full py-3">
                 Interactive API Explorer
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Button>

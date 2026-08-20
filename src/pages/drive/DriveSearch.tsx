@@ -69,28 +69,29 @@ export default function DriveSearch() {
       <div className="flex flex-1 overflow-hidden">
         <DriveMiniRail />
         <main className="flex flex-1 flex-col overflow-hidden">
-          <div className="border-b border-gray-100 px-6 py-4">
-            <Link to="/drive" className="text-xs text-gray-500 hover:underline">← Back to Drive</Link>
-            <h1 className="mt-1 flex items-center gap-2 text-2xl font-light text-gray-900">
-              <Sparkles className="h-5 w-5 text-blue-500" /> Search
+          <div className="border-b border-[var(--line-soft)] px-6 py-4">
+            <p className="plat-crumb">3days.drive / search</p>
+            <Link to="/drive" className="mt-1.5 inline-block text-xs text-[var(--text-4)] transition-colors hover:text-[var(--ink)]">← Back to Drive</Link>
+            <h1 className="mt-1 flex items-center gap-2 text-[26px] leading-tight">
+              <Sparkles className="h-5 w-5 text-[var(--text-4)]" /> Search
             </h1>
             <div className="relative mt-3 max-w-2xl">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-5)]" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder='Try "the deck I showed last month" or "screenshots from Berlin"'
-                className="h-10 w-full rounded-md border border-gray-200 bg-white pl-9 pr-3 text-sm focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                className="h-10 w-full rounded-[10px] border border-[var(--line)] bg-white pl-9 pr-3 text-sm text-[var(--ink)] placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:outline-none"
               />
             </div>
           </div>
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {!query.trim() ? (
-              <p className="text-sm text-gray-500">Type to search across {allFiles.length} files.</p>
+              <p className="text-sm text-[var(--text-4)]">Type to search across {allFiles.length} files.</p>
             ) : running ? (
-              <p className="text-sm text-gray-500">Searching…</p>
+              <p className="text-sm text-[var(--text-4)]">Searching…</p>
             ) : ranked.length === 0 ? (
-              <p className="text-sm text-gray-500">No matches.</p>
+              <p className="text-sm text-[var(--text-4)]">No matches.</p>
             ) : (
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {ranked.map((r) => {
@@ -99,7 +100,7 @@ export default function DriveSearch() {
                   return (
                     <div key={r.fileId} className="flex flex-col">
                       <FileCard item={item} onOpen={onOpen} />
-                      <div className="mt-1 inline-flex w-fit items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+                      <div className="mt-1 inline-flex w-fit items-center gap-1 rounded-full bg-[var(--sand-deep)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-2)]">
                         <Sparkles className="h-2.5 w-2.5" />
                         {r.reason}
                       </div>

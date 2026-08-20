@@ -122,14 +122,15 @@ export default function ContactsImport() {
       <div className="flex flex-1 overflow-hidden">
         <ContactsMiniRail />
         <main className="flex flex-1 flex-col overflow-hidden">
-          <div className="border-b border-gray-200 px-6 py-4">
-            <Link to="/contacts" className="inline-flex items-center gap-1 text-xs text-gray-500 hover:underline">
+          <div className="border-b border-[var(--line-soft)] px-6 py-4">
+            <p className="plat-crumb">3days.contacts / import</p>
+            <Link to="/contacts" className="mt-1.5 inline-flex items-center gap-1 text-xs text-[var(--text-4)] transition-colors hover:text-[var(--ink)]">
               <ArrowLeft className="h-3 w-3" /> Back to Contacts
             </Link>
-            <h1 className="mt-1 flex items-center gap-2 text-2xl font-light text-gray-900">
-              <Upload className="h-5 w-5 text-emerald-500" /> Import contacts
+            <h1 className="mt-1 flex items-center gap-2 text-[26px] leading-tight">
+              <Upload className="h-5 w-5 text-[var(--text-4)]" /> Import contacts
             </h1>
-            <p className="text-xs text-gray-500">CSV, vCard (.vcf), or JSON.</p>
+            <p className="mt-1 text-xs text-[var(--text-4)]">CSV, vCard (.vcf), or JSON.</p>
           </div>
 
           <div className="flex-1 overflow-y-auto px-6 py-5">
@@ -160,15 +161,15 @@ export default function ContactsImport() {
               />
             )}
             {step === 'done' && (
-              <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-6 text-center">
-                <Check className="mx-auto mb-2 h-7 w-7 text-emerald-600" />
-                <p className="text-sm text-emerald-900">
+              <div className="rounded-[14px] border border-[var(--line-soft)] bg-[var(--ok-bg)] px-4 py-6 text-center">
+                <Check className="mx-auto mb-2 h-7 w-7 text-[var(--ok-fg)]" />
+                <p className="text-sm text-[var(--ok-fg)]">
                   Imported {importedCount} contact{importedCount === 1 ? '' : 's'}.
                 </p>
                 <button
                   type="button"
                   onClick={() => navigate('/contacts')}
-                  className="mt-3 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800"
+                  className="plat-btn mt-4"
                 >
                   Open Contacts
                 </button>
@@ -183,11 +184,11 @@ export default function ContactsImport() {
 
 function UploadStep({ onFile }: { onFile: (f: File) => void }) {
   return (
-    <div className="rounded-lg border-2 border-dashed border-gray-200 bg-white p-12 text-center">
-      <Upload className="mx-auto mb-3 h-8 w-8 text-gray-400" />
-      <p className="text-sm text-gray-700">Drop a file here or click to choose</p>
-      <p className="mt-1 text-xs text-gray-500">Supported: .csv, .vcf, .json</p>
-      <label className="mt-4 inline-flex cursor-pointer items-center gap-1 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800">
+    <div className="rounded-[14px] border border-dashed border-[var(--line)] bg-white p-12 text-center">
+      <Upload className="mx-auto mb-3 h-8 w-8 text-[var(--text-5)]" />
+      <p className="text-sm text-[var(--text-2)]">Drop a file here or click to choose</p>
+      <p className="mt-1 text-xs text-[var(--text-4)]">Supported: .csv, .vcf, .json</p>
+      <label className="plat-btn mt-4 cursor-pointer">
         Choose file
         <input
           type="file"
@@ -219,30 +220,30 @@ function MapStep({
 }) {
   return (
     <div className="space-y-3">
-      <div className="rounded-md border border-blue-100 bg-blue-50 p-3 text-xs text-blue-900">
-        <div className="flex items-center gap-1 font-medium">
+      <div className="rounded-[12px] border border-[var(--line-soft)] bg-[var(--sand)] p-3 text-xs text-[var(--text-1)]">
+        <div className="flex items-center gap-1.5 font-semibold">
           <Sparkles className="h-3 w-3" /> AI column mapping
         </div>
         <div className="mt-1 italic">{aiReason}</div>
       </div>
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+      <div className="plat-list">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-3 py-2 text-left text-[11px] uppercase tracking-wider text-gray-500">CSV column</th>
-              <th className="px-3 py-2 text-left text-[11px] uppercase tracking-wider text-gray-500">Maps to</th>
-              <th className="px-3 py-2 text-left text-[11px] uppercase tracking-wider text-gray-500">Sample</th>
+          <thead>
+            <tr className="border-b border-[var(--line-soft)]">
+              <th className="plat-eyebrow px-4 py-2.5 text-left">CSV column</th>
+              <th className="plat-eyebrow px-4 py-2.5 text-left">Maps to</th>
+              <th className="plat-eyebrow px-4 py-2.5 text-left">Sample</th>
             </tr>
           </thead>
           <tbody>
             {headers.map((h) => (
-              <tr key={h} className="border-t border-gray-100">
-                <td className="px-3 py-2 text-gray-900">{h}</td>
-                <td className="px-3 py-2">
+              <tr key={h} className="border-t border-[var(--line-soft)]">
+                <td className="px-4 py-2 font-medium text-[var(--ink)]">{h}</td>
+                <td className="px-4 py-2">
                   <select
                     value={mapping[h]}
                     onChange={(e) => onChange({ ...mapping, [h]: e.target.value as any })}
-                    className="rounded-md border border-gray-200 bg-white px-2 py-1 text-xs"
+                    className="rounded-[10px] border border-[var(--line)] bg-white px-2 py-1.5 text-xs text-[var(--ink)] focus:border-[var(--ink)] focus:outline-none"
                   >
                     {FIELD_OPTIONS.map((f) => (
                       <option key={f} value={f}>
@@ -251,7 +252,7 @@ function MapStep({
                     ))}
                   </select>
                 </td>
-                <td className="truncate px-3 py-2 text-xs text-gray-500">
+                <td className="truncate px-4 py-2 text-xs text-[var(--text-4)]">
                   {rows[0]?.[h] ?? ''}
                 </td>
               </tr>
@@ -260,13 +261,13 @@ function MapStep({
         </table>
       </div>
       <div className="flex items-center justify-end gap-1">
-        <button type="button" onClick={onBack} className="rounded-md border border-gray-200 px-3 py-1.5 text-sm hover:bg-gray-50">
+        <button type="button" onClick={onBack} className="plat-btn-ghost h-9">
           Back
         </button>
         <button
           type="button"
           onClick={onConfirm}
-          className="flex items-center gap-1 rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700"
+          className="plat-btn"
         >
           <Check className="h-3.5 w-3.5" /> Apply mapping
         </button>
@@ -288,13 +289,13 @@ function ReviewStep({
 }) {
   return (
     <div className="space-y-3">
-      <div className="rounded-md border border-gray-200 bg-white p-3 text-sm">
-        Ready to import <span className="font-medium">{contacts.length}</span> contact
+      <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-3.5 text-sm text-[var(--text-1)]">
+        Ready to import <span className="font-semibold text-[var(--ink)]">{contacts.length}</span> contact
         {contacts.length === 1 ? '' : 's'}.
       </div>
       {duplicateClashes.length > 0 && (
-        <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
-          <div className="flex items-center gap-1 font-medium">
+        <div className="rounded-[12px] border border-[var(--line-soft)] bg-[var(--warn-bg)] p-3 text-xs text-[var(--warn-fg)]">
+          <div className="flex items-center gap-1.5 font-semibold">
             <AlertTriangle className="h-3 w-3" /> Possible duplicates with existing contacts
           </div>
           <div className="mt-1">
@@ -306,29 +307,29 @@ function ReviewStep({
           </div>
         </div>
       )}
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+      <div className="plat-list">
         {contacts.slice(0, 30).map((c) => (
-          <div key={c.id} className="flex items-center gap-3 border-b border-gray-100 px-3 py-2 last:border-0 text-sm">
-            <span className="truncate font-medium text-gray-900">
+          <div key={c.id} className="flex items-center gap-3 border-b border-[var(--line-soft)] px-4 py-2.5 last:border-0 text-sm">
+            <span className="truncate font-medium text-[var(--ink)]">
               {displayName(c)}
             </span>
-            <span className="ml-auto truncate text-xs text-gray-500">{c.emails[0]?.value ?? '—'}</span>
+            <span className="ml-auto truncate text-xs text-[var(--text-4)]">{c.emails[0]?.value ?? '—'}</span>
           </div>
         ))}
         {contacts.length > 30 && (
-          <div className="border-t border-gray-100 px-3 py-2 text-center text-xs text-gray-500">
+          <div className="border-t border-[var(--line-soft)] px-4 py-2 text-center text-xs text-[var(--text-4)]">
             +{contacts.length - 30} more
           </div>
         )}
       </div>
       <div className="flex items-center justify-end gap-1">
-        <button type="button" onClick={onBack} className="rounded-md border border-gray-200 px-3 py-1.5 text-sm hover:bg-gray-50">
+        <button type="button" onClick={onBack} className="plat-btn-ghost h-9">
           Back
         </button>
         <button
           type="button"
           onClick={onCommit}
-          className="flex items-center gap-1 rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700"
+          className="plat-btn"
         >
           <Check className="h-3.5 w-3.5" /> Confirm & import
         </button>

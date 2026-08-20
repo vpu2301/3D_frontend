@@ -63,20 +63,20 @@ export default function RecipientField({ label, value, onChange, placeholder }: 
   };
 
   return (
-    <div className="relative flex items-center gap-2 border-b border-gray-100 px-3 py-1.5 text-sm">
-      <span className="shrink-0 text-xs text-gray-500">{label}</span>
+    <div className="relative flex items-center gap-2 border-b border-[var(--line-soft)] px-3 py-1.5 text-sm">
+      <span className="shrink-0 text-xs text-[var(--text-4)]">{label}</span>
       <div className="flex flex-1 flex-wrap items-center gap-1">
         {value.map((r) => (
           <span
             key={r.email}
-            className="inline-flex items-center gap-1 rounded-full bg-[#dde9f4] px-2 py-0.5 text-xs"
+            className="inline-flex items-center gap-1 rounded-full bg-[var(--sand-deep)] px-2 py-0.5 text-xs"
           >
             <Avatar name={r.name} email={r.email} size={16} />
-            <span className="text-gray-800">{r.name}</span>
+            <span className="font-medium text-[var(--ink)]">{r.name}</span>
             <button
               type="button"
               onClick={() => onChange(value.filter((v) => v.email !== r.email))}
-              className="text-gray-500 hover:text-gray-800"
+              className="text-[var(--text-4)] transition-colors hover:text-[var(--ink)]"
               aria-label={`Remove ${r.name}`}
             >
               <X className="h-3 w-3" />
@@ -94,12 +94,12 @@ export default function RecipientField({ label, value, onChange, placeholder }: 
           onBlur={() => setTimeout(() => setOpen(false), 120)}
           onKeyDown={onKeyDown}
           placeholder={value.length === 0 ? placeholder : ''}
-          className="min-w-[80px] flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
+          className="min-w-[80px] flex-1 bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--text-5)]"
         />
       </div>
 
       {open && suggestions.length > 0 && (
-        <div className="absolute left-12 right-3 top-full z-10 mt-1 max-h-60 overflow-y-auto rounded-md border border-gray-200 bg-white py-1 shadow-lg">
+        <div className="absolute left-12 right-3 top-full z-10 mt-1 max-h-60 overflow-y-auto rounded-[12px] border border-[var(--line)] bg-white py-1 shadow-lg">
           {suggestions.map((s, i) => (
             <button
               key={s.id}
@@ -109,13 +109,13 @@ export default function RecipientField({ label, value, onChange, placeholder }: 
                 commit({ contactId: s.id, name: s.name, email: s.email });
               }}
               className={cn(
-                'flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-gray-50',
-                i === 0 && 'bg-gray-50',
+                'flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-[rgba(20,22,26,0.04)]',
+                i === 0 && 'bg-[rgba(20,22,26,0.04)]',
               )}
             >
               <Avatar name={s.name} email={s.email} size={20} />
-              <span className="text-gray-800">{s.name}</span>
-              <span className="text-xs text-gray-500">&lt;{s.email}&gt;</span>
+              <span className="font-medium text-[var(--ink)]">{s.name}</span>
+              <span className="text-xs text-[var(--text-4)]">&lt;{s.email}&gt;</span>
             </button>
           ))}
           {text && isEmail(text.trim()) && !suggestions.some((s) => s.email === text.trim()) && (
@@ -125,7 +125,7 @@ export default function RecipientField({ label, value, onChange, placeholder }: 
                 e.preventDefault();
                 commit({ name: text.trim(), email: text.trim() });
               }}
-              className="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-1.5 text-left text-sm text-[#1a73e8] hover:bg-gray-50"
+              className="flex w-full items-center gap-2 border-t border-[var(--line-soft)] px-3 py-1.5 text-left text-sm font-medium text-[var(--ink)] hover:bg-[rgba(20,22,26,0.04)]"
             >
               Use “{text.trim()}”
             </button>

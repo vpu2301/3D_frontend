@@ -96,16 +96,16 @@ export default function TodoAskSidebar() {
   };
 
   return (
-    <aside className="flex h-full w-96 shrink-0 flex-col border-l border-gray-200 bg-white">
-      <div className="flex items-center justify-between border-b border-gray-200 px-3 py-2.5">
-        <div className="flex items-center gap-1.5 font-medium">
-          <Sparkles className="h-4 w-4 text-violet-500" />
+    <aside className="flex h-full w-96 shrink-0 flex-col border-l border-[var(--line-soft)]">
+      <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-3 py-2.5">
+        <div className="flex items-center gap-1.5 text-sm font-semibold text-[var(--ink)]">
+          <Sparkles className="h-4 w-4" style={{ color: 'var(--text-4)' }} />
           Ask across tasks
         </div>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="rounded p-1 hover:bg-gray-100"
+          className="rounded-[6px] p-1 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
@@ -114,12 +114,12 @@ export default function TodoAskSidebar() {
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-3">
         {messages.length === 0 ? (
-          <div className="rounded-md bg-gray-50 p-3 text-sm text-gray-600">
+          <div className="rounded-[12px] border border-[var(--line-soft)] bg-white p-3 text-sm text-[var(--text-3)]">
             Ask anything across {tasks.length} tasks.
             <ul className="mt-2 space-y-1 text-xs">
-              <li className="text-violet-700">"What's blocking the Q2 launch?"</li>
-              <li className="text-violet-700">"Show me everything tagged urgent due this week"</li>
-              <li className="text-violet-700">"What did I procrastinate on most this month?"</li>
+              <li className="text-[var(--text-4)]">"What's blocking the Q2 launch?"</li>
+              <li className="text-[var(--text-4)]">"Show me everything tagged urgent due this week"</li>
+              <li className="text-[var(--text-4)]">"What did I procrastinate on most this month?"</li>
             </ul>
           </div>
         ) : (
@@ -127,8 +127,10 @@ export default function TodoAskSidebar() {
             <div key={m.id} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
               <div
                 className={cn(
-                  'max-w-[90%] rounded-lg px-3 py-2 text-sm',
-                  m.role === 'user' ? 'bg-violet-600 text-white' : 'bg-gray-100 text-gray-900',
+                  'max-w-[90%] rounded-[12px] px-3 py-2 text-sm',
+                  m.role === 'user'
+                    ? 'bg-[var(--ink)] text-white'
+                    : 'border border-[var(--line-soft)] bg-white text-[var(--ink)]',
                 )}
               >
                 <div className="whitespace-pre-wrap">
@@ -148,7 +150,7 @@ export default function TodoAskSidebar() {
                             setSelectedTaskId(tid);
                             setDetailOpen(true);
                           }}
-                          className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-violet-700 shadow-sm hover:bg-violet-50"
+                          className="plat-pill plat-pill-mute !gap-1 !px-2 !py-0.5 !text-[10px] !font-medium transition-colors hover:!text-[var(--ink)]"
                         >
                           <ListTodo className="h-2.5 w-2.5" />
                           <span className="max-w-[160px] truncate">{t.title}</span>
@@ -164,7 +166,7 @@ export default function TodoAskSidebar() {
       </div>
 
       <form
-        className="border-t border-gray-200 p-3"
+        className="border-t border-[var(--line-soft)] p-3"
         onSubmit={(e) => {
           e.preventDefault();
           send();
@@ -182,12 +184,12 @@ export default function TodoAskSidebar() {
             }}
             placeholder="Ask anything about your tasks…"
             rows={2}
-            className="flex-1 resize-none rounded-md border border-gray-200 bg-white p-2 text-sm focus:border-violet-400 focus:outline-none"
+            className="flex-1 resize-none rounded-[10px] border border-[var(--line)] bg-white p-2 text-sm text-[var(--ink)] transition-colors placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:outline-none"
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="flex h-9 w-9 items-center justify-center rounded-md bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-50"
+            className="plat-btn !h-9 !w-9 !justify-center !px-0"
           >
             <Send className="h-4 w-4" />
           </button>

@@ -19,8 +19,11 @@ First visit seeds 15 example notes across 2 notebooks (Work, Personal), with cro
 3. **Wiki-link to a doc.** In any note, type `[[` — the autocomplete shows all your notes, docs, and (mock) calendar events. Pick "PRD — Inline AI commands" → a chip-style link is inserted. The doc-side outgoing link is recorded in the notes store, and the new note shows up under the target's backlinks.
 4. **Tag inline.** Type `#research` mid-paragraph. The tag chip renders inline; the tag now appears in the left sidebar and counts the note. Click the chip to filter.
 5. **Set a reminder.** Click the bell icon in the editor toolbar (or type `/remind` and pick from the slash menu) → enter a time. The reminder chip appears under the title with a "Mirrored to Calendar" badge. The reminder also gets a `calendarEventId` recorded — Calendar can read this when the calendar-side panel ships (data layer is wired).
-6. **Extract tasks.** Open "Q2 kickoff — quick capture" (seeded). Highlight a paragraph. In the bubble menu, click the wand → **Extract tasks**. Mock AI streams a task list and inserts it after the selection.
-7. **Ask across notes.** Click the **AI** button in the editor toolbar. The right-hand sidebar opens. Ask "What did I decide about diff-accept this week?" → the assistant streams an answer and renders citation chips that route directly to the source notes.
+6. **Extract tasks.** Open a meeting note and highlight a paragraph. The bubble menu offers exactly three AI actions — **Extract tasks**, **Extract decisions**, **Ask…** — with no submenu. Click *Extract tasks*: the icon becomes a spinner in place, the menu stays open, and the task list is inserted **after** the selection, never replacing it. One `Cmd+Z` restores the document exactly.
+7. **Ask across notes.** Press `Cmd/Ctrl+J` (or run *Ask across your notes* from the palette). The panel opens on the right. Choose a scope — *This note* / *This notebook* / *Everything* — and ask "What did I decide about diff-accept this week?". A progress line appears immediately, the answer streams in, citation chips render underneath, and clicking one opens the source note scrolled to the cited passage. Under every answer, permanently, is the provider, model and region it was computed in. Press **Stop** mid-answer: what arrived stays on screen, marked *incomplete*, with **Ask again** offered — there is no reconnect.
+
+   *Both steps run identically against Anthropic EU and a local Ollama; the
+   footer is what tells them apart, which is the parity gate Sprint 3 opened.*
 8. **Graph view.** Sidebar → **Graph**. SVG force-directed layout of notes-as-nodes and wiki-links-as-edges. Filter by tag. Click a node to open.
 9. **Daily note.** Sidebar → **Today**. Auto-creates today's daily note with a template (date + intent + tasks + notes), or opens it if it already exists.
 
@@ -104,19 +107,47 @@ All wrapped in `ProtectedRoute` to match the rest of the platform.
 - **Global command palette `Cmd+K` "New note"/"Open daily" actions.** The platform's existing palette would need a small additional source. Not modified here.
 - **Global search** rolling notes into the existing search results. Same reason.
 
-## Mock AI extensions
+## AI (FE-5 — no mock remains)
 
-All extensions live in `src/pages/docs/_lib/mockAi.ts` (extended in place per the spec):
+Everything AI in /notes goes through `src/pages/notes/_lib/aiClient.ts`, which
+talks to the Notes service. There is no mock behind it and no path back to one:
+`src/test/notes/aiGates.test.ts` fails the build if any file under
+`src/pages/notes` so much as names the old Docs mock module.
 
 ```ts
-extractTasks(text)                         // -> MockTask[]
-extractDecisions(text)                     // -> MockDecision[]
-suggestTags(noteContent, existingTags)     // -> string[]
-suggestLinks(noteContent, candidates)      // -> MockLinkSuggestion[]
-answerOverNotes(question, notes)           // AsyncIterable<{ chunk, citations? }>
+extractTasks(text, signal)                        // -> Task[]
+extractDecisions(text, signal)                    // -> Decision[]
+suggestTags(content, existingTags, signal)        // -> string[]
+suggestLinks(noteId, candidates, signal)          // -> LinkSuggestion[]
+answerOverNotes(question, notes, opts)            // AsyncIterable<{chunk, citations?, meta?}>
+agentChat(message, sessionId?, signal)            // AsyncIterable<AgentEvent>
+continueAgentTurn(sessionId, signal)              // resume after an approval
 ```
 
-Same latency model (200–800 ms initial, 15–40 ms per chunk), same configurable failure rate, same `AbortSignal` support as the rest of the module.
+**AI exists in exactly two places** and a CI gate (A17) keeps it that way:
+
+1. `NoteBubbleMenu` — three actions on a text selection.
+2. The ask panel — `Cmd+J`, two tabs (Agent behind `VITE_NOTES_AGENT_CHAT`).
+
+Everything else may *render* AI output; nothing else may *invoke* it. Streaming
+is one implementation — `_lib/sse.ts`, `fetch` + a manual reader, never
+`EventSource` — and A3 asserts no second one appears. Chunks are applied per
+animation frame (`_lib/rafBatch.ts`), not per chunk.
+
+**Approvals.** Every agent write stops at a `PendingApproval` rendered by one
+`ApprovalCard` on three surfaces — the agent transcript, the notifications bell,
+and a banner on the affected note — all reading one store slice
+(`_hooks/use-approvals-store.ts`), polled every 30 s and paused on a hidden tab.
+A 409 `stale_base` refuses the write and says why. There is no "remember my
+choice", deliberately.
+
+**Confidentiality.** Provider, model and region sit under every answer;
+a local-only workspace shows a permanent pill in the rail; Settings → AI carries
+the spend chart, the budget bar and the full `agent_actions` log with CSV export.
+
+Backend contracts this depends on that BE-4 has not shipped yet are listed in
+`~/Desktop/notes-backend-gaps-fe5.md`; each one degrades visibly rather than
+silently.
 
 ## State + persistence
 
@@ -152,7 +183,7 @@ Same latency model (200–800 ms initial, 15–40 ms per chunk), same configurab
 ## Keyboard shortcuts (Notes-specific additions on top of Docs')
 
 - `Cmd/Ctrl + Shift + N` — Quick capture (global, anywhere in the platform)
-- `Cmd/Ctrl + Shift + I` — Toggle Notes AI sidebar
+- `Cmd/Ctrl + J` — Toggle the ask panel (was `Cmd/Ctrl + Shift + I` before FE-5)
 - `Cmd/Ctrl + Enter` (in quick capture) — Save & open the note
 - `[[` — Wiki-link autocomplete
 - `#word` — Inline tag

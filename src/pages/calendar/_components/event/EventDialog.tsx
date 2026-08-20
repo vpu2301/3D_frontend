@@ -180,15 +180,15 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[640px] gap-0 overflow-hidden p-0">
-        <header className="flex items-center justify-between border-b border-gray-200/70 px-5 py-3">
+      <DialogContent className="max-w-[640px] gap-0 overflow-hidden rounded-[14px] p-0">
+        <header className="flex items-center justify-between border-b border-[var(--line-soft)] px-5 py-3">
           <div className="flex items-center gap-2">
             <span className={cn('h-2.5 w-2.5 rounded-full', palette.dot)} />
-            <span className="text-sm font-semibold text-gray-900">
+            <h2 className="text-sm">
               {isEdit ? 'Edit event' : 'New event'}
-            </span>
+            </h2>
             {isFocus && (
-              <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-violet-700">
+              <span className="plat-pill plat-pill-mute uppercase tracking-wide">
                 Focus
               </span>
             )}
@@ -204,14 +204,14 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
             className="h-auto border-0 px-0 text-xl font-semibold shadow-none focus-visible:ring-0"
           />
 
-          <div className="rounded-xl border border-gray-200 bg-gray-50/60 p-3">
-            <div className="mb-2 flex items-center gap-2 text-xs font-medium text-gray-500">
+          <div className="rounded-[12px] border border-[var(--line-soft)] bg-[var(--sand)] p-3">
+            <div className="mb-2 flex items-center gap-2 text-xs font-medium text-[var(--text-3)]">
               <Clock className="h-3.5 w-3.5" />
               Time
               <div className="ml-auto flex items-center gap-2">
                 <Label
                   htmlFor="ed-allday"
-                  className="text-xs font-medium text-gray-500"
+                  className="text-xs font-medium text-[var(--text-3)]"
                 >
                   All-day
                 </Label>
@@ -232,28 +232,28 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
                 type="date"
                 value={startDate}
                 onChange={e => setStartDate(e.target.value)}
-                className="h-9 text-sm"
+                className="h-9 rounded-[10px] border-[var(--line)] text-sm"
               />
               {!allDay && (
                 <Input
                   type="time"
                   value={startTime}
                   onChange={e => setStartTime(e.target.value)}
-                  className="h-9 text-sm"
+                  className="h-9 rounded-[10px] border-[var(--line)] text-sm"
                 />
               )}
               <Input
                 type="date"
                 value={endDate}
                 onChange={e => setEndDate(e.target.value)}
-                className="h-9 text-sm"
+                className="h-9 rounded-[10px] border-[var(--line)] text-sm"
               />
               {!allDay && (
                 <Input
                   type="time"
                   value={endTime}
                   onChange={e => setEndTime(e.target.value)}
-                  className="h-9 text-sm"
+                  className="h-9 rounded-[10px] border-[var(--line)] text-sm"
                 />
               )}
             </div>
@@ -261,11 +261,11 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="mb-1 block text-xs font-medium text-gray-500">
+              <Label className="mb-1.5 block text-xs font-medium text-[var(--text-3)]">
                 Calendar
               </Label>
               <Select value={calendarId} onValueChange={setCalendarId}>
-                <SelectTrigger className="h-9 text-sm">
+                <SelectTrigger className="h-9 rounded-[10px] border-[var(--line)] text-sm">
                   <SelectValue placeholder="Select calendar" />
                 </SelectTrigger>
                 <SelectContent>
@@ -293,7 +293,7 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
               />
               <Label
                 htmlFor="ed-focus"
-                className="text-xs font-medium text-gray-600"
+                className="text-xs font-medium text-[var(--text-2)]"
               >
                 Mark as focus block
               </Label>
@@ -301,7 +301,7 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
           </div>
 
           <div>
-            <Label className="mb-1 flex items-center gap-1.5 text-xs font-medium text-gray-500">
+            <Label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-[var(--text-3)]">
               <MapPin className="h-3.5 w-3.5" />
               Location
             </Label>
@@ -309,12 +309,12 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
               placeholder="Add location"
               value={location}
               onChange={e => setLocation(e.target.value)}
-              className="h-9 text-sm"
+              className="h-9 rounded-[10px] border-[var(--line)] text-sm"
             />
           </div>
 
           <div>
-            <Label className="mb-1 flex items-center gap-1.5 text-xs font-medium text-gray-500">
+            <Label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-[var(--text-3)]">
               <Video className="h-3.5 w-3.5" />
               Video conferencing
             </Label>
@@ -323,7 +323,7 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
                 value={video}
                 onValueChange={v => setVideo(v as Provider)}
               >
-                <SelectTrigger className="h-9 text-sm">
+                <SelectTrigger className="h-9 rounded-[10px] border-[var(--line)] text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -340,13 +340,13 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
                 }
                 value={videoUrl}
                 onChange={e => setVideoUrl(e.target.value)}
-                className="h-9 text-sm"
+                className="h-9 rounded-[10px] border-[var(--line)] text-sm"
               />
             </div>
           </div>
 
           <div>
-            <Label className="mb-1 flex items-center gap-1.5 text-xs font-medium text-gray-500">
+            <Label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-[var(--text-3)]">
               <Users className="h-3.5 w-3.5" />
               Attendees
             </Label>
@@ -361,7 +361,7 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
                   }
                 }}
                 placeholder="email@example.com"
-                className="h-9 flex-1 text-sm"
+                className="h-9 flex-1 rounded-[10px] border-[var(--line)] text-sm"
               />
               <Button
                 type="button"
@@ -375,12 +375,12 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
             </div>
 
             <div className="mt-2 flex items-center gap-2">
-              <Bot className="h-3.5 w-3.5 text-violet-500" />
-              <span className="text-xs font-medium text-gray-500">
+              <Bot className="h-3.5 w-3.5 text-[var(--blue)]" />
+              <span className="text-xs font-medium text-[var(--text-3)]">
                 Add AI agent:
               </span>
               <Select value="" onValueChange={addAgent}>
-                <SelectTrigger className="h-8 w-[220px] text-xs">
+                <SelectTrigger className="h-8 w-[220px] rounded-[10px] border-[var(--line)] text-xs">
                   <SelectValue
                     placeholder={
                       availableAgents.length
@@ -405,18 +405,18 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
                   <li
                     key={a.email}
                     className={cn(
-                      'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs',
+                      'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs',
                       a.isAgent
-                        ? 'border-violet-200 bg-violet-50 text-violet-800'
-                        : 'border-gray-200 bg-gray-50 text-gray-700',
+                        ? 'border-[var(--blue)] bg-[var(--blue-100)] text-[var(--blue)]'
+                        : 'border-[var(--line-soft)] bg-[var(--sand)] text-[var(--text-1)]',
                     )}
                   >
-                    {a.isAgent && <Bot className="h-3 w-3 text-violet-500" />}
+                    {a.isAgent && <Bot className="h-3 w-3" />}
                     <span>{a.name ?? a.email}</span>
                     <button
                       type="button"
                       aria-label={`Remove ${a.email}`}
-                      className="text-gray-400 hover:text-rose-600"
+                      className="text-[var(--text-5)] transition hover:text-[var(--bad-fg)]"
                       onClick={() => removeAttendee(a.email)}
                     >
                       <X className="h-3 w-3" />
@@ -428,7 +428,7 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
           </div>
 
           <div>
-            <Label className="mb-1 block text-xs font-medium text-gray-500">
+            <Label className="mb-1.5 block text-xs font-medium text-[var(--text-3)]">
               Description
             </Label>
             <Textarea
@@ -436,12 +436,12 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
               onChange={e => setDescription(e.target.value)}
               rows={3}
               placeholder="Notes, agenda, links…"
-              className="text-sm"
+              className="rounded-[10px] border-[var(--line)] text-sm"
             />
           </div>
 
           <div>
-            <Label className="mb-1 flex items-center gap-1.5 text-xs font-medium text-gray-500">
+            <Label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-[var(--text-3)]">
               <Sparkles className="h-3.5 w-3.5" />
               Prep notes
             </Label>
@@ -450,17 +450,17 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
               onChange={e => setPrepNotes(e.target.value)}
               rows={2}
               placeholder="What the assistant should brief you on…"
-              className="text-sm"
+              className="rounded-[10px] border-[var(--line)] text-sm"
             />
           </div>
         </div>
 
-        <footer className="flex items-center gap-2 border-t border-gray-200/70 bg-gray-50/40 px-5 py-3">
+        <footer className="flex items-center gap-2 border-t border-[var(--line-soft)] bg-[var(--sand)] px-5 py-3">
           {isEdit && (
             <Button
               variant="ghost"
               size="sm"
-              className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+              className="rounded-full text-[var(--bad-fg)] hover:bg-[rgba(179,56,46,0.06)] hover:text-[var(--bad-fg)]"
               onClick={deleteEvent}
             >
               <Trash2 className="mr-1.5 h-3.5 w-3.5" />
@@ -468,20 +468,22 @@ export function EventDialog({ open, onOpenChange, state }: Props) {
             </Button>
           )}
           <div className="ml-auto flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
+              type="button"
+              className="plat-btn-ghost"
+              style={{ height: 34 }}
               onClick={() => onOpenChange(false)}
             >
               Cancel
-            </Button>
-            <Button
-              size="sm"
-              className="bg-gradient-to-r from-blue-500 to-violet-500 text-white hover:from-blue-600 hover:to-violet-600"
+            </button>
+            <button
+              type="button"
+              className="plat-btn"
+              style={{ height: 34, padding: '0 18px' }}
               onClick={save}
             >
               {isEdit ? 'Save' : 'Create'}
-            </Button>
+            </button>
           </div>
         </footer>
       </DialogContent>

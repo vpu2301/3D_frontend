@@ -691,6 +691,21 @@
   pointer-events: none;
 }
 
+/*
+ * The source-sentence highlight (FE-2).
+ *
+ * Reuses the editor's existing search-highlight weight rather than inventing a
+ * treatment — the design debt is recorded and this is the interim. Deliberately
+ * a background wash and not a border: it must not shift a single character of
+ * the text it lands on, or hovering a proposal makes the paragraph jump.
+ */
+.ProseMirror .notes-source-highlight {
+  background-color: rgba(251, 191, 36, 0.32);
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.32);
+  transition: background-color 120ms ease-out;
+}
+
 .ProseMirror ul[data-type="taskList"] {
   list-style: none;
   padding: 0;

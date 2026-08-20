@@ -43,9 +43,9 @@ function formatTimeAgo(date: Date) {
 }
 
 const ACTIVITY_STATUS_STYLE: Record<string, string> = {
-  Completed:     'bg-green-100 text-green-700 border-green-200',
-  Failed:        'bg-red-100 text-red-700 border-red-200',
-  'In Progress': 'bg-blue-100 text-blue-700 border-blue-200',
+  Completed:     'plat-pill-ok',
+  Failed:        'bg-[rgba(179,56,46,0.1)] text-[color:var(--bad-fg)]',
+  'In Progress': 'bg-[color:var(--blue-100)] text-[color:var(--blue)]',
 };
 
 /* ═══════════════════════════════════════════════════════
@@ -114,21 +114,21 @@ const WorkerActivityTable = () => {
   };
 
   const SortIcon = ({ field }: { field: keyof WorkerActivityEntry }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-[color:var(--ink)]' : 'text-[color:var(--text-5)] opacity-50')} />
   );
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search activity…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-5)] pointer-events-none" />
+          <Input placeholder="Search activity…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-9 !rounded-[10px] bg-[color:var(--paper)] border-[color:var(--line)] text-[13px] placeholder:text-[color:var(--text-5)] focus-visible:border-[color:var(--ink)] focus-visible:ring-0 focus-visible:ring-offset-0" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[130px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Bot className="h-3.5 w-3.5 text-gray-400" />{workerFilter === 'All Workers' ? 'Worker' : workerFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[130px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Bot className="h-3.5 w-3.5 opacity-60" />{workerFilter === 'All Workers' ? 'Worker' : workerFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-44">
@@ -137,9 +137,9 @@ const WorkerActivityTable = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 text-gray-400" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[110px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 opacity-60" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -148,9 +148,9 @@ const WorkerActivityTable = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 text-gray-400" />{typeFilter === 'All Types' ? 'Type' : typeFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[110px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 opacity-60" />{typeFilter === 'All Types' ? 'Type' : typeFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -158,49 +158,49 @@ const WorkerActivityTable = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
+      <Card className="bg-[color:var(--paper)] border-[color:var(--line-soft)] rounded-[14px] shadow-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('task')}>Task <SortIcon field="task" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('status')}>Status <SortIcon field="status" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('worker')}>Worker <SortIcon field="worker" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('type')}>Type <SortIcon field="type" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('date')}>Time <SortIcon field="date" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Duration</th>
+              <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('task')}>Task <SortIcon field="task" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('status')}>Status <SortIcon field="status" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('worker')}>Worker <SortIcon field="worker" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('type')}>Type <SortIcon field="type" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden lg:table-cell" onClick={() => toggleSort('date')}>Time <SortIcon field="date" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden lg:table-cell">Duration</th>
               </tr>
             </thead>
             <tbody>
               {paged.length === 0 ? (
-                <tr><td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">No activity matches your filters.</td></tr>
+                <tr><td colSpan={6} className="px-4 py-12 text-center text-[color:var(--text-4)] text-sm">No activity matches your filters.</td></tr>
               ) : paged.map(entry => (
-                <tr key={entry.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
-                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="p-1.5 rounded bg-gray-100 flex-shrink-0"><Activity className="h-3.5 w-3.5 text-gray-500" /></div><span className="font-medium text-gray-900 truncate max-w-[220px]">{entry.task}</span></div></td>
-                  <td className="px-4 py-3"><span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', ACTIVITY_STATUS_STYLE[entry.status])}>{entry.status}</span></td>
-                  <td className="px-4 py-3 hidden md:table-cell"><div className="flex items-center gap-2"><div className="h-6 w-6 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center flex-shrink-0"><span className="text-xs font-semibold text-gray-600">{entry.worker[0]}</span></div><span className="text-gray-700">{entry.worker}</span></div></td>
-                  <td className="px-4 py-3 hidden md:table-cell"><span className="text-gray-600 text-xs">{entry.type}</span></td>
-                  <td className="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">{formatTimeAgo(entry.date)}</td>
-                  <td className="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">{entry.duration}</td>
+                <tr key={entry.id} className="border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors">
+                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="p-1.5 rounded-[8px] bg-[color:var(--sand)] flex-shrink-0"><Activity className="h-3.5 w-3.5 text-[color:var(--text-3)]" /></div><span className="font-medium text-[color:var(--ink)] truncate max-w-[220px]">{entry.task}</span></div></td>
+                  <td className="px-4 py-3"><span className={cn('plat-pill', ACTIVITY_STATUS_STYLE[entry.status])}>{entry.status}</span></td>
+                  <td className="px-4 py-3 hidden md:table-cell"><div className="flex items-center gap-2"><div className="h-6 w-6 rounded-full bg-[color:var(--sand-deep)] flex items-center justify-center flex-shrink-0"><span className="text-xs font-semibold text-[color:var(--text-2)]">{entry.worker[0]}</span></div><span className="text-[color:var(--text-2)]">{entry.worker}</span></div></td>
+                  <td className="px-4 py-3 hidden md:table-cell"><span className="text-[color:var(--text-3)] text-xs">{entry.type}</span></td>
+                  <td className="px-4 py-3 hidden lg:table-cell text-[color:var(--text-4)] text-xs">{formatTimeAgo(entry.date)}</td>
+                  <td className="px-4 py-3 hidden lg:table-cell text-[color:var(--text-4)] text-xs">{entry.duration}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+        <div className="px-4 py-3 border-t border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center justify-between gap-3 flex-wrap text-xs text-[color:var(--text-4)]">
           <div className="flex items-center gap-3">
             <span>{filtered.length > 0 ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} entries` : '0 entries'}</span>
-            <div className="flex items-center gap-1.5"><span className="text-gray-400">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
+            <div className="flex items-center gap-1.5"><span className="text-[color:var(--text-5)]">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} className="h-6 rounded-[6px] border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--text-2)] text-xs px-1 focus:outline-none focus:ring-1 focus:ring-[color:var(--line)] cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
           </div>
           <div className="flex items-center gap-2">
             {(search || workerFilter !== 'All Workers' || statusFilter !== 'All' || typeFilter !== 'All Types') && (
-              <button className="text-gray-500 hover:text-gray-900 underline underline-offset-2" onClick={() => { setSearch(''); setWorkerFilter('All Workers'); setStatusFilter('All'); setTypeFilter('All Types'); setPage(1); }}>Clear filters</button>
+              <button className="text-[color:var(--text-3)] hover:text-[color:var(--ink)] underline underline-offset-2" onClick={() => { setSearch(''); setWorkerFilter('All Workers'); setStatusFilter('All'); setTypeFilter('All Types'); setPage(1); }}>Clear filters</button>
             )}
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>{p}</Button>)}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[color:var(--ink)] !text-white !border-transparent hover:!opacity-90' : '!border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]')} onClick={() => setPage(p)}>{p}</Button>)}
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
               </div>
             )}
           </div>
@@ -212,65 +212,56 @@ const WorkerActivityTable = () => {
 
 const WorkersGrid = ({ employees, onViewEmployee, onShowCreate }: { employees: any[]; onViewEmployee: (id: string | number) => void; onShowCreate: () => void }) => (
   <>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {/* One panel, hairline-divided rows — a roster reads as a single object. */}
+    <div className="plat-list">
       {employees.map(employee => (
-        <Card key={employee.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={employee.avatar} alt={employee.name} />
-                    <AvatarFallback className={`bg-gradient-to-br ${employee.bgColor} ${employee.iconColor} font-medium`}>{employee.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div className={`absolute -bottom-1 -right-1 p-1 rounded-full bg-gradient-to-br ${employee.bgColor}`}>
-                    <Bot className={`h-3 w-3 ${employee.iconColor}`} />
-                  </div>
-                </div>
-                <div>
-                  <span className="font-medium">{employee.name}</span>
-                  {employee.isAssistant && <span className="block text-xs text-gray-600 font-normal">AI Assistant</span>}
-                </div>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8" onClick={() => onViewEmployee(employee.id)}><Eye className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8"><Settings className="h-4 w-4" /></Button>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Badge variant="outline" className="text-xs">{employee.type || employee.department}</Badge>
-                <div className="flex items-center space-x-1">
-                  {employee.scope === 'team' ? <Building className="h-3 w-3 text-gray-600" /> : <Users className="h-3 w-3 text-gray-600" />}
-                  <span className="text-xs text-gray-600 capitalize">{employee.scope}</span>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="p-1 rounded bg-gray-100"><Activity className="h-3 w-3 text-gray-600" /></div>
-                <span className={`text-sm font-medium ${employee.status === 'Active' ? 'text-green-700' : 'text-amber-700'}`}>{employee.status}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="p-1 rounded bg-gray-100"><MessageCircle className="h-3 w-3 text-gray-600" /></div>
-                <span className="text-sm text-gray-700">Conversations: {employee.conversations}</span>
-              </div>
-              <p className="text-sm text-gray-700">Active Tasks: {employee.tasks}</p>
-              <div className="flex space-x-2">
-                <Button variant="outline" size="sm" className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200" onClick={() => onViewEmployee(employee.id)}><Eye className="h-3 w-3 mr-1" />View Details</Button>
-                <Button variant="outline" size="sm" className="text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"><Settings className="h-3 w-3" /></Button>
-              </div>
+        <div key={employee.id} className="flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-[color:var(--line-soft)] px-5 py-4 transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]">
+          <div className="relative flex-shrink-0">
+            <Avatar className="h-11 w-11">
+              <AvatarImage src={employee.avatar} alt={employee.name} />
+              <AvatarFallback className="bg-[color:var(--sand-deep)] text-[color:var(--ink)] font-medium">{employee.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--sand-deep)]">
+              <Bot className="h-3 w-3 text-[color:var(--ink)]" />
+            </span>
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-baseline gap-2">
+              <span className="truncate text-sm font-semibold text-[color:var(--ink)]">{employee.name}</span>
+              {employee.isAssistant && <span className="text-xs font-normal text-[color:var(--text-4)]">AI Assistant</span>}
             </div>
-          </CardContent>
-        </Card>
+            <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-[color:var(--text-4)]">
+              <Badge variant="outline" className="rounded-full border-[color:var(--line)] text-[11px] font-medium text-[color:var(--text-2)]">{employee.type || employee.department}</Badge>
+              <span className="flex items-center gap-1.5">
+                {employee.scope === 'team' ? <Building className="h-3 w-3 text-[color:var(--text-5)]" /> : <Users className="h-3 w-3 text-[color:var(--text-5)]" />}
+                <span className="capitalize">{employee.scope}</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Activity className="h-3 w-3 text-[color:var(--text-5)]" />
+                <span className={`font-medium ${employee.status === 'Active' ? 'text-[color:var(--ok-fg)]' : 'text-[color:var(--warn-fg)]'}`}>{employee.status}</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <MessageCircle className="h-3 w-3 text-[color:var(--text-5)]" />
+                Conversations: {employee.conversations}
+              </span>
+              <span>Active Tasks: {employee.tasks}</span>
+            </div>
+          </div>
+          <div className="ml-auto flex items-center gap-1.5">
+            <Button variant="outline" size="sm" className="plat-btn-ghost !h-8 !rounded-full !border-[color:var(--line)] !bg-transparent !px-3.5 text-xs" onClick={() => onViewEmployee(employee.id)}><Eye className="h-3 w-3 mr-1" />View Details</Button>
+            <Button variant="outline" size="sm" className="plat-btn-ghost !h-8 !rounded-full !border-[color:var(--line)] !bg-transparent !px-3 text-xs"><Settings className="h-3 w-3" /></Button>
+            <Button variant="ghost" size="icon" className="!rounded-[10px] hover:bg-[rgba(20,22,26,0.05)] h-8 w-8" onClick={() => onViewEmployee(employee.id)}><Eye className="h-4 w-4" /></Button>
+            <Button variant="ghost" size="icon" className="!rounded-[10px] hover:bg-[rgba(20,22,26,0.05)] h-8 w-8"><Settings className="h-4 w-4" /></Button>
+          </div>
+        </div>
       ))}
     </div>
     {employees.length === 0 && (
       <div className="text-center py-12">
-        <Bot className="h-16 w-16 text-black/50 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No AI employees yet</h3>
-        <p className="text-gray-600 mb-4">Create your first AI employee to get started</p>
-        <Button onClick={onShowCreate} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800"><Plus className="h-4 w-4 mr-2" />Add AI Employee</Button>
+        <Bot className="h-16 w-16 text-[color:var(--text-5)] mx-auto mb-4" />
+        <h3 className="text-lg font-medium mb-2">No AI employees yet</h3>
+        <p className="mb-4" style={{ color: 'var(--text-4)' }}>Create your first AI employee to get started</p>
+        <Button onClick={onShowCreate} className="plat-btn !h-8 !rounded-full !bg-[color:var(--ink)] !px-4 !text-xs !text-white hover:!opacity-90"><Plus className="h-4 w-4 mr-2" />Add AI Employee</Button>
       </div>
     )}
   </>
@@ -288,8 +279,8 @@ type AIWorkerEntry = {
 };
 
 const AW_STATUS_STYLE: Record<string, string> = {
-  Active: 'bg-green-100 text-green-700 border-green-200',
-  Idle:   'bg-amber-100 text-amber-700 border-amber-200',
+  Active: 'plat-pill-ok',
+  Idle:   'plat-pill-warn',
 };
 
 const AW_TYPES    = ['All Types', 'Sales', 'Support', 'Finance', 'Marketing'];
@@ -352,34 +343,34 @@ const AIWorkersListTab = ({ employees, onViewEmployee, onShowCreate }: {
   };
 
   const SortIcon = ({ field }: { field: keyof AIWorkerEntry }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-[color:var(--ink)]' : 'text-[color:var(--text-5)] opacity-50')} />
   );
 
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: 'Total',      value: stats.total,  color: 'text-gray-900',  bg: 'bg-gray-100' },
-          { label: 'Active',     value: stats.active, color: 'text-green-700', bg: 'bg-green-50' },
-          { label: 'Idle',       value: stats.idle,   color: 'text-amber-700', bg: 'bg-amber-50' },
-          { label: 'Total Tasks',value: stats.tasks,  color: 'text-blue-700',  bg: 'bg-blue-50'  },
+          { label: 'Total',      value: stats.total,  color: 'text-[color:var(--ink)]',     bg: '' },
+          { label: 'Active',     value: stats.active, color: 'text-[color:var(--ok-fg)]',   bg: '' },
+          { label: 'Idle',       value: stats.idle,   color: 'text-[color:var(--warn-fg)]', bg: '' },
+          { label: 'Total Tasks',value: stats.tasks,  color: 'text-[color:var(--ink)]',     bg: '' },
         ].map(s => (
-          <Card key={s.label} className={cn('border-gray-200/60', s.bg)}>
-            <CardContent className="p-4"><p className="text-xs text-gray-500 mb-1">{s.label}</p><p className={cn('text-2xl font-semibold', s.color)}>{s.value}</p></CardContent>
+          <Card key={s.label} className={cn('rounded-[14px] border-[color:var(--line-soft)] shadow-none bg-[color:var(--paper)]', s.bg)}>
+            <CardContent className="p-4"><p className="text-xs mb-1" style={{ color: 'var(--text-4)' }}>{s.label}</p><p className={cn('plat-num !text-[26px]', s.color)}>{s.value}</p></CardContent>
           </Card>
         ))}
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search AI workers…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-5)] pointer-events-none" />
+          <Input placeholder="Search AI workers…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-9 !rounded-[10px] bg-[color:var(--paper)] border-[color:var(--line)] text-[13px] placeholder:text-[color:var(--text-5)] focus-visible:border-[color:var(--ink)] focus-visible:ring-0 focus-visible:ring-offset-0" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[120px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 text-gray-400" />{typeFilter === 'All Types' ? 'Type' : typeFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[120px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 opacity-60" />{typeFilter === 'All Types' ? 'Type' : typeFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-44">
@@ -388,9 +379,9 @@ const AIWorkersListTab = ({ employees, onViewEmployee, onShowCreate }: {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 text-gray-400" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[110px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 opacity-60" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -399,9 +390,9 @@ const AIWorkersListTab = ({ employees, onViewEmployee, onShowCreate }: {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5 text-gray-400" />{scopeFilter === 'All Scopes' ? 'Scope' : scopeFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[110px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5 opacity-60" />{scopeFilter === 'All Scopes' ? 'Scope' : scopeFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -409,54 +400,54 @@ const AIWorkersListTab = ({ employees, onViewEmployee, onShowCreate }: {
           </DropdownMenuContent>
         </DropdownMenu>
         <div className="flex-1" />
-        <Button size="sm" onClick={onShowCreate} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800">
+        <Button size="sm" onClick={onShowCreate} className="plat-btn !h-8 !rounded-full !bg-[color:var(--ink)] !px-4 !text-xs !text-white hover:!opacity-90">
           <Plus className="h-3.5 w-3.5 mr-1.5" />Add AI Worker
         </Button>
       </div>
 
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
+      <Card className="bg-[color:var(--paper)] border-[color:var(--line-soft)] rounded-[14px] shadow-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="w-10 px-4 py-3"><input type="checkbox" checked={selected.size === paged.length && paged.length > 0} onChange={toggleAll} className="rounded border-gray-300 cursor-pointer" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('name')}>Worker <SortIcon field="name" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('status')}>Status <SortIcon field="status" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('type')}>Type <SortIcon field="type" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('tasks')}>Tasks <SortIcon field="tasks" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('conversations')}>Conversations <SortIcon field="conversations" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('scope')}>Scope <SortIcon field="scope" /></th>
+              <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                <th className="w-10 px-4 py-3"><input type="checkbox" checked={selected.size === paged.length && paged.length > 0} onChange={toggleAll} className="rounded-[4px] border-[color:var(--line)] cursor-pointer" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('name')}>Worker <SortIcon field="name" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('status')}>Status <SortIcon field="status" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('type')}>Type <SortIcon field="type" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('tasks')}>Tasks <SortIcon field="tasks" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden lg:table-cell cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('conversations')}>Conversations <SortIcon field="conversations" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden lg:table-cell cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('scope')}>Scope <SortIcon field="scope" /></th>
                 <th className="w-10 px-4 py-3" />
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={8} className="px-4 py-12 text-center text-gray-400 text-sm">No AI workers match your filters.</td></tr>
+                <tr><td colSpan={8} className="px-4 py-12 text-center text-[color:var(--text-4)] text-sm">No AI workers match your filters.</td></tr>
               ) : paged.map(emp => (
-                <tr key={emp.id} className={cn('border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors', selected.has(emp.id) && 'bg-blue-50/40')}>
-                  <td className="px-4 py-3"><input type="checkbox" checked={selected.has(emp.id)} onChange={() => toggleOne(emp.id)} className="rounded border-gray-300 cursor-pointer" /></td>
+                <tr key={emp.id} className={cn('border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors', selected.has(emp.id) && 'bg-[rgba(20,22,26,0.04)]')}>
+                  <td className="px-4 py-3"><input type="checkbox" checked={selected.has(emp.id)} onChange={() => toggleOne(emp.id)} className="rounded-[4px] border-[color:var(--line)] cursor-pointer" /></td>
                   <td className="px-4 py-3">
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-8 w-8 flex-shrink-0">
                         <AvatarImage src={emp.avatar} alt={emp.name} />
-                        <AvatarFallback className={cn('text-xs font-semibold bg-gradient-to-br', emp.bgColor, emp.iconColor)}>{emp.name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback className="text-xs font-semibold bg-[color:var(--sand-deep)] text-[color:var(--ink)]">{emp.name.charAt(0)}</AvatarFallback>
                       </Avatar>
-                      <div className="min-w-0"><p className="font-medium text-gray-900 truncate">{emp.name}</p>{emp.isAssistant && <p className="text-xs text-gray-500">AI Assistant</p>}</div>
+                      <div className="min-w-0"><p className="font-medium text-[color:var(--ink)] truncate">{emp.name}</p>{emp.isAssistant && <p className="text-xs text-[color:var(--text-4)]">AI Assistant</p>}</div>
                     </div>
                   </td>
-                  <td className="px-4 py-3"><span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', AW_STATUS_STYLE[emp.status] ?? 'bg-gray-100 text-gray-500 border-gray-200')}>{emp.status}</span></td>
-                  <td className="px-4 py-3 hidden md:table-cell"><span className="text-gray-600 text-xs">{emp.type || emp.department}</span></td>
-                  <td className="px-4 py-3 hidden md:table-cell text-gray-700">{emp.tasks}</td>
-                  <td className="px-4 py-3 hidden lg:table-cell text-gray-700">{emp.conversations}</td>
-                  <td className="px-4 py-3 hidden lg:table-cell"><span className="text-gray-600 text-xs capitalize">{emp.scope}</span></td>
+                  <td className="px-4 py-3"><span className={cn('plat-pill', AW_STATUS_STYLE[emp.status] ?? 'plat-pill-mute')}>{emp.status}</span></td>
+                  <td className="px-4 py-3 hidden md:table-cell"><span className="text-[color:var(--text-3)] text-xs">{emp.type || emp.department}</span></td>
+                  <td className="px-4 py-3 hidden md:table-cell text-[color:var(--text-2)]">{emp.tasks}</td>
+                  <td className="px-4 py-3 hidden lg:table-cell text-[color:var(--text-2)]">{emp.conversations}</td>
+                  <td className="px-4 py-3 hidden lg:table-cell"><span className="text-[color:var(--text-3)] text-xs capitalize">{emp.scope}</span></td>
                   <td className="px-4 py-3">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+                      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-7 w-7 !rounded-[10px] hover:bg-[rgba(20,22,26,0.05)]"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => onViewEmployee(emp.id)}><Eye className="h-4 w-4 mr-2" />View profile</DropdownMenuItem>
                         <DropdownMenuItem><Settings className="h-4 w-4 mr-2" />Configure</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-600"><Trash2 className="h-4 w-4 mr-2" />Remove</DropdownMenuItem>
+                        <DropdownMenuItem className="text-[color:var(--bad-fg)]"><Trash2 className="h-4 w-4 mr-2" />Remove</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </td>
@@ -465,20 +456,20 @@ const AIWorkersListTab = ({ employees, onViewEmployee, onShowCreate }: {
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+        <div className="px-4 py-3 border-t border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center justify-between gap-3 flex-wrap text-xs text-[color:var(--text-4)]">
           <div className="flex items-center gap-3">
             <span>{filtered.length > 0 ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} workers` : '0 workers'}{selected.size > 0 ? ` · ${selected.size} selected` : ''}</span>
-            <div className="flex items-center gap-1.5"><span className="text-gray-400">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
+            <div className="flex items-center gap-1.5"><span className="text-[color:var(--text-5)]">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} className="h-6 rounded-[6px] border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--text-2)] text-xs px-1 focus:outline-none focus:ring-1 focus:ring-[color:var(--line)] cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
           </div>
           <div className="flex items-center gap-2">
             {(search || typeFilter !== 'All Types' || statusFilter !== 'All' || scopeFilter !== 'All Scopes') && (
-              <button className="text-gray-500 hover:text-gray-900 underline underline-offset-2" onClick={() => { setSearch(''); setTypeFilter('All Types'); setStatusFilter('All'); setScopeFilter('All Scopes'); setPage(1); }}>Clear filters</button>
+              <button className="text-[color:var(--text-3)] hover:text-[color:var(--ink)] underline underline-offset-2" onClick={() => { setSearch(''); setTypeFilter('All Types'); setStatusFilter('All'); setScopeFilter('All Scopes'); setPage(1); }}>Clear filters</button>
             )}
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>{p}</Button>)}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[color:var(--ink)] !text-white !border-transparent hover:!opacity-90' : '!border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]')} onClick={() => setPage(p)}>{p}</Button>)}
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
               </div>
             )}
           </div>
@@ -533,19 +524,19 @@ const AIWorkersSection = () => {
   return (
     <>
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">AI Workers</h2>
-        <p className="text-sm text-gray-500">Manage your artificial intelligence workforce and assistants</p>
+        <h2 className="text-xl font-semibold">AI Workers</h2>
+        <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Manage your artificial intelligence workforce and assistants</p>
       </div>
 
-      <div className="flex items-center border-b border-gray-100 mb-6 py-2">
-        <div className="flex flex-1 items-center gap-1">
+      <div className="flex items-center border-b border-[color:var(--line-soft)] mb-6 py-2">
+        <div className="flex flex-1 items-center gap-1.5">
           {TABS.map(({ key, label, icon: Icon }) => (
-            <button key={key} onClick={() => setActiveTab(key)} className={cn('flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors', activeTab === key ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]' : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900')}>
+            <button key={key} onClick={() => setActiveTab(key)} className={cn('flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors', activeTab === key ? 'border border-transparent bg-[color:var(--ink)] text-white hover:opacity-90' : 'border border-[color:var(--line)] text-[color:var(--text-2)] hover:bg-[rgba(20,22,26,0.04)] hover:text-[color:var(--ink)]')}>
               <Icon className="h-3.5 w-3.5" />{label}
             </button>
           ))}
         </div>
-        <Button size="sm" onClick={() => navigate('/staff/create-ai-worker')} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800">
+        <Button size="sm" onClick={() => navigate('/staff/create-ai-worker')} className="plat-btn !h-8 !rounded-full !bg-[color:var(--ink)] !px-4 !text-xs !text-white hover:!opacity-90">
           <Plus className="h-3.5 w-3.5 mr-1.5" />New AI Employee
         </Button>
       </div>
@@ -573,10 +564,10 @@ const INITIAL_EMPLOYEES: Employee[] = [
 ];
 
 const EMP_STATUS_STYLE: Record<Employee['status'], string> = {
-  Active:   'bg-green-100 text-green-700 border-green-200',
-  Inactive: 'bg-gray-100 text-gray-500 border-gray-200',
-  'On Leave': 'bg-amber-100 text-amber-700 border-amber-200',
-  Remote:   'bg-blue-100 text-blue-700 border-blue-200',
+  Active:   'plat-pill-ok',
+  Inactive: 'plat-pill-mute',
+  'On Leave': 'plat-pill-warn',
+  Remote:   'bg-[color:var(--blue-100)] text-[color:var(--blue)]',
 };
 
 const DEPARTMENTS = ['All Departments', 'Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations', 'Legal', 'Customer Success', 'Design', 'Product'];
@@ -639,34 +630,34 @@ const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: bool
   };
 
   const SortIcon = ({ field }: { field: keyof Employee }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-[color:var(--ink)]' : 'text-[color:var(--text-5)] opacity-50')} />
   );
 
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: 'Total',    value: stats.total,   color: 'text-gray-900',  bg: 'bg-gray-100' },
-          { label: 'Active',   value: stats.active,  color: 'text-green-700', bg: 'bg-green-50' },
-          { label: 'On Leave', value: stats.onLeave, color: 'text-amber-700', bg: 'bg-amber-50' },
-          { label: 'Remote',   value: stats.remote,  color: 'text-blue-700',  bg: 'bg-blue-50' },
+          { label: 'Total',    value: stats.total,   color: 'text-[color:var(--ink)]',     bg: '' },
+          { label: 'Active',   value: stats.active,  color: 'text-[color:var(--ok-fg)]',   bg: '' },
+          { label: 'On Leave', value: stats.onLeave, color: 'text-[color:var(--warn-fg)]', bg: '' },
+          { label: 'Remote',   value: stats.remote,  color: 'text-[color:var(--ink)]',     bg: '' },
         ].map(s => (
-          <Card key={s.label} className={cn('border-gray-200/60', s.bg)}>
-            <CardContent className="p-4"><p className="text-xs text-gray-500 mb-1">{s.label}</p><p className={cn('text-2xl font-semibold', s.color)}>{s.value}</p></CardContent>
+          <Card key={s.label} className={cn('rounded-[14px] border-[color:var(--line-soft)] shadow-none bg-[color:var(--paper)]', s.bg)}>
+            <CardContent className="p-4"><p className="text-xs mb-1" style={{ color: 'var(--text-4)' }}>{s.label}</p><p className={cn('plat-num !text-[26px]', s.color)}>{s.value}</p></CardContent>
           </Card>
         ))}
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search employees…" value={search} onChange={e => { setSearch(e.target.value); setEmpPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-5)] pointer-events-none" />
+          <Input placeholder="Search employees…" value={search} onChange={e => { setSearch(e.target.value); setEmpPage(1); }} className="pl-9 h-9 !rounded-[10px] bg-[color:var(--paper)] border-[color:var(--line)] text-[13px] placeholder:text-[color:var(--text-5)] focus-visible:border-[color:var(--ink)] focus-visible:ring-0 focus-visible:ring-offset-0" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[150px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5 text-gray-400" />{deptFilter === 'All Departments' ? 'Department' : deptFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[150px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5 opacity-60" />{deptFilter === 'All Departments' ? 'Department' : deptFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
@@ -675,9 +666,9 @@ const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: bool
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 text-gray-400" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[110px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 opacity-60" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -686,59 +677,59 @@ const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: bool
         </DropdownMenu>
         <div className="flex-1" />
         {selected.size > 0 && (
-          <Button variant="outline" size="sm" onClick={deleteSelected} className="border-red-200 text-red-600 hover:bg-red-50">
+          <Button variant="outline" size="sm" onClick={deleteSelected} className="plat-btn-ghost !h-8 !rounded-full !border-[rgba(179,56,46,0.3)] !bg-transparent !px-3.5 !text-xs !text-[color:var(--bad-fg)] hover:!bg-[rgba(179,56,46,0.06)]">
             <Trash2 className="h-3.5 w-3.5 mr-1.5" />Delete {selected.size}
           </Button>
         )}
-        <Button variant="outline" size="sm" onClick={() => setShowImportDialog(true)} className="bg-[#f1f3f4] border-transparent rounded-full text-gray-700 hover:bg-gray-200">
+        <Button variant="outline" size="sm" onClick={() => setShowImportDialog(true)} className="plat-btn-ghost !h-8 !rounded-full !border-[color:var(--line)] !bg-transparent !px-3.5 !text-xs">
           <Upload className="h-3.5 w-3.5 mr-1.5" />Import
         </Button>
       </div>
 
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
+      <Card className="bg-[color:var(--paper)] border-[color:var(--line-soft)] rounded-[14px] shadow-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="w-10 px-4 py-3"><input type="checkbox" checked={selected.size === pagedEmployees.length && pagedEmployees.length > 0} onChange={toggleAll} className="rounded border-gray-300 cursor-pointer" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('name')}>Employee <SortIcon field="name" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('status')}>Status <SortIcon field="status" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('role')}>Role <SortIcon field="role" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('department')}>Department <SortIcon field="department" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Contact</th>
+              <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                <th className="w-10 px-4 py-3"><input type="checkbox" checked={selected.size === pagedEmployees.length && pagedEmployees.length > 0} onChange={toggleAll} className="rounded-[4px] border-[color:var(--line)] cursor-pointer" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('name')}>Employee <SortIcon field="name" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('status')}>Status <SortIcon field="status" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('role')}>Role <SortIcon field="role" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('department')}>Department <SortIcon field="department" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden lg:table-cell">Contact</th>
                 <th className="w-10 px-4 py-3" />
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={7} className="px-4 py-12 text-center text-gray-400 text-sm">No employees match your filters.</td></tr>
+                <tr><td colSpan={7} className="px-4 py-12 text-center text-[color:var(--text-4)] text-sm">No employees match your filters.</td></tr>
               ) : pagedEmployees.map(emp => (
-                <tr key={emp.id} className={cn('border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors', selected.has(emp.id) && 'bg-blue-50/40')}>
-                  <td className="px-4 py-3"><input type="checkbox" checked={selected.has(emp.id)} onChange={() => toggleOne(emp.id)} className="rounded border-gray-300 cursor-pointer" /></td>
+                <tr key={emp.id} className={cn('border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors', selected.has(emp.id) && 'bg-[rgba(20,22,26,0.04)]')}>
+                  <td className="px-4 py-3"><input type="checkbox" checked={selected.has(emp.id)} onChange={() => toggleOne(emp.id)} className="rounded-[4px] border-[color:var(--line)] cursor-pointer" /></td>
                   <td className="px-4 py-3">
                     <div className="flex items-center space-x-3">
-                      <Avatar className="h-8 w-8 flex-shrink-0"><AvatarFallback className="bg-gradient-to-br from-gray-200 to-gray-300 text-gray-600 text-xs font-semibold">{emp.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</AvatarFallback></Avatar>
-                      <div className="min-w-0"><p className="font-medium text-gray-900 truncate">{emp.name}</p><p className="text-xs text-gray-500 truncate">{emp.email}</p></div>
+                      <Avatar className="h-8 w-8 flex-shrink-0"><AvatarFallback className="bg-[color:var(--sand-deep)] text-[color:var(--text-2)] text-xs font-semibold">{emp.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</AvatarFallback></Avatar>
+                      <div className="min-w-0"><p className="font-medium text-[color:var(--ink)] truncate">{emp.name}</p><p className="text-xs text-[color:var(--text-4)] truncate">{emp.email}</p></div>
                     </div>
                   </td>
-                  <td className="px-4 py-3"><span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', EMP_STATUS_STYLE[emp.status])}>{emp.status}</span></td>
-                  <td className="px-4 py-3 text-gray-700">{emp.role}</td>
-                  <td className="px-4 py-3 hidden md:table-cell"><span className="inline-flex items-center gap-1 text-gray-600 text-xs"><Building2 className="h-3 w-3 text-gray-400" />{emp.department}</span></td>
+                  <td className="px-4 py-3"><span className={cn('plat-pill', EMP_STATUS_STYLE[emp.status])}>{emp.status}</span></td>
+                  <td className="px-4 py-3 text-[color:var(--text-2)]">{emp.role}</td>
+                  <td className="px-4 py-3 hidden md:table-cell"><span className="inline-flex items-center gap-1 text-[color:var(--text-3)] text-xs"><Building2 className="h-3 w-3 text-[color:var(--text-5)]" />{emp.department}</span></td>
                   <td className="px-4 py-3 hidden lg:table-cell">
                     <div className="space-y-0.5">
-                      <p className="text-xs text-gray-500 flex items-center gap-1"><Mail className="h-3 w-3 text-gray-400" />{emp.email}</p>
-                      {emp.phone && <p className="text-xs text-gray-500 flex items-center gap-1"><Phone className="h-3 w-3 text-gray-400" />{emp.phone}</p>}
+                      <p className="text-xs text-[color:var(--text-4)] flex items-center gap-1"><Mail className="h-3 w-3 text-[color:var(--text-5)]" />{emp.email}</p>
+                      {emp.phone && <p className="text-xs text-[color:var(--text-4)] flex items-center gap-1"><Phone className="h-3 w-3 text-[color:var(--text-5)]" />{emp.phone}</p>}
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+                      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-7 w-7 !rounded-[10px] hover:bg-[rgba(20,22,26,0.05)]"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => navigate(`/staff/human/${emp.id}`)}><Eye className="h-4 w-4 mr-2" />View profile</DropdownMenuItem>
                         <DropdownMenuItem><Pencil className="h-4 w-4 mr-2" />Edit</DropdownMenuItem>
                         <DropdownMenuItem><CheckSquare className="h-4 w-4 mr-2" />Assign to team</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-600" onClick={() => deleteOne(emp.id)}><Trash2 className="h-4 w-4 mr-2" />Remove</DropdownMenuItem>
+                        <DropdownMenuItem className="text-[color:var(--bad-fg)]" onClick={() => deleteOne(emp.id)}><Trash2 className="h-4 w-4 mr-2" />Remove</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </td>
@@ -747,20 +738,20 @@ const EmployeesTab = ({ showAddDialog, setShowAddDialog }: { showAddDialog: bool
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+        <div className="px-4 py-3 border-t border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center justify-between gap-3 flex-wrap text-xs text-[color:var(--text-4)]">
           <div className="flex items-center gap-3">
             <span>{filtered.length > 0 ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} employees` : '0 employees'}{selected.size > 0 ? ` · ${selected.size} selected` : ''}</span>
-            <div className="flex items-center gap-1.5"><span className="text-gray-400">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setEmpPage(1); }} className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
+            <div className="flex items-center gap-1.5"><span className="text-[color:var(--text-5)]">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setEmpPage(1); }} className="h-6 rounded-[6px] border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--text-2)] text-xs px-1 focus:outline-none focus:ring-1 focus:ring-[color:var(--line)] cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
           </div>
           <div className="flex items-center gap-2">
             {(deptFilter !== 'All Departments' || statusFilter !== 'All' || search) && (
-              <button className="text-gray-500 hover:text-gray-900 underline underline-offset-2" onClick={() => { setSearch(''); setDeptFilter('All Departments'); setStatusFilter('All'); setEmpPage(1); }}>Clear filters</button>
+              <button className="text-[color:var(--text-3)] hover:text-[color:var(--ink)] underline underline-offset-2" onClick={() => { setSearch(''); setDeptFilter('All Departments'); setStatusFilter('All'); setEmpPage(1); }}>Clear filters</button>
             )}
             {totalEmpPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setEmpPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
-                {Array.from({ length: totalEmpPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setEmpPage(p)}>{p}</Button>)}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalEmpPages} onClick={() => setEmpPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === 1} onClick={() => setEmpPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
+                {Array.from({ length: totalEmpPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[color:var(--ink)] !text-white !border-transparent hover:!opacity-90' : '!border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]')} onClick={() => setEmpPage(p)}>{p}</Button>)}
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === totalEmpPages} onClick={() => setEmpPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
               </div>
             )}
           </div>
@@ -792,42 +783,36 @@ const TeamsTab = ({ onShowCreate }: { onShowCreate: () => void }) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* One panel, hairline-divided rows */}
+      <div className="plat-list">
         {pagedTeams.map(team => (
-          <Card key={team.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-2">
-                  <div className={`p-2 rounded-lg bg-gradient-to-br ${team.bgColor}`}><Users className={`h-4 w-4 ${team.iconColor}`} /></div>
-                  <div><span className="font-medium">{team.name}</span><p className="text-xs text-gray-500 font-normal mt-1">{team.description}</p></div>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8" onClick={() => handleViewTeam(team.id)}><Eye className="h-4 w-4" /></Button>
-                  <Button variant="ghost" size="icon" className="hover:bg-gray-100 h-8 w-8"><Settings className="h-4 w-4" /></Button>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2"><div className="p-1 rounded bg-gray-100"><Crown className="h-3 w-3 text-amber-600" /></div><span className="text-sm text-gray-700">Leader: {team.leader}</span></div>
-                <div className="flex items-center space-x-2"><div className="p-1 rounded bg-gray-100"><Users className="h-3 w-3 text-blue-600" /></div><span className="text-sm text-gray-700">Human Workers: {team.humanMembers}</span></div>
-                <div className="flex items-center space-x-2"><div className="p-1 rounded bg-gray-100"><Bot className="h-3 w-3 text-green-600" /></div><span className="text-sm text-gray-700">AI Workers: {team.aiWorkers}</span></div>
-                <div className="flex space-x-2">
-                  <Button variant="outline" size="sm" className="flex-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200" onClick={() => handleViewTeam(team.id)}><Eye className="h-3 w-3 mr-1" />View Team</Button>
-                  <Button variant="outline" size="sm" className="text-xs bg-gray-50 hover:bg-gray-100 border-gray-200"><UserPlus className="h-3 w-3" /></Button>
-                </div>
+          <div key={team.id} className="flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-[color:var(--line-soft)] px-5 py-4 transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[12px] bg-[color:var(--sand)]"><Users className="h-4 w-4 text-[color:var(--ink)]" /></div>
+            <div className="min-w-0 flex-1">
+              <span className="text-sm font-semibold text-[color:var(--ink)]">{team.name}</span>
+              <p className="mt-0.5 text-xs font-normal text-[color:var(--text-4)]">{team.description}</p>
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-[color:var(--text-3)]">
+                <span className="flex items-center gap-1.5"><Crown className="h-3 w-3 text-[color:var(--text-5)]" />Leader: {team.leader}</span>
+                <span className="flex items-center gap-1.5"><Users className="h-3 w-3 text-[color:var(--text-5)]" />Human Workers: {team.humanMembers}</span>
+                <span className="flex items-center gap-1.5"><Bot className="h-3 w-3 text-[color:var(--text-5)]" />AI Workers: {team.aiWorkers}</span>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+            <div className="ml-auto flex items-center gap-1.5">
+              <Button variant="outline" size="sm" className="plat-btn-ghost !h-8 !rounded-full !border-[color:var(--line)] !bg-transparent !px-3.5 text-xs" onClick={() => handleViewTeam(team.id)}><Eye className="h-3 w-3 mr-1" />View Team</Button>
+              <Button variant="outline" size="sm" className="plat-btn-ghost !h-8 !rounded-full !border-[color:var(--line)] !bg-transparent !px-3 text-xs"><UserPlus className="h-3 w-3" /></Button>
+              <Button variant="ghost" size="icon" className="!rounded-[10px] hover:bg-[rgba(20,22,26,0.05)] h-8 w-8" onClick={() => handleViewTeam(team.id)}><Eye className="h-4 w-4" /></Button>
+              <Button variant="ghost" size="icon" className="!rounded-[10px] hover:bg-[rgba(20,22,26,0.05)] h-8 w-8"><Settings className="h-4 w-4" /></Button>
+            </div>
+          </div>
         ))}
       </div>
       {totalTeamsPages > 1 && (
-        <div className="flex items-center justify-between mt-6 text-sm text-gray-500">
+        <div className="flex items-center justify-between mt-6 text-sm" style={{ color: 'var(--text-4)' }}>
           <span>Showing {(teamsPage - 1) * TEAMS_PAGE_SIZE + 1}–{Math.min(teamsPage * TEAMS_PAGE_SIZE, teams.length)} of {teams.length} teams</span>
           <div className="flex items-center gap-1">
-            <Button variant="outline" size="icon" className="h-8 w-8 border-gray-200" disabled={teamsPage === 1} onClick={() => setTeamsPage(p => p - 1)}><ChevronLeft className="h-4 w-4" /></Button>
-            {Array.from({ length: totalTeamsPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === teamsPage ? 'default' : 'outline'} size="icon" className={cn('h-8 w-8', p !== teamsPage && 'border-gray-200 text-gray-600')} onClick={() => setTeamsPage(p)}>{p}</Button>)}
-            <Button variant="outline" size="icon" className="h-8 w-8 border-gray-200" disabled={teamsPage === totalTeamsPages} onClick={() => setTeamsPage(p => p + 1)}><ChevronRight className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon" className="h-8 w-8 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={teamsPage === 1} onClick={() => setTeamsPage(p => p - 1)}><ChevronLeft className="h-4 w-4" /></Button>
+            {Array.from({ length: totalTeamsPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === teamsPage ? 'default' : 'outline'} size="icon" className={cn('h-8 w-8 !rounded-full', p === teamsPage ? '!bg-[color:var(--ink)] !text-white !border-transparent hover:!opacity-90' : '!border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]')} onClick={() => setTeamsPage(p)}>{p}</Button>)}
+            <Button variant="outline" size="icon" className="h-8 w-8 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={teamsPage === totalTeamsPages} onClick={() => setTeamsPage(p => p + 1)}><ChevronRight className="h-4 w-4" /></Button>
           </div>
         </div>
       )}
@@ -842,10 +827,10 @@ const HumanTeamsSection = () => {
     <>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">Humans</h2>
-          <p className="text-sm text-gray-500">Manage hybrid teams of human workers and AI assistants</p>
+          <h2 className="text-xl font-semibold">Humans</h2>
+          <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Manage hybrid teams of human workers and AI assistants</p>
         </div>
-        <Button size="sm" onClick={() => setShowAddDialog(true)} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800">
+        <Button size="sm" onClick={() => setShowAddDialog(true)} className="plat-btn !h-8 !rounded-full !bg-[color:var(--ink)] !px-4 !text-xs !text-white hover:!opacity-90">
           <UserPlus className="h-3.5 w-3.5 mr-1.5" />Add Employee
         </Button>
       </div>
@@ -920,21 +905,21 @@ const AgentActivityTable = () => {
   };
 
   const SortIcon = ({ field }: { field: keyof AgentActivityEntry }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-[color:var(--ink)]' : 'text-[color:var(--text-5)] opacity-50')} />
   );
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search activity…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-5)] pointer-events-none" />
+          <Input placeholder="Search activity…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-9 !rounded-[10px] bg-[color:var(--paper)] border-[color:var(--line)] text-[13px] placeholder:text-[color:var(--text-5)] focus-visible:border-[color:var(--ink)] focus-visible:ring-0 focus-visible:ring-offset-0" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[140px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Bot className="h-3.5 w-3.5 text-gray-400" />{groupFilter === 'All Groups' ? 'Group' : groupFilter.replace(' Agent', '')}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[140px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Bot className="h-3.5 w-3.5 opacity-60" />{groupFilter === 'All Groups' ? 'Group' : groupFilter.replace(' Agent', '')}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-56">
@@ -943,9 +928,9 @@ const AgentActivityTable = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[110px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 text-gray-400" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[110px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Filter className="h-3.5 w-3.5 opacity-60" />{statusFilter === 'All' ? 'Status' : statusFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -954,9 +939,9 @@ const AgentActivityTable = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[130px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 text-gray-400" />{catFilter === 'All Categories' ? 'Category' : catFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[130px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 opacity-60" />{catFilter === 'All Categories' ? 'Category' : catFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -964,49 +949,49 @@ const AgentActivityTable = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
+      <Card className="bg-[color:var(--paper)] border-[color:var(--line-soft)] rounded-[14px] shadow-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('task')}>Task <SortIcon field="task" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('status')}>Status <SortIcon field="status" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('group')}>Agent Group <SortIcon field="group" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('category')}>Category <SortIcon field="category" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('date')}>Time <SortIcon field="date" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Duration</th>
+              <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('task')}>Task <SortIcon field="task" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('status')}>Status <SortIcon field="status" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('group')}>Agent Group <SortIcon field="group" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('category')}>Category <SortIcon field="category" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden lg:table-cell" onClick={() => toggleSort('date')}>Time <SortIcon field="date" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden lg:table-cell">Duration</th>
               </tr>
             </thead>
             <tbody>
               {paged.length === 0 ? (
-                <tr><td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">No activity matches your filters.</td></tr>
+                <tr><td colSpan={6} className="px-4 py-12 text-center text-[color:var(--text-4)] text-sm">No activity matches your filters.</td></tr>
               ) : paged.map(entry => (
-                <tr key={entry.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
-                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="p-1.5 rounded bg-gray-100 flex-shrink-0"><Zap className="h-3.5 w-3.5 text-gray-500" /></div><span className="font-medium text-gray-900 truncate max-w-[220px]">{entry.task}</span></div></td>
-                  <td className="px-4 py-3"><span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', ACTIVITY_STATUS_STYLE[entry.status])}>{entry.status}</span></td>
-                  <td className="px-4 py-3 hidden md:table-cell"><div className="flex items-center gap-2"><div className="p-1 rounded bg-gray-100 flex-shrink-0"><Bot className="h-3 w-3 text-gray-500" /></div><span className="text-gray-700 text-xs">{entry.group}</span></div></td>
-                  <td className="px-4 py-3 hidden md:table-cell"><span className="text-gray-600 text-xs">{entry.category}</span></td>
-                  <td className="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">{formatTimeAgo(entry.date)}</td>
-                  <td className="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">{entry.duration}</td>
+                <tr key={entry.id} className="border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors">
+                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="p-1.5 rounded-[8px] bg-[color:var(--sand)] flex-shrink-0"><Zap className="h-3.5 w-3.5 text-[color:var(--text-3)]" /></div><span className="font-medium text-[color:var(--ink)] truncate max-w-[220px]">{entry.task}</span></div></td>
+                  <td className="px-4 py-3"><span className={cn('plat-pill', ACTIVITY_STATUS_STYLE[entry.status])}>{entry.status}</span></td>
+                  <td className="px-4 py-3 hidden md:table-cell"><div className="flex items-center gap-2"><div className="p-1 rounded-[8px] bg-[color:var(--sand)] flex-shrink-0"><Bot className="h-3 w-3 text-[color:var(--text-3)]" /></div><span className="text-[color:var(--text-2)] text-xs">{entry.group}</span></div></td>
+                  <td className="px-4 py-3 hidden md:table-cell"><span className="text-[color:var(--text-3)] text-xs">{entry.category}</span></td>
+                  <td className="px-4 py-3 hidden lg:table-cell text-[color:var(--text-4)] text-xs">{formatTimeAgo(entry.date)}</td>
+                  <td className="px-4 py-3 hidden lg:table-cell text-[color:var(--text-4)] text-xs">{entry.duration}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+        <div className="px-4 py-3 border-t border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center justify-between gap-3 flex-wrap text-xs text-[color:var(--text-4)]">
           <div className="flex items-center gap-3">
             <span>{filtered.length > 0 ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} entries` : '0 entries'}</span>
-            <div className="flex items-center gap-1.5"><span className="text-gray-400">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
+            <div className="flex items-center gap-1.5"><span className="text-[color:var(--text-5)]">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} className="h-6 rounded-[6px] border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--text-2)] text-xs px-1 focus:outline-none focus:ring-1 focus:ring-[color:var(--line)] cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
           </div>
           <div className="flex items-center gap-2">
             {(search || groupFilter !== 'All Groups' || statusFilter !== 'All' || catFilter !== 'All Categories') && (
-              <button className="text-gray-500 hover:text-gray-900 underline underline-offset-2" onClick={() => { setSearch(''); setGroupFilter('All Groups'); setStatusFilter('All'); setCatFilter('All Categories'); setPage(1); }}>Clear filters</button>
+              <button className="text-[color:var(--text-3)] hover:text-[color:var(--ink)] underline underline-offset-2" onClick={() => { setSearch(''); setGroupFilter('All Groups'); setStatusFilter('All'); setCatFilter('All Categories'); setPage(1); }}>Clear filters</button>
             )}
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>{p}</Button>)}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[color:var(--ink)] !text-white !border-transparent hover:!opacity-90' : '!border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]')} onClick={() => setPage(p)}>{p}</Button>)}
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
               </div>
             )}
           </div>
@@ -1073,34 +1058,34 @@ const AgentsListTab = ({ agents, onShowCreate }: { agents: any[]; onShowCreate: 
     : '—';
 
   const SortIcon = ({ field }: { field: keyof AgentEntry }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-[color:var(--ink)]' : 'text-[color:var(--text-5)] opacity-50')} />
   );
 
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: 'Total Agents',      value: agents.length, color: 'text-gray-900',  bg: 'bg-gray-100' },
-          { label: 'Total Executions',  value: totalExec,     color: 'text-blue-700',  bg: 'bg-blue-50'  },
-          { label: 'Avg Efficiency',    value: avgEff,        color: 'text-green-700', bg: 'bg-green-50' },
-          { label: 'Categories',        value: new Set(agents.map(a => a.purpose)).size, color: 'text-violet-700', bg: 'bg-violet-50' },
+          { label: 'Total Agents',      value: agents.length, color: 'text-[color:var(--ink)]',   bg: '' },
+          { label: 'Total Executions',  value: totalExec,     color: 'text-[color:var(--ink)]',   bg: '' },
+          { label: 'Avg Efficiency',    value: avgEff,        color: 'text-[color:var(--ok-fg)]', bg: '' },
+          { label: 'Categories',        value: new Set(agents.map(a => a.purpose)).size, color: 'text-[color:var(--ink)]', bg: '' },
         ].map(s => (
-          <Card key={s.label} className={cn('border-gray-200/60', s.bg)}>
-            <CardContent className="p-4"><p className="text-xs text-gray-500 mb-1">{s.label}</p><p className={cn('text-2xl font-semibold', s.color)}>{s.value}</p></CardContent>
+          <Card key={s.label} className={cn('rounded-[14px] border-[color:var(--line-soft)] shadow-none bg-[color:var(--paper)]', s.bg)}>
+            <CardContent className="p-4"><p className="text-xs mb-1" style={{ color: 'var(--text-4)' }}>{s.label}</p><p className={cn('plat-num !text-[26px]', s.color)}>{s.value}</p></CardContent>
           </Card>
         ))}
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input placeholder="Search agent groups…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-full bg-[#f1f3f4] border-transparent focus-visible:border-[#8fc4e4] focus-visible:ring-1 focus-visible:ring-[#8fc4e4]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-5)] pointer-events-none" />
+          <Input placeholder="Search agent groups…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-9 !rounded-[10px] bg-[color:var(--paper)] border-[color:var(--line)] text-[13px] placeholder:text-[color:var(--text-5)] focus-visible:border-[color:var(--ink)] focus-visible:ring-0 focus-visible:ring-offset-0" />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-[#f1f3f4] !border-transparent rounded-full text-gray-700 min-w-[130px] justify-between hover:!bg-gray-200 hover:!text-gray-700">
-              <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 text-gray-400" />{purposeFilter === 'All Purposes' ? 'Purpose' : purposeFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+            <Button variant="outline" size="sm" className="!rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)] min-w-[130px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
+              <span className="flex items-center gap-1.5"><Activity className="h-3.5 w-3.5 opacity-60" />{purposeFilter === 'All Purposes' ? 'Purpose' : purposeFilter}</span>
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
@@ -1108,49 +1093,49 @@ const AgentsListTab = ({ agents, onShowCreate }: { agents: any[]; onShowCreate: 
           </DropdownMenuContent>
         </DropdownMenu>
         <div className="flex-1" />
-        <Button size="sm" onClick={onShowCreate} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800">
+        <Button size="sm" onClick={onShowCreate} className="plat-btn !h-8 !rounded-full !bg-[color:var(--ink)] !px-4 !text-xs !text-white hover:!opacity-90">
           <Plus className="h-3.5 w-3.5 mr-1.5" />Deploy Agent
         </Button>
       </div>
 
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
+      <Card className="bg-[color:var(--paper)] border-[color:var(--line-soft)] rounded-[14px] shadow-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="w-10 px-4 py-3"><input type="checkbox" checked={selected.size === paged.length && paged.length > 0} onChange={toggleAll} className="rounded border-gray-300 cursor-pointer" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('name')}>Agent Group <SortIcon field="name" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('purpose')}>Purpose <SortIcon field="purpose" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('executions')}>Executions <SortIcon field="executions" /></th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('efficiency')}>Efficiency <SortIcon field="efficiency" /></th>
+              <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                <th className="w-10 px-4 py-3"><input type="checkbox" checked={selected.size === paged.length && paged.length > 0} onChange={toggleAll} className="rounded-[4px] border-[color:var(--line)] cursor-pointer" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('name')}>Agent Group <SortIcon field="name" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('purpose')}>Purpose <SortIcon field="purpose" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('executions')}>Executions <SortIcon field="executions" /></th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden lg:table-cell" onClick={() => toggleSort('efficiency')}>Efficiency <SortIcon field="efficiency" /></th>
                 <th className="w-10 px-4 py-3" />
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">No agent groups match your filters.</td></tr>
+                <tr><td colSpan={6} className="px-4 py-12 text-center text-[color:var(--text-4)] text-sm">No agent groups match your filters.</td></tr>
               ) : paged.map(agent => (
-                <tr key={agent.id} className={cn('border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors', selected.has(agent.id) && 'bg-blue-50/40')}>
-                  <td className="px-4 py-3"><input type="checkbox" checked={selected.has(agent.id)} onChange={() => toggleOne(agent.id)} className="rounded border-gray-300 cursor-pointer" /></td>
+                <tr key={agent.id} className={cn('border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors', selected.has(agent.id) && 'bg-[rgba(20,22,26,0.04)]')}>
+                  <td className="px-4 py-3"><input type="checkbox" checked={selected.has(agent.id)} onChange={() => toggleOne(agent.id)} className="rounded-[4px] border-[color:var(--line)] cursor-pointer" /></td>
                   <td className="px-4 py-3">
                     <div className="flex items-center space-x-3">
-                      <div className={cn('p-2 rounded-lg bg-gradient-to-br flex-shrink-0', agent.bgColor)}><Bot className={cn('h-4 w-4', agent.iconColor)} /></div>
-                      <span className="font-medium text-gray-900">{agent.name}</span>
+                      <div className="p-2 rounded-[10px] bg-[color:var(--sand)] flex-shrink-0"><Bot className="h-4 w-4 text-[color:var(--ink)]" /></div>
+                      <span className="font-medium text-[color:var(--ink)]">{agent.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 hidden md:table-cell"><span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">{agent.purpose}</span></td>
-                  <td className="px-4 py-3 hidden md:table-cell text-gray-700">{agent.executions.toLocaleString()}</td>
+                  <td className="px-4 py-3 hidden md:table-cell"><span className="plat-pill plat-pill-mute">{agent.purpose}</span></td>
+                  <td className="px-4 py-3 hidden md:table-cell text-[color:var(--text-2)]">{agent.executions.toLocaleString()}</td>
                   <td className="px-4 py-3 hidden lg:table-cell">
-                    <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', agent.efficiency === 'N/A' ? 'bg-gray-100 text-gray-500 border-gray-200' : 'bg-green-100 text-green-700 border-green-200')}>{agent.efficiency}</span>
+                    <span className={cn('plat-pill', agent.efficiency === 'N/A' ? 'plat-pill-mute' : 'plat-pill-ok')}>{agent.efficiency}</span>
                   </td>
                   <td className="px-4 py-3">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+                      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-7 w-7 !rounded-[10px] hover:bg-[rgba(20,22,26,0.05)]"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem><Settings className="h-4 w-4 mr-2" />Configure</DropdownMenuItem>
                         <DropdownMenuItem><Eye className="h-4 w-4 mr-2" />Monitor</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-600"><Trash2 className="h-4 w-4 mr-2" />Remove</DropdownMenuItem>
+                        <DropdownMenuItem className="text-[color:var(--bad-fg)]"><Trash2 className="h-4 w-4 mr-2" />Remove</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </td>
@@ -1159,20 +1144,20 @@ const AgentsListTab = ({ agents, onShowCreate }: { agents: any[]; onShowCreate: 
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+        <div className="px-4 py-3 border-t border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center justify-between gap-3 flex-wrap text-xs text-[color:var(--text-4)]">
           <div className="flex items-center gap-3">
             <span>{filtered.length > 0 ? `Showing ${(safePage - 1) * pageSize + 1}–${Math.min(safePage * pageSize, filtered.length)} of ${filtered.length} agents` : '0 agents'}{selected.size > 0 ? ` · ${selected.size} selected` : ''}</span>
-            <div className="flex items-center gap-1.5"><span className="text-gray-400">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
+            <div className="flex items-center gap-1.5"><span className="text-[color:var(--text-5)]">Rows:</span><select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} className="h-6 rounded-[6px] border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--text-2)] text-xs px-1 focus:outline-none focus:ring-1 focus:ring-[color:var(--line)] cursor-pointer">{[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
           </div>
           <div className="flex items-center gap-2">
             {(search || purposeFilter !== 'All Purposes') && (
-              <button className="text-gray-500 hover:text-gray-900 underline underline-offset-2" onClick={() => { setSearch(''); setPurposeFilter('All Purposes'); setPage(1); }}>Clear filters</button>
+              <button className="text-[color:var(--text-3)] hover:text-[color:var(--ink)] underline underline-offset-2" onClick={() => { setSearch(''); setPurposeFilter('All Purposes'); setPage(1); }}>Clear filters</button>
             )}
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>{p}</Button>)}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="h-3.5 w-3.5" /></Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs !rounded-full', p === safePage ? '!bg-[color:var(--ink)] !text-white !border-transparent hover:!opacity-90' : '!border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]')} onClick={() => setPage(p)}>{p}</Button>)}
+                <Button variant="outline" size="icon" className="h-7 w-7 !rounded-full !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}><ChevronRight className="h-3.5 w-3.5" /></Button>
               </div>
             )}
           </div>
@@ -1184,30 +1169,25 @@ const AgentsListTab = ({ agents, onShowCreate }: { agents: any[]; onShowCreate: 
 
 const WorkerGroupsGrid = ({ agents }: { agents: any[] }) => (
   <>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {/* One panel, hairline-divided rows */}
+    <div className="plat-list">
       {agents.map(agent => (
-        <Card key={agent.id} className="bg-white/80 border-gray-200/50 hover:shadow-lg transition-all duration-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-2">
-                <div className={`p-2 rounded-lg bg-gradient-to-br ${agent.bgColor}`}><Bot className={`h-4 w-4 ${agent.iconColor}`} /></div>
-                <span className="font-medium">{agent.name}</span>
-              </div>
-              <Button variant="ghost" size="icon" className="hover:bg-muted"><Settings className="h-4 w-4" /></Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="space-y-3">
-              <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">{agent.purpose}</span>
-              <div className="flex items-center space-x-2"><div className="p-1 rounded bg-muted"><Activity className="h-3 w-3 text-blue-600" /></div><span className="text-sm text-muted-foreground">Executions: {agent.executions}</span></div>
-              <div className="flex items-center space-x-2"><div className="p-1 rounded bg-muted"><Zap className="h-3 w-3 text-green-600" /></div><span className="text-sm text-muted-foreground">Efficiency: {agent.efficiency}</span></div>
-              <div className="flex space-x-2">
-                <Button variant="outline" size="sm" className="flex-1 text-xs">Configure</Button>
-                <Button variant="outline" size="sm" className="flex-1 text-xs">Monitor</Button>
-              </div>
+        <div key={agent.id} className="flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-[color:var(--line-soft)] px-5 py-4 transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[12px] bg-[color:var(--sand)]"><Bot className="h-4 w-4 text-[color:var(--ink)]" /></div>
+          <div className="min-w-0 flex-1">
+            <span className="text-sm font-semibold text-[color:var(--ink)]">{agent.name}</span>
+            <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-[color:var(--text-3)]">
+              <span className="plat-pill plat-pill-mute">{agent.purpose}</span>
+              <span className="flex items-center gap-1.5"><Activity className="h-3 w-3 text-[color:var(--text-5)]" />Executions: {agent.executions}</span>
+              <span className="flex items-center gap-1.5"><Zap className="h-3 w-3 text-[color:var(--text-5)]" />Efficiency: {agent.efficiency}</span>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="ml-auto flex items-center gap-1.5">
+            <Button variant="outline" size="sm" className="plat-btn-ghost !h-8 !rounded-full !border-[color:var(--line)] !bg-transparent !px-3.5 text-xs">Configure</Button>
+            <Button variant="outline" size="sm" className="plat-btn-ghost !h-8 !rounded-full !border-[color:var(--line)] !bg-transparent !px-3.5 text-xs">Monitor</Button>
+            <Button variant="ghost" size="icon" className="!rounded-[10px] hover:bg-[rgba(20,22,26,0.05)] h-8 w-8"><Settings className="h-4 w-4" /></Button>
+          </div>
+        </div>
       ))}
     </div>
   </>
@@ -1227,19 +1207,19 @@ const WorkerGroupsSection = () => {
   return (
     <>
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Teams</h2>
-        <p className="text-sm text-gray-500">Manage hybrid teams of human workers and AI assistants</p>
+        <h2 className="text-xl font-semibold">Teams</h2>
+        <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Manage hybrid teams of human workers and AI assistants</p>
       </div>
-      <div className="flex items-center justify-between border-b border-gray-100 mb-6 py-2">
+      <div className="flex items-center justify-between border-b border-[color:var(--line-soft)] mb-6 py-2">
         <div className="flex items-center gap-1">
           {TABS.map(({ key, label, icon: Icon }) => (
-            <button key={key} onClick={() => setActiveTab(key)} className={cn('flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors', activeTab === key ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]' : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900')}>
+            <button key={key} onClick={() => setActiveTab(key)} className={cn('flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors', activeTab === key ? 'border border-transparent bg-[color:var(--ink)] text-white hover:opacity-90' : 'border border-[color:var(--line)] text-[color:var(--text-2)] hover:bg-[rgba(20,22,26,0.04)] hover:text-[color:var(--ink)]')}>
               <Icon className="h-3.5 w-3.5" />{label}
             </button>
           ))}
         </div>
         {activeTab === 'groups' && (
-          <Button size="icon" onClick={() => setShowCreateTeamDialog(true)} className="bg-[#bdd8ec] hover:bg-[#a5c8e0] text-gray-800 h-8 w-8 rounded-full">
+          <Button size="icon" onClick={() => setShowCreateTeamDialog(true)} className="plat-btn !h-8 !w-8 !rounded-full !bg-[color:var(--ink)] !p-0 !text-white hover:!opacity-90">
             <Plus className="h-4 w-4" />
           </Button>
         )}
@@ -1272,30 +1252,31 @@ const Staff = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col bg-white">
-            <main className="flex-1 p-6">
+          <SidebarInset className="flex-1 flex flex-col bg-transparent">
+            <main className="flex-1 p-6 lg:p-8">
 
               {/* Page header */}
               <div className="mb-6">
-                <h1 className="text-3xl font-light text-gray-900">Staff</h1>
-                <p className="text-gray-600">Manage your entire workforce — AI workers, human teams, and agent groups</p>
+                <p className="plat-crumb">3days.staff</p>
+                <h1 className="mt-1 text-3xl">Staff</h1>
+                <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Manage your entire workforce — AI workers, human teams, and agent groups</p>
               </div>
 
               {/* Section switcher */}
-              <div className="inline-flex items-center gap-1 mb-8">
+              <div className="inline-flex items-center gap-1.5 mb-8">
                 {SECTIONS.map(({ key, label, icon: Icon }) => (
                   <button
                     key={key}
                     onClick={() => setActiveSection(key)}
                     className={cn(
-                      'flex h-9 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors',
+                      'flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium transition-colors',
                       activeSection === key
-                        ? 'bg-[#bdd8ec] text-gray-800 hover:bg-[#a5c8e0]'
-                        : 'text-gray-500 hover:bg-[#f1f3f4] hover:text-gray-900'
+                        ? 'border-transparent bg-[color:var(--ink)] text-white hover:opacity-90'
+                        : 'border-[color:var(--line)] text-[color:var(--text-2)] hover:bg-[rgba(20,22,26,0.04)] hover:text-[color:var(--ink)]'
                     )}
                   >
                     <Icon className="h-3.5 w-3.5" />

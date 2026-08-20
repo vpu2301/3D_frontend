@@ -80,33 +80,38 @@ export function folderIcon() {
   return Folder;
 }
 
-/** Tailwind text color for a file kind icon. */
+/**
+ * Tailwind text color for a file kind icon.
+ *
+ * Deliberately desaturated: the platform surface is neutral, so file-type
+ * coding survives only as a low-chroma hint, never as a colour accent.
+ */
 export function fileKindColor(kind: FileKind): string {
   switch (kind) {
     case 'image':
-      return 'text-pink-500';
+      return 'text-rose-400/80';
     case 'video':
-      return 'text-purple-500';
+      return 'text-violet-400/80';
     case 'audio':
-      return 'text-violet-500';
+      return 'text-indigo-400/80';
     case 'pdf':
-      return 'text-red-500';
+      return 'text-red-400/80';
     case 'markdown':
-      return 'text-emerald-500';
+      return 'text-emerald-500/70';
     case 'text':
-      return 'text-gray-500';
+      return 'text-[var(--text-4)]';
     case 'code':
-      return 'text-orange-500';
+      return 'text-amber-500/80';
     case 'archive':
-      return 'text-amber-600';
+      return 'text-amber-600/70';
     case 'office':
-      return 'text-blue-600';
+      return 'text-blue-500/70';
     case 'doc':
-      return 'text-blue-500';
+      return 'text-blue-400/80';
     case 'note':
-      return 'text-amber-500';
+      return 'text-amber-400/80';
     default:
-      return 'text-gray-400';
+      return 'text-[var(--text-5)]';
   }
 }
 

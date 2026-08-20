@@ -105,22 +105,22 @@ export default function FilePreview({ itemId, siblings, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="m-auto flex h-[90vh] w-[95vw] max-w-7xl flex-col overflow-hidden rounded-lg bg-white shadow-2xl"
+        className="m-auto flex h-[90vh] w-[95vw] max-w-7xl flex-col overflow-hidden rounded-[14px] bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top bar */}
-        <header className="flex shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-4 py-2.5">
+        <header className="flex shrink-0 items-center justify-between gap-2 border-b border-[var(--line-soft)] px-4 py-2.5">
           <div className="flex min-w-0 items-center gap-2">
             <Icon className={cn('h-4 w-4', fileKindColor(kind))} />
-            <span className="truncate text-sm font-medium text-gray-900">{item.name}</span>
-            {item.starred && <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />}
+            <span className="truncate text-[13.5px] font-semibold text-[var(--ink)]">{item.name}</span>
+            {item.starred && <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />}
           </div>
           <div className="flex items-center gap-1">
             {item.sourceModule && (
               <button
                 type="button"
                 onClick={openInSourceModule}
-                className="flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-xs hover:bg-gray-50"
+                className="plat-btn-ghost h-8 px-3"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
                 Open in {item.sourceModule === 'docs' ? 'Docs' : 'Notes'}
@@ -129,22 +129,22 @@ export default function FilePreview({ itemId, siblings, onClose }: Props) {
             <button
               type="button"
               onClick={() => star(item.id)}
-              className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100"
+              className="rounded-[8px] p-1.5 text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
               aria-label={item.starred ? 'Unstar' : 'Star'}
             >
-              <Star className={cn('h-4 w-4', item.starred && 'fill-yellow-400 text-yellow-400')} />
+              <Star className={cn('h-4 w-4', item.starred && 'fill-amber-400 text-amber-400')} />
             </button>
             <button
               type="button"
               onClick={() => setShareTargetId(item.id)}
-              className="flex items-center gap-1 rounded-md p-1.5 text-gray-600 hover:bg-gray-100"
+              className="flex items-center gap-1 rounded-[8px] p-1.5 text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
             >
               <Share2 className="h-4 w-4" />
             </button>
             <button
               type="button"
               onClick={onDownload}
-              className="flex items-center gap-1 rounded-md p-1.5 text-gray-600 hover:bg-gray-100"
+              className="flex items-center gap-1 rounded-[8px] p-1.5 text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
               aria-label="Download"
             >
               <Download className="h-4 w-4" />
@@ -157,19 +157,19 @@ export default function FilePreview({ itemId, siblings, onClose }: Props) {
                   onClose();
                 }
               }}
-              className="rounded-md p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600"
+              className="rounded-[8px] p-1.5 text-[var(--text-4)] hover:bg-[rgba(179,56,46,0.07)] hover:text-[var(--bad-fg)]"
               aria-label="Trash"
             >
               <Trash2 className="h-4 w-4" />
             </button>
-            <div className="mx-1 h-5 w-px bg-gray-200" />
+            <div className="mx-1 h-5 w-px bg-[var(--line)]" />
             <button
               type="button"
               onClick={() => {
                 const idx = siblings.indexOf(itemId);
                 if (idx > 0) setPreviewId(siblings[idx - 1]);
               }}
-              className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100"
+              className="rounded-[8px] p-1.5 text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
               aria-label="Previous"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -180,7 +180,7 @@ export default function FilePreview({ itemId, siblings, onClose }: Props) {
                 const idx = siblings.indexOf(itemId);
                 if (idx < siblings.length - 1) setPreviewId(siblings[idx + 1]);
               }}
-              className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100"
+              className="rounded-[8px] p-1.5 text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
               aria-label="Next"
             >
               <ChevronRight className="h-4 w-4" />
@@ -188,7 +188,7 @@ export default function FilePreview({ itemId, siblings, onClose }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100"
+              className="rounded-[8px] p-1.5 text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
@@ -198,21 +198,23 @@ export default function FilePreview({ itemId, siblings, onClose }: Props) {
 
         <div className="flex flex-1 overflow-hidden">
           {/* Body */}
-          <div className="flex flex-1 items-stretch overflow-auto bg-gray-50">
+          <div className="flex flex-1 items-stretch overflow-auto bg-[var(--sand)]">
             <PreviewBody item={item} blobUrl={blobUrl} />
           </div>
 
           {/* Right rail */}
-          <aside className="flex w-80 shrink-0 flex-col border-l border-gray-200 bg-white">
-            <div className="flex border-b border-gray-200 text-xs">
+          <aside className="flex w-80 shrink-0 flex-col border-l border-[var(--line-soft)]">
+            <div className="flex border-b border-[var(--line-soft)] text-xs">
               {(['details', 'activity', 'ai'] as const).map((t) => (
                 <button
                   key={t}
                   type="button"
                   onClick={() => setPreviewTab(t)}
                   className={cn(
-                    'flex-1 px-3 py-2 capitalize transition-colors',
-                    previewTab === t ? 'border-b-2 border-blue-500 font-medium text-gray-900' : 'text-gray-500 hover:bg-gray-50',
+                    'flex-1 px-3 py-2.5 capitalize transition-colors',
+                    previewTab === t
+                      ? 'border-b-2 border-[var(--ink)] font-semibold text-[var(--ink)]'
+                      : 'text-[var(--text-4)] hover:text-[var(--ink)]',
                   )}
                 >
                   {t === 'ai' ? (
@@ -225,7 +227,7 @@ export default function FilePreview({ itemId, siblings, onClose }: Props) {
                 </button>
               ))}
             </div>
-            <div className="flex-1 overflow-y-auto p-3">
+            <div className="flex-1 overflow-y-auto p-4">
               {previewTab === 'details' && <DetailsPanel item={item} />}
               {previewTab === 'activity' && <ActivityPanel item={item} />}
               {previewTab === 'ai' && <AskAboutFile item={item} />}
@@ -261,7 +263,7 @@ function DetailsPanel({ item }: { item: DriveItem }) {
         <Section label="Tags">
           <div className="flex flex-wrap gap-1">
             {item.tags.map((t) => (
-              <span key={t} className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-gray-700">
+              <span key={t} className="rounded-full bg-[var(--sand-deep)] px-2 py-0.5 text-[11px] text-[var(--text-2)]">
                 #{t}
               </span>
             ))}
@@ -274,7 +276,7 @@ function DetailsPanel({ item }: { item: DriveItem }) {
             {item.sharedWith.map((p) => (
               <li key={p.userId} className="flex items-center justify-between">
                 <span>{p.userId}</span>
-                <span className="text-gray-500">{p.role}</span>
+                <span className="text-[var(--text-4)]">{p.role}</span>
               </li>
             ))}
           </ul>
@@ -285,8 +287,8 @@ function DetailsPanel({ item }: { item: DriveItem }) {
         <Section label="Linked from">
           <ul className="space-y-1">
             {linkedFromNotes.map((n) => (
-              <li key={n.id} className="flex items-center gap-1.5 text-xs text-gray-700">
-                <StickyNote className="h-3 w-3 text-amber-500" />
+              <li key={n.id} className="flex items-center gap-1.5 text-xs text-[var(--text-2)]">
+                <StickyNote className="h-3 w-3 text-[var(--text-4)]" />
                 <span className="truncate">{n.title || 'Untitled note'}</span>
               </li>
             ))}
@@ -300,7 +302,7 @@ function DetailsPanel({ item }: { item: DriveItem }) {
             {item.versions.map((v) => (
               <li key={v.id} className="flex items-center justify-between">
                 <span>{new Date(v.uploadedAt).toLocaleString()}</span>
-                <span className="text-gray-500">{formatBytes(v.size)}</span>
+                <span className="text-[var(--text-4)]">{formatBytes(v.size)}</span>
               </li>
             ))}
           </ul>
@@ -313,8 +315,8 @@ function DetailsPanel({ item }: { item: DriveItem }) {
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500">{label}</div>
-      <div className="text-sm text-gray-800">{children}</div>
+      <div className="plat-eyebrow mb-1.5">{label}</div>
+      <div className="text-sm text-[var(--text-1)]">{children}</div>
     </div>
   );
 }
@@ -322,19 +324,19 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 function ActivityPanel({ item }: { item: DriveItem }) {
   const activity = item.activity ?? [];
   if (!activity.length) {
-    return <div className="text-xs italic text-gray-500">No activity recorded yet.</div>;
+    return <div className="text-xs italic text-[var(--text-4)]">No activity recorded yet.</div>;
   }
   return (
     <ul className="space-y-2">
       {activity.map((a) => (
         <li key={a.id} className="flex items-start gap-2 text-xs">
-          <div className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-blue-400" />
+          <div className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--text-5)]" />
           <div className="min-w-0 flex-1">
-            <div className="text-gray-900">
-              <span className="font-medium">{a.by}</span> {a.kind}
+            <div className="text-[var(--ink)]">
+              <span className="font-semibold">{a.by}</span> {a.kind}
             </div>
-            <div className="text-[10px] text-gray-500">{new Date(a.at).toLocaleString()}</div>
-            {a.detail && <div className="text-[11px] text-gray-600">{a.detail}</div>}
+            <div className="text-[10px] text-[var(--text-5)]">{new Date(a.at).toLocaleString()}</div>
+            {a.detail && <div className="text-[11px] text-[var(--text-3)]">{a.detail}</div>}
           </div>
         </li>
       ))}
@@ -389,7 +391,7 @@ function AskAboutFile({ item }: { item: DriveItem }) {
   return (
     <div className="flex h-full flex-col">
       {item.summary?.extended && (
-        <div className="mb-3 rounded-md border border-blue-100 bg-blue-50 p-3 text-xs leading-relaxed text-blue-900">
+        <div className="mb-3 rounded-[12px] border border-[var(--line-soft)] bg-[var(--sand)] p-3 text-xs leading-relaxed text-[var(--text-1)]">
           <div className="mb-1 flex items-center gap-1 font-medium">
             <Sparkles className="h-3 w-3" /> AI summary
           </div>
@@ -398,7 +400,7 @@ function AskAboutFile({ item }: { item: DriveItem }) {
       )}
       <div className="flex-1 space-y-2 overflow-y-auto">
         {messages.length === 0 ? (
-          <div className="rounded-md bg-gray-50 p-3 text-xs text-gray-600">
+          <div className="rounded-[12px] border border-[var(--line-soft)] bg-[var(--sand)] p-3 text-xs text-[var(--text-3)]">
             Ask anything about this file. Mock AI will stream a plausible answer with citations.
           </div>
         ) : (
@@ -406,8 +408,10 @@ function AskAboutFile({ item }: { item: DriveItem }) {
             <div
               key={i}
               className={cn(
-                'rounded-md px-2.5 py-2 text-xs',
-                m.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900',
+                'rounded-[10px] px-2.5 py-2 text-xs',
+                m.role === 'user'
+                  ? 'bg-[var(--ink)] text-white'
+                  : 'border border-[var(--line-soft)] bg-white text-[var(--ink)]',
               )}
             >
               <div className="whitespace-pre-wrap">{m.content || (m.role === 'assistant' ? 'Thinking…' : '')}</div>
@@ -427,12 +431,12 @@ function AskAboutFile({ item }: { item: DriveItem }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about this file…"
-            className="flex-1 rounded-md border border-gray-200 bg-white px-2 py-1.5 text-xs focus:border-blue-400 focus:outline-none"
+            className="flex-1 rounded-[10px] border border-[var(--line)] bg-white px-2.5 py-1.5 text-xs text-[var(--ink)] placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:outline-none"
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="rounded-md bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            className="rounded-full bg-[var(--ink)] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-85 disabled:opacity-35"
           >
             Ask
           </button>

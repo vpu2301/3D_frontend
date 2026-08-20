@@ -95,13 +95,13 @@ const Partnerships = () => {
   };
 
   return (
-    <section className="py-32 bg-gradient-to-b from-white to-gray-50 px-4">
+    <section className="py-32 bg-gradient-to-b from-[color:var(--paper)] to-[color:var(--sand)] px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <h2 className="text-6xl font-light text-gray-900 mb-8 tracking-tight pricing-title">
+          <h2 className="text-6xl font-light text-[color:var(--ink)] mb-8 tracking-tight pricing-title">
             Trusted by Industry Leaders
           </h2>
-          <p className="text-2xl text-gray-600 max-w-4xl mx-auto font-light pricing-text">
+          <p className="text-2xl text-[color:var(--text-2)] max-w-4xl mx-auto font-light pricing-text">
             Join thousands of companies that trust our AI workers to transform their operations.
           </p>
         </div>
@@ -122,7 +122,7 @@ const Partnerships = () => {
             <CarouselContent className="-ml-2 md:-ml-4">
               {partners.map((partner, index) => (
                 <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/5">
-                  <div className="flex items-center justify-center p-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover-lift animate-fade-in h-32">
+                  <div className="flex items-center justify-center p-8 bg-[color:var(--paper)] backdrop-blur-sm rounded-[28px] shadow-sm hover:shadow-md transition-all duration-300 hover-lift animate-fade-in h-32">
                     <img
                       src={partner.logo}
                       alt={`${partner.name} logo`}
@@ -131,7 +131,7 @@ const Partnerships = () => {
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
                         const fallback = document.createElement('div');
-                        fallback.className = 'h-16 w-40 bg-gray-200 rounded flex items-center justify-center text-lg text-gray-500 font-medium';
+                        fallback.className = 'h-16 w-40 bg-[color:var(--sand)] rounded flex items-center justify-center text-lg text-[color:var(--text-2)] font-medium';
                         fallback.textContent = partner.name;
                         target.parentNode?.appendChild(fallback);
                       }}
@@ -146,38 +146,38 @@ const Partnerships = () => {
         <div className="text-center mt-20">
           <div className="flex flex-col sm:flex-row gap-12 justify-center items-center">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 bg-[color:var(--blue-100)] rounded-[28px] flex items-center justify-center">
+                <svg className="w-8 h-8 text-[color:var(--blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
               <div>
-                <div className="text-3xl font-semibold text-gray-900">99.9%</div>
-                <div className="text-lg text-gray-600">Uptime SLA</div>
+                <div className="text-3xl font-semibold text-[color:var(--ink)]">99.9%</div>
+                <div className="text-lg text-[color:var(--text-2)]">Uptime SLA</div>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 bg-[color:var(--blue-100)] rounded-[28px] flex items-center justify-center">
+                <svg className="w-8 h-8 text-[color:var(--blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <div className="text-3xl font-semibold text-gray-900">SOC 2</div>
-                <div className="text-lg text-gray-600">Compliant</div>
+                <div className="text-3xl font-semibold text-[color:var(--ink)]">SOC 2</div>
+                <div className="text-lg text-[color:var(--text-2)]">Compliant</div>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center">
-                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 bg-[color:var(--blue-100)] rounded-[28px] flex items-center justify-center">
+                <svg className="w-8 h-8 text-[color:var(--blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
               <div>
-                <div className="text-3xl font-semibold text-gray-900">GDPR</div>
-                <div className="text-lg text-gray-600">Ready</div>
+                <div className="text-3xl font-semibold text-[color:var(--ink)]">GDPR</div>
+                <div className="text-lg text-[color:var(--text-2)]">Ready</div>
               </div>
             </div>
           </div>

@@ -40,15 +40,15 @@ export default function ShareModal({ docTitle }: Props) {
       onClick={() => setShareOpen(false)}
     >
       <div
-        className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-5 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+        className="w-full max-w-md rounded-[14px] border border-[var(--line-soft)] bg-white p-5 shadow-[0_16px_48px_rgba(20,22,26,0.16)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="font-semibold">Share "{docTitle}"</h3>
+          <h3 className="font-semibold text-[var(--ink)]">Share "{docTitle}"</h3>
           <button
             type="button"
             onClick={() => setShareOpen(false)}
-            className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           >
             <X className="h-4 w-4" />
           </button>
@@ -61,12 +61,12 @@ export default function ShareModal({ docTitle }: Props) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Add people by email…"
-            className="flex-1 rounded-md border border-zinc-200 bg-white px-2 py-1.5 text-sm focus:border-blue-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900"
+            className="flex-1 rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] px-2.5 py-1.5 text-sm text-[var(--ink)] placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:bg-white focus:outline-none"
           />
           <select
             value={access}
             onChange={(e) => setAccess(e.target.value as any)}
-            className="rounded-md border border-zinc-200 bg-white px-2 py-1.5 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+            className="rounded-[10px] border border-[var(--line-soft)] bg-white px-2 py-1.5 text-sm text-[var(--ink)] focus:border-[var(--ink)] focus:outline-none"
           >
             <option value="view">Can view</option>
             <option value="comment">Can comment</option>
@@ -74,7 +74,7 @@ export default function ShareModal({ docTitle }: Props) {
           </select>
           <button
             type="submit"
-            className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+            className="plat-btn h-9 px-4"
           >
             Invite
           </button>
@@ -85,22 +85,22 @@ export default function ShareModal({ docTitle }: Props) {
             {invited.map((p, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between rounded-md bg-zinc-50 px-2 py-1 text-sm dark:bg-zinc-800"
+                className="flex items-center justify-between rounded-[10px] bg-[var(--sand)] px-2.5 py-1.5 text-sm text-[var(--ink)]"
               >
                 <span>{p.email}</span>
-                <span className="text-xs text-zinc-500">{p.access}</span>
+                <span className="text-xs text-[var(--text-4)]">{p.access}</span>
               </div>
             ))}
           </div>
         )}
 
-        <div className="mb-3 rounded-md border border-zinc-200 p-3 dark:border-zinc-700">
+        <div className="mb-3 rounded-[12px] border border-[var(--line-soft)] p-3">
           <div className="mb-2 flex items-center justify-between text-sm">
-            <span>Anyone with the link</span>
+            <span className="text-[var(--ink)]">Anyone with the link</span>
             <select
               value={access}
               onChange={(e) => setAccess(e.target.value as any)}
-              className="rounded-md border border-zinc-200 bg-white px-2 py-0.5 text-xs dark:border-zinc-700 dark:bg-zinc-900"
+              className="rounded-[10px] border border-[var(--line-soft)] bg-white px-2 py-0.5 text-xs text-[var(--ink)] focus:border-[var(--ink)] focus:outline-none"
             >
               <option value="view">Can view</option>
               <option value="comment">Can comment</option>
@@ -111,28 +111,28 @@ export default function ShareModal({ docTitle }: Props) {
             <input
               readOnly
               value={link}
-              className="flex-1 rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-xs dark:border-zinc-700 dark:bg-zinc-800"
+              className="flex-1 rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] px-2 py-1.5 text-xs text-[var(--text-2)]"
             />
             <button
               type="button"
               onClick={onCopy}
-              className="flex items-center gap-1 rounded-md border border-zinc-200 px-2 py-1 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
+              className="plat-btn-ghost h-8 px-3 text-[11.5px]"
             >
-              {copied ? <Check className="h-3 w-3 text-green-600" /> : <Copy className="h-3 w-3" />}
+              {copied ? <Check className="h-3 w-3 text-[var(--ok-fg)]" /> : <Copy className="h-3 w-3" />}
               {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
         </div>
 
-        <div className="flex items-center justify-between rounded-md border border-dashed border-zinc-300 bg-zinc-50/50 p-3 text-sm dark:border-zinc-700 dark:bg-zinc-800/30">
-          <div className="flex items-center gap-2 text-zinc-500">
+        <div className="flex items-center justify-between rounded-[12px] border border-dashed border-[var(--line)] bg-[var(--sand)]/60 p-3 text-sm">
+          <div className="flex items-center gap-2 text-[var(--text-4)]">
             <Bot className="h-4 w-4" />
             <div>
-              <div className="font-medium text-zinc-700 dark:text-zinc-300">Share with AI agents</div>
+              <div className="font-semibold text-[var(--text-2)]">Share with AI agents</div>
               <div className="text-xs">Coming soon</div>
             </div>
           </div>
-          <span className="rounded-full border border-zinc-300 px-2 py-0.5 text-[10px] uppercase tracking-wider text-zinc-500 dark:border-zinc-600">
+          <span className="plat-pill plat-pill-mute uppercase tracking-wider">
             Preview
           </span>
         </div>
@@ -141,7 +141,7 @@ export default function ShareModal({ docTitle }: Props) {
           <button
             type="button"
             onClick={() => setShareOpen(false)}
-            className="rounded-md border border-zinc-200 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
+            className="plat-btn-ghost"
           >
             Done
           </button>

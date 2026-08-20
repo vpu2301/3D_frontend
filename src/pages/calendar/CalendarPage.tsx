@@ -74,11 +74,11 @@ export default function CalendarPage() {
   else body = <AgendaView anchor={anchor} onEventClick={onEventClick} />;
 
   return (
-    <div className="min-h-screen bg-[hsl(30,25%,97%)]">
+    <div className="min-h-screen">
       <SidebarProvider>
         <div className="flex h-screen w-full">
           <AppSidebar />
-          <SidebarInset className="flex h-screen flex-1 flex-col bg-white">
+          <SidebarInset className="flex h-screen flex-1 flex-col bg-transparent">
             <div className="flex flex-1 overflow-hidden">
               <CalendarShell onCreate={onCreate}>{body}</CalendarShell>
               <AIChatSidebar

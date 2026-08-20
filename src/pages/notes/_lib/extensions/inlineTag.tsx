@@ -8,6 +8,7 @@ function InlineTagView({ node }: NodeViewProps) {
   return (
     <NodeViewWrapper as="span" className="inline-block align-baseline">
       <button
+            data-command-exempt="inline chip inside the document; clicking it filters by that tag"
         type="button"
         contentEditable={false}
         onClick={(e) => {
@@ -15,7 +16,7 @@ function InlineTagView({ node }: NodeViewProps) {
           e.stopPropagation();
           navigate(`/notes/tag/${encodeURIComponent(name)}`);
         }}
-        className="mx-0.5 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[0.85em] font-medium text-gray-700 transition-colors hover:bg-gray-200"
+        className="mx-0.5 inline-flex items-center rounded-full bg-[var(--sand)] px-2 py-0.5 text-[0.85em] font-medium text-[var(--text-2)] transition-colors hover:bg-[var(--sand-deep)] hover:text-[var(--ink)]"
       >
         #{name}
       </button>

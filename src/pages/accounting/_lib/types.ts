@@ -100,3 +100,71 @@ export const ROLE_RIGHTS: Record<Role, Right[]> = {
 
 /** Cases at or above this confidence are considered high-confidence (§4). */
 export const CONFIDENCE_THRESHOLD = 85;
+
+// ─── Workflows (§5: automations with a mandatory human decision gate) ─────────
+
+export type BlockCategory = 'trigger' | 'integration' | 'agent' | 'logic' | 'human' | 'action';
+
+export type BlockId =
+  // triggers
+  | 'schedule'
+  | 'bank_feed'
+  | 'inbox_document'
+  // integrations
+  | 'datev'
+  | 'ocr'
+  | 'vies'
+  | 'dms'
+  // agent steps
+  | 'detect'
+  | 'propose'
+  | 'draft_request'
+  // logic
+  | 'rule_check'
+  | 'confidence_gate'
+  // human in the loop
+  | 'human_decision'
+  // actions
+  | 'send_request'
+  | 'datev_post'
+  | 'audit';
+
+export interface NodeConfig {
+  /** Delivery channel — for human_decision the decision request, for send_request the client message. */
+  channel?: RequestChannel;
+  /** Role whose decision is required (human_decision). */
+  role?: Role;
+  /** Confidence threshold 0–100 (confidence_gate). */
+  threshold?: number;
+}
+
+export interface WorkflowNode {
+  id: string;
+  blockId: BlockId;
+  /** Canvas position (px). */
+  x: number;
+  y: number;
+  config: NodeConfig;
+}
+
+export interface WorkflowEdge {
+  id: string;
+  /** Source node id (output port). */
+  from: string;
+  /** Target node id (input port). */
+  to: string;
+}
+
+export type WorkflowStatus = 'active' | 'paused' | 'draft';
+
+export interface Workflow {
+  id: string;
+  name: string;
+  description: string;
+  status: WorkflowStatus;
+  runs30d: number;
+  /** ISO timestamp of the last run, if any. */
+  lastRun?: string;
+  nodes: WorkflowNode[];
+  edges: WorkflowEdge[];
+}

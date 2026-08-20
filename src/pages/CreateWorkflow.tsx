@@ -136,12 +136,12 @@ const NODE_CONFIG: Record<string, NodeCfg> = {
 };
 
 const CATEGORIES: Record<string, { label: string; icon: React.ElementType; color: string }> = {
-  triggers:     { label: 'Triggers',      icon: Zap,          color: 'text-amber-500' },
-  flow:         { label: 'Flow',          icon: GitBranch,    color: 'text-indigo-500' },
-  core:         { label: 'Core',          icon: Code2,        color: 'text-blue-500' },
-  ai:           { label: 'AI & Data',     icon: Sparkles,     color: 'text-violet-500' },
-  actions:      { label: 'Actions',       icon: Play,         color: 'text-green-500' },
-  integrations: { label: 'Integrations', icon: Link2,        color: 'text-teal-500' },
+  triggers:     { label: 'Triggers',      icon: Zap,          color: 'text-[color:var(--text-5)]' },
+  flow:         { label: 'Flow',          icon: GitBranch,    color: 'text-[color:var(--text-5)]' },
+  core:         { label: 'Core',          icon: Code2,        color: 'text-[color:var(--text-5)]' },
+  ai:           { label: 'AI & Data',     icon: Sparkles,     color: 'text-[color:var(--text-5)]' },
+  actions:      { label: 'Actions',       icon: Play,         color: 'text-[color:var(--text-5)]' },
+  integrations: { label: 'Integrations', icon: Link2,        color: 'text-[color:var(--text-5)]' },
 };
 
 const AI_AGENTS = ['Emma (Sales)', 'Aria (HR)', 'Felix (Finance)', 'Maya (Marketing)', 'Atlas (Support)', 'Sage (Research)'];
@@ -247,15 +247,43 @@ const INTEGRATION_STYLE: Record<string, { icon: React.ElementType; bg: string; c
 // ── Integration group header colors ───────────────────────────────────────────
 
 const GROUP_STYLE: Record<string, { color: string; label: string }> = {
-  'Google Workspace': { color: 'text-red-500',    label: 'Google' },
-  'Microsoft 365':    { color: 'text-blue-600',   label: 'Microsoft 365' },
-  'Slack':            { color: 'text-violet-600', label: 'Slack' },
-  'HubSpot':          { color: 'text-orange-500', label: 'HubSpot' },
-  'Salesforce':       { color: 'text-blue-500',   label: 'Salesforce' },
-  'Zoom':             { color: 'text-blue-400',   label: 'Zoom' },
-  'Desktop Control':  { color: 'text-slate-600',  label: 'Desktop' },
-  'Built-in Tools':   { color: 'text-emerald-600',label: 'Built-in' },
+  'Google Workspace': { color: 'text-[color:var(--text-5)]',    label: 'Google' },
+  'Microsoft 365':    { color: 'text-[color:var(--text-5)]',   label: 'Microsoft 365' },
+  'Slack':            { color: 'text-[color:var(--text-5)]', label: 'Slack' },
+  'HubSpot':          { color: 'text-[color:var(--text-5)]', label: 'HubSpot' },
+  'Salesforce':       { color: 'text-[color:var(--text-5)]',   label: 'Salesforce' },
+  'Zoom':             { color: 'text-[color:var(--text-5)]',   label: 'Zoom' },
+  'Desktop Control':  { color: 'text-[color:var(--text-5)]',  label: 'Desktop' },
+  'Built-in Tools':   { color: 'text-[color:var(--text-5)]',label: 'Built-in' },
 };
+
+// ── Design tokens for portalled surfaces ──────────────────────────────────────
+// Radix dialogs render into document.body, i.e. outside the `.platform` /
+// `.plat` wrapper that declares the platform custom properties. Dialogs on this
+// page therefore carry the tokens themselves; values mirror styles/platform.css.
+
+const PLAT_TOKENS = {
+  '--ink': '#14161a',
+  '--paper': '#ffffff',
+  '--sand': '#f4f5f7',
+  '--sand-deep': '#e9ebef',
+  '--text-1': '#4a5057',
+  '--text-2': '#5a6067',
+  '--text-3': '#6b7178',
+  '--text-4': '#7a8087',
+  '--text-5': '#9aa0a6',
+  '--ok-bg': '#e6f5ea',
+  '--ok-fg': '#1e7a3c',
+  '--warn-bg': '#fdf0e4',
+  '--warn-fg': '#9a5312',
+  '--bad-fg': '#b3382e',
+  '--line': 'rgba(20, 22, 26, 0.1)',
+  '--line-soft': 'rgba(20, 22, 26, 0.07)',
+  '--sans': "'Manrope', system-ui, sans-serif",
+  '--mono': "'IBM Plex Mono', monospace",
+  fontFamily: 'var(--sans)',
+  color: 'var(--ink)',
+} as unknown as React.CSSProperties;
 
 // ── Execution context ─────────────────────────────────────────────────────────
 
@@ -284,80 +312,86 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
   const branches: string[] = nodeData.branches ?? ['Case 1', 'Case 2', 'Default'];
 
   const statusIcon = {
-    running: <Loader2 className="h-3 w-3 animate-spin text-amber-500" />,
-    done:    <CheckCircle2 className="h-3 w-3 text-green-500" />,
-    error:   <AlertCircle className="h-3 w-3 text-red-500" />,
-    pending: <div className="h-2 w-2 rounded-full bg-gray-300" />,
+    running: <Loader2 className="h-3 w-3 animate-spin" style={{ color: 'var(--warn-fg)' }} />,
+    done:    <CheckCircle2 className="h-3 w-3" style={{ color: 'var(--ok-fg)' }} />,
+    error:   <AlertCircle className="h-3 w-3" style={{ color: 'var(--bad-fg)' }} />,
+    pending: <div className="h-2 w-2 rounded-full" style={{ background: 'var(--sand-deep)' }} />,
     idle:    null,
   }[status];
 
   return (
     <div
       className={[
-        'relative bg-white rounded-xl transition-all duration-200 group border',
+        'relative bg-white rounded-[12px] transition-all duration-200 group border',
         isSwitch ? 'w-52' : 'w-44',
         selected
-          ? 'ring-2 ring-gray-900 ring-offset-1 border-transparent shadow-lg'
-          : 'border-gray-100 shadow-sm hover:border-gray-200 hover:shadow-md',
+          ? 'ring-1 ring-[color:var(--ink)] ring-offset-1 border-transparent shadow-md'
+          : 'border-[color:var(--line-soft)] shadow-sm hover:border-[color:var(--line)] hover:shadow-md',
       ].join(' ')}
     >
       {!isTrigger && (
         <Handle
           type="target"
           position={Position.Top}
-          className="!w-2.5 !h-2.5 !bg-white !border-2 !border-gray-200 !-top-1.5 hover:!border-gray-900 !transition-colors"
+          className="!w-2.5 !h-2.5 !bg-white !border-2 !border-[color:var(--line)] !-top-1.5 hover:!border-[color:var(--ink)] !transition-colors"
         />
       )}
 
       <div className="p-3">
         <div className="flex items-center justify-between gap-2 mb-2">
-          <div className={`w-7 h-7 rounded-lg ${cfg.bg} flex items-center justify-center flex-shrink-0 opacity-90`}>
-            <Icon className="h-3.5 w-3.5 text-white" />
+          <div
+            className="w-7 h-7 rounded-[10px] flex items-center justify-center flex-shrink-0"
+            style={{ background: 'var(--sand)', color: 'var(--ink)' }}
+          >
+            <Icon className="h-3.5 w-3.5" />
           </div>
           {statusIcon && <div>{statusIcon}</div>}
         </div>
-        <p className="text-[8px] font-medium text-gray-400 uppercase tracking-widest leading-none mb-1.5">
+        <p className="text-[8px] font-medium uppercase tracking-widest leading-none mb-1.5" style={{ color: 'var(--text-5)' }}>
           {cfg.label}
         </p>
-        <p className="text-[11px] font-semibold text-gray-900 truncate leading-tight">
+        <p className="text-[11px] font-semibold truncate leading-tight" style={{ color: 'var(--ink)' }}>
           {nodeData.label || cfg.label}
         </p>
         {nodeData.expression && (
-          <p className="text-[10px] font-mono text-gray-400 mt-1.5 truncate bg-gray-50 rounded-md px-1.5 py-1 border border-gray-100">
+          <p
+            className="text-[10px] font-mono mt-1.5 truncate rounded-[8px] px-1.5 py-1 border"
+            style={{ color: 'var(--text-4)', background: 'var(--sand)', borderColor: 'var(--line-soft)' }}
+          >
             {nodeData.expression}
           </p>
         )}
         {!nodeData.expression && nodeData.description && (
-          <p className="text-[10px] text-gray-400 mt-1 truncate leading-relaxed">{nodeData.description}</p>
+          <p className="text-[10px] mt-1 truncate leading-relaxed" style={{ color: 'var(--text-4)' }}>{nodeData.description}</p>
         )}
       </div>
 
       {/* ── If / Condition node: True + False labeled outputs ── */}
       {isCondition && (
         <>
-          <div className="flex border-t border-gray-100 rounded-b-xl overflow-hidden">
-            <div className="flex-1 py-2 flex items-center justify-center bg-emerald-50/70">
-              <CheckCircle2 className="h-3 w-3 text-emerald-500 mr-1" />
-              <span className="text-[9px] font-semibold text-emerald-600 uppercase tracking-widest">True</span>
+          <div className="flex border-t rounded-b-[12px] overflow-hidden" style={{ borderColor: 'var(--line-soft)' }}>
+            <div className="flex-1 py-2 flex items-center justify-center" style={{ background: 'var(--ok-bg)' }}>
+              <CheckCircle2 className="h-3 w-3 mr-1" style={{ color: 'var(--ok-fg)' }} />
+              <span className="text-[9px] font-semibold uppercase tracking-widest" style={{ color: 'var(--ok-fg)' }}>True</span>
             </div>
-            <div className="flex-1 py-2 flex items-center justify-center bg-rose-50/70 border-l border-gray-100">
-              <AlertCircle className="h-3 w-3 text-rose-400 mr-1" />
-              <span className="text-[9px] font-semibold text-rose-500 uppercase tracking-widest">False</span>
+            <div className="flex-1 py-2 flex items-center justify-center border-l" style={{ background: 'var(--sand)', borderColor: 'var(--line-soft)' }}>
+              <AlertCircle className="h-3 w-3 mr-1" style={{ color: 'var(--bad-fg)' }} />
+              <span className="text-[9px] font-semibold uppercase tracking-widest" style={{ color: 'var(--bad-fg)' }}>False</span>
             </div>
           </div>
           <Handle
             id="true"
             type="source"
             position={Position.Bottom}
-            style={{ left: '25%' }}
-            className="!w-3 !h-3 !bg-white !border-2 !border-green-400 !-bottom-1.5 hover:!border-green-600 !transition-colors"
+            style={{ left: '25%', borderColor: 'var(--ok-fg)' }}
+            className="!w-3 !h-3 !bg-white !border-2 !-bottom-1.5 !transition-colors"
           />
           <Handle
             id="false"
             type="source"
             position={Position.Bottom}
-            style={{ left: '75%' }}
-            className="!w-3 !h-3 !bg-white !border-2 !border-red-400 !-bottom-1.5 hover:!border-red-600 !transition-colors"
+            style={{ left: '75%', borderColor: 'var(--bad-fg)' }}
+            className="!w-3 !h-3 !bg-white !border-2 !-bottom-1.5 !transition-colors"
           />
         </>
       )}
@@ -365,17 +399,20 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
       {/* ── Switch node: N labeled branch outputs ── */}
       {isSwitch && (
         <>
-          <div className="flex border-t border-gray-100 rounded-b-xl overflow-hidden">
+          <div className="flex border-t rounded-b-[12px] overflow-hidden" style={{ borderColor: 'var(--line-soft)' }}>
             {branches.map((branch, i) => (
               <div
                 key={i}
                 className={cn(
                   'flex-1 py-2 flex items-center justify-center',
-                  i > 0 ? 'border-l border-gray-100' : '',
-                  i === branches.length - 1 ? 'bg-gray-50/60' : 'bg-indigo-50/40',
+                  i > 0 ? 'border-l' : '',
                 )}
+                style={{
+                  borderColor: 'var(--line-soft)',
+                  background: i === branches.length - 1 ? 'var(--sand)' : 'var(--sand-deep)',
+                }}
               >
-                <span className="text-[9px] font-semibold text-indigo-600 truncate px-1 max-w-[52px] text-center leading-tight">
+                <span className="text-[9px] font-semibold truncate px-1 max-w-[52px] text-center leading-tight" style={{ color: 'var(--text-2)' }}>
                   {branch}
                 </span>
               </div>
@@ -387,8 +424,8 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
               id={`branch-${i}`}
               type="source"
               position={Position.Bottom}
-              style={{ left: `${((i + 0.5) / branches.length) * 100}%` }}
-              className="!w-3 !h-3 !bg-white !border-2 !border-indigo-400 !-bottom-1.5 hover:!border-indigo-600 !transition-colors"
+              style={{ left: `${((i + 0.5) / branches.length) * 100}%`, borderColor: 'var(--text-4)' }}
+              className="!w-3 !h-3 !bg-white !border-2 !-bottom-1.5 hover:!border-[color:var(--ink)] !transition-colors"
             />
           ))}
         </>
@@ -399,7 +436,7 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
         <Handle
           type="source"
           position={Position.Bottom}
-          className="!w-3 !h-3 !bg-white !border-2 !border-gray-300 !-bottom-1.5 hover:!border-blue-500 !transition-colors"
+          className="!w-3 !h-3 !bg-white !border-2 !border-[color:var(--line)] !-bottom-1.5 hover:!border-[color:var(--ink)] !transition-colors"
         />
       )}
     </div>
@@ -425,40 +462,43 @@ function IntegrationNode({ id, data, selected }: NodeProps) {
   const bg = style?.bg ?? 'bg-teal-600';
 
   const statusIcon = {
-    running: <Loader2 className="h-3 w-3 animate-spin text-amber-500" />,
-    done:    <CheckCircle2 className="h-3 w-3 text-green-500" />,
-    error:   <AlertCircle className="h-3 w-3 text-red-500" />,
-    pending: <div className="h-2 w-2 rounded-full bg-gray-300" />,
+    running: <Loader2 className="h-3 w-3 animate-spin" style={{ color: 'var(--warn-fg)' }} />,
+    done:    <CheckCircle2 className="h-3 w-3" style={{ color: 'var(--ok-fg)' }} />,
+    error:   <AlertCircle className="h-3 w-3" style={{ color: 'var(--bad-fg)' }} />,
+    pending: <div className="h-2 w-2 rounded-full" style={{ background: 'var(--sand-deep)' }} />,
     idle:    null,
   }[status];
 
   return (
     <div
       className={cn(
-        'relative bg-white rounded-xl w-48 transition-all duration-200 border',
+        'relative bg-white rounded-[12px] w-48 transition-all duration-200 border',
         selected
-          ? 'ring-2 ring-gray-900 ring-offset-1 border-transparent shadow-lg'
-          : 'border-gray-100 shadow-sm hover:border-gray-200 hover:shadow-md',
+          ? 'ring-1 ring-[color:var(--ink)] ring-offset-1 border-transparent shadow-md'
+          : 'border-[color:var(--line-soft)] shadow-sm hover:border-[color:var(--line)] hover:shadow-md',
       )}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!w-2.5 !h-2.5 !bg-white !border-2 !border-gray-200 !-top-1.5 hover:!border-gray-900 !transition-colors"
+        className="!w-2.5 !h-2.5 !bg-white !border-2 !border-[color:var(--line)] !-top-1.5 hover:!border-[color:var(--ink)] !transition-colors"
       />
 
       <div className="p-3">
         {/* Header row */}
         <div className="flex items-center justify-between gap-1 mb-2">
           <div className="flex items-center gap-2 min-w-0">
-            <div className={`w-7 h-7 rounded-lg ${bg} flex items-center justify-center flex-shrink-0 opacity-90`}>
-              <Icon className="h-3.5 w-3.5 text-white" />
+            <div
+              className="w-7 h-7 rounded-[10px] flex items-center justify-center flex-shrink-0"
+              style={{ background: 'var(--sand)', color: 'var(--ink)' }}
+            >
+              <Icon className="h-3.5 w-3.5" />
             </div>
             <div className="min-w-0">
-              <p className="text-[8px] font-medium text-gray-300 uppercase tracking-widest leading-none">
+              <p className="text-[8px] font-medium uppercase tracking-widest leading-none" style={{ color: 'var(--text-5)' }}>
                 {service?.integration ?? 'Integration'}
               </p>
-              <p className="text-[11px] font-semibold text-gray-900 truncate leading-tight mt-0.5">
+              <p className="text-[11px] font-semibold truncate leading-tight mt-0.5" style={{ color: 'var(--ink)' }}>
                 {service?.service ?? nodeData.label}
               </p>
             </div>
@@ -467,7 +507,8 @@ function IntegrationNode({ id, data, selected }: NodeProps) {
             {statusIcon}
             {/* Three-dots config button */}
             <button
-              className="w-5 h-5 rounded-md flex items-center justify-center text-gray-300 hover:text-gray-800 hover:bg-gray-50 transition-colors"
+              className="w-5 h-5 rounded-[8px] flex items-center justify-center transition-colors hover:bg-[rgba(20,22,26,0.06)] hover:text-[color:var(--ink)]"
+              style={{ color: 'var(--text-5)' }}
               onMouseDown={e => { e.stopPropagation(); }}
               onClick={e => { e.stopPropagation(); openConfig(id); }}
               title="Configure tools"
@@ -479,11 +520,8 @@ function IntegrationNode({ id, data, selected }: NodeProps) {
 
         {/* Tool count badge */}
         <div className="flex items-center gap-1">
-          <span className={cn(
-            'text-[9px] px-1.5 py-0.5 rounded-full font-medium border',
-            enabledCount === totalCount
-              ? 'bg-gray-100 text-gray-600 border-gray-200'
-              : 'bg-amber-50 text-amber-700 border-amber-100'
+          <span className={cn('plat-pill !px-2 !py-0.5 !text-[9px] !font-medium',
+            enabledCount === totalCount ? 'plat-pill-mute' : 'plat-pill-warn',
           )}>
             {enabledCount}/{totalCount} tools
           </span>
@@ -493,7 +531,7 @@ function IntegrationNode({ id, data, selected }: NodeProps) {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!w-2.5 !h-2.5 !bg-white !border-2 !border-gray-200 !-bottom-1.5 hover:!border-gray-900 !transition-colors"
+        className="!w-2.5 !h-2.5 !bg-white !border-2 !border-[color:var(--line)] !-bottom-1.5 hover:!border-[color:var(--ink)] !transition-colors"
       />
     </div>
   );
@@ -570,16 +608,22 @@ function ToolConfigModal({
 
   return (
     <Dialog open={open} onOpenChange={o => { if (!o) onClose(); }}>
-      <DialogContent className="sm:max-w-[560px] p-0 overflow-hidden flex flex-col max-h-[85vh]">
+      <DialogContent
+        className="sm:max-w-[560px] p-0 overflow-hidden flex flex-col max-h-[85vh] rounded-[14px] border-[color:var(--line-soft)]"
+        style={PLAT_TOKENS}
+      >
         {/* Header */}
-        <DialogHeader className="px-5 pt-5 pb-3 border-b border-gray-100 flex-shrink-0">
+        <DialogHeader className="px-5 pt-5 pb-3 border-b flex-shrink-0" style={{ borderColor: 'var(--line-soft)' }}>
           <DialogTitle className="flex items-center gap-2.5 text-base font-semibold">
-            <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center flex-shrink-0`}>
-              <Icon className="h-4 w-4 text-white" />
+            <div
+              className="w-8 h-8 rounded-[10px] flex items-center justify-center flex-shrink-0"
+              style={{ background: 'var(--sand)', color: 'var(--ink)' }}
+            >
+              <Icon className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-900">{service.integration} · {service.service}</p>
-              <p className="text-xs font-normal text-gray-500 mt-0.5">
+              <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>{service.integration} · {service.service}</p>
+              <p className="text-xs font-normal mt-0.5" style={{ color: 'var(--text-4)' }}>
                 {localEnabled.size} / {service.tools.length} tools enabled
               </p>
             </div>
@@ -587,15 +631,16 @@ function ToolConfigModal({
         </DialogHeader>
 
         {/* Controls */}
-        <div className="px-5 pt-3 pb-2 border-b border-gray-50 flex-shrink-0 space-y-2">
+        <div className="px-5 pt-3 pb-2 border-b flex-shrink-0 space-y-2" style={{ borderColor: 'var(--line-soft)' }}>
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5" style={{ color: 'var(--text-5)' }} />
             <input
               value={searchQ}
               onChange={e => setSearchQ(e.target.value)}
               placeholder="Search tools…"
-              className="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-100 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-colors"
+              className="w-full pl-8 pr-3 py-1.5 text-xs border rounded-[10px] focus:outline-none focus:border-[color:var(--ink)] transition-colors"
+              style={{ borderColor: 'var(--line-soft)', background: 'var(--sand)', color: 'var(--ink)' }}
             />
           </div>
           {/* Filters + bulk actions */}
@@ -605,10 +650,12 @@ function ToolConfigModal({
                 <button
                   key={f}
                   onClick={() => setTypeFilter(f)}
-                  className={cn(
-                    'px-2.5 py-1 rounded-md text-xs font-medium transition-colors',
-                    typeFilter === f ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  )}
+                  className="px-2.5 py-1 rounded-full text-xs font-medium border transition-colors"
+                  style={
+                    typeFilter === f
+                      ? { background: 'var(--ink)', borderColor: 'var(--ink)', color: '#fff' }
+                      : { background: 'transparent', borderColor: 'var(--line)', color: 'var(--text-2)' }
+                  }
                 >
                   {f === 'all' ? 'All' : f === 'read' ? 'Read' : 'Write'}
                 </button>
@@ -617,13 +664,13 @@ function ToolConfigModal({
             <div className="flex gap-1">
               <button
                 onClick={searchQ || typeFilter !== 'all' ? enableAllVisible : enableAll}
-                className="px-2.5 py-1 rounded-md text-xs font-medium bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+                className="plat-btn !h-7 !px-3 !text-xs"
               >
                 Enable {searchQ || typeFilter !== 'all' ? 'visible' : 'all'}
               </button>
               <button
                 onClick={disableAll}
-                className="px-2.5 py-1 rounded-md text-xs font-medium bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+                className="plat-btn-ghost !h-7 !px-3 !text-xs"
               >
                 Disable all
               </button>
@@ -634,16 +681,16 @@ function ToolConfigModal({
         {/* Tool list */}
         <div className="flex-1 overflow-y-auto px-5 py-3 space-y-4">
           {filteredTools.length === 0 && (
-            <p className="text-xs text-gray-400 text-center py-6">No tools match your search</p>
+            <p className="text-xs text-center py-6" style={{ color: 'var(--text-4)' }}>No tools match your search</p>
           )}
 
           {readTools.length > 0 && (
             <div>
               <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Read</span>
-                <span className="text-[10px] text-gray-300">{readTools.filter(t => localEnabled.has(t.name)).length}/{readTools.length}</span>
+                <span className="plat-eyebrow">Read</span>
+                <span className="text-[10px]" style={{ color: 'var(--text-5)' }}>{readTools.filter(t => localEnabled.has(t.name)).length}/{readTools.length}</span>
               </div>
-              <div className="space-y-1">
+              <div className="rounded-[14px] border overflow-hidden" style={{ borderColor: 'var(--line-soft)' }}>
                 {readTools.map(tool => (
                   <ToolRow key={tool.name} tool={tool} enabled={localEnabled.has(tool.name)} onToggle={() => toggle(tool.name)} />
                 ))}
@@ -654,10 +701,10 @@ function ToolConfigModal({
           {writeTools.length > 0 && (
             <div>
               <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Write</span>
-                <span className="text-[10px] text-gray-300">{writeTools.filter(t => localEnabled.has(t.name)).length}/{writeTools.length}</span>
+                <span className="plat-eyebrow">Write</span>
+                <span className="text-[10px]" style={{ color: 'var(--text-5)' }}>{writeTools.filter(t => localEnabled.has(t.name)).length}/{writeTools.length}</span>
               </div>
-              <div className="space-y-1">
+              <div className="rounded-[14px] border overflow-hidden" style={{ borderColor: 'var(--line-soft)' }}>
                 {writeTools.map(tool => (
                   <ToolRow key={tool.name} tool={tool} enabled={localEnabled.has(tool.name)} onToggle={() => toggle(tool.name)} />
                 ))}
@@ -667,17 +714,17 @@ function ToolConfigModal({
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between flex-shrink-0">
-          <p className="text-xs text-gray-400">
+        <div className="px-5 py-3 border-t flex items-center justify-between flex-shrink-0" style={{ borderColor: 'var(--line-soft)' }}>
+          <p className="text-xs" style={{ color: 'var(--text-4)' }}>
             {enabledVisible} shown · {localEnabled.size} total enabled
           </p>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="h-7 text-xs" onClick={onClose}>
+            <Button variant="outline" size="sm" className="plat-btn-ghost !h-7 !px-3 !text-xs !rounded-full !border !border-[color:var(--line)] !bg-transparent !text-[color:var(--text-2)]" onClick={onClose}>
               Cancel
             </Button>
             <Button
               size="sm"
-              className="h-7 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-lg transition-colors"
+              className="plat-btn !h-7 !px-3 !text-xs !rounded-full !bg-[color:var(--ink)] !text-white"
               onClick={handleSave}
             >
               <CheckCircle2 className="h-3 w-3 mr-1" />
@@ -699,34 +746,36 @@ function ToolRow({
 }) {
   return (
     <div
-      className={cn(
-        'flex items-center gap-3 px-3 py-2 rounded-lg border cursor-pointer transition-all',
-        enabled
-          ? 'border-gray-200 bg-gray-50 hover:bg-gray-100'
-          : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50/50'
-      )}
+      className="flex items-center gap-3 px-3 py-2 border-b last:border-b-0 cursor-pointer transition-colors"
+      style={{
+        borderColor: 'var(--line-soft)',
+        background: enabled ? 'rgba(20, 22, 26, 0.03)' : 'transparent',
+      }}
       onClick={onToggle}
     >
       {/* Toggle */}
-      <div className={cn(
-        'w-8 h-4 rounded-full flex items-center transition-colors flex-shrink-0',
-        enabled ? 'bg-gray-900 justify-end pr-0.5' : 'bg-gray-200 justify-start pl-0.5'
-      )}>
+      <div
+        className={cn(
+          'w-8 h-4 rounded-full flex items-center transition-colors flex-shrink-0',
+          enabled ? 'justify-end pr-0.5' : 'justify-start pl-0.5',
+        )}
+        style={{ background: enabled ? 'var(--ink)' : 'var(--sand-deep)' }}
+      >
         <div className="w-3 h-3 rounded-full bg-white shadow-sm" />
       </div>
 
       {/* Tool info */}
       <div className="flex-1 min-w-0">
-        <p className={cn('text-xs font-medium truncate', enabled ? 'text-gray-900' : 'text-gray-500')}>
+        <p className="text-xs font-medium truncate" style={{ color: enabled ? 'var(--ink)' : 'var(--text-3)' }}>
           {tool.name}
         </p>
-        <p className="text-[10px] text-gray-400 truncate">{tool.desc}</p>
+        <p className="text-[10px] truncate" style={{ color: 'var(--text-4)' }}>{tool.desc}</p>
       </div>
 
       {/* Badges */}
       <div className="flex items-center gap-1 flex-shrink-0">
         {tool.approval && (
-          <span className="text-[9px] px-1.5 py-0.5 rounded font-semibold bg-amber-100 text-amber-700 border border-amber-200">
+          <span className="plat-pill plat-pill-warn !px-2 !py-0.5 !text-[9px]">
             Approval
           </span>
         )}
@@ -742,9 +791,9 @@ function StickyNoteNode({ id, data, selected }: NodeProps) {
   return (
     <div
       className={[
-        'relative w-44 min-h-[80px] rounded-xl p-3 flex flex-col gap-1',
+        'relative w-44 min-h-[80px] rounded-[12px] p-3 flex flex-col gap-1',
         'bg-amber-50 border border-amber-200',
-        selected ? 'ring-2 ring-gray-900 ring-offset-1 shadow-lg' : 'shadow-sm hover:shadow-md',
+        selected ? 'ring-1 ring-[color:var(--ink)] ring-offset-1 shadow-md' : 'shadow-sm hover:shadow-md',
       ].join(' ')}
     >
       <Handle type="target" position={Position.Top} className="!w-2 !h-2 !bg-yellow-400 !border-yellow-500 !-top-1" />
@@ -782,14 +831,17 @@ function PaletteItem({ nodeType }: { nodeType: string }) {
     <div
       draggable
       onDragStart={onDragStart}
-      className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-[#f5f3ee] cursor-grab active:cursor-grabbing transition-colors select-none group border border-transparent hover:border-[#141413]/10"
+      className="flex items-center gap-2.5 px-3 py-1.5 rounded-[10px] hover:bg-[rgba(20,22,26,0.04)] cursor-grab active:cursor-grabbing transition-colors select-none group border border-transparent hover:border-[color:var(--line-soft)]"
     >
-      <div className="w-7 h-7 bg-[#141413]/6 border border-[#c8c6be] flex items-center justify-center flex-shrink-0 group-hover:bg-[#141413]/10 transition-colors" style={{ borderRadius: '9px' }}>
-        <Icon className="h-3.5 w-3.5 text-black/45 group-hover:text-black/70 transition-colors" />
+      <div
+        className="w-7 h-7 border flex items-center justify-center flex-shrink-0 transition-colors"
+        style={{ borderRadius: '10px', background: 'var(--sand)', borderColor: 'var(--line-soft)', color: 'var(--text-2)' }}
+      >
+        <Icon className="h-3.5 w-3.5 group-hover:text-[color:var(--ink)] transition-colors" />
       </div>
       <div className="min-w-0">
-        <p className="text-[11px] font-medium text-[#141413] truncate leading-tight">{cfg.label}</p>
-        <p className="text-[9px] text-[#30302e]/45 truncate">{cfg.desc}</p>
+        <p className="text-[11px] font-medium truncate leading-tight" style={{ color: 'var(--ink)' }}>{cfg.label}</p>
+        <p className="text-[9px] truncate" style={{ color: 'var(--text-4)' }}>{cfg.desc}</p>
       </div>
     </div>
   );
@@ -812,14 +864,17 @@ function IntegrationPaletteItem({ serviceKey }: { serviceKey: string }) {
     <div
       draggable
       onDragStart={onDragStart}
-      className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-[#f5f3ee] cursor-grab active:cursor-grabbing transition-colors select-none group border border-transparent hover:border-[#141413]/10"
+      className="flex items-center gap-2.5 px-3 py-1.5 rounded-[10px] hover:bg-[rgba(20,22,26,0.04)] cursor-grab active:cursor-grabbing transition-colors select-none group border border-transparent hover:border-[color:var(--line-soft)]"
     >
-      <div className="w-7 h-7 bg-[#141413]/6 border border-[#c8c6be] flex items-center justify-center flex-shrink-0 group-hover:bg-[#141413]/10 transition-colors" style={{ borderRadius: '9px' }}>
-        <Icon className="h-3.5 w-3.5 text-black/45 group-hover:text-black/70 transition-colors" />
+      <div
+        className="w-7 h-7 border flex items-center justify-center flex-shrink-0 transition-colors"
+        style={{ borderRadius: '10px', background: 'var(--sand)', borderColor: 'var(--line-soft)', color: 'var(--text-2)' }}
+      >
+        <Icon className="h-3.5 w-3.5 group-hover:text-[color:var(--ink)] transition-colors" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-medium text-[#141413] truncate leading-tight">{service.service}</p>
-        <p className="text-[9px] text-[#30302e]/45 truncate">{service.tools.length} tools</p>
+        <p className="text-[11px] font-medium truncate leading-tight" style={{ color: 'var(--ink)' }}>{service.service}</p>
+        <p className="text-[9px] truncate" style={{ color: 'var(--text-4)' }}>{service.tools.length} tools</p>
       </div>
     </div>
   );
@@ -839,11 +894,11 @@ function CategorySection({
     <div>
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center gap-2 px-3 py-2 text-[9px] font-semibold uppercase tracking-widest text-[#30302e]/40 hover:text-[#141413] transition-colors"
+        className="plat-eyebrow w-full flex items-center gap-2 px-3 py-2 hover:text-[color:var(--ink)] transition-colors"
       >
         <CatIcon className={`h-3 w-3 ${cat.color} flex-shrink-0`} />
         <span className="flex-1 text-left">{cat.label}</span>
-        {open ? <ChevronDown className="h-3 w-3 text-[#30302e]/25" /> : <ChevronRight className="h-3 w-3 text-[#30302e]/25" />}
+        {open ? <ChevronDown className="h-3 w-3 text-[color:var(--text-5)]" /> : <ChevronRight className="h-3 w-3 text-[color:var(--text-5)]" />}
       </button>
       {open && (
         <div className="mb-2 px-1">
@@ -866,12 +921,12 @@ function IntegrationGroupSection({
     <div>
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center gap-2 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-widest text-[#30302e]/40 hover:text-[#141413] transition-colors"
+        className="plat-eyebrow w-full flex items-center gap-2 px-3 py-1.5 hover:text-[color:var(--ink)] transition-colors"
       >
-        <Puzzle className={`h-3 w-3 ${gStyle?.color ?? 'text-teal-500'} flex-shrink-0`} />
+        <Puzzle className={`h-3 w-3 ${gStyle?.color ?? 'text-[color:var(--text-5)]'} flex-shrink-0`} />
         <span className="flex-1 text-left truncate">{gStyle?.label ?? groupName}</span>
-        <span className="text-[9px] text-[#30302e]/25 mr-1 tabular-nums">{serviceKeys.length}</span>
-        {open ? <ChevronDown className="h-3 w-3 text-[#30302e]/25" /> : <ChevronRight className="h-3 w-3 text-[#30302e]/25" />}
+        <span className="text-[9px] text-[color:var(--text-5)] mr-1 tabular-nums">{serviceKeys.length}</span>
+        {open ? <ChevronDown className="h-3 w-3 text-[color:var(--text-5)]" /> : <ChevronRight className="h-3 w-3 text-[color:var(--text-5)]" />}
       </button>
       {open && (
         <div className="mb-2 px-1">
@@ -904,11 +959,11 @@ function IntegrationPalettePanel({ search }: { search: string }) {
     <div>
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center gap-2 px-3 py-2 text-[9px] font-semibold uppercase tracking-widest text-[#30302e]/40 hover:text-[#141413] transition-colors"
+        className="plat-eyebrow w-full flex items-center gap-2 px-3 py-2 hover:text-[color:var(--ink)] transition-colors"
       >
-        <Puzzle className="h-3 w-3 text-teal-500 flex-shrink-0" />
+        <Puzzle className="h-3 w-3 text-[color:var(--text-5)] flex-shrink-0" />
         <span className="flex-1 text-left">Integrations</span>
-        {open ? <ChevronDown className="h-3 w-3 text-[#30302e]/25" /> : <ChevronRight className="h-3 w-3 text-[#30302e]/25" />}
+        {open ? <ChevronDown className="h-3 w-3 text-[color:var(--text-5)]" /> : <ChevronRight className="h-3 w-3 text-[color:var(--text-5)]" />}
       </button>
       {open && (
         <div className="pl-2 mb-1">
@@ -921,7 +976,7 @@ function IntegrationPalettePanel({ search }: { search: string }) {
             />
           ))}
           {filteredGroups.length === 0 && (
-            <p className="text-xs text-[#30302e]/45 text-center py-3 px-2">No integrations found</p>
+            <p className="text-xs text-[color:var(--text-4)] text-center py-3 px-2">No integrations found</p>
           )}
         </div>
       )}
@@ -951,19 +1006,22 @@ function PropertiesPanel({
   const isTrigger = !isIntegration && cfg!.category === 'triggers';
 
   return (
-    <div className="w-64 border-l border-gray-100 bg-white flex flex-col flex-shrink-0 overflow-hidden">
+    <div className="w-64 border-l flex flex-col flex-shrink-0 overflow-hidden" style={{ borderColor: 'var(--line-soft)' }}>
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-100">
-        <div className={`w-7 h-7 rounded-lg ${bg} flex items-center justify-center flex-shrink-0 opacity-90`}>
-          <Icon className="h-3.5 w-3.5 text-white" />
+      <div className="flex items-center gap-3 px-4 py-3.5 border-b" style={{ borderColor: 'var(--line-soft)' }}>
+        <div
+          className="w-7 h-7 rounded-[10px] flex items-center justify-center flex-shrink-0"
+          style={{ background: 'var(--sand)', color: 'var(--ink)' }}
+        >
+          <Icon className="h-3.5 w-3.5" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[8px] font-medium text-gray-300 uppercase tracking-widest mb-0.5">Properties</p>
-          <span className="text-[11px] font-semibold text-gray-900 truncate block">
+          <p className="plat-eyebrow mb-0.5">Properties</p>
+          <span className="text-[11px] font-semibold truncate block" style={{ color: 'var(--ink)' }}>
             {isIntegration ? (integService?.service ?? 'Integration') : cfg!.label}
           </span>
         </div>
-        <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0 text-gray-300 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-colors" onClick={onClose}>
+        <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0 rounded-[8px] transition-colors text-[color:var(--text-5)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)]" onClick={onClose}>
           <X className="h-3.5 w-3.5" />
         </Button>
       </div>
@@ -972,16 +1030,16 @@ function PropertiesPanel({
         {/* Integration-specific */}
         {isIntegration && integService && (
           <div>
-            <Label className="text-xs text-gray-500 mb-2 block">Tool Configuration</Label>
-            <div className="rounded-lg border border-gray-100 p-3 space-y-2">
+            <Label className="text-xs mb-2 block" style={{ color: 'var(--text-3)' }}>Tool Configuration</Label>
+            <div className="rounded-[12px] border p-3 space-y-2" style={{ borderColor: 'var(--line-soft)' }}>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">
+                <span className="text-xs" style={{ color: 'var(--text-3)' }}>
                   {(data.enabledTools ?? integService.tools.map(t => t.name)).length} / {integService.tools.length} enabled
                 </span>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-6 text-[10px] px-2 border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 transition-colors rounded-md"
+                  className="plat-btn-ghost !h-6 !px-2 !text-[10px] !rounded-full !bg-transparent !border !border-[color:var(--line)] !text-[color:var(--text-2)]"
                   onClick={() => onOpenConfig?.(node.id)}
                 >
                   <Settings2 className="h-3 w-3 mr-1" /> Configure
@@ -993,7 +1051,7 @@ function PropertiesPanel({
 
         {/* Label */}
         <div>
-          <Label className="text-xs text-gray-500 mb-1 block">Label</Label>
+          <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Label</Label>
           <Input
             className="h-8 text-xs"
             placeholder={isIntegration ? (integService?.service ?? 'Integration') : cfg!.label}
@@ -1004,7 +1062,7 @@ function PropertiesPanel({
 
         {/* Description */}
         <div>
-          <Label className="text-xs text-gray-500 mb-1 block">Description</Label>
+          <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Description</Label>
           <Textarea
             className="text-xs resize-none"
             rows={2}
@@ -1017,14 +1075,14 @@ function PropertiesPanel({
         {/* Trigger-specific */}
         {data.nodeType === 'trigger_schedule' && (
           <div>
-            <Label className="text-xs text-gray-500 mb-1 block">Cron Expression</Label>
+            <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Cron Expression</Label>
             <Input className="h-8 text-xs font-mono" placeholder="0 9 * * 1-5" value={data.cronExpression ?? ''} onChange={e => onChange(node.id, { cronExpression: e.target.value })} />
-            <p className="text-[10px] text-gray-400 mt-1">e.g. <span className="font-mono">0 9 * * 1-5</span> = weekdays at 9am</p>
+            <p className="text-[10px] mt-1" style={{ color: 'var(--text-4)' }}>e.g. <span className="font-mono">0 9 * * 1-5</span> = weekdays at 9am</p>
           </div>
         )}
         {data.nodeType === 'trigger_webhook' && (
           <div>
-            <Label className="text-xs text-gray-500 mb-1 block">Webhook URL</Label>
+            <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Webhook URL</Label>
             <Input className="h-8 text-xs font-mono" placeholder="/webhook/my-flow" value={data.url ?? ''} onChange={e => onChange(node.id, { url: e.target.value })} />
           </div>
         )}
@@ -1033,7 +1091,7 @@ function PropertiesPanel({
         {data.nodeType === 'http_request' && (
           <>
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Method</Label>
+              <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Method</Label>
               <Select value={data.method ?? 'GET'} onValueChange={v => onChange(node.id, { method: v })}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -1042,7 +1100,7 @@ function PropertiesPanel({
               </Select>
             </div>
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">URL</Label>
+              <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>URL</Label>
               <Input className="h-8 text-xs font-mono" placeholder="https://api.example.com/data" value={data.url ?? ''} onChange={e => onChange(node.id, { url: e.target.value })} />
             </div>
           </>
@@ -1052,7 +1110,7 @@ function PropertiesPanel({
         {data.nodeType === 'code' && (
           <>
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Language</Label>
+              <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Language</Label>
               <Select value={data.language ?? 'javascript'} onValueChange={v => onChange(node.id, { language: v })}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -1062,7 +1120,7 @@ function PropertiesPanel({
               </Select>
             </div>
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Code</Label>
+              <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Code</Label>
               <Textarea className="text-xs font-mono resize-none" rows={5} placeholder="// return { data: items };" value={data.expression ?? ''} onChange={e => onChange(node.id, { expression: e.target.value })} />
             </div>
           </>
@@ -1071,7 +1129,7 @@ function PropertiesPanel({
         {/* Set data */}
         {data.nodeType === 'set_data' && (
           <div>
-            <Label className="text-xs text-gray-500 mb-1 block">Expression</Label>
+            <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Expression</Label>
             <Textarea className="text-xs font-mono resize-none" rows={4} placeholder='{{ $json.field }}' value={data.expression ?? ''} onChange={e => onChange(node.id, { expression: e.target.value })} />
           </div>
         )}
@@ -1080,7 +1138,7 @@ function PropertiesPanel({
         {(data.nodeType === 'ai_agent' || data.nodeType === 'llm_chain') && (
           <>
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">AI Agent</Label>
+              <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>AI Agent</Label>
               <Select value={data.assignee ?? ''} onValueChange={v => onChange(node.id, { assignee: v })}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Select agent" /></SelectTrigger>
                 <SelectContent>
@@ -1089,7 +1147,7 @@ function PropertiesPanel({
               </Select>
             </div>
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Prompt / Instructions</Label>
+              <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Prompt / Instructions</Label>
               <Textarea className="text-xs resize-none" rows={4} placeholder="Describe what the agent should do…" value={data.prompt ?? ''} onChange={e => onChange(node.id, { prompt: e.target.value })} />
             </div>
           </>
@@ -1098,7 +1156,7 @@ function PropertiesPanel({
         {/* AI Summarize / Classify / Extract */}
         {(data.nodeType === 'ai_summarize' || data.nodeType === 'ai_classify' || data.nodeType === 'ai_extract') && (
           <div>
-            <Label className="text-xs text-gray-500 mb-1 block">Input Field</Label>
+            <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Input Field</Label>
             <Input className="h-8 text-xs font-mono" placeholder="{{ $json.text }}" value={data.field ?? ''} onChange={e => onChange(node.id, { field: e.target.value })} />
           </div>
         )}
@@ -1106,7 +1164,7 @@ function PropertiesPanel({
         {/* Delay / Wait */}
         {(data.nodeType === 'delay' || data.nodeType === 'wait') && (
           <div>
-            <Label className="text-xs text-gray-500 mb-1 block">Duration</Label>
+            <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Duration</Label>
             <Input className="h-8 text-xs" placeholder="e.g. 1 hour, 2 days" value={data.duration ?? ''} onChange={e => onChange(node.id, { duration: e.target.value })} />
           </div>
         )}
@@ -1114,7 +1172,7 @@ function PropertiesPanel({
         {/* Notification / Send Email */}
         {(data.nodeType === 'notification' || data.nodeType === 'send_email') && (
           <div>
-            <Label className="text-xs text-gray-500 mb-1 block">Message</Label>
+            <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Message</Label>
             <Textarea className="text-xs resize-none" rows={3} placeholder="Message content…" value={data.message ?? ''} onChange={e => onChange(node.id, { message: e.target.value })} />
           </div>
         )}
@@ -1123,11 +1181,11 @@ function PropertiesPanel({
         {data.nodeType === 'slack' && (
           <>
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Channel</Label>
+              <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Channel</Label>
               <Input className="h-8 text-xs" placeholder="#general" value={data.channel ?? ''} onChange={e => onChange(node.id, { channel: e.target.value })} />
             </div>
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Message</Label>
+              <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Message</Label>
               <Textarea className="text-xs resize-none" rows={3} placeholder="Message text…" value={data.message ?? ''} onChange={e => onChange(node.id, { message: e.target.value })} />
             </div>
           </>
@@ -1137,20 +1195,20 @@ function PropertiesPanel({
         {data.nodeType === 'condition' && (
           <div className="space-y-2">
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Condition Expression</Label>
+              <Label className="text-xs mb-1 block" style={{ color: 'var(--text-3)' }}>Condition Expression</Label>
               <Input className="h-8 text-xs font-mono" placeholder="{{ $json.status === 'active' }}" value={data.expression ?? ''} onChange={e => onChange(node.id, { expression: e.target.value })} />
             </div>
-            <div className="rounded-lg border border-gray-100 overflow-hidden text-[10px]">
+            <div className="rounded-[12px] border overflow-hidden text-[10px]" style={{ borderColor: 'var(--line-soft)' }}>
               <div className="flex">
-                <div className="flex-1 flex items-center gap-1.5 px-2.5 py-2 bg-green-50/70 border-r border-gray-100">
-                  <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
-                  <span className="font-semibold text-green-700">True</span>
-                  <span className="text-green-600 ml-auto">left handle</span>
+                <div className="flex-1 flex items-center gap-1.5 px-2.5 py-2 border-r" style={{ background: 'var(--ok-bg)', borderColor: 'var(--line-soft)' }}>
+                  <CheckCircle2 className="h-3 w-3 flex-shrink-0" style={{ color: 'var(--ok-fg)' }} />
+                  <span className="font-semibold" style={{ color: 'var(--ok-fg)' }}>True</span>
+                  <span className="ml-auto" style={{ color: 'var(--ok-fg)' }}>left handle</span>
                 </div>
-                <div className="flex-1 flex items-center gap-1.5 px-2.5 py-2 bg-red-50/70">
-                  <AlertCircle className="h-3 w-3 text-red-400 flex-shrink-0" />
-                  <span className="font-semibold text-red-600">False</span>
-                  <span className="text-red-500 ml-auto">right handle</span>
+                <div className="flex-1 flex items-center gap-1.5 px-2.5 py-2" style={{ background: 'var(--sand)' }}>
+                  <AlertCircle className="h-3 w-3 flex-shrink-0" style={{ color: 'var(--bad-fg)' }} />
+                  <span className="font-semibold" style={{ color: 'var(--bad-fg)' }}>False</span>
+                  <span className="ml-auto" style={{ color: 'var(--bad-fg)' }}>right handle</span>
                 </div>
               </div>
             </div>
@@ -1162,11 +1220,11 @@ function PropertiesPanel({
           const branches: string[] = data.branches ?? ['Case 1', 'Case 2', 'Default'];
           return (
             <div className="space-y-2">
-              <Label className="text-xs text-gray-500 block">Branches</Label>
+              <Label className="text-xs block" style={{ color: 'var(--text-3)' }}>Branches</Label>
               {branches.map((branch, i) => (
                 <div key={i} className="flex items-center gap-1.5">
-                  <div className="w-5 h-5 rounded bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                    <span className="text-[9px] font-bold text-indigo-600">{i + 1}</span>
+                  <div className="w-5 h-5 rounded-[6px] flex items-center justify-center flex-shrink-0" style={{ background: 'var(--sand)' }}>
+                    <span className="text-[9px] font-bold" style={{ color: 'var(--text-2)' }}>{i + 1}</span>
                   </div>
                   <Input
                     className="h-7 text-xs flex-1"
@@ -1179,7 +1237,7 @@ function PropertiesPanel({
                   />
                   {branches.length > 2 && (
                     <button
-                      className="w-5 h-5 flex items-center justify-center rounded text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors flex-shrink-0"
+                      className="w-5 h-5 flex items-center justify-center rounded-[6px] text-[color:var(--text-4)] hover:text-[color:var(--bad-fg)] hover:bg-[rgba(20,22,26,0.06)] transition-colors flex-shrink-0"
                       onClick={() => {
                         const next = branches.filter((_, j) => j !== i);
                         onChange(node.id, { branches: next });
@@ -1192,24 +1250,24 @@ function PropertiesPanel({
               ))}
               {branches.length < 8 && (
                 <button
-                  className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-dashed border-indigo-200 text-[10px] font-medium text-indigo-500 hover:bg-indigo-50 transition-colors"
+                  className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-[10px] border border-dashed border-[color:var(--line)] text-[10px] font-medium text-[color:var(--text-3)] hover:bg-[rgba(20,22,26,0.04)] hover:text-[color:var(--ink)] transition-colors"
                   onClick={() => onChange(node.id, { branches: [...branches, `Case ${branches.length + 1}`] })}
                 >
                   <span className="text-base leading-none">+</span> Add Branch
                 </button>
               )}
-              <p className="text-[10px] text-gray-400">Each branch gets its own output handle at the bottom of the node.</p>
+              <p className="text-[10px]" style={{ color: 'var(--text-4)' }}>Each branch gets its own output handle at the bottom of the node.</p>
             </div>
           );
         })()}
       </div>
 
       {/* Footer actions */}
-      <div className="px-4 py-3 border-t border-gray-100 flex gap-2">
+      <div className="px-4 py-3 border-t flex gap-2" style={{ borderColor: 'var(--line-soft)' }}>
         <Button
           variant="ghost"
           size="sm"
-          className="flex-1 h-7 text-[11px] text-gray-400 hover:text-gray-800 hover:bg-gray-50 gap-1 rounded-lg transition-colors"
+          className="flex-1 h-7 text-[11px] text-[color:var(--text-3)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)] gap-1 rounded-[10px] transition-colors"
           onClick={() => onDuplicate(node.id)}
         >
           <Copy className="h-3 w-3" /> Duplicate
@@ -1218,7 +1276,7 @@ function PropertiesPanel({
           <Button
             variant="ghost"
             size="sm"
-            className="flex-1 h-7 text-[11px] text-gray-400 hover:text-red-600 hover:bg-red-50 gap-1 rounded-lg transition-colors"
+            className="flex-1 h-7 text-[11px] text-[color:var(--text-3)] hover:text-[color:var(--bad-fg)] hover:bg-[rgba(20,22,26,0.06)] gap-1 rounded-[10px] transition-colors"
             onClick={() => onDelete(node.id)}
           >
             <Trash2 className="h-3 w-3" /> Remove
@@ -1238,14 +1296,14 @@ function ExecutionLog({
   useEffect(() => { ref.current?.scrollTo(0, ref.current.scrollHeight); }, [log]);
 
   return (
-    <div className="border-t border-gray-100 bg-gray-950 flex flex-col" style={{ height: 160 }}>
-      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-800/60">
-        <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Execution Output</span>
-        <Button variant="ghost" size="sm" className="h-5 text-[10px] text-gray-600 hover:text-gray-300 px-2 transition-colors" onClick={onClear}>Clear</Button>
+    <div className="border-t flex flex-col" style={{ height: 160, background: 'var(--ink)', borderColor: 'var(--line-soft)' }}>
+      <div className="flex items-center justify-between px-4 py-2 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+        <span className="plat-eyebrow">Execution Output</span>
+        <Button variant="ghost" size="sm" className="h-5 text-[10px] text-white/45 hover:text-white hover:bg-white/10 px-2 transition-colors rounded-full" onClick={onClear}>Clear</Button>
       </div>
       <div ref={ref} className="flex-1 overflow-y-auto px-4 py-2 space-y-0.5 font-mono text-[11px]">
         {log.length === 0
-          ? <span className="text-gray-600">Run the workflow to see output here.</span>
+          ? <span className="text-white/40">Run the workflow to see output here.</span>
           : log.map((line, i) => (
             <div key={i} className={[
               line.startsWith('[ERROR]') ? 'text-red-400' :
@@ -1319,7 +1377,7 @@ const initialEdges: Edge[] = [];
 // ── Workflow templates ─────────────────────────────────────────────────────────
 
 const mkEdge = (id: string, source: string, target: string): Edge => ({
-  id, source, target, animated: true, style: { stroke: '#cbd5e1', strokeWidth: 1.5 },
+  id, source, target, animated: true, style: { stroke: 'rgba(20, 22, 26, 0.22)', strokeWidth: 1.5 },
 });
 
 const mkNode = (id: string, x: number, y: number, nodeType: string, label: string): Node => ({
@@ -2403,10 +2461,10 @@ function Builder({ templateNodes, templateEdges }: { templateNodes?: Node[]; tem
       const edge = {
         ...params,
         animated: true,
-        style: { stroke: '#cbd5e1', strokeWidth: 1.5 },
+        style: { stroke: 'rgba(20, 22, 26, 0.22)', strokeWidth: 1.5 },
         ...(edgeLabel && {
           label: edgeLabel,
-          labelStyle: { fontSize: 10, fontWeight: 700, fill: '#374151' },
+          labelStyle: { fontSize: 10, fontWeight: 700, fill: '#14161a' },
           labelBgStyle: { fill: 'white', fillOpacity: 0.95 },
           labelBgPadding: [4, 6] as [number, number],
           labelBgBorderRadius: 4,
@@ -2667,12 +2725,12 @@ function Builder({ templateNodes, templateEdges }: { templateNodes?: Node[]; tem
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex flex-1 overflow-hidden">
             {/* ── Left panel: node palette ── */}
-            <div className="w-56 flex-shrink-0 border-r border-[#141413]/8 bg-white flex flex-col overflow-hidden">
-              <div className="px-3 pt-3 pb-2.5 border-b border-[#141413]/8">
+            <div className="w-56 flex-shrink-0 border-r border-[color:var(--line-soft)] flex flex-col overflow-hidden">
+              <div className="px-3 pt-3 pb-2.5 border-b border-[color:var(--line-soft)]">
                 <div className="relative">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#30302e]/35" />
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[color:var(--text-5)]" />
                   <Input
-                    className="h-8 pl-8 text-xs bg-[#e8e6dc] border-[#141413]/10 text-[#141413] focus-visible:ring-1 focus-visible:ring-[#141413]/20 rounded-lg placeholder:text-[#30302e]/30"
+                    className="h-8 pl-8 text-xs text-[color:var(--ink)] placeholder:text-[color:var(--text-5)]"
                     placeholder="Search nodes…"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
@@ -2691,19 +2749,19 @@ function Builder({ templateNodes, templateEdges }: { templateNodes?: Node[]; tem
                 ))}
                 <IntegrationPalettePanel search={search} />
                 {Object.values(filteredByCategory).every(a => a.length === 0) && !search && (
-                  <p className="text-xs text-[#30302e]/45 text-center py-6">No nodes found</p>
+                  <p className="text-xs text-[color:var(--text-4)] text-center py-6">No nodes found</p>
                 )}
               </div>
 
-              <div className="px-3 py-3 border-t border-[#141413]/8">
-                <p className="text-[9px] text-[#30302e]/30 leading-relaxed tracking-wide uppercase font-medium">
+              <div className="px-3 py-3 border-t border-[color:var(--line-soft)]">
+                <p className="plat-eyebrow leading-relaxed">
                   Drag nodes onto the canvas
                 </p>
               </div>
             </div>
 
             {/* ── Canvas ── */}
-            <div className="flex-1 relative bg-gray-50/30" onDrop={onDrop} onDragOver={onDragOver}>
+            <div className="flex-1 relative" onDrop={onDrop} onDragOver={onDragOver}>
               <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -2714,17 +2772,17 @@ function Builder({ templateNodes, templateEdges }: { templateNodes?: Node[]; tem
                 onPaneClick={() => setSelectedId(null)}
                 nodeTypes={nodeTypes}
                 fitView
-                defaultEdgeOptions={{ animated: true, style: { stroke: '#d1d5db', strokeWidth: 1.5 } }}
+                defaultEdgeOptions={{ animated: true, style: { stroke: 'rgba(20, 22, 26, 0.18)', strokeWidth: 1.5 } }}
                 deleteKeyCode="Delete"
                 proOptions={{ hideAttribution: true }}
               >
-                <Background variant={BackgroundVariant.Dots} gap={20} size={1.5} color="#c9cdd4" />
+                <Background variant={BackgroundVariant.Dots} gap={20} size={1.5} color="rgba(20, 22, 26, 0.14)" />
 
                 {/* Hidden import input */}
                 <input ref={importRef} type="file" accept=".json" className="hidden" onChange={handleImportFile} />
 
                 <Controls
-                  className="!shadow-sm !border !border-gray-100 !rounded-xl overflow-hidden !bg-white"
+                  className="!shadow-sm !border !border-[color:var(--line-soft)] !rounded-[12px] overflow-hidden !bg-white"
                   showInteractive={false}
                 />
                 {showMiniMap && (
@@ -2735,7 +2793,7 @@ function Builder({ templateNodes, templateEdges }: { templateNodes?: Node[]; tem
                       }
                       return NODE_CONFIG[(n.data as NodeData)?.nodeType]?.miniColor ?? '#94a3b8';
                     }}
-                    className="!shadow-sm !border !border-gray-100 !rounded-xl !bg-white"
+                    className="!shadow-sm !border !border-[color:var(--line-soft)] !rounded-[12px] !bg-white"
                     pannable
                     zoomable
                   />
@@ -2746,58 +2804,59 @@ function Builder({ templateNodes, templateEdges }: { templateNodes?: Node[]; tem
             {/* ── Right side: vertical toolbar + optional properties panel ── */}
             <div className="flex flex-row flex-shrink-0">
               {/* Vertical toolbar */}
-              <div className="flex flex-col items-center gap-0.5 bg-white border-l border-gray-100 px-1.5 py-3">
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-300 hover:text-gray-800 hover:bg-gray-50 transition-colors" title="Undo (⌘Z)" onClick={undo} disabled={!canUndo}>
+              <div className="flex flex-col items-center gap-0.5 border-l border-[color:var(--line-soft)] px-1.5 py-3">
+                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)] transition-colors" title="Undo (⌘Z)" onClick={undo} disabled={!canUndo}>
                   <Undo2 className="h-3.5 w-3.5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-300 hover:text-gray-800 hover:bg-gray-50 transition-colors" title="Redo (⌘Y)" onClick={redo} disabled={!canRedo}>
+                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)] transition-colors" title="Redo (⌘Y)" onClick={redo} disabled={!canRedo}>
                   <Redo2 className="h-3.5 w-3.5" />
                 </Button>
 
-                <div className="h-px w-4 bg-gray-100 my-1.5" />
+                <div className="h-px w-4 my-1.5" style={{ background: 'var(--line-soft)' }} />
 
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-300 hover:text-gray-800 hover:bg-gray-50 transition-colors" title="Fit view (⌘F)" onClick={handleFitView}>
+                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)] transition-colors" title="Fit view (⌘F)" onClick={handleFitView}>
                   <Maximize2 className="h-3.5 w-3.5" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className={`h-7 w-7 hover:bg-gray-50 transition-colors ${showMiniMap ? 'text-gray-900' : 'text-gray-300 hover:text-gray-800'}`}
+                  className={`h-7 w-7 rounded-[10px] hover:bg-[rgba(20,22,26,0.06)] transition-colors ${showMiniMap ? 'text-[color:var(--ink)] bg-[rgba(20,22,26,0.06)]' : 'text-[color:var(--text-4)] hover:text-[color:var(--ink)]'}`}
                   title="Toggle minimap"
                   onClick={() => setShowMiniMap(v => !v)}
                 >
                   <Map className="h-3.5 w-3.5" />
                 </Button>
 
-                <div className="h-px w-4 bg-gray-100 my-1.5" />
+                <div className="h-px w-4 my-1.5" style={{ background: 'var(--line-soft)' }} />
 
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-300 hover:text-gray-800 hover:bg-gray-50 transition-colors" title="Auto layout (⌘L)" onClick={handleAutoLayout}>
+                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)] transition-colors" title="Auto layout (⌘L)" onClick={handleAutoLayout}>
                   <LayoutGrid className="h-3.5 w-3.5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-300 hover:text-gray-800 hover:bg-gray-50 transition-colors" title="Add sticky note" onClick={handleAddNote}>
+                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)] transition-colors" title="Add sticky note" onClick={handleAddNote}>
                   <StickyNote className="h-3.5 w-3.5" />
                 </Button>
 
-                <div className="h-px w-4 bg-gray-100 my-1.5" />
+                <div className="h-px w-4 my-1.5" style={{ background: 'var(--line-soft)' }} />
 
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-300 hover:text-gray-800 hover:bg-gray-50 transition-colors" title="Export JSON (⌘E)" onClick={handleExportJSON}>
+                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)] transition-colors" title="Export JSON (⌘E)" onClick={handleExportJSON}>
                   <Download className="h-3.5 w-3.5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-300 hover:text-gray-800 hover:bg-gray-50 transition-colors" title="Import JSON" onClick={() => importRef.current?.click()}>
+                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)] transition-colors" title="Import JSON" onClick={() => importRef.current?.click()}>
                   <Upload className="h-3.5 w-3.5" />
                 </Button>
 
-                <div className="h-px w-4 bg-gray-100 my-1.5" />
+                <div className="h-px w-4 my-1.5" style={{ background: 'var(--line-soft)' }} />
 
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors" title="Clear canvas" onClick={handleClearCanvas}>
+                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--bad-fg)] hover:bg-[rgba(20,22,26,0.06)] transition-colors" title="Clear canvas" onClick={handleClearCanvas}>
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>
 
-                <div className="h-px w-4 bg-gray-100 my-1.5" />
+                <div className="h-px w-4 my-1.5" style={{ background: 'var(--line-soft)' }} />
 
                 <Button
                   size="sm"
-                  className={`h-7 w-7 p-0 ${running ? 'bg-amber-500 hover:bg-amber-600' : 'bg-gray-900 hover:bg-gray-800'} text-white rounded-lg transition-colors`}
+                  className="h-7 w-7 p-0 text-white !rounded-[10px] transition-opacity hover:opacity-85"
+                  style={{ background: running ? 'var(--warn-fg)' : 'var(--ink)' }}
                   onClick={runWorkflow}
                   disabled={running}
                   title={running ? 'Running…' : 'Test Run'}
@@ -2805,7 +2864,7 @@ function Builder({ templateNodes, templateEdges }: { templateNodes?: Node[]; tem
                   {running ? <Loader2 className="h-3 w-3 animate-spin" /> : <Play className="h-3 w-3" />}
                 </Button>
                 {showLog && (
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-400 hover:text-gray-700" title="Hide output" onClick={() => setShowLog(false)}>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)]" title="Hide output" onClick={() => setShowLog(false)}>
                     <X className="h-3.5 w-3.5" />
                   </Button>
                 )}
@@ -2869,47 +2928,51 @@ const CreateWorkflow = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1 overflow-hidden" style={{ height: '100vh' }}>
           <AppSidebar />
-          <SidebarInset className="flex-1 flex flex-col overflow-hidden">
+          <SidebarInset className="flex-1 flex flex-col overflow-hidden bg-transparent">
             <main className="flex-1 flex flex-col overflow-hidden">
               {/* Top bar */}
-              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-gray-100 bg-white flex-shrink-0">
+              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[color:var(--line-soft)] flex-shrink-0">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-colors rounded-lg"
+                  className="h-8 w-8 rounded-[10px] text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.06)] transition-colors"
                   onClick={() => navigate('/workflows')}
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
 
-                <div className="w-px h-5 bg-gray-100 mx-1" />
+                <div className="w-px h-5 mx-1" style={{ background: 'var(--line-soft)' }} />
 
-                <Input
-                  placeholder="Untitled Workflow"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  className="max-w-[240px] text-sm font-semibold text-gray-900 border-0 bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-300 px-1 h-8"
-                />
+                {/* Page identifier above the workflow name, per the platform header pattern */}
+                <div className="flex min-w-0 flex-col justify-center">
+                  <p className="plat-crumb !text-[11px] px-1 leading-none">3days.workflows.new</p>
+                  <Input
+                    placeholder="Untitled Workflow"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    className="max-w-[240px] text-sm font-semibold text-[color:var(--ink)] border-0 bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-[color:var(--text-5)] px-1 h-7"
+                  />
+                </div>
 
                 <div className="flex items-center gap-2 ml-auto">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors border border-gray-100 rounded-lg px-3"
+                    className="plat-btn-ghost !h-8 !px-3 !text-xs !rounded-full !bg-transparent !border !border-[color:var(--line)] !text-[color:var(--text-2)] !font-semibold"
                     onClick={handleSave}
                     disabled={saving}
                   >
-                    <Save className="h-3.5 w-3.5 mr-1.5 text-gray-400" />
+                    <Save className="h-3.5 w-3.5 mr-1.5" />
                     Save Draft
                   </Button>
 
                   <Button
                     size="sm"
-                    className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-lg px-4 font-medium transition-colors"
+                    className="plat-btn !h-8 !px-4 !text-xs !rounded-full !bg-[color:var(--ink)] !text-white !font-semibold"
                     onClick={handleSave}
                     disabled={saving}
                   >

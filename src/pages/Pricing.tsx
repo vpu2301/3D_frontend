@@ -108,25 +108,25 @@ const Pricing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f5ede3] dark:bg-[#181512]">
+    <div className="min-h-screen bg-[color:var(--sand)] dark:bg-[color:var(--bg)]">
       <main className="pt-[60px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Header Section */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-[color:var(--ink)] mb-4">
               Simple, Transparent Pricing
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-[color:var(--text-2)] max-w-3xl mx-auto mb-8">
               Choose the plan that fits your business size. All plans include 14-day free trial.
             </p>
             <div className="flex justify-center items-center space-x-4">
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              <Badge variant="outline" className="bg-[color:var(--blue-100)] text-[color:var(--blue)] border-[color:var(--line)]">
                 14-day free trial
               </Badge>
-              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+              <Badge variant="outline" className="bg-[color:var(--blue-100)] text-[color:var(--blue)] border-[color:var(--line)]">
                 Cancel anytime
               </Badge>
-              <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+              <Badge variant="outline" className="bg-[color:var(--blue-100)] text-[color:var(--blue)] border-[color:var(--line)]">
                 15% off annual billing
               </Badge>
             </div>
@@ -135,10 +135,10 @@ const Pricing = () => {
           {/* Pricing Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             {plans.map((plan, index) => (
-              <Card key={index} className={`relative ${plan.popular ? 'border-blue-500 shadow-lg scale-105' : 'border-gray-200'}`}>
+              <Card key={index} className={`relative ${plan.popular ? 'border-[color:var(--line)] shadow-lg scale-105' : 'border-[color:var(--line)]'}`}>
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-blue-600 text-white px-4 py-1">
+                    <Badge className="bg-[color:var(--blue)] text-white px-4 py-1">
                       <Star className="w-3 h-3 mr-1" />
                       Most Popular
                     </Badge>
@@ -147,10 +147,10 @@ const Pricing = () => {
                 <CardHeader className="text-center pb-6">
                   <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
                   <div className="mt-4">
-                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                    <span className="text-gray-600">/month</span>
+                    <span className="text-4xl font-bold text-[color:var(--ink)]">{plan.price}</span>
+                    <span className="text-[color:var(--text-2)]">/month</span>
                   </div>
-                  <p className="text-gray-600 mt-2">{plan.description}</p>
+                  <p className="text-[color:var(--text-2)] mt-2">{plan.description}</p>
                   <Badge variant="outline" className="mt-2 w-fit mx-auto">
                     {plan.ideal}
                   </Badge>
@@ -159,13 +159,13 @@ const Pricing = () => {
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start">
-                        <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
+                        <Check className="h-5 w-5 text-[color:var(--blue)] mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-[color:var(--ink)]">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   <Button 
-                    className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : 'bg-[#111111] hover:bg-[#222222] rounded-full'}`}
+                    className={`w-full ${plan.popular ? 'bg-[color:var(--blue)] hover:bg-[color:var(--blue)]' : 'bg-[color:var(--ink)] hover:bg-[color:var(--text-2)] rounded-full'}`}
                     asChild
                   >
                     <Link to={plan.cta === 'Contact Sales' ? '/contact' : '/signup'}>
@@ -181,25 +181,25 @@ const Pricing = () => {
           {/* What's Included Section */}
           <div className="mb-16">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl font-bold text-[color:var(--ink)] mb-4">
                 Complete AI Marketing Suite
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-[color:var(--text-2)]">
                 Every plan includes access to our full range of AI marketing tools
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {modules.map((module, index) => (
-                <Card key={index} className="border-gray-200 hover:shadow-md transition-shadow">
+                <Card key={index} className="border-[color:var(--line)] hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
                     <div className="flex items-center mb-4">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                        <module.icon className="h-5 w-5 text-blue-600" />
+                      <div className="w-10 h-10 bg-[color:var(--blue-100)] rounded-[16px] flex items-center justify-center mr-3">
+                        <module.icon className="h-5 w-5 text-[color:var(--blue)]" />
                       </div>
-                      <h3 className="font-semibold text-gray-900">{module.name}</h3>
+                      <h3 className="font-semibold text-[color:var(--ink)]">{module.name}</h3>
                     </div>
-                    <p className="text-gray-600 mb-3">{module.description}</p>
+                    <p className="text-[color:var(--text-2)] mb-3">{module.description}</p>
                     <div className="flex flex-wrap gap-1">
                       {module.included.map((item, itemIndex) => (
                         <Badge key={itemIndex} variant="outline" className="text-xs">
@@ -216,45 +216,45 @@ const Pricing = () => {
           {/* FAQ Section */}
           <div className="mb-16">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl font-bold text-[color:var(--ink)] mb-4">
                 Frequently Asked Questions
               </h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">What happens after the free trial?</h3>
-                <p className="text-gray-600">You can continue with a paid plan or cancel anytime. No commitment required.</p>
+                <h3 className="font-semibold text-[color:var(--ink)] mb-2">What happens after the free trial?</h3>
+                <p className="text-[color:var(--text-2)]">You can continue with a paid plan or cancel anytime. No commitment required.</p>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Can I change plans anytime?</h3>
-                <p className="text-gray-600">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+                <h3 className="font-semibold text-[color:var(--ink)] mb-2">Can I change plans anytime?</h3>
+                <p className="text-[color:var(--text-2)]">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">What are overages?</h3>
-                <p className="text-gray-600">If you exceed your plan limits, additional usage is billed at cost × 1.25. You'll be notified before any charges.</p>
+                <h3 className="font-semibold text-[color:var(--ink)] mb-2">What are overages?</h3>
+                <p className="text-[color:var(--text-2)]">If you exceed your plan limits, additional usage is billed at cost × 1.25. You'll be notified before any charges.</p>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Is my data secure?</h3>
-                <p className="text-gray-600">Yes, we use EU hosting with GDPR compliance, SOC-2 certification, and per-tenant encryption.</p>
+                <h3 className="font-semibold text-[color:var(--ink)] mb-2">Is my data secure?</h3>
+                <p className="text-[color:var(--text-2)]">Yes, we use EU hosting with GDPR compliance, SOC-2 certification, and per-tenant encryption.</p>
               </div>
             </div>
           </div>
 
           {/* CTA Section */}
-          <div className="text-center bg-gradient-to-r from-[#111111] to-[#333333] rounded-3xl p-12 text-white">
+          <div className="text-center bg-gradient-to-r from-[color:var(--ink)] to-[#333333] rounded-[28px] p-12 text-white">
             <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Marketing?</h2>
             <p className="text-xl mb-8 opacity-90">
               Join thousands of SMBs using AI to automate their marketing and drive growth.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100" asChild>
+              <Button size="lg" className="bg-[color:var(--paper)] text-[color:var(--blue)] hover:bg-[color:var(--sand)]" asChild>
                 <Link to="/signup">
                   Start 14-Day Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600" asChild>
+              <Button size="lg" variant="outline" className="text-white border-white hover:bg-[color:var(--paper)] hover:text-[color:var(--blue)]" asChild>
                 <Link to="/watch-demo">
                   Watch Demo
                 </Link>

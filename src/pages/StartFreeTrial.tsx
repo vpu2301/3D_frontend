@@ -44,14 +44,14 @@ const StartFreeTrial = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#181512]">
+    <div className="min-h-screen bg-[color:var(--paper)] dark:bg-[color:var(--bg)]">
       <main className="pt-[60px]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-[color:var(--ink)] mb-4">
               Start Your Free Trial
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-[color:var(--text-2)] max-w-2xl mx-auto">
               Experience the power of AI employees with no commitment. Get started in minutes.
             </p>
           </div>
@@ -131,17 +131,17 @@ const StartFreeTrial = () => {
 
             {/* Benefits */}
             <div className="space-y-8">
-              <Card className="border-blue-200 bg-blue-50">
+              <Card className="border-[color:var(--line)] bg-[color:var(--blue-100)]">
                 <CardContent className="p-6">
                   <h3 className="text-xl font-semibold mb-4 flex items-center">
-                    <Zap className="h-6 w-6 text-blue-600 mr-2" />
+                    <Zap className="h-6 w-6 text-[color:var(--blue)] mr-2" />
                     What's Included
                   </h3>
                   <ul className="space-y-3">
                     {benefits.map((benefit, index) => (
                       <li key={index} className="flex items-center">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">{benefit}</span>
+                        <CheckCircle className="h-5 w-5 text-[color:var(--blue)] mr-3 flex-shrink-0" />
+                        <span className="text-[color:var(--ink)]">{benefit}</span>
                       </li>
                     ))}
                   </ul>
@@ -150,15 +150,15 @@ const StartFreeTrial = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Card className="text-center p-6">
-                  <Shield className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                  <Shield className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                   <h4 className="font-semibold mb-2">Enterprise Security</h4>
-                  <p className="text-sm text-gray-600">Bank-level encryption and compliance</p>
+                  <p className="text-sm text-[color:var(--text-2)]">Bank-level encryption and compliance</p>
                 </Card>
                 
                 <Card className="text-center p-6">
-                  <Users className="h-12 w-12 text-green-600 mx-auto mb-4" />
+                  <Users className="h-12 w-12 text-[color:var(--blue)] mx-auto mb-4" />
                   <h4 className="font-semibold mb-2">Expert Support</h4>
-                  <p className="text-sm text-gray-600">24/7 assistance from our team</p>
+                  <p className="text-sm text-[color:var(--text-2)]">24/7 assistance from our team</p>
                 </Card>
               </div>
             </div>

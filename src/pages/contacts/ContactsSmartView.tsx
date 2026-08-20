@@ -64,7 +64,7 @@ export default function ContactsSmartView() {
   if (!view) {
     return (
       <ContactsLayout>
-        <div className="flex flex-1 items-center justify-center text-sm text-gray-500">
+        <div className="flex flex-1 items-center justify-center text-sm" style={{ color: 'var(--text-4)' }}>
           Smart view not found.
         </div>
       </ContactsLayout>
@@ -98,23 +98,24 @@ export default function ContactsSmartView() {
       <div className="flex flex-1 overflow-hidden">
         <ContactsMiniRail />
         <main className="flex flex-1 flex-col overflow-hidden">
-          <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+          <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 py-4">
             <div>
-              <Link to="/contacts" className="inline-flex items-center gap-1 text-xs text-gray-500 hover:underline">
+              <p className="plat-crumb">3days.contacts / view</p>
+              <Link to="/contacts" className="mt-1.5 inline-flex items-center gap-1 text-xs text-[var(--text-4)] transition-colors hover:text-[var(--ink)]">
                 <ArrowLeft className="h-3 w-3" /> Back to Contacts
               </Link>
-              <h1 className="mt-1 flex items-center gap-2 text-2xl font-light text-gray-900">
-                <Sparkles className="h-5 w-5 text-blue-500" />
+              <h1 className="mt-1 flex items-center gap-2 text-[26px] leading-tight">
+                <Sparkles className="h-5 w-5 text-[var(--text-4)]" />
                 {view.emoji ? `${view.emoji} ` : ''}
                 {view.name}
               </h1>
-              <p className="text-xs italic text-gray-500">"{view.definition}"</p>
+              <p className="mt-1 text-xs italic text-[var(--text-4)]">"{view.definition}"</p>
             </div>
             {view.precomputed && (
               <button
                 type="button"
                 onClick={onRecompute}
-                className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1 text-xs hover:bg-gray-50"
+                className="plat-btn-ghost"
               >
                 <RefreshCw className="h-3.5 w-3.5" /> Recompute
               </button>
@@ -122,7 +123,7 @@ export default function ContactsSmartView() {
           </div>
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {contacts.length === 0 ? (
-              <div className="rounded-md border border-dashed border-gray-200 px-6 py-16 text-center text-sm text-gray-500">
+              <div className="rounded-[14px] border border-dashed border-[var(--line)] px-6 py-16 text-center text-sm text-[var(--text-4)]">
                 No matches.
               </div>
             ) : (
@@ -132,11 +133,11 @@ export default function ContactsSmartView() {
                     key={c.id}
                     type="button"
                     onClick={() => navigate(`/contacts/contact/${c.id}`)}
-                    className="flex flex-col items-center rounded-lg border border-gray-200 bg-white p-4 text-center transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:shadow-md"
+                    className="flex flex-col items-center rounded-[12px] border border-[var(--line-soft)] bg-white p-4 text-center transition-colors hover:border-[var(--ink)]"
                   >
                     <ContactAvatar contact={c} size={56} />
-                    <div className="mt-2 truncate text-sm font-medium text-gray-900">{displayName(c)}</div>
-                    <div className="truncate text-xs text-gray-500">
+                    <div className="mt-2 truncate text-sm font-semibold text-[var(--ink)]">{displayName(c)}</div>
+                    <div className="truncate text-xs text-[var(--text-4)]">
                       {c.title ?? c.organization ?? '—'}
                     </div>
                   </button>

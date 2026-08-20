@@ -82,7 +82,7 @@ export function CommandPalette({ open, onOpenChange, onOpenEvent }: Props) {
           <button
             type="button"
             onClick={commitNL}
-            className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-blue-500 to-violet-500 px-2 py-1 text-[11px] font-medium text-white shadow-sm hover:brightness-110"
+            className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-full bg-[var(--ink)] px-2.5 py-1 text-[11px] font-semibold text-white transition hover:opacity-85"
           >
             <Sparkles className="h-3 w-3" />
             Create ({Math.round(preview.confidence * 100)}%)
@@ -90,16 +90,16 @@ export function CommandPalette({ open, onOpenChange, onOpenEvent }: Props) {
         )}
       </div>
       {preview && preview.title && (
-        <div className="mx-3 mt-2 rounded-lg border border-dashed border-blue-200 bg-blue-50/40 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-blue-500">Preview</p>
-          <p className="mt-0.5 text-sm font-medium text-gray-900">{preview.title}</p>
-          <p className="text-xs text-gray-600">
+        <div className="mx-3 mt-2 rounded-[10px] border border-dashed border-[var(--line)] bg-[var(--sand)] px-3 py-2">
+          <p className="plat-eyebrow">Preview</p>
+          <p className="mt-1 text-sm font-semibold text-[var(--ink)]">{preview.title}</p>
+          <p className="text-xs text-[var(--text-3)]">
             {format(parseUTC(preview.start), 'EEE, MMM d · h:mm a')} –{' '}
             {format(parseUTC(preview.end), 'h:mm a')}
             {preview.location ? ` · ${preview.location}` : ''}
           </p>
-          <p className="mt-1 text-[11px] text-gray-500">
-            Press <kbd className="rounded border border-gray-300 bg-white px-1 text-[10px]">Enter</kbd> to create.
+          <p className="mt-1 text-[11px] text-[var(--text-4)]">
+            Press <kbd className="rounded-[4px] border border-[var(--line)] bg-white px-1 font-mono text-[10px]">Enter</kbd> to create.
           </p>
         </div>
       )}
@@ -107,32 +107,32 @@ export function CommandPalette({ open, onOpenChange, onOpenEvent }: Props) {
         <CommandEmpty>No matches.</CommandEmpty>
         <CommandGroup heading="Actions">
           <CommandItem onSelect={() => { onOpenChange(false); calendarStore.setAnchor(new Date().toISOString()); }}>
-            <Clock className="mr-2 h-3.5 w-3.5 text-gray-400" />
+            <Clock className="mr-2 h-3.5 w-3.5 text-[var(--text-5)]" />
             Jump to today
-            <span className="ml-auto text-[10px] text-gray-400">T</span>
+            <span className="ml-auto font-mono text-[10px] text-[var(--text-5)]">T</span>
           </CommandItem>
           <CommandItem onSelect={() => setView('day')}>
-            <CalendarClock className="mr-2 h-3.5 w-3.5 text-gray-400" />
+            <CalendarClock className="mr-2 h-3.5 w-3.5 text-[var(--text-5)]" />
             Switch to day
-            <span className="ml-auto text-[10px] text-gray-400">1</span>
+            <span className="ml-auto font-mono text-[10px] text-[var(--text-5)]">1</span>
           </CommandItem>
           <CommandItem onSelect={() => setView('3day')}>
-            <CalendarClock className="mr-2 h-3.5 w-3.5 text-gray-400" />
+            <CalendarClock className="mr-2 h-3.5 w-3.5 text-[var(--text-5)]" />
             Switch to 3-day
-            <span className="ml-auto text-[10px] text-gray-400">2</span>
+            <span className="ml-auto font-mono text-[10px] text-[var(--text-5)]">2</span>
           </CommandItem>
           <CommandItem onSelect={() => setView('week')}>
-            <CalendarClock className="mr-2 h-3.5 w-3.5 text-gray-400" />
+            <CalendarClock className="mr-2 h-3.5 w-3.5 text-[var(--text-5)]" />
             Switch to week
-            <span className="ml-auto text-[10px] text-gray-400">3</span>
+            <span className="ml-auto font-mono text-[10px] text-[var(--text-5)]">3</span>
           </CommandItem>
           <CommandItem onSelect={() => setView('month')}>
-            <CalendarClock className="mr-2 h-3.5 w-3.5 text-gray-400" />
+            <CalendarClock className="mr-2 h-3.5 w-3.5 text-[var(--text-5)]" />
             Switch to month
-            <span className="ml-auto text-[10px] text-gray-400">4</span>
+            <span className="ml-auto font-mono text-[10px] text-[var(--text-5)]">4</span>
           </CommandItem>
           <CommandItem onSelect={() => { onOpenChange(false); calendarStore.toggleChat(); }}>
-            <Zap className="mr-2 h-3.5 w-3.5 text-gray-400" />
+            <Zap className="mr-2 h-3.5 w-3.5 text-[var(--text-5)]" />
             Toggle AI sidebar
           </CommandItem>
           <CommandItem
@@ -154,9 +154,9 @@ export function CommandPalette({ open, onOpenChange, onOpenEvent }: Props) {
               onOpenEvent(ev);
             }}
           >
-            <Plus className="mr-2 h-3.5 w-3.5 text-gray-400" />
+            <Plus className="mr-2 h-3.5 w-3.5 text-[var(--text-5)]" />
             Create blank event
-            <span className="ml-auto text-[10px] text-gray-400">C</span>
+            <span className="ml-auto font-mono text-[10px] text-[var(--text-5)]">C</span>
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
@@ -170,9 +170,9 @@ export function CommandPalette({ open, onOpenChange, onOpenEvent }: Props) {
                 onOpenEvent(e);
               }}
             >
-              <Search className="mr-2 h-3.5 w-3.5 text-gray-400" />
+              <Search className="mr-2 h-3.5 w-3.5 text-[var(--text-5)]" />
               <span className="truncate">{e.title}</span>
-              <span className="ml-auto text-[10px] text-gray-400">
+              <span className="ml-auto font-mono text-[10px] text-[var(--text-5)]">
                 {format(parseUTC(e.start), 'EEE h:mm a')}
               </span>
             </CommandItem>

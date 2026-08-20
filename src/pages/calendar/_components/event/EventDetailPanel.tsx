@@ -26,11 +26,11 @@ export function EventDetailPanel({ open, onOpenChange }: Props) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-[420px] p-0 sm:max-w-[420px]">
-        <SheetHeader className="border-b border-gray-200/70 px-5 py-3">
+        <SheetHeader className="border-b border-[var(--line-soft)] px-5 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className={cn('h-2.5 w-2.5 rounded-full', palette.dot)} />
-              <SheetTitle className="text-sm font-semibold text-gray-900">
+              <SheetTitle className="text-sm">
                 Event
               </SheetTitle>
             </div>
@@ -38,7 +38,7 @@ export function EventDetailPanel({ open, onOpenChange }: Props) {
               type="button"
               onClick={() => onOpenChange(false)}
               aria-label="Close"
-              className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100"
+              className="flex h-7 w-7 items-center justify-center rounded-[8px] text-[var(--text-4)] transition hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -54,9 +54,9 @@ export function EventDetailPanel({ open, onOpenChange }: Props) {
             className="h-auto border-0 px-0 text-lg font-semibold focus-visible:ring-0"
           />
 
-          <div className="space-y-2 text-sm text-gray-700">
+          <div className="space-y-2 text-sm text-[var(--text-1)]">
             <div className="flex items-center gap-2">
-              <Calendar className="h-3.5 w-3.5 text-gray-400" />
+              <Calendar className="h-3.5 w-3.5 text-[var(--text-5)]" />
               <span>
                 {format(parseUTC(event.start), 'EEE, MMM d · h:mm a')} –{' '}
                 {format(parseUTC(event.end), 'h:mm a')}
@@ -64,18 +64,18 @@ export function EventDetailPanel({ open, onOpenChange }: Props) {
             </div>
             {event.location && (
               <div className="flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-gray-400" />
+                <MapPin className="h-3.5 w-3.5 text-[var(--text-5)]" />
                 <span>{event.location}</span>
               </div>
             )}
             {event.conferencing && (
               <div className="flex items-center gap-2">
-                <Video className="h-3.5 w-3.5 text-gray-400" />
+                <Video className="h-3.5 w-3.5 text-[var(--text-5)]" />
                 <a
                   href={event.conferencing.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-blue-600 hover:underline"
+                  className="text-[var(--blue)] hover:underline"
                 >
                   Join {event.conferencing.provider}
                 </a>
@@ -83,12 +83,12 @@ export function EventDetailPanel({ open, onOpenChange }: Props) {
             )}
             {event.attendees && event.attendees.length > 0 && (
               <div className="flex items-start gap-2">
-                <Users className="mt-0.5 h-3.5 w-3.5 text-gray-400" />
+                <Users className="mt-0.5 h-3.5 w-3.5 text-[var(--text-5)]" />
                 <div className="flex flex-wrap gap-1">
                   {event.attendees.map(a => (
                     <span
                       key={a.email}
-                      className="rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs text-gray-700"
+                      className="rounded-full border border-[var(--line-soft)] bg-[var(--sand)] px-2.5 py-0.5 text-xs text-[var(--text-1)]"
                     >
                       {a.name ?? a.email}
                     </span>
@@ -99,7 +99,7 @@ export function EventDetailPanel({ open, onOpenChange }: Props) {
           </div>
 
           <div>
-            <div className="mb-1 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+            <div className="plat-eyebrow mb-1.5 flex items-center gap-1.5">
               <Sparkles className="h-3 w-3" />
               Prep notes
             </div>
@@ -110,16 +110,16 @@ export function EventDetailPanel({ open, onOpenChange }: Props) {
               }
               placeholder="Ask the assistant to prep you…"
               rows={5}
-              className="text-sm"
+              className="rounded-[10px] border-[var(--line)] text-sm"
             />
           </div>
         </div>
 
-        <footer className="border-t border-gray-200/70 px-5 py-3">
+        <footer className="border-t border-[var(--line-soft)] px-5 py-3">
           <Button
             variant="ghost"
             size="sm"
-            className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+            className="rounded-full text-[var(--bad-fg)] hover:bg-[rgba(179,56,46,0.06)] hover:text-[var(--bad-fg)]"
             onClick={() => {
               calendarStore.deleteEvent(event.id);
               onOpenChange(false);

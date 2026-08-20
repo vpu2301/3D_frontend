@@ -31,17 +31,21 @@ function NavRow({ icon: Icon, label, count, badgeColor, active, onClick }: NavRo
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full items-center gap-3 rounded-r-full py-2 pl-5 pr-4 text-left text-sm transition-colors',
-        active ? 'bg-[#dde9f4] text-gray-900' : 'text-gray-700 hover:bg-gray-100',
+        'flex w-full items-center gap-3 rounded-[10px] py-2 pl-4 pr-3 text-left text-[13.5px] font-medium transition-colors',
+        active
+          ? 'bg-[rgba(20,22,26,0.07)] text-[var(--ink)]'
+          : 'text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
       )}
     >
-      <Icon className="h-4 w-4 shrink-0 text-gray-500" />
+      <Icon className={cn('h-4 w-4 shrink-0', active ? 'text-[var(--ink)]' : 'text-[var(--text-4)]')} />
       <span className="flex-1 truncate">{label}</span>
       {count !== undefined && count > 0 && (
         <span
           className={cn(
             'shrink-0 rounded-full px-1.5 text-[10px] font-medium leading-tight',
-            badgeColor === 'red' ? 'bg-red-500 text-white' : 'text-gray-500',
+            badgeColor === 'red'
+              ? 'bg-[var(--bad-fg)] text-white'
+              : 'text-[var(--text-5)]',
           )}
         >
           {count}
@@ -73,18 +77,18 @@ export default function ContactsMiniRail() {
   };
 
   return (
-    <aside className="flex h-full w-60 shrink-0 flex-col bg-white">
+    <aside className="flex h-full w-60 shrink-0 flex-col border-r border-[var(--line-soft)]">
       <div className="px-4 pt-3 pb-4">
         <button
           type="button"
           onClick={onNew}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#bdd8ec] px-4 py-2.5 text-sm font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
+          className="plat-btn w-full justify-center"
         >
           <Plus className="h-4 w-4" /> Create contact
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-3">
+      <div className="flex-1 overflow-y-auto px-3">
         <div className="space-y-0.5">
           <NavRow
             icon={Users}
@@ -97,9 +101,7 @@ export default function ContactsMiniRail() {
           <NavRow icon={Inbox} label="Other contacts" onClick={() => navigate('/contacts')} />
         </div>
 
-        <div className="mb-1.5 mt-6 px-5 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
-          Fix &amp; manage
-        </div>
+        <div className="plat-eyebrow mb-1.5 mt-6 px-4">Fix &amp; manage</div>
         <div className="space-y-0.5">
           <NavRow
             icon={GitMerge}
@@ -124,23 +126,23 @@ export default function ContactsMiniRail() {
           />
         </div>
 
-        <div className="mb-1.5 mt-6 flex items-center justify-between px-5 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+        <div className="plat-eyebrow mb-1.5 mt-6 flex items-center justify-between px-4">
           <span>Labels</span>
         </div>
         <div className="space-y-0.5">
           {tags.length === 0 ? (
-            <div className="px-5 text-[11px] italic text-gray-400">No labels yet</div>
+            <div className="px-4 text-[11px] italic text-[var(--text-5)]">No labels yet</div>
           ) : (
             tags.slice(0, 10).map((t) => (
               <button
                 key={t.name}
                 type="button"
                 onClick={() => navigate(`/contacts?tag=${encodeURIComponent(t.name)}`)}
-                className="flex w-full items-center gap-3 rounded-r-full py-2 pl-5 pr-4 text-left text-sm text-gray-700 hover:bg-gray-100"
+                className="flex w-full items-center gap-3 rounded-[10px] py-2 pl-4 pr-3 text-left text-[13.5px] font-medium text-[var(--text-2)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
-                <Tag className="h-4 w-4 shrink-0 text-gray-400" />
+                <Tag className="h-4 w-4 shrink-0 text-[var(--text-4)]" />
                 <span className="flex-1 truncate">{t.name}</span>
-                <span className="text-[10px] text-gray-400">{t.count}</span>
+                <span className="text-[10px] text-[var(--text-5)]">{t.count}</span>
               </button>
             ))
           )}

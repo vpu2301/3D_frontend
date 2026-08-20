@@ -107,16 +107,16 @@ export default function AiSidebar({ editor, docId, onClose }: Props) {
   };
 
   return (
-    <aside className="flex h-full w-96 shrink-0 flex-col border-l border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-      <div className="flex items-center justify-between border-b border-zinc-200 px-3 py-2.5 dark:border-zinc-800">
-        <div className="flex items-center gap-1.5 font-medium">
-          <Sparkles className="h-4 w-4 text-blue-500" />
+    <aside className="flex h-full w-96 shrink-0 flex-col border-l border-[var(--line-soft)]">
+      <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-3 py-2.5">
+        <div className="flex items-center gap-1.5 font-semibold text-[var(--ink)]">
+          <Sparkles className="h-4 w-4 text-[var(--text-4)]" />
           AI assistant
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-[8px] p-1 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           aria-label="Close AI sidebar"
         >
           <X className="h-4 w-4" />
@@ -125,13 +125,13 @@ export default function AiSidebar({ editor, docId, onClose }: Props) {
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-3">
         {messages.length === 0 ? (
-          <div className="rounded-md bg-zinc-50 p-3 text-sm text-zinc-500 dark:bg-zinc-800/40">
+          <div className="rounded-[12px] border border-[var(--line-soft)] bg-white p-3 text-sm text-[var(--text-3)]">
             Ask anything about this document.
             <ul className="mt-2 space-y-1 text-xs">
-              <li className="text-blue-700 dark:text-blue-300">"Rewrite section 2 in bullets"</li>
-              <li className="text-blue-700 dark:text-blue-300">"Summarize this in three sentences"</li>
-              <li className="text-blue-700 dark:text-blue-300">"List action items"</li>
-              <li className="text-blue-700 dark:text-blue-300">"Make the tone more confident"</li>
+              <li className="text-[var(--text-2)]">"Rewrite section 2 in bullets"</li>
+              <li className="text-[var(--text-2)]">"Summarize this in three sentences"</li>
+              <li className="text-[var(--text-2)]">"List action items"</li>
+              <li className="text-[var(--text-2)]">"Make the tone more confident"</li>
             </ul>
           </div>
         ) : (
@@ -141,10 +141,10 @@ export default function AiSidebar({ editor, docId, onClose }: Props) {
               className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+                className={`max-w-[85%] rounded-[12px] px-3 py-2 text-sm ${
                   m.role === 'user'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100'
+                    ? 'bg-[var(--ink)] text-white'
+                    : 'border border-[var(--line-soft)] bg-white text-[var(--ink)]'
                 }`}
               >
                 <div className="whitespace-pre-wrap">
@@ -158,14 +158,14 @@ export default function AiSidebar({ editor, docId, onClose }: Props) {
                       <button
                         type="button"
                         onClick={() => rejectProposal(m)}
-                        className="rounded px-2 py-1 text-xs text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                        className="rounded-[8px] px-2 py-1 text-xs font-medium text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
                       >
                         Reject
                       </button>
                       <button
                         type="button"
                         onClick={() => acceptProposal(m)}
-                        className="flex items-center gap-1 rounded bg-green-600 px-2 py-1 text-xs font-medium text-white hover:bg-green-700"
+                        className="flex items-center gap-1 rounded-full bg-[var(--ink)] px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-85"
                       >
                         <Check className="h-3 w-3" /> Accept all
                       </button>
@@ -179,7 +179,7 @@ export default function AiSidebar({ editor, docId, onClose }: Props) {
       </div>
 
       <form
-        className="border-t border-zinc-200 p-3 dark:border-zinc-800"
+        className="border-t border-[var(--line-soft)] p-3"
         onSubmit={(e) => {
           e.preventDefault();
           send();
@@ -197,12 +197,12 @@ export default function AiSidebar({ editor, docId, onClose }: Props) {
             }}
             placeholder="Ask AI about this doc…"
             rows={2}
-            className="flex-1 resize-none rounded-md border border-zinc-200 bg-white p-2 text-sm focus:border-blue-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900"
+            className="flex-1 resize-none rounded-[10px] border border-[var(--line-soft)] bg-[var(--sand)] p-2 text-sm text-[var(--ink)] placeholder:text-[var(--text-5)] focus:border-[var(--ink)] focus:bg-white focus:outline-none"
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="flex h-9 w-9 items-center justify-center rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+            className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-[var(--ink)] text-white transition-opacity hover:opacity-85 disabled:opacity-35"
           >
             <Send className="h-4 w-4" />
           </button>

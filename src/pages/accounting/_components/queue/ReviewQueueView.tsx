@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { BadgeCheck, CircleAlert, Inbox } from 'lucide-react';
+import { BadgeCheck, ChevronRight, CircleAlert, Inbox } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { CloseCase } from '@/pages/accounting/_lib/types';
 import { CONFIDENCE_THRESHOLD } from '@/pages/accounting/_lib/types';
@@ -21,38 +21,30 @@ function CaseCard({ c, mandateName, onOpen }: { c: CloseCase; mandateName: strin
     <button
       type="button"
       onClick={onOpen}
-      className={cn(
-        'group flex w-full flex-col rounded-xl border bg-white p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
-        high ? 'border-gray-200' : 'border-amber-200',
-      )}
+      className="group flex w-full flex-col px-5 py-4 text-left transition-colors hover:bg-[rgba(20,22,26,0.02)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--ink)]/25"
     >
-      <div className="flex w-full items-center justify-between gap-2">
-        <span className="rounded-full bg-[#f0e9df] px-2.5 py-0.5 text-[11px] font-medium text-gray-700">
-          {t(`category.${c.category}`)}
-        </span>
-        <span
-          className={cn(
-            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold',
-            high ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700',
-          )}
-        >
+      <div className="flex w-full items-center gap-2">
+        <span className="plat-pill plat-pill-mute">{t(`category.${c.category}`)}</span>
+        <span className={cn('plat-pill', high ? 'plat-pill-ok' : 'plat-pill-warn')}>
           {high ? <BadgeCheck aria-hidden className="h-3 w-3" /> : <CircleAlert aria-hidden className="h-3 w-3" />}
           {c.confidence}% · {high ? t('queue.highConfidence') : t('queue.belowThreshold')}
         </span>
+        <ChevronRight
+          aria-hidden
+          className="ml-auto h-4 w-4 shrink-0 text-[var(--text-5)] transition-colors group-hover:text-[var(--ink)]"
+        />
       </div>
 
-      <p className="mt-3 text-sm font-medium leading-snug text-gray-900">{c.problem}</p>
+      <p className="mt-3 text-[14.5px] font-medium leading-snug text-[var(--ink)]">{c.problem}</p>
 
-      <p className="mt-2 text-xs text-gray-400">
-        {mandateName} · <span className="font-mono">{c.transactionRef}</span> ·{' '}
-        {formatCurrency(i18n.language, c.amount, c.currency)}
+      <p className="mt-1.5 text-xs text-[var(--text-4)]">
+        {mandateName} · <span style={{ fontFamily: 'var(--mono)' }}>{c.transactionRef}</span> ·{' '}
+        <span style={{ fontFamily: 'var(--mono)' }}>{formatCurrency(i18n.language, c.amount, c.currency)}</span>
       </p>
 
-      <div className="mt-3 w-full rounded-lg bg-[#faf7f2] px-3 py-2">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-          {t('queue.proposedAction')}
-        </p>
-        <p className="mt-0.5 line-clamp-2 text-xs text-gray-700">{c.proposedAction}</p>
+      <div className="mt-3 w-full rounded-[12px] bg-[var(--sand)] px-3 py-2.5">
+        <p className="plat-eyebrow">{t('queue.proposedAction')}</p>
+        <p className="mt-1 line-clamp-2 text-xs text-[var(--text-1)]">{c.proposedAction}</p>
       </div>
     </button>
   );
@@ -62,8 +54,9 @@ export default function ReviewQueueView() {
   const { t } = useTranslation('accounting');
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const pending = useAccountingStore(selectPendingCases);
+  const cases = useAccountingStore((s) => s.cases);
   const mandates = useAccountingStore((s) => s.mandates);
+  const pending = useMemo(() => selectPendingCases({ cases }), [cases]);
 
   const [openCaseId, setOpenCaseId] = useState<string | null>(null);
 
@@ -83,13 +76,13 @@ export default function ReviewQueueView() {
   const sorted = [...pending].sort((a, b) => b.confidence - a.confidence);
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden bg-white">
+    <div className="flex flex-1 flex-col overflow-hidden">
       <ViewHeader
         title={t('queue.title')}
         subtitle={t('queue.subtitle')}
         right={
           pending.length > 0 ? (
-            <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-medium text-amber-700">
+            <span className="plat-pill plat-pill-warn">
               {t('queue.casesPending', { count: pending.length })}
             </span>
           ) : undefined
@@ -99,16 +92,16 @@ export default function ReviewQueueView() {
       <div className="flex-1 overflow-y-auto p-6">
         {sorted.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center py-20 text-center">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-green-50">
-              <Inbox aria-hidden className="h-5 w-5 text-green-600" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--ok-bg)]">
+              <Inbox aria-hidden className="h-5 w-5 text-[var(--ok-fg)]" />
             </span>
-            <p className="mt-3 text-sm font-medium text-gray-700">{t('queue.emptyTitle')}</p>
-            <p className="mt-1 max-w-xs text-xs text-gray-400">{t('queue.emptyBody')}</p>
+            <p className="mt-3 text-sm font-semibold text-[var(--ink)]">{t('queue.emptyTitle')}</p>
+            <p className="mt-1 max-w-xs text-xs text-[var(--text-4)]">{t('queue.emptyBody')}</p>
           </div>
         ) : (
-          <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2" aria-label={t('queue.title')}>
+          <ul className="plat-list" aria-label={t('queue.title')}>
             {sorted.map((c) => (
-              <li key={c.id}>
+              <li key={c.id} className="border-b border-[var(--line-soft)] last:border-0">
                 <CaseCard c={c} mandateName={mandateName(c.mandateId)} onOpen={() => setOpenCaseId(c.id)} />
               </li>
             ))}

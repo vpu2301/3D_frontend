@@ -104,8 +104,8 @@ const CookieConsent = () => {
     <>
       {bannerOpen && !settingsOpen && (
         <div
-          className="fixed bottom-4 left-4 right-4 md:left-6 md:right-6 z-[60] mx-auto max-w-5xl bg-[#1a1916] dark:bg-[#1a1916] text-white border border-white/10 shadow-2xl"
-          style={{ borderRadius: '4px' }}
+          className="m-dark-panel fixed bottom-4 left-4 right-4 md:left-6 md:right-6 z-[60] mx-auto max-w-5xl"
+          style={{ borderRadius: '28px' }}
           role="dialog"
           aria-live="polite"
           aria-label={t('cookies.bannerTitle')}
@@ -113,8 +113,8 @@ const CookieConsent = () => {
           <div className="flex flex-col md:flex-row md:items-center gap-5 p-5 md:p-6">
             <div className="flex items-start gap-3 flex-1">
               <div
-                className="w-9 h-9 bg-white/10 flex items-center justify-center flex-shrink-0"
-                style={{ borderRadius: '4px' }}
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0"
+                style={{ borderRadius: '9999px' }}
               >
                 <Cookie className="w-4 h-4 text-white/80" />
               </div>
@@ -130,22 +130,22 @@ const CookieConsent = () => {
             <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0">
               <button
                 onClick={() => setSettingsOpen(true)}
-                className="px-4 py-2 text-white/80 hover:text-white text-sm font-medium border border-white/15 hover:bg-white/5 transition-colors"
-                style={{ borderRadius: '4px' }}
+                className="rounded-full border border-white/25 px-5 py-2.5 text-sm font-semibold text-white/85 transition-colors hover:bg-white/10 hover:text-white"
+                style={{ borderRadius: '9999px' }}
               >
                 {t('cookies.customize')}
               </button>
               <button
                 onClick={rejectAll}
-                className="px-4 py-2 text-white/80 hover:text-white text-sm font-medium border border-white/15 hover:bg-white/5 transition-colors"
-                style={{ borderRadius: '4px' }}
+                className="rounded-full border border-white/25 px-5 py-2.5 text-sm font-semibold text-white/85 transition-colors hover:bg-white/10 hover:text-white"
+                style={{ borderRadius: '9999px' }}
               >
                 {t('cookies.rejectAll')}
               </button>
               <button
                 onClick={acceptAll}
-                className="px-4 py-2 bg-white hover:bg-[#f5f3ee] text-[#141413] text-sm font-medium transition-colors"
-                style={{ borderRadius: '4px' }}
+                className="rounded-full bg-[color:var(--blue-200)] px-5 py-2.5 text-sm font-semibold text-[color:var(--ink)] transition-colors hover:bg-white"
+                style={{ borderRadius: '9999px' }}
               >
                 {t('cookies.acceptAll')}
               </button>
@@ -162,31 +162,31 @@ const CookieConsent = () => {
             aria-hidden
           />
           <div
-            className="relative w-full max-w-xl bg-white dark:bg-[#1a1916] text-[#1a1916] dark:text-white shadow-2xl border border-black/5 dark:border-white/10"
-            style={{ borderRadius: '4px' }}
+            className="relative w-full max-w-xl bg-[color:var(--paper)] dark:bg-[color:var(--ink)] text-[color:var(--ink)] dark:text-white shadow-2xl border border-[color:var(--line)] dark:border-white/10"
+            style={{ borderRadius: '9999px' }}
             role="dialog"
             aria-modal="true"
             aria-labelledby="cookie-settings-title"
           >
-            <div className="flex items-start justify-between p-6 border-b border-black/5 dark:border-white/10">
+            <div className="flex items-start justify-between p-6 border-b border-[color:var(--line)] dark:border-white/10">
               <div>
                 <h2 id="cookie-settings-title" className="text-lg font-semibold tracking-tight">
                   {t('cookies.settingsTitle')}
                 </h2>
-                <p className="text-sm text-black/55 dark:text-white/55 mt-1">
+                <p className="text-sm text-[color:var(--text-2)] dark:text-white/55 mt-1">
                   {t('cookies.settingsBody')}
                 </p>
               </div>
               <button
                 onClick={() => setSettingsOpen(false)}
                 aria-label={t('common.cancel')}
-                className="text-black/40 hover:text-black/80 dark:text-white/40 dark:hover:text-white/90 transition-colors"
+                className="text-[color:var(--text-2)] hover:text-[color:var(--text-2)] dark:text-white/40 dark:hover:text-white/90 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="max-h-[55vh] overflow-y-auto px-6 py-2 divide-y divide-black/5 dark:divide-white/10">
+            <div className="max-h-[55vh] overflow-y-auto px-6 py-2 divide-y divide-[color:var(--line)] dark:divide-white/10">
               {categories.map(({ key, required }) => (
                 <div key={key} className="flex items-start justify-between gap-4 py-4">
                   <div className="flex-1">
@@ -196,14 +196,14 @@ const CookieConsent = () => {
                       </h3>
                       {required && (
                         <span
-                          className="text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 bg-black/5 dark:bg-white/10 text-black/55 dark:text-white/55"
-                          style={{ borderRadius: '3px' }}
+                          className="text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 bg-black/5 dark:bg-[color:var(--paper)] text-[color:var(--text-2)] dark:text-white/55"
+                          style={{ borderRadius: '9999px' }}
                         >
                           {t('cookies.alwaysActive')}
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-black/55 dark:text-white/55 mt-1 leading-relaxed">
+                    <p className="text-sm text-[color:var(--text-2)] dark:text-white/55 mt-1 leading-relaxed">
                       {t(`cookies.categories.${key}.description`)}
                     </p>
                   </div>
@@ -217,25 +217,25 @@ const CookieConsent = () => {
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:justify-end gap-2 p-6 border-t border-black/5 dark:border-white/10">
+            <div className="flex flex-col sm:flex-row sm:justify-end gap-2 p-6 border-t border-[color:var(--line)] dark:border-white/10">
               <button
                 onClick={rejectAll}
-                className="px-4 py-2 text-sm font-medium border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                style={{ borderRadius: '4px' }}
+                className="px-4 py-2 text-sm font-medium border border-[color:var(--line)] dark:border-white/15 hover:bg-black/5 dark:hover:bg-[color:var(--paper)] transition-colors"
+                style={{ borderRadius: '9999px' }}
               >
                 {t('cookies.rejectAll')}
               </button>
               <button
                 onClick={saveSelection}
-                className="px-4 py-2 text-sm font-medium border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                style={{ borderRadius: '4px' }}
+                className="px-4 py-2 text-sm font-medium border border-[color:var(--line)] dark:border-white/15 hover:bg-black/5 dark:hover:bg-[color:var(--paper)] transition-colors"
+                style={{ borderRadius: '9999px' }}
               >
                 {t('cookies.savePreferences')}
               </button>
               <button
                 onClick={acceptAll}
-                className="px-4 py-2 bg-[#1a1916] dark:bg-white text-white dark:text-[#1a1916] hover:opacity-90 text-sm font-medium transition-opacity"
-                style={{ borderRadius: '4px' }}
+                className="px-4 py-2 bg-[color:var(--ink)] dark:bg-[color:var(--paper)] text-white dark:text-[color:var(--ink)] hover:opacity-90 text-sm font-medium transition-opacity"
+                style={{ borderRadius: '9999px' }}
               >
                 {t('cookies.acceptAll')}
               </button>

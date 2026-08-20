@@ -20,20 +20,20 @@ export function MiniMonth() {
         months: 'space-y-2',
         month: 'space-y-1',
         caption: 'flex justify-between items-center px-1 py-1',
-        caption_label: 'text-xs font-semibold text-gray-800',
+        caption_label: 'text-xs font-semibold text-[var(--ink)] [font-family:var(--display)]',
         nav: 'flex gap-1',
         nav_button:
-          'h-6 w-6 rounded-md text-gray-500 hover:bg-gray-100 inline-flex items-center justify-center',
+          'h-6 w-6 rounded-[8px] text-[var(--text-4)] hover:bg-[rgba(20,22,26,0.05)] inline-flex items-center justify-center',
         table: 'w-full border-collapse',
         head_row: 'flex',
         head_cell:
-          'text-[10px] font-medium text-gray-400 uppercase w-7 h-6 flex items-center justify-center',
+          'text-[10px] font-medium text-[var(--text-5)] uppercase w-7 h-6 flex items-center justify-center',
         row: 'flex',
         cell: 'h-7 w-7 text-center text-xs p-0 relative',
-        day: 'h-7 w-7 rounded-full text-gray-700 hover:bg-gray-100 inline-flex items-center justify-center',
-        day_selected: '!bg-[#bdd8ec] !text-gray-900 hover:!bg-[#a5c8e0]',
-        day_today: 'font-semibold text-[#1a73e8]',
-        day_outside: 'text-gray-300',
+        day: 'h-7 w-7 rounded-full text-[var(--text-1)] hover:bg-[rgba(20,22,26,0.05)] inline-flex items-center justify-center',
+        day_selected: '!bg-[#14161a] !text-white hover:!bg-[#14161a]',
+        day_today: 'font-semibold text-[var(--ink)]',
+        day_outside: 'text-[var(--text-5)] opacity-60',
       }}
     />
   );

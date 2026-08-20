@@ -1,6 +1,16 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Radar, ListChecks, Send, ScrollText } from 'lucide-react';
+import {
+  Radar,
+  ListChecks,
+  Send,
+  ScrollText,
+  Workflow,
+  Plus,
+  ChevronDown,
+  ChevronRight,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Role } from '@/pages/accounting/_lib/types';
 import {
@@ -8,6 +18,7 @@ import {
   selectPendingCases,
   selectDraftRequests,
 } from '@/pages/accounting/_hooks/use-accounting-store';
+import { useWorkflowsStore } from '@/pages/accounting/_hooks/use-workflows-store';
 import { ACCOUNTING_LOCALES } from '@/pages/accounting/_lib/i18n';
 
 interface NavRowProps {
@@ -15,33 +26,50 @@ interface NavRowProps {
   label: string;
   active: boolean;
   onClick: () => void;
-  badge?: React.ReactNode;
+  count?: number;
 }
 
-function NavRow({ icon: Icon, label, active, onClick, badge }: NavRowProps) {
+// Platform nav row: 10px radius, quiet ink-tinted active fill, count as plain text.
+function NavRow({ icon: Icon, label, active, onClick, count }: NavRowProps) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'flex w-full items-center gap-3 rounded-r-full py-2 pl-5 pr-4 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
-        active ? 'bg-[#f0e9df] text-gray-900' : 'text-gray-700 hover:bg-gray-100',
+        'flex w-full items-center gap-3 rounded-[10px] py-2 pl-3 pr-3 text-left text-[13.5px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]/25',
+        active
+          ? 'bg-[rgba(20,22,26,0.07)] font-semibold text-[var(--ink)]'
+          : 'font-medium text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.04)] hover:text-[var(--ink)]',
       )}
     >
-      <Icon className="h-4 w-4 shrink-0 text-gray-500" />
+      <Icon className={cn('h-4 w-4 shrink-0', active ? 'text-[var(--ink)]' : 'text-[var(--text-4)]')} />
       <span className="flex-1 truncate">{label}</span>
-      {badge}
+      {count !== undefined && count > 0 && (
+        <span className="shrink-0 text-[11px] font-medium leading-tight text-[var(--text-4)]">
+          {count}
+        </span>
+      )}
     </button>
   );
 }
 
-function CountBadge({ count }: { count: number }) {
-  if (count === 0) return null;
+function SectionHeader({
+  label,
+  open,
+  onToggle,
+}: {
+  label: string;
+  open: boolean;
+  onToggle: () => void;
+}) {
   return (
-    <span className="flex h-4 min-w-[1rem] shrink-0 items-center justify-center rounded-full bg-amber-400 px-1 text-[9px] font-bold leading-none text-white">
-      {count}
-    </span>
+    <div className="mb-1.5 mt-6 flex items-center justify-between px-3">
+      <button type="button" onClick={onToggle} className="plat-eyebrow flex items-center gap-1">
+        {open ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+        {label}
+      </button>
+    </div>
   );
 }
 
@@ -51,26 +79,45 @@ export default function AccountingRail() {
   const { t, i18n } = useTranslation('accounting');
   const path = location.pathname;
 
-  const pendingCount = useAccountingStore(selectPendingCases).length;
-  const draftCount = useAccountingStore(selectDraftRequests).length;
+  const pendingCount = useAccountingStore((s) => selectPendingCases(s).length);
+  const draftCount = useAccountingStore((s) => selectDraftRequests(s).length);
   const role = useAccountingStore((s) => s.role);
   const setRole = useAccountingStore((s) => s.setRole);
+  const workflowCount = useWorkflowsStore((s) => s.workflows.length);
+  const createWorkflow = useWorkflowsStore((s) => s.createWorkflow);
+
+  const [automationOpen, setAutomationOpen] = useState(true);
+  const [manageOpen, setManageOpen] = useState(true);
 
   const isActive = (href: string) => path === href || path.startsWith(href + '/');
   const lang = i18n.language.split('-')[0];
 
+  const onNewWorkflow = () => {
+    const id = createWorkflow(t('workflows.untitled'));
+    navigate(`/accounting/workflows/${id}`);
+  };
+
   return (
-    <aside className="flex h-full w-60 shrink-0 flex-col overflow-hidden border-r border-gray-100 bg-white">
+    <aside className="flex h-full w-60 shrink-0 flex-col overflow-hidden border-r border-[var(--line-soft)]">
       {/* Header */}
-      <div className="px-5 pb-3 pt-5">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
-          {t('appName')}
-        </p>
-        <p className="mt-0.5 text-[11px] text-gray-400">{t('tagline')}</p>
+      <div className="px-5 pb-1 pt-5">
+        <p className="plat-eyebrow">{t('appName')}</p>
+        <p className="mt-1 text-[11.5px] text-[var(--text-4)]">{t('tagline')}</p>
+      </div>
+
+      {/* Primary action */}
+      <div className="px-4 pb-4 pt-3">
+        <button
+          type="button"
+          onClick={onNewWorkflow}
+          className="plat-btn w-full justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]/25"
+        >
+          <Plus className="h-4 w-4" /> {t('workflows.newWorkflow')}
+        </button>
       </div>
 
       {/* Nav */}
-      <nav aria-label={t('nav.workspace')} className="flex-1 overflow-y-auto pb-4 pr-3">
+      <nav aria-label={t('nav.workspace')} className="flex-1 overflow-y-auto px-3 pb-4">
         <div className="space-y-0.5">
           <NavRow
             icon={Radar}
@@ -83,34 +130,61 @@ export default function AccountingRail() {
             label={t('nav.queue')}
             active={isActive('/accounting/queue')}
             onClick={() => navigate('/accounting/queue')}
-            badge={<CountBadge count={pendingCount} />}
+            count={pendingCount}
           />
           <NavRow
             icon={Send}
             label={t('nav.requests')}
             active={isActive('/accounting/requests')}
             onClick={() => navigate('/accounting/requests')}
-            badge={<CountBadge count={draftCount} />}
-          />
-          <NavRow
-            icon={ScrollText}
-            label={t('nav.audit')}
-            active={isActive('/accounting/audit')}
-            onClick={() => navigate('/accounting/audit')}
+            count={draftCount}
           />
         </div>
+
+        <SectionHeader
+          label={t('nav.automation')}
+          open={automationOpen}
+          onToggle={() => setAutomationOpen((o) => !o)}
+        />
+        {automationOpen && (
+          <div className="space-y-0.5">
+            <NavRow
+              icon={Workflow}
+              label={t('nav.workflows')}
+              active={isActive('/accounting/workflows')}
+              onClick={() => navigate('/accounting/workflows')}
+              count={workflowCount}
+            />
+          </div>
+        )}
+
+        <SectionHeader
+          label={t('nav.manage')}
+          open={manageOpen}
+          onToggle={() => setManageOpen((o) => !o)}
+        />
+        {manageOpen && (
+          <div className="space-y-0.5">
+            <NavRow
+              icon={ScrollText}
+              label={t('nav.audit')}
+              active={isActive('/accounting/audit')}
+              onClick={() => navigate('/accounting/audit')}
+            />
+          </div>
+        )}
       </nav>
 
       {/* Role (mock permission switcher) */}
-      <div className="border-t border-gray-100 px-5 py-3">
-        <label htmlFor="acc-role" className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+      <div className="border-t border-[var(--line-soft)] px-5 py-3">
+        <label htmlFor="acc-role" className="plat-eyebrow mb-1.5 block">
           {t('role.label')}
         </label>
         <select
           id="acc-role"
           value={role}
           onChange={(e) => setRole(e.target.value as Role)}
-          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+          className="w-full rounded-[10px] border border-[var(--line)] bg-white px-2 py-1.5 text-xs text-[var(--text-2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]/25"
         >
           <option value="operator">{t('role.operator')}</option>
           <option value="preparer">{t('role.preparer')}</option>
@@ -119,10 +193,10 @@ export default function AccountingRail() {
       </div>
 
       {/* Language + connection status */}
-      <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
+      <div className="flex items-center justify-between border-t border-[var(--line-soft)] px-5 py-3">
         <div className="flex items-center gap-2">
-          <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-green-500" />
-          <span role="status" className="text-xs text-gray-500">{t('connected')}</span>
+          <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-[var(--ok-fg)]" />
+          <span role="status" className="text-xs text-[var(--text-3)]">{t('connected')}</span>
         </div>
         <div className="flex gap-1">
           {ACCOUNTING_LOCALES.map((code) => (
@@ -131,8 +205,10 @@ export default function AccountingRail() {
               type="button"
               onClick={() => i18n.changeLanguage(code)}
               className={cn(
-                'rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
-                lang === code ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-100',
+                'rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]/25',
+                lang === code
+                  ? 'bg-[var(--ink)] text-white'
+                  : 'text-[var(--text-5)] hover:bg-[rgba(20,22,26,0.06)] hover:text-[var(--ink)]',
               )}
             >
               {code}

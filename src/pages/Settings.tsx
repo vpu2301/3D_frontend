@@ -155,16 +155,16 @@ const Settings = () => {
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider className="plat">
       <AppSidebar />
-      <SidebarInset className="flex flex-col overflow-hidden h-screen bg-white">
+      <SidebarInset className="flex flex-col overflow-hidden h-screen bg-transparent">
         {/* Header */}
         <div className="flex items-center justify-between px-5 h-14 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-[#bdd8ec]">
-              <SettingsIcon className="h-4 w-4 text-gray-700" />
-            </div>
-            <span className="text-sm font-semibold text-gray-800">Settings</span>
+            <span className="flex items-center justify-center h-7 w-7 rounded-[10px]" style={{ background: 'var(--sand)', color: 'var(--ink)' }}>
+              <SettingsIcon className="h-4 w-4" strokeWidth={1.75} />
+            </span>
+            <span className="text-sm font-semibold">Settings</span>
           </div>
         </div>
 
@@ -175,7 +175,7 @@ const Settings = () => {
             {/* Sticky section navigator */}
             <aside className="hidden lg:block w-56 shrink-0">
               <nav className="sticky top-0">
-                <div className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2 px-2">
+                <div className="plat-eyebrow mb-2 px-2">
                   Settings
                 </div>
                 <ul className="space-y-0.5">
@@ -186,15 +186,16 @@ const Settings = () => {
                       <li key={s.id}>
                         <button
                           onClick={() => scrollToSection(s.id)}
-                          className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                            active
-                              ? 'bg-[#bdd8ec]/40 text-gray-900'
-                              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                          }`}
+                          className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-[10px] text-xs font-medium transition-colors hover:bg-[rgba(20,22,26,0.04)]"
+                          style={{
+                            background: active ? 'rgba(20,22,26,0.06)' : 'transparent',
+                            color: active ? 'var(--ink)' : 'var(--text-3)',
+                            fontWeight: active ? 600 : 500,
+                          }}
                         >
-                          <Icon className={`h-3.5 w-3.5 ${active ? 'text-gray-800' : 'text-gray-400'}`} />
+                          <Icon className="h-3.5 w-3.5" style={{ color: active ? 'var(--ink)' : 'var(--text-5)' }} />
                           <span className="truncate">{s.label}</span>
-                          {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#5ea7d4]" />}
+                          {active && <span className="ml-auto h-1.5 w-1.5 rounded-full" style={{ background: 'var(--ink)' }} />}
                         </button>
                       </li>
                     );
@@ -205,8 +206,16 @@ const Settings = () => {
 
             <div className="flex-1 max-w-2xl space-y-6 min-w-0">
 
+            {/* Page header */}
+            <div>
+              <p className="plat-crumb">3days.settings</p>
+              <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>
+                Account, keys, notifications and appearance
+              </p>
+            </div>
+
             {/* Profile */}
-            <section id="profile" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <section id="profile" className="scroll-mt-4 plat-panel !p-5">
               <SectionHeader icon={User} title="Profile" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <FieldInput label="First name" value={firstName} onChange={setFirstName} placeholder="Enter your first name" />
@@ -218,7 +227,7 @@ const Settings = () => {
               <div className="mt-4">
                 <button
                   onClick={() => toast({ title: 'Profile saved' })}
-                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-900 text-white hover:bg-gray-700 transition-all"
+                  className="plat-btn !h-9 !px-4 !text-xs"
                 >
                   Save profile
                 </button>
@@ -231,12 +240,12 @@ const Settings = () => {
             </div>
 
             {/* API keys */}
-            <section id="api-keys" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <section id="api-keys" className="scroll-mt-4 plat-panel !p-5">
               <SectionHeader icon={Key} title="API keys & tokens" />
 
               {/* Generator */}
-              <div className="rounded-xl border border-gray-200 bg-gray-50/60 px-4 py-3 mb-4">
-                <div className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2">
+              <div className="rounded-[12px] px-4 py-3 mb-4" style={{ background: 'var(--sand)', border: '1px solid var(--line-soft)' }}>
+                <div className="plat-eyebrow mb-2">
                   Generate new
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2">
@@ -245,18 +254,20 @@ const Settings = () => {
                     value={newKeyName}
                     onChange={e => setNewKeyName(e.target.value)}
                     placeholder="e.g., Production API Key"
-                    className="h-9 px-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#8fc4e4] transition-colors"
+                    className="h-9 px-3 rounded-[10px] bg-white text-sm transition-colors focus:outline-none focus:border-[color:var(--ink)]"
+                    style={{ border: '1px solid var(--line)', color: 'var(--ink)' }}
                   />
                   <select
                     value={newKeyType}
                     onChange={e => setNewKeyType(e.target.value)}
-                    className="h-9 px-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-800 focus:outline-none focus:border-[#8fc4e4] transition-colors"
+                    className="h-9 px-3 rounded-[10px] bg-white text-sm transition-colors focus:outline-none focus:border-[color:var(--ink)]"
+                    style={{ border: '1px solid var(--line)', color: 'var(--ink)' }}
                   >
                     {KEY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                   <button
                     onClick={generateKey}
-                    className="flex items-center justify-center gap-1.5 h-9 px-3 rounded-lg text-xs font-medium bg-gray-900 text-white hover:bg-gray-700 transition-all"
+                    className="plat-btn !h-9 !px-4 !text-xs"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     Generate
@@ -264,15 +275,15 @@ const Settings = () => {
                 </div>
               </div>
 
-              {/* Existing keys */}
-              <div className="space-y-2.5">
-                {apiKeys.map(k => (
-                  <div key={k.id} className="rounded-xl border border-gray-200 bg-gray-50/60 px-4 py-3">
+              {/* Existing keys — one block, hairline-separated */}
+              <div className="rounded-[12px] overflow-hidden" style={{ border: '1px solid var(--line-soft)' }}>
+                {apiKeys.map((k, i) => (
+                  <div key={k.id} className="px-4 py-3" style={i > 0 ? { borderTop: '1px solid var(--line-soft)' } : undefined}>
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="min-w-0 flex-1">
-                        <div className="text-sm font-medium text-gray-800 truncate">{k.name}</div>
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-gray-500 mt-0.5">
-                          <span className="inline-flex items-center px-1.5 py-0.5 rounded-full border border-gray-200 bg-white text-gray-600">
+                        <div className="text-sm font-medium truncate">{k.name}</div>
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] mt-0.5" style={{ color: 'var(--text-4)' }}>
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded-full" style={{ border: '1px solid var(--line)', color: 'var(--text-3)' }}>
                             {k.type}
                           </span>
                           <span>Created {k.created}</span>
@@ -294,33 +305,35 @@ const Settings = () => {
                         </IconBtn>
                       </div>
                     </div>
-                    <div className="font-mono text-xs text-gray-700 bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 truncate">
+                    <div className="font-mono text-xs rounded-[10px] px-2.5 py-1.5 truncate" style={{ background: 'var(--sand)', color: 'var(--text-2)' }}>
                       {showKeys[k.id] ? k.key : maskKey(k.key)}
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-4 rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-3">
-                <div className="text-[11px] font-medium text-blue-900 uppercase tracking-wide mb-1">
+              <div className="mt-4 rounded-[12px] px-4 py-3" style={{ background: 'var(--sand)', border: '1px solid var(--line-soft)' }}>
+                <div className="plat-eyebrow mb-1">
                   Security notice
                 </div>
-                <p className="text-xs text-blue-800 leading-relaxed">
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
                   Keep your keys secure and never share them publicly. If a key is compromised, regenerate it immediately.
                 </p>
               </div>
             </section>
 
             {/* Notifications */}
-            <section id="notifications" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <section id="notifications" className="scroll-mt-4 plat-panel !p-5">
               <SectionHeader icon={Bell} title="Notifications" />
-              <ToggleRow label="Email notifications" hint="Receive email notifications for important updates" />
-              <ToggleRow label="Task completion alerts" hint="Get notified when AI tasks are completed" />
-              <ToggleRow label="System maintenance" hint="Receive alerts about scheduled maintenance" />
+              <div>
+                <ToggleRow label="Email notifications" hint="Receive email notifications for important updates" />
+                <ToggleRow label="Task completion alerts" hint="Get notified when AI tasks are completed" divided />
+                <ToggleRow label="System maintenance" hint="Receive alerts about scheduled maintenance" divided />
+              </div>
             </section>
 
             {/* Security */}
-            <section id="security" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <section id="security" className="scroll-mt-4 plat-panel !p-5">
               <SectionHeader icon={Shield} title="Security" />
               <div className="space-y-3">
                 <FieldInput label="Current password" type="password" placeholder="Enter current password" value="" onChange={() => {}} />
@@ -328,12 +341,12 @@ const Settings = () => {
                 <FieldInput label="Confirm new password" type="password" placeholder="Confirm new password" value="" onChange={() => {}} />
               </div>
               <div className="mt-3">
-                <ToggleRow label="Two-factor authentication" hint="Add an extra layer of security to your account" />
+                <ToggleRow label="Two-factor authentication" hint="Add an extra layer of security to your account" divided />
               </div>
-              <div className="mt-2">
+              <div className="mt-3">
                 <button
                   onClick={() => toast({ title: 'Security settings updated' })}
-                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-900 text-white hover:bg-gray-700 transition-all"
+                  className="plat-btn !h-9 !px-4 !text-xs"
                 >
                   Update security
                 </button>
@@ -341,10 +354,12 @@ const Settings = () => {
             </section>
 
             {/* Appearance */}
-            <section id="appearance" className="scroll-mt-4 rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <section id="appearance" className="scroll-mt-4 plat-panel !p-5">
               <SectionHeader icon={Palette} title="Appearance" />
-              <ToggleRow label="Dark mode" hint="Switch to dark theme" />
-              <ToggleRow label="Compact layout" hint="Use a more compact interface layout" />
+              <div>
+                <ToggleRow label="Dark mode" hint="Switch to dark theme" />
+                <ToggleRow label="Compact layout" hint="Use a more compact interface layout" divided />
+              </div>
             </section>
             </div>
           </div>
@@ -357,8 +372,8 @@ const Settings = () => {
 function SectionHeader({ icon: Icon, title }: { icon: typeof User; title: string }) {
   return (
     <div className="flex items-center gap-2 mb-4">
-      <Icon className="h-4 w-4 text-gray-500" />
-      <h2 className="text-sm font-semibold text-gray-800">{title}</h2>
+      <Icon className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
+      <h2 className="text-sm font-semibold">{title}</h2>
     </div>
   );
 }
@@ -380,25 +395,29 @@ function FieldInput({
 }) {
   return (
     <label className="block">
-      <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wide">{label}</span>
+      <span className="plat-eyebrow">{label}</span>
       <input
         type={type}
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className="mt-1 w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#8fc4e4] transition-colors disabled:bg-gray-50 disabled:text-gray-500"
+        className="mt-1 w-full h-9 px-3 rounded-[10px] bg-white text-sm transition-colors focus:outline-none focus:border-[color:var(--ink)] disabled:bg-[var(--sand)] disabled:text-[color:var(--text-4)]"
+        style={{ border: '1px solid var(--line)', color: 'var(--ink)' }}
       />
     </label>
   );
 }
 
-function ToggleRow({ label, hint }: { label: string; hint: string }) {
+function ToggleRow({ label, hint, divided }: { label: string; hint: string; divided?: boolean }) {
   return (
-    <div className="flex items-center justify-between gap-3 py-2">
+    <div
+      className="flex items-center justify-between gap-3 py-3"
+      style={divided ? { borderTop: '1px solid var(--line-soft)' } : undefined}
+    >
       <div className="min-w-0">
-        <div className="text-sm text-gray-800">{label}</div>
-        <div className="text-xs text-gray-500 mt-0.5">{hint}</div>
+        <div className="text-sm">{label}</div>
+        <div className="text-xs mt-0.5" style={{ color: 'var(--text-4)' }}>{hint}</div>
       </div>
       <Switch />
     </div>
@@ -420,11 +439,12 @@ function IconBtn({
     <button
       onClick={onClick}
       title={title}
-      className={`flex items-center justify-center h-7 w-7 rounded-lg border border-gray-200 bg-white transition-colors ${
+      className={`flex items-center justify-center h-7 w-7 rounded-[10px] bg-white transition-colors ${
         danger
-          ? 'text-red-500 hover:text-red-600 hover:bg-red-50 hover:border-red-200'
-          : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
+          ? 'text-[color:var(--bad-fg)] hover:bg-[rgba(179,56,46,0.08)]'
+          : 'text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:bg-[rgba(20,22,26,0.05)]'
       }`}
+      style={{ border: '1px solid var(--line)' }}
     >
       {children}
     </button>

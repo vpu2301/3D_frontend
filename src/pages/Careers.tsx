@@ -103,17 +103,17 @@ const Careers = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f5ede3] via-white to-purple-50 dark:from-[#181512] dark:via-[#1c1916] dark:to-[#1c1916]">
+    <div className="min-h-screen bg-gradient-to-br from-[color:var(--sand)] via-[color:var(--paper)] to-[color:var(--blue-100)] dark:from-[color:var(--bg)] dark:via-[color:var(--paper)] dark:to-[color:var(--paper)]">
       <main className="pt-16 p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Join the AI Revolution</h1>
-            <p className="text-gray-600">Help us build the future of work with passionate individuals</p>
+            <h1 className="text-3xl font-bold text-[color:var(--ink)]">Join the AI Revolution</h1>
+            <p className="text-[color:var(--text-2)]">Help us build the future of work with passionate individuals</p>
           </div>
 
           {/* Company Stats */}
           <section className="mb-8">
-            <Card className="bg-[#f5ede3] text-[#111111] border-0">
+            <Card className="bg-[color:var(--sand)] text-[color:var(--ink)] border-0">
               <CardContent className="p-6">
                 <div className="grid grid-cols-3 gap-6 text-center">
                   <div>
@@ -140,16 +140,16 @@ const Careers = () => {
           <section className="mb-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black/50 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[color:var(--text-2)] h-4 w-4" />
                 <Input
                   placeholder="Search jobs..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-white/80 border-gray-200"
+                  className="pl-10 bg-[color:var(--paper)] border-[color:var(--line)]"
                 />
               </div>
               <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
-                <SelectTrigger className="bg-white/80 border-gray-200">
+                <SelectTrigger className="bg-[color:var(--paper)] border-[color:var(--line)]">
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
                 <SelectContent>
@@ -160,7 +160,7 @@ const Careers = () => {
                 </SelectContent>
               </Select>
               <Select value={locationFilter} onValueChange={setLocationFilter}>
-                <SelectTrigger className="bg-white/80 border-gray-200">
+                <SelectTrigger className="bg-[color:var(--paper)] border-[color:var(--line)]">
                   <SelectValue placeholder="Location" />
                 </SelectTrigger>
                 <SelectContent>
@@ -175,7 +175,7 @@ const Careers = () => {
 
           {/* Job Listings */}
           <section className="mb-12">
-            <h2 className="text-xl font-medium text-gray-900 mb-6">Open Positions ({filteredJobs.length})</h2>
+            <h2 className="text-xl font-medium text-[color:var(--ink)] mb-6">Open Positions ({filteredJobs.length})</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {filteredJobs.map((job) => (
                 <Card key={job.id} className="border-0 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer">
@@ -188,17 +188,17 @@ const Careers = () => {
                           <Badge variant="outline" className="text-xs">{job.type}</Badge>
                         </div>
                       </div>
-                      <span className="text-xs text-gray-500">{job.posted}</span>
+                      <span className="text-xs text-[color:var(--text-2)]">{job.posted}</span>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 text-sm mb-4">{job.description}</p>
+                    <p className="text-[color:var(--text-2)] text-sm mb-4">{job.description}</p>
                     <div className="space-y-2 mb-4">
-                      <div className="flex items-center text-xs text-gray-600">
+                      <div className="flex items-center text-xs text-[color:var(--text-2)]">
                         <MapPin className="h-3 w-3 mr-2" />
                         {job.location}
                       </div>
-                      <div className="flex items-center text-xs text-gray-600">
+                      <div className="flex items-center text-xs text-[color:var(--text-2)]">
                         <DollarSign className="h-3 w-3 mr-2" />
                         {job.salary}
                       </div>
@@ -214,8 +214,8 @@ const Careers = () => {
             {filteredJobs.length === 0 && (
               <Card className="text-center py-12 border-0 shadow-sm">
                 <CardContent>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
-                  <p className="text-gray-600">Try adjusting your search criteria or check back later for new openings.</p>
+                  <h3 className="text-lg font-medium text-[color:var(--ink)] mb-2">No jobs found</h3>
+                  <p className="text-[color:var(--text-2)]">Try adjusting your search criteria or check back later for new openings.</p>
                 </CardContent>
               </Card>
             )}
@@ -224,18 +224,18 @@ const Careers = () => {
           {/* Benefits Section */}
           <section>
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-light text-gray-900 mb-4">Why Work at 3days.ai?</h2>
-              <p className="text-gray-600">We invest in our people and their growth</p>
+              <h2 className="text-2xl font-light text-[color:var(--ink)] mb-4">Why Work at 3days.ai?</h2>
+              <p className="text-[color:var(--text-2)]">We invest in our people and their growth</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {benefits.map((benefit, index) => (
                 <Card key={index} className="text-center border-0 shadow-sm">
                   <CardContent className="p-6">
-                    <div className="p-3 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 w-fit mx-auto mb-4">
-                      <benefit.icon className="h-6 w-6 text-blue-600" />
+                    <div className="p-3 rounded-full bg-gradient-to-r from-[color:var(--blue-100)] to-[color:var(--blue-100)] w-fit mx-auto mb-4">
+                      <benefit.icon className="h-6 w-6 text-[color:var(--blue)]" />
                     </div>
-                    <h3 className="font-medium text-gray-900 mb-2">{benefit.title}</h3>
-                    <p className="text-sm text-gray-600">{benefit.description}</p>
+                    <h3 className="font-medium text-[color:var(--ink)] mb-2">{benefit.title}</h3>
+                    <p className="text-sm text-[color:var(--text-2)]">{benefit.description}</p>
                   </CardContent>
                 </Card>
               ))}

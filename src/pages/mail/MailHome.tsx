@@ -135,7 +135,7 @@ export default function MailHome({ mode = 'inbox', title }: Props) {
               showCategoryTabs={mode === 'inbox'}
             />
             {mode === 'inbox' && (
-              <div className="absolute left-0 right-0 top-[112px] z-10">
+              <div className="absolute left-0 right-0 top-[146px] z-10">
                 <DailyDigestCard />
               </div>
             )}
@@ -143,11 +143,15 @@ export default function MailHome({ mode = 'inbox', title }: Props) {
           {selectedThreadId ? (
             <ThreadView threadId={selectedThreadId} />
           ) : (
-            <div className="flex flex-1 items-center justify-center text-sm text-gray-500">
+            <div className="flex flex-1 items-center justify-center text-sm text-[var(--text-3)]">
               <div className="text-center">
                 <p>Select a conversation</p>
-                <p className="mt-1 text-xs text-gray-400">
-                  Or press <span className="rounded bg-gray-100 px-1 font-mono">C</span> to compose
+                <p className="mt-1 text-xs text-[var(--text-4)]">
+                  Or press{' '}
+                  <span className="rounded-[6px] border border-[var(--line-soft)] bg-[var(--sand)] px-1.5 py-0.5 font-mono text-[var(--ink)]">
+                    C
+                  </span>{' '}
+                  to compose
                 </p>
               </div>
             </div>

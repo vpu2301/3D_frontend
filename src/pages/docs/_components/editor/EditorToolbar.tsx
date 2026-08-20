@@ -48,7 +48,7 @@ interface Props {
 function SaveStatusIndicator({ status }: { status: 'saved' | 'saving' | 'error' }) {
   if (status === 'saving') {
     return (
-      <span className="flex items-center gap-1 text-xs text-gray-500" title="Saving">
+      <span className="flex items-center gap-1 text-xs text-[var(--text-4)]" title="Saving">
         <Loader2 className="h-3 w-3 animate-spin" />
         Saving…
       </span>
@@ -56,14 +56,14 @@ function SaveStatusIndicator({ status }: { status: 'saved' | 'saving' | 'error' 
   }
   if (status === 'error') {
     return (
-      <span className="flex items-center gap-1 text-xs text-red-600" title="Save failed">
+      <span className="flex items-center gap-1 text-xs text-[var(--bad-fg)]" title="Save failed">
         <CloudOff className="h-3 w-3" />
         Save failed
       </span>
     );
   }
   return (
-    <span className="flex items-center gap-1 text-xs text-gray-500" title="Saved">
+    <span className="flex items-center gap-1 text-xs text-[var(--text-4)]" title="Saved">
       <Cloud className="h-3 w-3" />
       Saved
     </span>
@@ -107,17 +107,17 @@ export default function EditorToolbar({
   const openComments = doc.comments.filter((t) => !t.resolved).length;
 
   return (
-    <div className="border-b border-gray-200 bg-white">
+    <div className="border-b border-[var(--line-soft)] bg-white">
       {/* Row 1 — title + actions */}
       <div className="flex items-center gap-2 px-4 pt-2.5 pb-1.5">
         <Link
           to="/docs"
-          className="rounded-md p-1.5 text-gray-700 hover:bg-gray-100"
+          className="rounded-[10px] p-1.5 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
           aria-label="Back to docs"
         >
           <MenuIcon className="h-5 w-5" />
         </Link>
-        <FileText className="h-5 w-5 shrink-0 text-blue-500" />
+        <FileText className="h-5 w-5 shrink-0 text-[var(--text-4)]" />
         <div className="flex min-w-0 items-center gap-1">
           <input
             ref={titleRef}
@@ -127,19 +127,19 @@ export default function EditorToolbar({
               onPatchTitle(e.target.value);
             }}
             placeholder="Untitled document"
-            className="min-w-0 max-w-md rounded border border-transparent bg-transparent px-1.5 py-1 text-base font-medium text-gray-900 placeholder:text-gray-400 hover:border-gray-200 focus:border-blue-400 focus:bg-white focus:outline-none"
+            className="min-w-0 max-w-md rounded-[10px] border border-transparent bg-transparent px-1.5 py-1 text-base font-semibold text-[var(--ink)] placeholder:text-[var(--text-5)] hover:border-[var(--line-soft)] focus:border-[var(--ink)] focus:bg-white focus:outline-none"
             style={{ width: `${Math.max(8, title.length + 1)}ch` }}
           />
           <button
             type="button"
             onClick={() => star(doc.id, !doc.starred)}
-            className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-[10px] p-1 text-[var(--text-4)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             aria-label={doc.starred ? 'Unstar' : 'Star'}
           >
             <Star
               className={cn(
                 'h-4 w-4',
-                doc.starred && 'fill-yellow-400 text-yellow-400',
+                doc.starred && 'fill-[var(--ink)] text-[var(--ink)]',
               )}
             />
           </button>
@@ -149,14 +149,14 @@ export default function EditorToolbar({
         <div className="ml-auto flex items-center gap-1">
           <Link
             to={`/docs/${doc.id}/history`}
-            className="flex items-center gap-1 rounded-md p-1.5 text-gray-700 hover:bg-gray-100"
+            className="flex items-center gap-1 rounded-[10px] p-1.5 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             title="Version history"
           >
             <History className="h-4 w-4" />
           </Link>
           <button
             type="button"
-            className="relative flex items-center gap-1 rounded-md p-1.5 text-gray-700 hover:bg-gray-100"
+            className="relative flex items-center gap-1 rounded-[10px] p-1.5 text-[var(--text-3)] transition-colors hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             title="Comments"
             onClick={() =>
               alert('Highlight text and click "Comment" in the bubble menu to start a thread.')
@@ -164,7 +164,7 @@ export default function EditorToolbar({
           >
             <MessageCircle className="h-4 w-4" />
             {openComments > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-blue-500 px-1 text-[9px] font-medium text-white">
+              <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-[var(--ink)] px-1 text-[9px] font-semibold text-white">
                 {openComments}
               </span>
             )}
@@ -173,10 +173,10 @@ export default function EditorToolbar({
             type="button"
             onClick={() => setAiSidebarOpen(!aiSidebarOpen)}
             className={cn(
-              'flex items-center gap-1 rounded-md px-2 py-1 text-sm font-medium',
+              'flex h-8 items-center gap-1.5 rounded-full px-3 text-[12.5px] font-semibold transition-colors',
               aiSidebarOpen
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-blue-50 text-blue-700 hover:bg-blue-100',
+                ? 'bg-[var(--ink)] text-white'
+                : 'border border-[var(--line)] text-[var(--text-2)] hover:border-[var(--ink)] hover:text-[var(--ink)]',
             )}
           >
             <Sparkles className="h-3.5 w-3.5" /> AI
@@ -184,7 +184,7 @@ export default function EditorToolbar({
           <button
             type="button"
             onClick={() => setShareOpen(true)}
-            className="flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+            className="plat-btn h-8 px-4 text-[12.5px]"
           >
             <Share2 className="h-3.5 w-3.5" /> Share
           </button>
@@ -195,7 +195,7 @@ export default function EditorToolbar({
       <div className="px-2 pb-1">
         <Menubar className="h-auto rounded-none border-0 bg-transparent p-0 shadow-none">
           <MenubarMenu>
-            <MenubarTrigger className="px-2.5 py-1 text-sm font-normal text-gray-800">
+            <MenubarTrigger className="rounded-[8px] px-2.5 py-1 text-sm font-medium text-[var(--text-2)]">
               File
             </MenubarTrigger>
             <MenubarContent>
@@ -224,7 +224,7 @@ export default function EditorToolbar({
               </MenubarItem>
               <MenubarSeparator />
               <MenubarItem
-                className="text-red-600 focus:text-red-600"
+                className="text-[var(--bad-fg)] focus:text-[var(--bad-fg)]"
                 onSelect={() => {
                   if (confirm('Move this doc to trash?')) {
                     trash(doc.id);
@@ -238,7 +238,7 @@ export default function EditorToolbar({
           </MenubarMenu>
 
           <MenubarMenu>
-            <MenubarTrigger className="px-2.5 py-1 text-sm font-normal text-gray-800">
+            <MenubarTrigger className="rounded-[8px] px-2.5 py-1 text-sm font-medium text-[var(--text-2)]">
               Edit
             </MenubarTrigger>
             <MenubarContent>
@@ -272,7 +272,7 @@ export default function EditorToolbar({
           </MenubarMenu>
 
           <MenubarMenu>
-            <MenubarTrigger className="px-2.5 py-1 text-sm font-normal text-gray-800">
+            <MenubarTrigger className="rounded-[8px] px-2.5 py-1 text-sm font-medium text-[var(--text-2)]">
               View
             </MenubarTrigger>
             <MenubarContent>
@@ -293,7 +293,7 @@ export default function EditorToolbar({
           </MenubarMenu>
 
           <MenubarMenu>
-            <MenubarTrigger className="px-2.5 py-1 text-sm font-normal text-gray-800">
+            <MenubarTrigger className="rounded-[8px] px-2.5 py-1 text-sm font-medium text-[var(--text-2)]">
               Insert
             </MenubarTrigger>
             <MenubarContent>
@@ -354,7 +354,7 @@ export default function EditorToolbar({
           </MenubarMenu>
 
           <MenubarMenu>
-            <MenubarTrigger className="px-2.5 py-1 text-sm font-normal text-gray-800">
+            <MenubarTrigger className="rounded-[8px] px-2.5 py-1 text-sm font-medium text-[var(--text-2)]">
               Format
             </MenubarTrigger>
             <MenubarContent>
@@ -416,7 +416,7 @@ export default function EditorToolbar({
           </MenubarMenu>
 
           <MenubarMenu>
-            <MenubarTrigger className="px-2.5 py-1 text-sm font-normal text-gray-800">
+            <MenubarTrigger className="rounded-[8px] px-2.5 py-1 text-sm font-medium text-[var(--text-2)]">
               Tools
             </MenubarTrigger>
             <MenubarContent>
@@ -436,7 +436,7 @@ export default function EditorToolbar({
           </MenubarMenu>
 
           <MenubarMenu>
-            <MenubarTrigger className="px-2.5 py-1 text-sm font-normal text-gray-800">
+            <MenubarTrigger className="rounded-[8px] px-2.5 py-1 text-sm font-medium text-[var(--text-2)]">
               Help
             </MenubarTrigger>
             <MenubarContent>

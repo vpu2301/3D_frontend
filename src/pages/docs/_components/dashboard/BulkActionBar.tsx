@@ -28,13 +28,13 @@ export default function BulkActionBar() {
   };
 
   return (
-    <div className="fixed bottom-6 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-2 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
-      <span className="px-1 text-sm font-medium">{selectedDocIds.length} selected</span>
-      <div className="h-4 w-px bg-zinc-300 dark:bg-zinc-700" />
+    <div className="fixed bottom-6 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-[14px] border border-[var(--line-soft)] bg-white px-3 py-2 shadow-[0_8px_24px_rgba(20,22,26,0.1)]">
+      <span className="px-1 text-sm font-semibold text-[var(--ink)]">{selectedDocIds.length} selected</span>
+      <div className="h-4 w-px bg-[var(--line)]" />
       <button
         type="button"
         onClick={onStar}
-        className="flex items-center gap-1 rounded-md px-2 py-1 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        className="flex items-center gap-1 rounded-[8px] px-2 py-1 text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
       >
         <Star className="h-3.5 w-3.5" /> Star
       </button>
@@ -42,16 +42,16 @@ export default function BulkActionBar() {
         <button
           type="button"
           onClick={() => setMoveOpen((o) => !o)}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="flex items-center gap-1 rounded-[8px] px-2 py-1 text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
         >
           <FolderInput className="h-3.5 w-3.5" /> Move
         </button>
         {moveOpen && (
-          <div className="absolute bottom-full left-0 mb-1 w-44 rounded-md border bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+          <div className="absolute bottom-full left-0 mb-1 w-44 rounded-[12px] border border-[var(--line-soft)] bg-white p-1 shadow-[0_8px_24px_rgba(20,22,26,0.1)]">
             <button
               type="button"
               onClick={() => onMove(null)}
-              className="block w-full rounded px-2 py-1 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              className="block w-full rounded-[8px] px-2 py-1 text-left text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
             >
               No folder
             </button>
@@ -60,7 +60,7 @@ export default function BulkActionBar() {
                 type="button"
                 key={f.id}
                 onClick={() => onMove(f.id)}
-                className="block w-full rounded px-2 py-1 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="block w-full rounded-[8px] px-2 py-1 text-left text-sm text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
                 {f.name}
               </button>
@@ -71,15 +71,15 @@ export default function BulkActionBar() {
       <button
         type="button"
         onClick={onTrash}
-        className="flex items-center gap-1 rounded-md px-2 py-1 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
+        className="flex items-center gap-1 rounded-[8px] px-2 py-1 text-sm text-[var(--bad-fg)] hover:bg-[rgba(179,56,46,0.07)]"
       >
         <Trash2 className="h-3.5 w-3.5" /> Trash
       </button>
-      <div className="h-4 w-px bg-zinc-300 dark:bg-zinc-700" />
+      <div className="h-4 w-px bg-[var(--line)]" />
       <button
         type="button"
         onClick={clearSelection}
-        className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        className="rounded-[8px] p-1 text-[var(--text-3)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
         aria-label="Clear selection"
       >
         <X className="h-3.5 w-3.5" />

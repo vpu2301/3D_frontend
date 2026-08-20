@@ -119,15 +119,15 @@ const SystemStatus = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'operational':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-[color:var(--blue)]" />;
       case 'degraded':
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
+        return <AlertTriangle className="h-5 w-5 text-[color:var(--blue)]" />;
       case 'outage':
-        return <XCircle className="h-5 w-5 text-red-500" />;
+        return <XCircle className="h-5 w-5 text-[color:var(--blue)]" />;
       case 'investigating':
-        return <Clock className="h-5 w-5 text-blue-500" />;
+        return <Clock className="h-5 w-5 text-[color:var(--blue)]" />;
       default:
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-[color:var(--blue)]" />;
     }
   };
 
@@ -148,25 +148,25 @@ const SystemStatus = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-[#f5ede3] to-white dark:from-[#181512] dark:to-[#1c1916]">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-[color:var(--sand)] to-[color:var(--paper)] dark:from-[color:var(--bg)] dark:to-[color:var(--paper)]">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-6xl font-light text-gray-900 mb-6 tracking-tight">
+            <h1 className="text-6xl font-light text-[color:var(--ink)] mb-6 tracking-tight">
               System Status
             </h1>
-            <p className="text-xl text-gray-600 mb-8 font-light">
+            <p className="text-xl text-[color:var(--text-2)] mb-8 font-light">
               Real-time status and performance metrics for all our services
             </p>
             
             {/* Overall Status */}
             <div className="flex items-center justify-center mb-8">
-              <CheckCircle className="h-8 w-8 text-green-500 mr-3" />
-              <span className="text-2xl font-medium text-gray-900">All Systems Operational</span>
+              <CheckCircle className="h-8 w-8 text-[color:var(--blue)] mr-3" />
+              <span className="text-2xl font-medium text-[color:var(--ink)]">All Systems Operational</span>
             </div>
             
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-[color:var(--text-2)]">
               Last updated: {currentStatus.lastUpdated}
             </p>
           </div>
@@ -179,8 +179,8 @@ const SystemStatus = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
             {metrics.map((metric, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl font-light text-blue-600 mb-2">{metric.value}</div>
-                <div className="text-gray-600">{metric.label}</div>
+                <div className="text-3xl font-light text-[color:var(--blue)] mb-2">{metric.value}</div>
+                <div className="text-[color:var(--text-2)]">{metric.label}</div>
               </div>
             ))}
           </div>
@@ -188,11 +188,11 @@ const SystemStatus = () => {
       </section>
 
       {/* Service Status */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Service Status</h2>
-            <p className="text-xl text-gray-600">Current status of all our services and components</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Service Status</h2>
+            <p className="text-xl text-[color:var(--text-2)]">Current status of all our services and components</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -201,8 +201,8 @@ const SystemStatus = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center">
-                      <service.icon className="h-6 w-6 text-gray-600 mr-3" />
-                      <h3 className="text-lg font-medium text-gray-900">{service.name}</h3>
+                      <service.icon className="h-6 w-6 text-[color:var(--text-2)] mr-3" />
+                      <h3 className="text-lg font-medium text-[color:var(--ink)]">{service.name}</h3>
                     </div>
                     <div className="flex items-center">
                       {getStatusIcon(service.status)}
@@ -211,12 +211,12 @@ const SystemStatus = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-gray-500">Uptime (30 days)</span>
-                      <div className="font-medium text-gray-900">{service.uptime}</div>
+                      <span className="text-[color:var(--text-2)]">Uptime (30 days)</span>
+                      <div className="font-medium text-[color:var(--ink)]">{service.uptime}</div>
                     </div>
                     <div>
-                      <span className="text-gray-500">Avg Response</span>
-                      <div className="font-medium text-gray-900">{service.responseTime}</div>
+                      <span className="text-[color:var(--text-2)]">Avg Response</span>
+                      <div className="font-medium text-[color:var(--ink)]">{service.responseTime}</div>
                     </div>
                   </div>
                 </CardContent>
@@ -228,11 +228,11 @@ const SystemStatus = () => {
 
       {/* Current Incidents */}
       {incidents.length > 0 && (
-        <section className="py-20 px-4 bg-gray-50">
+        <section className="py-20 px-4 bg-[color:var(--sand)]">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-light text-gray-900 mb-6">Current Incidents</h2>
-              <p className="text-xl text-gray-600">Active incidents and their resolution progress</p>
+              <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Current Incidents</h2>
+              <p className="text-xl text-[color:var(--text-2)]">Active incidents and their resolution progress</p>
             </div>
 
             {incidents.map((incident, index) => (
@@ -240,8 +240,8 @@ const SystemStatus = () => {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-xl text-gray-900 mb-2">{incident.title}</CardTitle>
-                      <div className="flex items-center text-sm text-gray-500">
+                      <CardTitle className="text-xl text-[color:var(--ink)] mb-2">{incident.title}</CardTitle>
+                      <div className="flex items-center text-sm text-[color:var(--text-2)]">
                         <Clock className="h-4 w-4 mr-2" />
                         Started: {incident.startTime}
                       </div>
@@ -255,13 +255,13 @@ const SystemStatus = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 mb-6">{incident.description}</p>
+                  <p className="text-[color:var(--ink)] mb-6">{incident.description}</p>
                   <div className="space-y-4">
-                    <h4 className="font-medium text-gray-900">Updates:</h4>
+                    <h4 className="font-medium text-[color:var(--ink)]">Updates:</h4>
                     {incident.updates.map((update, idx) => (
-                      <div key={idx} className="border-l-2 border-blue-200 pl-4">
-                        <div className="text-sm text-gray-500 mb-1">{update.time}</div>
-                        <div className="text-gray-700">{update.message}</div>
+                      <div key={idx} className="border-l-2 border-[color:var(--line)] pl-4">
+                        <div className="text-sm text-[color:var(--text-2)] mb-1">{update.time}</div>
+                        <div className="text-[color:var(--ink)]">{update.message}</div>
                       </div>
                     ))}
                   </div>
@@ -273,20 +273,20 @@ const SystemStatus = () => {
       )}
 
       {/* Incident History */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[color:var(--paper)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">Recent Incidents</h2>
-            <p className="text-xl text-gray-600">History of past incidents and maintenance</p>
+            <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Recent Incidents</h2>
+            <p className="text-xl text-[color:var(--text-2)]">History of past incidents and maintenance</p>
           </div>
 
           <div className="space-y-4">
             {pastIncidents.map((incident, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-2xl">
+              <div key={index} className="bg-[color:var(--sand)] p-6 rounded-[28px]">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-1">{incident.title}</h3>
-                    <div className="flex items-center text-sm text-gray-500">
+                    <h3 className="text-lg font-medium text-[color:var(--ink)] mb-1">{incident.title}</h3>
+                    <div className="flex items-center text-sm text-[color:var(--text-2)]">
                       <span>{incident.date}</span>
                       <span className="mx-2">•</span>
                       <span>Duration: {incident.duration}</span>
@@ -301,17 +301,17 @@ const SystemStatus = () => {
       </section>
 
       {/* Subscribe to Updates */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-[color:var(--sand)]">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-light text-gray-900 mb-6">Stay Informed</h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <h2 className="text-4xl font-light text-[color:var(--ink)] mb-6">Stay Informed</h2>
+          <p className="text-xl text-[color:var(--text-2)] mb-8">
             Get real-time notifications about service status and scheduled maintenance
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-full">
+            <button className="bg-[color:var(--ink)] hover:bg-[color:var(--ink)] text-white px-8 py-3 rounded-full">
               Subscribe to Updates
             </button>
-            <button className="border border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full">
+            <button className="border border-[color:var(--line)] text-[color:var(--ink)] hover:bg-[color:var(--sand)] px-8 py-3 rounded-full">
               RSS Feed
             </button>
           </div>

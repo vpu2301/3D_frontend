@@ -38,32 +38,33 @@ export default function ContactsDuplicates() {
       <div className="flex flex-1 overflow-hidden">
         <ContactsMiniRail />
         <main className="flex flex-1 flex-col overflow-hidden">
-          <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+          <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 py-4">
             <div>
-              <Link to="/contacts" className="inline-flex items-center gap-1 text-xs text-gray-500 hover:underline">
+              <p className="plat-crumb">3days.contacts / duplicates</p>
+              <Link to="/contacts" className="mt-1.5 inline-flex items-center gap-1 text-xs text-[var(--text-4)] transition-colors hover:text-[var(--ink)]">
                 <ArrowLeft className="h-3 w-3" /> Back to Contacts
               </Link>
-              <h1 className="mt-1 flex items-center gap-2 text-2xl font-light text-gray-900">
-                <GitMerge className="h-5 w-5 text-violet-500" /> Duplicates
+              <h1 className="mt-1 flex items-center gap-2 text-[26px] leading-tight">
+                <GitMerge className="h-5 w-5 text-[var(--text-4)]" /> Duplicates
               </h1>
-              <p className="text-xs text-gray-500">
+              <p className="mt-1 text-xs text-[var(--text-4)]">
                 {pending.length} group{pending.length === 1 ? '' : 's'} pending review
               </p>
             </div>
             <button
               type="button"
               onClick={recompute}
-              className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1 text-xs hover:bg-gray-50"
+              className="plat-btn-ghost"
             >
               <RefreshCw className="h-3.5 w-3.5" /> Recompute
             </button>
           </div>
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {pending.length === 0 ? (
-              <div className="rounded-md border border-dashed border-gray-200 px-6 py-16 text-center">
-                <Sparkles className="mx-auto mb-3 h-7 w-7 text-blue-400" />
-                <p className="text-sm text-gray-700">No duplicates pending review.</p>
-                <p className="mt-1 text-xs text-gray-500">Click Recompute to scan again.</p>
+              <div className="rounded-[14px] border border-dashed border-[var(--line)] px-6 py-16 text-center">
+                <Sparkles className="mx-auto mb-3 h-7 w-7 text-[var(--text-5)]" />
+                <p className="text-sm text-[var(--text-2)]">No duplicates pending review.</p>
+                <p className="mt-1 text-xs text-[var(--text-4)]">Click Recompute to scan again.</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -128,28 +129,28 @@ function DuplicateRow({
   };
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4">
+    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-4">
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <div className="text-sm font-medium text-gray-900">
-            <span className="rounded-full bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-700">
+          <div className="text-sm font-medium text-[var(--ink)]">
+            <span className="plat-pill plat-pill-mute">
               {group.confidence}% confidence
             </span>{' '}
-            <span className="ml-2 italic text-gray-600">{group.reason}</span>
+            <span className="ml-2 italic text-[var(--text-3)]">{group.reason}</span>
           </div>
         </div>
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={onNotDup}
-            className="rounded-md border border-gray-200 px-2.5 py-1 text-xs text-gray-700 hover:bg-gray-50"
+            className="plat-btn-ghost"
           >
             Not a duplicate
           </button>
           <button
             type="button"
             onClick={apply}
-            className="flex items-center gap-1 rounded-md bg-violet-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-violet-700"
+            className="plat-btn h-9"
           >
             <Check className="h-3 w-3" /> Merge into {displayName(a)}
           </button>
@@ -161,7 +162,7 @@ function DuplicateRow({
         <ContactCompareColumn label="B · merged" contact={b} />
       </div>
 
-      <div className="mt-3 grid grid-cols-1 gap-2 border-t border-gray-100 pt-3 md:grid-cols-2">
+      <div className="mt-3 grid grid-cols-1 gap-2 border-t border-[var(--line-soft)] pt-3 md:grid-cols-2">
         <FieldChoice
           label="First name"
           a={a.firstName}
@@ -216,24 +217,24 @@ function pickPreferred<T>(a: T | undefined, b: T | undefined): 'a' | 'b' {
 
 function ContactCompareColumn({ label, contact }: { label: string; contact: Contact }) {
   return (
-    <div className="rounded-md border border-gray-200 p-3">
-      <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">{label}</div>
+    <div className="rounded-[12px] border border-[var(--line-soft)] p-3">
+      <div className="plat-eyebrow mb-2">{label}</div>
       <div className="flex items-start gap-2">
         <ContactAvatar contact={contact} size={36} />
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-gray-900">{displayName(contact)}</div>
-          <div className="truncate text-xs text-gray-500">
+          <div className="truncate text-sm font-semibold text-[var(--ink)]">{displayName(contact)}</div>
+          <div className="truncate text-xs text-[var(--text-4)]">
             {contact.title && contact.organization
               ? `${contact.title} · ${contact.organization}`
               : contact.organization ?? contact.title ?? '—'}
           </div>
-          <div className="mt-1 truncate text-xs text-gray-700">
+          <div className="mt-1 truncate text-xs text-[var(--text-2)]">
             {contact.emails[0]?.value ?? '—'}
           </div>
           {contact.phones[0] && (
-            <div className="truncate text-xs text-gray-700">{contact.phones[0].value}</div>
+            <div className="truncate text-xs text-[var(--text-2)]">{contact.phones[0].value}</div>
           )}
-          <div className="mt-1 text-[10px] text-gray-400">
+          <div className="mt-1 text-[10px] text-[var(--text-5)]">
             Last updated {new Date(contact.updatedAt).toLocaleDateString()}
           </div>
         </div>
@@ -256,15 +257,17 @@ function FieldChoice({
   onChange: (v: 'a' | 'b') => void;
 }) {
   return (
-    <div className="rounded-md border border-gray-100 p-2">
-      <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500">{label}</div>
+    <div className="rounded-[12px] border border-[var(--line-soft)] p-2">
+      <div className="plat-eyebrow mb-1.5">{label}</div>
       <div className="flex items-center gap-1 text-xs">
         <button
           type="button"
           onClick={() => onChange('a')}
           className={cn(
-            'flex-1 truncate rounded px-2 py-1 text-left',
-            value === 'a' ? 'bg-violet-100 text-violet-900' : 'bg-gray-50 hover:bg-gray-100',
+            'flex-1 truncate rounded-[8px] px-2 py-1.5 text-left transition-colors',
+            value === 'a'
+              ? 'bg-[rgba(20,22,26,0.07)] font-semibold text-[var(--ink)]'
+              : 'bg-[var(--sand)] text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)]',
           )}
         >
           A: {a ?? '—'}
@@ -273,8 +276,10 @@ function FieldChoice({
           type="button"
           onClick={() => onChange('b')}
           className={cn(
-            'flex-1 truncate rounded px-2 py-1 text-left',
-            value === 'b' ? 'bg-violet-100 text-violet-900' : 'bg-gray-50 hover:bg-gray-100',
+            'flex-1 truncate rounded-[8px] px-2 py-1.5 text-left transition-colors',
+            value === 'b'
+              ? 'bg-[rgba(20,22,26,0.07)] font-semibold text-[var(--ink)]'
+              : 'bg-[var(--sand)] text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)]',
           )}
         >
           B: {b ?? '—'}
@@ -298,8 +303,8 @@ function MultiFieldChoice({
   onChange: (v: 'union' | 'a' | 'b') => void;
 }) {
   return (
-    <div className="rounded-md border border-gray-100 p-2">
-      <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500">{label}</div>
+    <div className="rounded-[12px] border border-[var(--line-soft)] p-2">
+      <div className="plat-eyebrow mb-1.5">{label}</div>
       <div className="flex items-center gap-1 text-xs">
         {(['a', 'b', 'union'] as const).map((opt) => (
           <button
@@ -307,17 +312,19 @@ function MultiFieldChoice({
             type="button"
             onClick={() => onChange(opt)}
             className={cn(
-              'flex-1 rounded px-2 py-1',
-              value === opt ? 'bg-violet-100 text-violet-900' : 'bg-gray-50 hover:bg-gray-100',
+              'flex-1 rounded-[8px] px-2 py-1.5 transition-colors',
+              value === opt
+                ? 'bg-[rgba(20,22,26,0.07)] font-semibold text-[var(--ink)]'
+                : 'bg-[var(--sand)] text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)]',
             )}
           >
             {opt === 'a' ? 'A only' : opt === 'b' ? 'B only' : 'Both'}
           </button>
         ))}
       </div>
-      <div className="mt-1 flex flex-wrap gap-1 text-[10px] text-gray-500">
+      <div className="mt-1.5 flex flex-wrap gap-1 text-[10px] text-[var(--text-4)]">
         {[...a, ...b].map((v, i) => (
-          <span key={`${v.value}-${i}`} className="rounded-full bg-gray-100 px-1.5 py-0.5">
+          <span key={`${v.value}-${i}`} className="rounded-full bg-[var(--sand-deep)] px-1.5 py-0.5">
             {v.value}
           </span>
         ))}

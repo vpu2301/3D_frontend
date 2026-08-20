@@ -67,16 +67,16 @@ const EMPLOYEE_AGENTS: Record<number, Array<{
 type TaskStatus = 'Completed' | 'In Progress' | 'Failed' | 'Pending';
 
 const TASK_STATUS_STYLE: Record<TaskStatus, string> = {
-  Completed:     'bg-green-100 text-green-700 border-green-200',
-  'In Progress': 'bg-blue-100 text-blue-700 border-blue-200',
-  Failed:        'bg-red-100 text-red-700 border-red-200',
-  Pending:       'bg-gray-100 text-gray-500 border-gray-200',
+  Completed:     'bg-[color:var(--ok-bg)] text-[color:var(--ok-fg)] border-transparent',
+  'In Progress': 'bg-[color:var(--blue-100)] text-[color:var(--blue)] border-transparent',
+  Failed:        'bg-[rgba(179,56,46,0.1)] text-[color:var(--bad-fg)] border-transparent',
+  Pending:       'bg-[color:var(--sand-deep)] text-[color:var(--text-3)] border-transparent',
 };
 
 const PRIORITY_STYLE: Record<string, string> = {
-  High:   'bg-red-100 text-red-700 border-red-200',
-  Medium: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  Low:    'bg-green-100 text-green-700 border-green-200',
+  High:   'bg-[rgba(179,56,46,0.1)] text-[color:var(--bad-fg)] border-transparent',
+  Medium: 'bg-[color:var(--warn-bg)] text-[color:var(--warn-fg)] border-transparent',
+  Low:    'bg-[color:var(--ok-bg)] text-[color:var(--ok-fg)] border-transparent',
 };
 
 type EmployeeTask = {
@@ -179,18 +179,18 @@ const EMPLOYEE_ACTIVITY: Record<number, Array<{
 };
 
 const ACTIVITY_ICON_MAP: Record<string, { icon: React.ElementType; color: string; bg: string }> = {
-  task_completed: { icon: CheckCircle,   color: 'text-green-600', bg: 'from-green-100 to-emerald-100' },
-  task_failed:    { icon: XCircle,       color: 'text-red-600',   bg: 'from-red-100 to-pink-100'      },
-  message:        { icon: MessageSquare, color: 'text-blue-600',  bg: 'from-blue-100 to-cyan-100'     },
-  assignment:     { icon: Zap,           color: 'text-amber-600', bg: 'from-amber-100 to-yellow-100'  },
-  escalation:     { icon: AlertCircle,   color: 'text-orange-600',bg: 'from-orange-100 to-amber-100'  },
+  task_completed: { icon: CheckCircle,   color: 'text-[color:var(--ok-fg)]',   bg: 'bg-[color:var(--sand)]' },
+  task_failed:    { icon: XCircle,       color: 'text-[color:var(--bad-fg)]',  bg: 'bg-[color:var(--sand)]' },
+  message:        { icon: MessageSquare, color: 'text-[color:var(--text-2)]',  bg: 'bg-[color:var(--sand)]' },
+  assignment:     { icon: Zap,           color: 'text-[color:var(--warn-fg)]', bg: 'bg-[color:var(--sand)]' },
+  escalation:     { icon: AlertCircle,   color: 'text-[color:var(--warn-fg)]', bg: 'bg-[color:var(--sand)]' },
 };
 
 const STATUS_BADGE: Record<string, string> = {
-  Active:     'bg-green-100 text-green-700 border-green-200',
-  Inactive:   'bg-gray-100 text-gray-500 border-gray-200',
-  'On Leave': 'bg-amber-100 text-amber-700 border-amber-200',
-  Remote:     'bg-blue-100 text-blue-700 border-blue-200',
+  Active:     'bg-[color:var(--ok-bg)] text-[color:var(--ok-fg)] border-transparent',
+  Inactive:   'bg-[color:var(--sand-deep)] text-[color:var(--text-3)] border-transparent',
+  'On Leave': 'bg-[color:var(--warn-bg)] text-[color:var(--warn-fg)] border-transparent',
+  Remote:     'bg-[color:var(--blue-100)] text-[color:var(--blue)] border-transparent',
 };
 
 type ProfileTab = 'overview' | 'agents' | 'tasks' | 'activity';
@@ -240,7 +240,7 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
   };
 
   const SortIcon = ({ field }: { field: keyof EmployeeTask }) => (
-    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-gray-900' : 'text-gray-400')} />
+    <ArrowUpDown className={cn('h-3 w-3 ml-1 inline', sortField === field ? 'text-[color:var(--ink)]' : 'text-[color:var(--text-5)]')} />
   );
 
   return (
@@ -248,23 +248,23 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-5)] pointer-events-none" />
           <Input
             placeholder="Search tasks..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="pl-9 bg-white border-gray-200"
+            className="pl-9 bg-white rounded-[10px] border-[color:var(--line)]"
           />
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-white !border-[color:var(--line)] text-[color:var(--text-2)] min-w-[110px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
               <span className="flex items-center gap-1.5">
-                <Filter className="h-3.5 w-3.5 text-gray-400" />
+                <Filter className="h-3.5 w-3.5 text-[color:var(--text-5)]" />
                 {statusFilter === 'All' ? 'Status' : statusFilter}
               </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+              <ChevronDown className="h-3.5 w-3.5 text-[color:var(--text-5)] ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -278,12 +278,12 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-white !border-gray-200 text-gray-700 min-w-[110px] justify-between hover:!bg-gray-50 hover:!text-gray-700">
+            <Button variant="outline" size="sm" className="bg-white !border-[color:var(--line)] text-[color:var(--text-2)] min-w-[110px] justify-between hover:!bg-[rgba(20,22,26,0.04)] hover:!text-[color:var(--ink)]">
               <span className="flex items-center gap-1.5">
-                <Filter className="h-3.5 w-3.5 text-gray-400" />
+                <Filter className="h-3.5 w-3.5 text-[color:var(--text-5)]" />
                 {priorityFilter === 'All' ? 'Priority' : priorityFilter}
               </span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-400 ml-2" />
+              <ChevronDown className="h-3.5 w-3.5 text-[color:var(--text-5)] ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -297,28 +297,28 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
       </div>
 
       {/* Table */}
-      <Card className="bg-white border-gray-200/60 overflow-hidden">
+      <Card className="plat-panel !p-0 shadow-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('title')}>
+              <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('title')}>
                   Task <SortIcon field="title" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('status')}>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('status')}>
                   Status <SortIcon field="status" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('priority')}>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('priority')}>
                   Priority <SortIcon field="priority" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900" onClick={() => toggleSort('category')}>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)]" onClick={() => toggleSort('category')}>
                   Category <SortIcon field="category" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden md:table-cell" onClick={() => toggleSort('agent')}>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden md:table-cell" onClick={() => toggleSort('agent')}>
                   Agent <SortIcon field="agent" />
                 </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Duration</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600 cursor-pointer select-none hover:text-gray-900 hidden lg:table-cell" onClick={() => toggleSort('createdAt')}>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden lg:table-cell">Duration</th>
+                <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] cursor-pointer select-none hover:text-[color:var(--ink)] hidden lg:table-cell" onClick={() => toggleSort('createdAt')}>
                   Date <SortIcon field="createdAt" />
                 </th>
                 <th className="w-10 px-4 py-3" />
@@ -327,17 +327,17 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
             <tbody>
               {paged.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-12 text-center text-gray-400 text-sm">
+                  <td colSpan={8} className="px-4 py-12 text-center text-[color:var(--text-5)] text-sm">
                     No tasks match your filters.
                   </td>
                 </tr>
               ) : (
                 paged.map(task => (
-                  <tr key={task.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                  <tr key={task.id} className="border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors">
                     <td className="px-4 py-3">
                       <div className="min-w-0">
-                        <p className="font-medium text-gray-900 truncate">{task.title}</p>
-                        {task.notes && <p className="text-xs text-gray-500 truncate">{task.notes}</p>}
+                        <p className="font-medium text-[color:var(--ink)] truncate">{task.title}</p>
+                        {task.notes && <p className="text-xs text-[color:var(--text-4)] truncate">{task.notes}</p>}
                       </div>
                     </td>
                     <td className="px-4 py-3">
@@ -350,24 +350,24 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
                         {task.priority}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-700">{task.category}</td>
+                    <td className="px-4 py-3 text-[color:var(--text-2)]">{task.category}</td>
                     <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="flex items-center gap-1.5 text-gray-600 text-xs">
-                        <Bot className="h-3.5 w-3.5 text-gray-400" />
+                      <span className="flex items-center gap-1.5 text-[color:var(--text-3)] text-xs">
+                        <Bot className="h-3.5 w-3.5 text-[color:var(--text-5)]" />
                         {task.agent}
                       </span>
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-xs text-gray-500">{task.duration ?? '—'}</td>
+                    <td className="px-4 py-3 hidden lg:table-cell text-xs text-[color:var(--text-4)]">{task.duration ?? '—'}</td>
                     <td className="px-4 py-3 hidden lg:table-cell">
-                      <span className="text-xs text-gray-500 flex items-center gap-1">
-                        <Clock className="h-3 w-3 text-gray-400" />
+                      <span className="text-xs text-[color:var(--text-4)] flex items-center gap-1">
+                        <Clock className="h-3 w-3 text-[color:var(--text-5)]" />
                         {task.createdAt}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100">
+                          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-[rgba(20,22,26,0.05)]">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -389,7 +389,7 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between gap-3 flex-wrap text-xs text-gray-500">
+        <div className="px-4 py-3 border-t border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center justify-between gap-3 flex-wrap text-xs text-[color:var(--text-4)]">
           <div className="flex items-center gap-3">
             <span>
               {filtered.length > 0
@@ -397,11 +397,11 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
                 : '0 tasks'}
             </span>
             <div className="flex items-center gap-1.5">
-              <span className="text-gray-400">Rows:</span>
+              <span className="text-[color:var(--text-5)]">Rows:</span>
               <select
                 value={pageSize}
                 onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-                className="h-6 rounded border border-gray-200 bg-white text-gray-700 text-xs px-1 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
+                className="h-6 rounded-[6px] border border-[color:var(--line)] bg-white text-[color:var(--text-2)] text-xs px-1 focus:outline-none focus:ring-1 focus:ring-[color:var(--line)] cursor-pointer"
               >
                 {[5, 10, 15].map(n => <option key={n} value={n}>{n}</option>)}
               </select>
@@ -410,7 +410,7 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
           <div className="flex items-center gap-2">
             {(statusFilter !== 'All' || priorityFilter !== 'All' || search) && (
               <button
-                className="text-gray-500 hover:text-gray-900 underline underline-offset-2"
+                className="text-[color:var(--text-4)] hover:text-[color:var(--ink)] underline underline-offset-2"
                 onClick={() => { setSearch(''); setStatusFilter('All'); setPriorityFilter('All'); setPage(1); }}
               >
                 Clear filters
@@ -418,15 +418,15 @@ const EmployeeTasksTable = ({ tasks }: { tasks: EmployeeTask[] }) => {
             )}
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
+                <Button variant="outline" size="icon" className="h-7 w-7 !border-[color:var(--line)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === 1} onClick={() => setPage(p => p - 1)}>
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-gray-200 text-gray-600 hover:!bg-gray-100 hover:!text-gray-700')} onClick={() => setPage(p)}>
+                  <Button key={p} variant={p === safePage ? 'default' : 'outline'} size="icon" className={cn('h-7 w-7 text-xs', p !== safePage && '!border-[color:var(--line)] text-[color:var(--text-3)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]')} onClick={() => setPage(p)}>
                     {p}
                   </Button>
                 ))}
-                <Button variant="outline" size="icon" className="h-7 w-7 !border-gray-200 hover:!bg-gray-100 hover:!text-gray-700" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
+                <Button variant="outline" size="icon" className="h-7 w-7 !border-[color:var(--line)] hover:!bg-[rgba(20,22,26,0.05)] hover:!text-[color:var(--ink)]" disabled={safePage === totalPages} onClick={() => setPage(p => p + 1)}>
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -448,10 +448,10 @@ export default function HumanEmployeeCard() {
 
   if (!employee) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[hsl(30,25%,97%)]">
-        <Card className="text-center p-8 bg-white border-gray-200">
-          <p className="text-gray-500 mb-4 text-sm">Employee not found.</p>
-          <Button onClick={() => navigate('/staff')} size="sm">
+      <div className="plat min-h-screen flex items-center justify-center">
+        <Card className="plat-panel shadow-none text-center !p-8">
+          <p className="text-[color:var(--text-4)] mb-4 text-sm">Employee not found.</p>
+          <Button onClick={() => navigate('/staff')} size="sm" className="plat-btn !h-9 !px-4 !text-xs">
             Back to Staff
           </Button>
         </Card>
@@ -473,7 +473,7 @@ export default function HumanEmployeeCard() {
   const initials = employee.name.split(' ').map(n => n[0]).join('').slice(0, 2);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
@@ -483,28 +483,29 @@ export default function HumanEmployeeCard() {
               {/* Back button */}
               <button
                 onClick={() => navigate('/staff')}
-                className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors mb-6"
+                className="plat-crumb flex items-center gap-1.5 !text-[12.5px] hover:opacity-70 transition-opacity mb-6"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Back to Staff
               </button>
 
               {/* Profile header */}
-              <Card className="bg-white border-gray-200/60 mb-6 p-6">
+              <Card className="plat-panel shadow-none mb-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
                   {/* Avatar */}
-                  <div className="h-[72px] w-[72px] flex-shrink-0 bg-gray-100 border border-gray-200 rounded-2xl flex items-center justify-center">
-                    <span className="text-2xl font-semibold text-gray-900">{initials}</span>
+                  <div className="h-[72px] w-[72px] flex-shrink-0 bg-[color:var(--sand)] border border-[color:var(--line-soft)] rounded-[12px] flex items-center justify-center">
+                    <span className="text-2xl font-semibold text-[color:var(--ink)]">{initials}</span>
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2.5 mb-1">
-                      <h1 className="text-2xl font-bold text-gray-900">{employee.name}</h1>
-                      <Badge variant="secondary" className={cn('text-xs border', STATUS_BADGE[employee.status] ?? 'bg-gray-100 text-gray-500 border-gray-200')}>
+                    <p className="plat-crumb">3days.staff.profile</p>
+                    <div className="mt-1 flex flex-wrap items-center gap-2.5 mb-1">
+                      <h1 className="text-2xl font-bold text-[color:var(--ink)]">{employee.name}</h1>
+                      <Badge variant="secondary" className={cn('text-xs border', STATUS_BADGE[employee.status] ?? 'bg-[color:var(--sand-deep)] text-[color:var(--text-3)] border-transparent')}>
                         {employee.status}
                       </Badge>
                     </div>
-                    <p className="text-gray-600 mb-3">{employee.role} · {employee.department}</p>
+                    <p className="text-[color:var(--text-3)] mb-3">{employee.role} · {employee.department}</p>
 
                     <div className="flex flex-wrap gap-x-5 gap-y-1.5">
                       {[
@@ -512,7 +513,7 @@ export default function HumanEmployeeCard() {
                         { icon: Phone,    label: employee.phone  },
                         { icon: Calendar, label: `Joined ${new Date(employee.joinDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}` },
                       ].filter(i => i.label).map(({ icon: Icon, label }) => (
-                        <span key={label} className="flex items-center gap-1.5 text-xs text-gray-500">
+                        <span key={label} className="flex items-center gap-1.5 text-xs text-[color:var(--text-4)]">
                           <Icon className="h-3.5 w-3.5 flex-shrink-0" />
                           {label}
                         </span>
@@ -520,7 +521,7 @@ export default function HumanEmployeeCard() {
                     </div>
                   </div>
 
-                  <Button variant="outline" size="sm" className="flex-shrink-0">
+                  <Button variant="outline" size="sm" className="plat-btn-ghost flex-shrink-0">
                     <Mail className="h-3.5 w-3.5 mr-1.5" />
                     Message
                   </Button>
@@ -530,25 +531,25 @@ export default function HumanEmployeeCard() {
               {/* Stat row */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 {[
-                  { label: 'Assigned Agents', value: agents.length,    icon: Bot,         color: 'text-blue-600',   bg: 'bg-blue-100'  },
-                  { label: 'Total Tasks',      value: stats.totalTasks, icon: CheckSquare, color: 'text-gray-600',   bg: 'bg-gray-100'  },
-                  { label: 'In Progress',      value: stats.inProgress, icon: RefreshCw,   color: 'text-amber-600',  bg: 'bg-amber-100' },
-                  { label: 'Completed',        value: stats.completed,  icon: CheckCircle, color: 'text-green-600',  bg: 'bg-green-100' },
+                  { label: 'Assigned Agents', value: agents.length,    icon: Bot,         color: 'text-[color:var(--ink)]', bg: 'bg-[color:var(--sand)]' },
+                  { label: 'Total Tasks',      value: stats.totalTasks, icon: CheckSquare, color: 'text-[color:var(--ink)]', bg: 'bg-[color:var(--sand)]' },
+                  { label: 'In Progress',      value: stats.inProgress, icon: RefreshCw,   color: 'text-[color:var(--ink)]', bg: 'bg-[color:var(--sand)]' },
+                  { label: 'Completed',        value: stats.completed,  icon: CheckCircle, color: 'text-[color:var(--ink)]', bg: 'bg-[color:var(--sand)]' },
                 ].map(s => (
-                  <Card key={s.label} className="bg-white border-gray-200/60 p-4 flex items-center gap-3">
-                    <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', s.bg)}>
+                  <div key={s.label} className="plat-stat !p-4 flex items-center gap-3">
+                    <div className={cn('w-9 h-9 rounded-[10px] flex items-center justify-center flex-shrink-0', s.bg)}>
                       <s.icon className={cn('w-4 h-4', s.color)} />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 font-medium">{s.label}</p>
-                      <p className="text-xl font-bold text-gray-900">{s.value}</p>
+                      <p className="plat-stat-label !mt-0 !text-xs !font-medium" style={{ color: 'var(--text-4)' }}>{s.label}</p>
+                      <p className="plat-num !text-[22px]">{s.value}</p>
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
 
               {/* Tab navigation — Tasks-page style */}
-              <div className="flex border-b border-gray-200 mb-6">
+              <div className="flex border-b border-[color:var(--line-soft)] mb-6">
                 {PROFILE_TABS.map(tab => (
                   <button
                     key={tab.key}
@@ -556,8 +557,8 @@ export default function HumanEmployeeCard() {
                     className={cn(
                       'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
                       activeTab === tab.key
-                        ? 'border-gray-900 text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'border-[color:var(--ink)] text-[color:var(--ink)]'
+                        : 'border-transparent text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:border-[color:var(--line)]'
                     )}
                   >
                     <tab.icon className="h-4 w-4" />
@@ -571,10 +572,10 @@ export default function HumanEmployeeCard() {
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Employee info */}
-                    <Card className="bg-white border-gray-200/60 overflow-hidden">
-                      <div className="px-5 py-3.5 border-b border-gray-100 bg-gray-50/60 flex items-center gap-2">
-                        <Building2 className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm font-medium text-gray-700">Employee Info</span>
+                    <Card className="plat-panel !p-0 shadow-none overflow-hidden">
+                      <div className="px-5 py-3.5 border-b border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center gap-2">
+                        <Building2 className="w-4 h-4 text-[color:var(--text-5)]" />
+                        <span className="plat-eyebrow">Employee Info</span>
                       </div>
                       <div className="p-5 space-y-3">
                         {[
@@ -585,18 +586,18 @@ export default function HumanEmployeeCard() {
                           { label: 'Joined',      value: new Date(employee.joinDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) },
                         ].map(row => (
                           <div key={row.label} className="flex items-center justify-between">
-                            <span className="text-sm text-gray-500">{row.label}</span>
-                            <span className="text-sm font-medium text-gray-900">{row.value}</span>
+                            <span className="text-sm text-[color:var(--text-4)]">{row.label}</span>
+                            <span className="text-sm font-medium text-[color:var(--ink)]">{row.value}</span>
                           </div>
                         ))}
                       </div>
                     </Card>
 
                     {/* Task summary */}
-                    <Card className="bg-white border-gray-200/60 overflow-hidden">
-                      <div className="px-5 py-3.5 border-b border-gray-100 bg-gray-50/60 flex items-center gap-2">
-                        <BarChart2 className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm font-medium text-gray-700">Task Summary</span>
+                    <Card className="plat-panel !p-0 shadow-none overflow-hidden">
+                      <div className="px-5 py-3.5 border-b border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center gap-2">
+                        <BarChart2 className="w-4 h-4 text-[color:var(--text-5)]" />
+                        <span className="plat-eyebrow">Task Summary</span>
                       </div>
                       <div className="p-5 space-y-3">
                         {[
@@ -607,8 +608,8 @@ export default function HumanEmployeeCard() {
                           { label: 'Failed',           value: stats.failed     },
                         ].map(row => (
                           <div key={row.label} className="flex items-center justify-between">
-                            <span className="text-sm text-gray-500">{row.label}</span>
-                            <span className="text-sm font-medium text-gray-900">{row.value}</span>
+                            <span className="text-sm text-[color:var(--text-4)]">{row.label}</span>
+                            <span className="text-sm font-medium text-[color:var(--ink)]">{row.value}</span>
                           </div>
                         ))}
                       </div>
@@ -616,38 +617,38 @@ export default function HumanEmployeeCard() {
                   </div>
 
                   {/* Recent activity preview */}
-                  <Card className="bg-white border-gray-200/60 overflow-hidden">
-                    <div className="px-5 py-3.5 border-b border-gray-100 bg-gray-50/60 flex items-center gap-2">
-                      <Activity className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm font-medium text-gray-700">Recent Activity</span>
+                  <Card className="plat-panel !p-0 shadow-none overflow-hidden">
+                    <div className="px-5 py-3.5 border-b border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-[color:var(--text-5)]" />
+                      <span className="plat-eyebrow">Recent Activity</span>
                     </div>
                     <div className="overflow-x-auto">
                       {activity.length === 0 ? (
-                        <p className="text-sm text-gray-400 py-10 text-center">No recent activity.</p>
+                        <p className="text-sm text-[color:var(--text-5)] py-10 text-center">No recent activity.</p>
                       ) : (
                         <table className="w-full text-sm">
                           <tbody>
                             {activity.slice(0, 4).map(entry => {
-                              const meta = ACTIVITY_ICON_MAP[entry.type] ?? { icon: Activity, color: 'text-gray-400', bg: 'from-gray-100 to-gray-100' };
+                              const meta = ACTIVITY_ICON_MAP[entry.type] ?? { icon: Activity, color: 'text-[color:var(--text-5)]', bg: 'bg-[color:var(--sand)]' };
                               const Icon = meta.icon;
                               return (
-                                <tr key={entry.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                                <tr key={entry.id} className="border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors">
                                   <td className="px-4 py-3">
                                     <div className="flex items-center space-x-3">
-                                      <div className={`p-2 rounded-lg bg-gradient-to-br ${meta.bg} flex-shrink-0`}>
+                                      <div className={`p-2 rounded-[10px] ${meta.bg} flex-shrink-0`}>
                                         <Icon className={`h-4 w-4 ${meta.color}`} />
                                       </div>
-                                      <p className="text-gray-900">{entry.text}</p>
+                                      <p className="text-[color:var(--ink)]">{entry.text}</p>
                                     </div>
                                   </td>
                                   <td className="px-4 py-3 hidden md:table-cell">
-                                    <span className="flex items-center gap-1.5 text-gray-600 text-xs">
-                                      <Bot className="h-3.5 w-3.5 text-gray-400" />
+                                    <span className="flex items-center gap-1.5 text-[color:var(--text-3)] text-xs">
+                                      <Bot className="h-3.5 w-3.5 text-[color:var(--text-5)]" />
                                       {entry.agent}
                                     </span>
                                   </td>
                                   <td className="px-4 py-3 text-right">
-                                    <span className="text-xs text-gray-500">{entry.time}</span>
+                                    <span className="text-xs text-[color:var(--text-4)]">{entry.time}</span>
                                   </td>
                                 </tr>
                               );
@@ -662,54 +663,54 @@ export default function HumanEmployeeCard() {
 
               {/* ── Tab: Agents ── */}
               {activeTab === 'agents' && (
-                <Card className="bg-white border-gray-200/60 overflow-hidden">
-                  <div className="px-5 py-3.5 border-b border-gray-100 bg-gray-50/60 flex items-center gap-2">
-                    <Bot className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm font-medium text-gray-700">Assigned AI Agents</span>
+                <Card className="plat-panel !p-0 shadow-none overflow-hidden">
+                  <div className="px-5 py-3.5 border-b border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center gap-2">
+                    <Bot className="w-4 h-4 text-[color:var(--text-5)]" />
+                    <span className="plat-eyebrow">Assigned AI Agents</span>
                   </div>
                   {agents.length === 0 ? (
                     <div className="text-center py-12">
-                      <Bot className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                      <p className="text-sm text-gray-400">No agents assigned yet.</p>
+                      <Bot className="h-12 w-12 text-[color:var(--text-5)] mx-auto mb-3" />
+                      <p className="text-sm text-[color:var(--text-5)]">No agents assigned yet.</p>
                     </div>
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-gray-100 bg-gray-50/60">
-                            <th className="text-left px-4 py-3 font-medium text-gray-600">Agent</th>
-                            <th className="text-left px-4 py-3 font-medium text-gray-600">Type</th>
-                            <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
-                            <th className="text-left px-4 py-3 font-medium text-gray-600 hidden md:table-cell">Active</th>
-                            <th className="text-left px-4 py-3 font-medium text-gray-600 hidden md:table-cell">Completed</th>
-                            <th className="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Last Active</th>
+                          <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                            <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)]">Agent</th>
+                            <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)]">Type</th>
+                            <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)]">Status</th>
+                            <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden md:table-cell">Active</th>
+                            <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden md:table-cell">Completed</th>
+                            <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden lg:table-cell">Last Active</th>
                           </tr>
                         </thead>
                         <tbody>
                           {agents.map(agent => (
-                            <tr key={agent.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                            <tr key={agent.id} className="border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors">
                               <td className="px-4 py-3">
                                 <div className="flex items-center space-x-3">
-                                  <div className="p-2 rounded-lg bg-gradient-to-br from-blue-100 to-cyan-100 flex-shrink-0">
-                                    <Bot className="h-4 w-4 text-blue-600" />
+                                  <div className="p-2 rounded-[10px] bg-[color:var(--sand)] flex-shrink-0">
+                                    <Bot className="h-4 w-4 text-[color:var(--ink)]" />
                                   </div>
                                   <div className="min-w-0">
-                                    <p className="font-medium text-gray-900">{agent.name}</p>
-                                    <p className="text-xs text-gray-500 truncate">{agent.description}</p>
+                                    <p className="font-medium text-[color:var(--ink)]">{agent.name}</p>
+                                    <p className="text-xs text-[color:var(--text-4)] truncate">{agent.description}</p>
                                   </div>
                                 </div>
                               </td>
-                              <td className="px-4 py-3 text-gray-700">{agent.type}</td>
+                              <td className="px-4 py-3 text-[color:var(--text-2)]">{agent.type}</td>
                               <td className="px-4 py-3">
-                                <Badge variant="secondary" className={cn('text-xs border', agent.status === 'Active' ? 'bg-green-100 text-green-700 border-green-200' : 'bg-amber-100 text-amber-700 border-amber-200')}>
+                                <Badge variant="secondary" className={cn('text-xs border', agent.status === 'Active' ? 'bg-[color:var(--ok-bg)] text-[color:var(--ok-fg)] border-transparent' : 'bg-[color:var(--warn-bg)] text-[color:var(--warn-fg)] border-transparent')}>
                                   {agent.status}
                                 </Badge>
                               </td>
-                              <td className="px-4 py-3 hidden md:table-cell text-gray-700">{agent.activeTasks}</td>
-                              <td className="px-4 py-3 hidden md:table-cell text-gray-700">{agent.completedTasks}</td>
+                              <td className="px-4 py-3 hidden md:table-cell text-[color:var(--text-2)]">{agent.activeTasks}</td>
+                              <td className="px-4 py-3 hidden md:table-cell text-[color:var(--text-2)]">{agent.completedTasks}</td>
                               <td className="px-4 py-3 hidden lg:table-cell">
-                                <span className="text-xs text-gray-500 flex items-center gap-1">
-                                  <Clock className="h-3 w-3 text-gray-400" />
+                                <span className="text-xs text-[color:var(--text-4)] flex items-center gap-1">
+                                  <Clock className="h-3 w-3 text-[color:var(--text-5)]" />
                                   {agent.lastActivity}
                                 </span>
                               </td>
@@ -726,9 +727,9 @@ export default function HumanEmployeeCard() {
               {activeTab === 'tasks' && (
                 allTasks.length === 0 ? (
                   <div className="text-center py-12">
-                    <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No tasks yet</h3>
-                    <p className="text-gray-600">Tasks will appear here when agents are assigned work.</p>
+                    <CheckCircle className="h-16 w-16 mx-auto mb-4" style={{ color: 'var(--ok-fg)' }} />
+                    <h3 className="text-lg font-medium text-[color:var(--ink)] mb-2">No tasks yet</h3>
+                    <p className="text-[color:var(--text-3)]">Tasks will appear here when agents are assigned work.</p>
                   </div>
                 ) : (
                   <EmployeeTasksTable tasks={allTasks} />
@@ -737,52 +738,52 @@ export default function HumanEmployeeCard() {
 
               {/* ── Tab: Activity ── */}
               {activeTab === 'activity' && (
-                <Card className="bg-white border-gray-200/60 overflow-hidden">
-                  <div className="px-5 py-3.5 border-b border-gray-100 bg-gray-50/60 flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm font-medium text-gray-700">Activity Log</span>
-                    <Badge variant="secondary" className="ml-auto bg-gray-100 text-gray-600 border-gray-200 text-xs">
+                <Card className="plat-panel !p-0 shadow-none overflow-hidden">
+                  <div className="px-5 py-3.5 border-b border-[color:var(--line-soft)] bg-[color:var(--sand)] flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-[color:var(--text-5)]" />
+                    <span className="plat-eyebrow">Activity Log</span>
+                    <Badge variant="secondary" className="ml-auto bg-[color:var(--sand-deep)] text-[color:var(--text-3)] border-transparent text-xs">
                       {activity.length} entries
                     </Badge>
                   </div>
                   {activity.length === 0 ? (
                     <div className="text-center py-12">
-                      <Activity className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                      <p className="text-sm text-gray-400">No recent activity.</p>
+                      <Activity className="h-12 w-12 text-[color:var(--text-5)] mx-auto mb-3" />
+                      <p className="text-sm text-[color:var(--text-5)]">No recent activity.</p>
                     </div>
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-gray-100 bg-gray-50/60">
-                            <th className="text-left px-4 py-3 font-medium text-gray-600">Event</th>
-                            <th className="text-left px-4 py-3 font-medium text-gray-600 hidden md:table-cell">Agent</th>
-                            <th className="text-left px-4 py-3 font-medium text-gray-600">Time</th>
+                          <tr className="border-b border-[color:var(--line-soft)] bg-[color:var(--sand)]">
+                            <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)]">Event</th>
+                            <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)] hidden md:table-cell">Agent</th>
+                            <th className="text-left px-4 py-3 font-medium text-[color:var(--text-3)]">Time</th>
                           </tr>
                         </thead>
                         <tbody>
                           {activity.map(entry => {
-                            const meta = ACTIVITY_ICON_MAP[entry.type] ?? { icon: Activity, color: 'text-gray-400', bg: 'from-gray-100 to-gray-100' };
+                            const meta = ACTIVITY_ICON_MAP[entry.type] ?? { icon: Activity, color: 'text-[color:var(--text-5)]', bg: 'bg-[color:var(--sand)]' };
                             const Icon = meta.icon;
                             return (
-                              <tr key={entry.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/80 transition-colors">
+                              <tr key={entry.id} className="border-b border-[color:var(--line-soft)] last:border-b-0 hover:bg-[rgba(20,22,26,0.02)] transition-colors">
                                 <td className="px-4 py-3">
                                   <div className="flex items-center space-x-3">
-                                    <div className={`p-2 rounded-lg bg-gradient-to-br ${meta.bg} flex-shrink-0`}>
+                                    <div className={`p-2 rounded-[10px] ${meta.bg} flex-shrink-0`}>
                                       <Icon className={`h-4 w-4 ${meta.color}`} />
                                     </div>
-                                    <p className="text-gray-900">{entry.text}</p>
+                                    <p className="text-[color:var(--ink)]">{entry.text}</p>
                                   </div>
                                 </td>
                                 <td className="px-4 py-3 hidden md:table-cell">
-                                  <span className="flex items-center gap-1.5 text-gray-600 text-xs">
-                                    <Bot className="h-3.5 w-3.5 text-gray-400" />
+                                  <span className="flex items-center gap-1.5 text-[color:var(--text-3)] text-xs">
+                                    <Bot className="h-3.5 w-3.5 text-[color:var(--text-5)]" />
                                     {entry.agent}
                                   </span>
                                 </td>
                                 <td className="px-4 py-3">
-                                  <span className="text-xs text-gray-500 flex items-center gap-1">
-                                    <Clock className="h-3 w-3 text-gray-400" />
+                                  <span className="text-xs text-[color:var(--text-4)] flex items-center gap-1">
+                                    <Clock className="h-3 w-3 text-[color:var(--text-5)]" />
                                     {entry.time}
                                   </span>
                                 </td>

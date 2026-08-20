@@ -38,24 +38,24 @@ const GetStarted = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#181512]">
+    <div className="min-h-screen bg-[color:var(--paper)] dark:bg-[color:var(--bg)]">
       <main className="pt-[60px]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-[color:var(--ink)] mb-4">
               Get Started with 3days.ai
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-[color:var(--text-2)] max-w-2xl mx-auto">
               Transform your business with AI assistants in just a few simple steps
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {steps.map((step, index) => (
-              <Card key={step.id} className={`relative ${currentStep >= step.id ? 'ring-2 ring-blue-500' : ''}`}>
+              <Card key={step.id} className={`relative ${currentStep >= step.id ? 'ring-2 ring-[color:var(--line)]' : ''}`}>
                 <CardHeader className="text-center">
                   <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 ${
-                    currentStep >= step.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'
+                    currentStep >= step.id ? 'bg-[color:var(--blue)] text-white' : 'bg-[color:var(--sand)] text-[color:var(--text-2)]'
                   }`}>
                     {currentStep > step.id ? (
                       <CheckCircle className="h-8 w-8" />
@@ -68,7 +68,7 @@ const GetStarted = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 text-center mb-4">{step.description}</p>
+                  <p className="text-[color:var(--text-2)] text-center mb-4">{step.description}</p>
                   {currentStep === step.id && (
                     <Button 
                       className="w-full"
@@ -91,7 +91,7 @@ const GetStarted = () => {
             <Button 
               size="lg"
               onClick={() => navigate('/signup')}
-              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
+              className="bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--blue)] hover:from-[color:var(--blue)] hover:to-[color:var(--blue)]"
             >
               Sign Up Now
               <ArrowRight className="ml-2 h-5 w-5" />

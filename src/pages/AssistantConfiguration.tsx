@@ -147,10 +147,10 @@ const AssistantConfiguration = () => {
 
   if (pageLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="plat min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-600">Loading configuration...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[color:var(--ink)] mx-auto"></div>
+          <p className="mt-2 text-sm text-[color:var(--text-3)]">Loading configuration...</p>
         </div>
       </div>
     );
@@ -158,12 +158,12 @@ const AssistantConfiguration = () => {
 
   if (!assistant) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="plat min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Assistant not found</h3>
-          <p className="text-gray-600 mb-4">The assistant with ID "{id}" could not be found.</p>
-          <Button onClick={() => navigate('/ai-assistants')}>
+          <Bot className="h-16 w-16 text-[color:var(--text-5)] mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-[color:var(--ink)] mb-2">Assistant not found</h3>
+          <p className="text-[color:var(--text-3)] mb-4">The assistant with ID "{id}" could not be found.</p>
+          <Button onClick={() => navigate('/ai-assistants')} className="plat-btn">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Assistants
           </Button>
@@ -173,7 +173,7 @@ const AssistantConfiguration = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(30,25%,97%)]">
+    <div className="plat min-h-screen flex flex-col">
       <SidebarProvider>
         <div className="flex w-full flex-1">
           <AppSidebar />
@@ -186,25 +186,27 @@ const AssistantConfiguration = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
+                    className="plat-btn-ghost"
                     onClick={() => navigate(`/ai-assistants/${id}`)}
                   >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Back to Profile
                   </Button>
-                  <div className={`p-3 rounded-2xl bg-gradient-to-br ${assistant.bgColor || 'from-blue-100 to-indigo-100'}`}>
-                    <Settings className={`h-8 w-8 ${assistant.iconColor || 'text-blue-600'}`} />
+                  <div className="p-3 rounded-[12px] flex items-center justify-center" style={{ background: 'var(--sand)' }}>
+                    <Settings className="h-8 w-8" style={{ color: 'var(--ink)' }} />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Configure {assistant.name}</h1>
-                    <p className="text-gray-600">Customize behavior, permissions, and capabilities</p>
+                    <p className="plat-crumb">3days.assistant.config</p>
+                    <h1 className="mt-1 text-3xl font-bold text-[color:var(--ink)]">Configure {assistant.name}</h1>
+                    <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Customize behavior, permissions, and capabilities</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" onClick={handleTestAssistant}>
+                  <Button variant="outline" className="plat-btn-ghost !h-10" onClick={handleTestAssistant}>
                     <RefreshCw className="h-4 w-4 mr-2" />
                     Test Assistant
                   </Button>
-                  <Button onClick={handleSave} disabled={isLoading}>
+                  <Button onClick={handleSave} disabled={isLoading} className="plat-btn">
                     {isLoading ? (
                       <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                     ) : (
@@ -216,7 +218,7 @@ const AssistantConfiguration = () => {
               </div>
 
               {/* Tab nav */}
-              <div className="flex border-b border-gray-200 mb-6">
+              <div className="flex border-b border-[color:var(--line-soft)] mb-6">
                 {CONFIG_TABS.map(({ key, label, icon: Icon }) => (
                   <button
                     key={key}
@@ -224,8 +226,8 @@ const AssistantConfiguration = () => {
                     className={cn(
                       'flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors whitespace-nowrap',
                       activeTab === key
-                        ? 'border-gray-900 text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'border-[color:var(--ink)] text-[color:var(--ink)]'
+                        : 'border-transparent text-[color:var(--text-4)] hover:text-[color:var(--ink)] hover:border-[color:var(--line)]'
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -237,9 +239,9 @@ const AssistantConfiguration = () => {
               {/* Tab content */}
               {activeTab === 'general' && (
                 <div className="space-y-6">
-                  <Card className="bg-white border-gray-200/60">
+                  <Card className="plat-panel !p-0 shadow-none">
                     <CardHeader>
-                      <CardTitle className="flex items-center">
+                      <CardTitle className="flex items-center !text-lg">
                         <Bot className="h-5 w-5 mr-2" />
                         Basic Information
                       </CardTitle>
@@ -250,6 +252,7 @@ const AssistantConfiguration = () => {
                           <Label htmlFor="name">Assistant Name</Label>
                           <Input
                             id="name"
+                            className="rounded-[10px] border-[color:var(--line)] focus-visible:!ring-[rgba(20,22,26,0.08)] focus-visible:!border-[color:var(--ink)]"
                             value={config.name}
                             onChange={(e) => setConfig({...config, name: e.target.value})}
                           />
@@ -258,6 +261,7 @@ const AssistantConfiguration = () => {
                           <Label htmlFor="type">Type</Label>
                           <Input
                             id="type"
+                            className="rounded-[10px] border-[color:var(--line)] focus-visible:!ring-[rgba(20,22,26,0.08)] focus-visible:!border-[color:var(--ink)]"
                             value={config.type}
                             onChange={(e) => setConfig({...config, type: e.target.value})}
                           />
@@ -267,6 +271,7 @@ const AssistantConfiguration = () => {
                         <Label htmlFor="description">Description</Label>
                         <Textarea
                           id="description"
+                          className="rounded-[10px] border-[color:var(--line)] focus-visible:!ring-[rgba(20,22,26,0.08)] focus-visible:!border-[color:var(--ink)]"
                           value={config.description}
                           onChange={(e) => setConfig({...config, description: e.target.value})}
                           placeholder="Describe what this assistant does..."
@@ -277,6 +282,7 @@ const AssistantConfiguration = () => {
                           <Label htmlFor="department">Department</Label>
                           <Input
                             id="department"
+                            className="rounded-[10px] border-[color:var(--line)] focus-visible:!ring-[rgba(20,22,26,0.08)] focus-visible:!border-[color:var(--ink)]"
                             value={config.department}
                             onChange={(e) => setConfig({...config, department: e.target.value})}
                           />
@@ -285,6 +291,7 @@ const AssistantConfiguration = () => {
                           <Label htmlFor="workingHours">Working Hours</Label>
                           <Input
                             id="workingHours"
+                            className="rounded-[10px] border-[color:var(--line)] focus-visible:!ring-[rgba(20,22,26,0.08)] focus-visible:!border-[color:var(--ink)]"
                             value={config.workingHours}
                             onChange={(e) => setConfig({...config, workingHours: e.target.value})}
                           />
@@ -293,9 +300,10 @@ const AssistantConfiguration = () => {
                       <div className="flex items-center justify-between">
                         <div>
                           <Label>Active Status</Label>
-                          <p className="text-sm text-gray-600">Enable or disable this assistant</p>
+                          <p className="text-sm text-[color:var(--text-3)]">Enable or disable this assistant</p>
                         </div>
                         <Switch
+                          className="data-[state=checked]:bg-[color:var(--ink)]"
                           checked={config.isActive}
                           onCheckedChange={(checked) => setConfig({...config, isActive: checked})}
                         />
@@ -307,9 +315,9 @@ const AssistantConfiguration = () => {
 
               {activeTab === 'capabilities' && (
                 <div className="space-y-6">
-                  <Card className="bg-white border-gray-200/60">
+                  <Card className="plat-panel !p-0 shadow-none">
                     <CardHeader>
-                      <CardTitle className="flex items-center">
+                      <CardTitle className="flex items-center !text-lg">
                         <Zap className="h-5 w-5 mr-2" />
                         Assistant Capabilities
                       </CardTitle>
@@ -317,12 +325,12 @@ const AssistantConfiguration = () => {
                     <CardContent>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {config.capabilities.map((capability, index) => (
-                          <div key={index} className="p-4 bg-blue-50 rounded-lg text-center">
-                            <p className="font-medium text-blue-900">{capability}</p>
+                          <div key={index} className="p-4 rounded-[12px] text-center" style={{ background: 'var(--sand)', border: '1px solid var(--line-soft)' }}>
+                            <p className="font-medium" style={{ color: 'var(--ink)' }}>{capability}</p>
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="mt-2 text-red-600 hover:text-red-700"
+                              className="mt-2 !text-[color:var(--bad-fg)] hover:opacity-70"
                               onClick={() => {
                                 const newCapabilities = config.capabilities.filter((_, i) => i !== index);
                                 setConfig({...config, capabilities: newCapabilities});
@@ -332,8 +340,8 @@ const AssistantConfiguration = () => {
                             </Button>
                           </div>
                         ))}
-                        <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
-                          <Button variant="ghost" className="text-gray-600">
+                        <div className="p-4 border border-dashed border-[color:var(--line)] rounded-[12px] text-center">
+                          <Button variant="ghost" className="!text-[color:var(--text-3)]">
                             + Add Capability
                           </Button>
                         </div>
@@ -346,17 +354,17 @@ const AssistantConfiguration = () => {
               {activeTab === 'autonomy' && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <Card className="bg-white border-gray-200/60">
+                    <Card className="plat-panel !p-0 shadow-none">
                       <CardHeader>
-                        <CardTitle className="flex items-center text-green-700">
+                        <CardTitle className="flex items-center !text-lg" style={{ color: 'var(--ok-fg)' }}>
                           <Shield className="h-5 w-5 mr-2" />
                           Autonomous Decisions
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-3">
                         {config.canMakeDecisions.map((decision, index) => (
-                          <div key={index} className="p-3 bg-green-50 rounded-lg flex justify-between items-center">
-                            <p className="text-green-800 font-medium">{decision}</p>
+                          <div key={index} className="p-3 rounded-[12px] flex justify-between items-center" style={{ background: 'var(--ok-bg)' }}>
+                            <p className="font-medium" style={{ color: 'var(--ok-fg)' }}>{decision}</p>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -372,17 +380,17 @@ const AssistantConfiguration = () => {
                       </CardContent>
                     </Card>
 
-                    <Card className="bg-white border-gray-200/60">
+                    <Card className="plat-panel !p-0 shadow-none">
                       <CardHeader>
-                        <CardTitle className="flex items-center text-orange-700">
+                        <CardTitle className="flex items-center !text-lg" style={{ color: 'var(--warn-fg)' }}>
                           <AlertCircle className="h-5 w-5 mr-2" />
                           Requires Approval
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-3">
                         {config.approvalRequired.map((approval, index) => (
-                          <div key={index} className="p-3 bg-orange-50 rounded-lg flex justify-between items-center">
-                            <p className="text-orange-800 font-medium">{approval}</p>
+                          <div key={index} className="p-3 rounded-[12px] flex justify-between items-center" style={{ background: 'var(--warn-bg)' }}>
+                            <p className="font-medium" style={{ color: 'var(--warn-fg)' }}>{approval}</p>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -399,9 +407,9 @@ const AssistantConfiguration = () => {
                     </Card>
                   </div>
 
-                  <Card className="bg-white border-gray-200/60">
+                  <Card className="plat-panel !p-0 shadow-none">
                     <CardHeader>
-                      <CardTitle className="flex items-center">
+                      <CardTitle className="flex items-center !text-lg">
                         <DollarSign className="h-5 w-5 mr-2" />
                         Budget & Limits
                       </CardTitle>
@@ -411,6 +419,7 @@ const AssistantConfiguration = () => {
                         <Label htmlFor="budgetLimit">Maximum Budget Authority ($)</Label>
                         <Input
                           id="budgetLimit"
+                          className="rounded-[10px] border-[color:var(--line)] focus-visible:!ring-[rgba(20,22,26,0.08)] focus-visible:!border-[color:var(--ink)]"
                           type="number"
                           value={config.maxBudgetLimit}
                           onChange={(e) => setConfig({...config, maxBudgetLimit: parseInt(e.target.value)})}
@@ -419,9 +428,10 @@ const AssistantConfiguration = () => {
                       <div className="flex items-center justify-between">
                         <div>
                           <Label>Require Approval for Actions</Label>
-                          <p className="text-sm text-gray-600">All actions need human approval</p>
+                          <p className="text-sm text-[color:var(--text-3)]">All actions need human approval</p>
                         </div>
                         <Switch
+                          className="data-[state=checked]:bg-[color:var(--ink)]"
                           checked={config.requiresApproval}
                           onCheckedChange={(checked) => setConfig({...config, requiresApproval: checked})}
                         />
@@ -433,9 +443,9 @@ const AssistantConfiguration = () => {
 
               {activeTab === 'integrations' && (
                 <div className="space-y-6">
-                  <Card className="bg-white border-gray-200/60">
+                  <Card className="plat-panel !p-0 shadow-none">
                     <CardHeader>
-                      <CardTitle className="flex items-center">
+                      <CardTitle className="flex items-center !text-lg">
                         <Users className="h-5 w-5 mr-2" />
                         Connected Integrations
                       </CardTitle>
@@ -443,13 +453,13 @@ const AssistantConfiguration = () => {
                     <CardContent>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {config.integrations.map((integration, index) => (
-                          <div key={index} className="p-4 border border-gray-200 rounded-lg text-center hover:bg-gray-50 transition-colors">
+                          <div key={index} className="p-4 border border-[color:var(--line-soft)] rounded-[12px] text-center hover:bg-[rgba(20,22,26,0.04)] transition-colors">
                             <p className="font-medium">{integration}</p>
-                            <Badge variant="default" className="mt-2">Connected</Badge>
+                            <Badge variant="default" className="mt-2 bg-[color:var(--ok-bg)] text-[color:var(--ok-fg)] border-transparent hover:bg-[color:var(--ok-bg)]">Connected</Badge>
                           </div>
                         ))}
-                        <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
-                          <Button variant="ghost" className="text-gray-600">
+                        <div className="p-4 border border-dashed border-[color:var(--line)] rounded-[12px] text-center">
+                          <Button variant="ghost" className="!text-[color:var(--text-3)]">
                             + Add Integration
                           </Button>
                         </div>
@@ -461,9 +471,9 @@ const AssistantConfiguration = () => {
 
               {activeTab === 'security' && (
                 <div className="space-y-6">
-                  <Card className="bg-white border-gray-200/60">
+                  <Card className="plat-panel !p-0 shadow-none">
                     <CardHeader>
-                      <CardTitle className="flex items-center">
+                      <CardTitle className="flex items-center !text-lg">
                         <Lock className="h-5 w-5 mr-2" />
                         Security Settings
                       </CardTitle>
@@ -473,7 +483,7 @@ const AssistantConfiguration = () => {
                         <Label htmlFor="confidentiality">Confidentiality Level</Label>
                         <select
                           id="confidentiality"
-                          className="w-full h-10 px-3 rounded-md border border-input bg-background mt-2"
+                          className="w-full h-10 px-3 rounded-[10px] border border-[color:var(--line)] bg-white mt-2"
                           value={config.confidentialityLevel}
                           onChange={(e) => setConfig({...config, confidentialityLevel: e.target.value})}
                         >
@@ -487,7 +497,7 @@ const AssistantConfiguration = () => {
                         <Label htmlFor="scope">Access Scope</Label>
                         <select
                           id="scope"
-                          className="w-full h-10 px-3 rounded-md border border-input bg-background mt-2"
+                          className="w-full h-10 px-3 rounded-[10px] border border-[color:var(--line)] bg-white mt-2"
                           value={config.scope}
                           onChange={(e) => setConfig({...config, scope: e.target.value})}
                         >

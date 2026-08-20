@@ -40,17 +40,21 @@ function NavRow({ icon: Icon, label, count, badgeColor, active, onClick }: NavRo
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full items-center gap-3 rounded-r-full py-2 pl-5 pr-4 text-left text-sm transition-colors',
-        active ? 'bg-[#dde9f4] text-gray-900' : 'text-gray-700 hover:bg-gray-100',
+        'flex w-full items-center gap-3 rounded-[10px] py-2 pl-4 pr-3 text-left text-[13.5px] font-medium transition-colors',
+        active
+          ? 'bg-[rgba(20,22,26,0.07)] text-[var(--ink)]'
+          : 'text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]',
       )}
     >
-      <Icon className="h-4 w-4 shrink-0 text-gray-500" />
+      <Icon className={cn('h-4 w-4 shrink-0', active ? 'text-[var(--ink)]' : 'text-[var(--text-4)]')} />
       <span className="flex-1 truncate">{label}</span>
       {count !== undefined && count > 0 && (
         <span
           className={cn(
             'shrink-0 rounded-full px-1.5 text-[10px] font-medium leading-tight',
-            badgeColor === 'red' ? 'bg-red-500 text-white' : 'text-gray-500',
+            badgeColor === 'red'
+              ? 'bg-[var(--bad-fg)] text-white'
+              : 'text-[var(--text-5)]',
           )}
         >
           {count}
@@ -101,27 +105,27 @@ export default function DriveMiniRail() {
   };
 
   return (
-    <aside className="flex h-full w-60 shrink-0 flex-col bg-white">
+    <aside className="flex h-full w-60 shrink-0 flex-col border-r border-[var(--line-soft)]">
       <div className="px-4 pt-3 pb-4">
         <div className="relative">
           <button
             type="button"
             onClick={() => setNewOpen((o) => !o)}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#bdd8ec] px-4 py-2.5 text-sm font-medium text-gray-800 transition-colors hover:bg-[#a5c8e0]"
+            className="plat-btn w-full justify-center"
           >
             <Plus className="h-4 w-4" /> New
           </button>
           {newOpen && (
             <div
-              className="absolute left-0 top-full z-20 mt-1 w-48 rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+              className="absolute left-0 top-full z-20 mt-1 w-48 rounded-[12px] border border-[var(--line)] bg-white p-1 shadow-lg"
               onMouseLeave={() => setNewOpen(false)}
             >
               <button
                 type="button"
                 onClick={onNewFolder}
-                className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-gray-100"
+                className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-[13px] text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
-                <FolderPlus className="h-3.5 w-3.5 text-gray-500" /> New folder
+                <FolderPlus className="h-3.5 w-3.5 text-[var(--text-4)]" /> New folder
               </button>
               <button
                 type="button"
@@ -130,20 +134,20 @@ export default function DriveMiniRail() {
                   // Bubble to the upload trigger via a custom event the dropzone listens to.
                   window.dispatchEvent(new CustomEvent('drive:upload'));
                 }}
-                className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-gray-100"
+                className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-[13px] text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
-                <UploadIcon className="h-3.5 w-3.5 text-gray-500" /> Upload file
+                <UploadIcon className="h-3.5 w-3.5 text-[var(--text-4)]" /> Upload file
               </button>
-              <div className="my-1 border-t border-gray-100" />
+              <div className="my-1 border-t border-[var(--line-soft)]" />
               <button
                 type="button"
                 onClick={() => {
                   setNewOpen(false);
                   navigate('/docs');
                 }}
-                className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-gray-100"
+                className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-[13px] text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
-                <FileText className="h-3.5 w-3.5 text-gray-500" /> New doc (in Docs)
+                <FileText className="h-3.5 w-3.5 text-[var(--text-4)]" /> New doc (in Docs)
               </button>
               <button
                 type="button"
@@ -151,16 +155,16 @@ export default function DriveMiniRail() {
                   setNewOpen(false);
                   navigate('/notes');
                 }}
-                className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-gray-100"
+                className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-[13px] text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.05)] hover:text-[var(--ink)]"
               >
-                <StickyNote className="h-3.5 w-3.5 text-gray-500" /> New note (in Notes)
+                <StickyNote className="h-3.5 w-3.5 text-[var(--text-4)]" /> New note (in Notes)
               </button>
             </div>
           )}
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-3">
+      <div className="flex-1 overflow-y-auto px-3">
         <div className="space-y-0.5">
           <NavRow
             icon={HardDrive}
@@ -190,7 +194,7 @@ export default function DriveMiniRail() {
           />
         </div>
 
-        <div className="mb-1.5 mt-6 flex items-center justify-between px-5 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+        <div className="plat-eyebrow mb-1.5 mt-6 flex items-center justify-between px-4">
           <button
             type="button"
             onClick={() => setSpacesOpen((o) => !o)}
@@ -221,9 +225,7 @@ export default function DriveMiniRail() {
           </div>
         )}
 
-        <div className="mb-1.5 mt-6 px-5 text-[11px] font-semibold uppercase tracking-widest text-gray-400">
-          Fix &amp; manage
-        </div>
+        <div className="plat-eyebrow mb-1.5 mt-6 px-4">Fix &amp; manage</div>
         <div className="space-y-0.5">
           <NavRow
             icon={Trash2}
@@ -236,13 +238,13 @@ export default function DriveMiniRail() {
       </div>
 
       {/* Storage footer */}
-      <div className="border-t border-gray-100 px-5 py-3">
-        <div className="flex items-center justify-between text-[11px] text-gray-500">
+      <div className="border-t border-[var(--line-soft)] px-5 py-3">
+        <div className="flex items-center justify-between text-[11px] text-[var(--text-4)]">
           <span className="truncate">{formatBytes(stored)} of {formatBytes(MOCK_STORAGE_BUDGET)}</span>
           <span>{pct.toFixed(1)}%</span>
         </div>
-        <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-gray-100">
-          <div className="h-full bg-[#8fc4e4]" style={{ width: `${pct}%` }} />
+        <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-[var(--sand-deep)]">
+          <div className="h-full bg-[var(--ink)]" style={{ width: `${pct}%` }} />
         </div>
       </div>
     </aside>

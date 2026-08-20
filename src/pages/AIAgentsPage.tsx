@@ -9,6 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bot, Search, Filter, Plus, Settings, Play, Pause, MoreVertical, TrendingUp, Users, Clock, CheckCircle } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
+/* Design-system helpers (see src/styles/platform.css) */
+const PLAT_CARD = '!rounded-[14px] !border-[color:var(--line-soft)] !shadow-none';
+const PLAT_ROW_CARD =
+  '!rounded-none !border-x-0 !border-t-0 !border-b !border-[color:var(--line-soft)] !shadow-none !bg-transparent last:!border-b-0';
+const PLAT_TAB =
+  '!h-8 !rounded-full !px-3.5 !text-xs !font-medium !shadow-none border border-[color:var(--line)] text-[color:var(--text-2)] data-[state=active]:!bg-[color:var(--ink)] data-[state=active]:!text-white data-[state=active]:!border-transparent';
+
 const AIAgentsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -70,84 +77,85 @@ const AIAgentsPage = () => {
   });
 
   return (
-    <div className="flex-1 space-y-6 p-6 bg-gray-50/50">
+    <div className="plat flex-1 space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">AI Agents</h1>
-          <p className="text-gray-600 mt-1">Autonomous AI workers handling your business processes</p>
+          <p className="plat-crumb">3days.agents</p>
+          <h1 className="text-3xl mt-1">AI Agents</h1>
+          <p className="mt-1 text-sm" style={{ color: 'var(--text-4)' }}>Autonomous AI workers handling your business processes</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button className="plat-btn">
           <Plus className="h-4 w-4 mr-2" />
           Create Agent
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className={PLAT_CARD}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Agents</CardTitle>
-            <Bot className="h-4 w-4 text-muted-foreground" />
+            <Bot className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">14</div>
-            <p className="text-xs text-muted-foreground">+2 from last month</p>
+            <div className="plat-num !text-[28px]">14</div>
+            <p className="plat-stat-sub mt-1">+2 from last month</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={PLAT_CARD}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Tasks Completed</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <CheckCircle className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2,760</div>
-            <p className="text-xs text-muted-foreground">+12% from last week</p>
+            <div className="plat-num !text-[28px]">2,760</div>
+            <p className="plat-stat-sub mt-1">+12% from last week</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={PLAT_CARD}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">95.7%</div>
-            <p className="text-xs text-muted-foreground">+0.8% from last week</p>
+            <div className="plat-num !text-[28px]">95.7%</div>
+            <p className="plat-stat-sub mt-1">+0.8% from last week</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={PLAT_CARD}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Users className="h-4 w-4" style={{ color: 'var(--text-5)' }} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">11</div>
-            <p className="text-xs text-muted-foreground">3 paused</p>
+            <div className="plat-num !text-[28px]">11</div>
+            <p className="plat-stat-sub mt-1">3 paused</p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="agents" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="agents">All Agents</TabsTrigger>
-          <TabsTrigger value="types">By Type</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
+        <TabsList className="!h-auto !bg-transparent !p-0 gap-1.5">
+          <TabsTrigger value="agents" className={PLAT_TAB}>All Agents</TabsTrigger>
+          <TabsTrigger value="types" className={PLAT_TAB}>By Type</TabsTrigger>
+          <TabsTrigger value="performance" className={PLAT_TAB}>Performance</TabsTrigger>
         </TabsList>
 
         <TabsContent value="agents" className="space-y-4">
           {/* Filters */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-black/50" />
+              <Search className="absolute left-3 top-3 h-4 w-4" style={{ color: 'var(--text-5)' }} />
               <Input
                 placeholder="Search agents..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 !rounded-[10px] !border-[color:var(--line)] bg-white"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] !rounded-[10px] !border-[color:var(--line)] bg-white">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
@@ -159,19 +167,19 @@ const AIAgentsPage = () => {
             </Select>
           </div>
 
-          {/* Agents List */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Agents List — one panel, hairline-separated rows */}
+          <div className="plat-panel !p-0 overflow-hidden">
             {filteredAgents.map((agent) => (
-              <Card key={agent.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="pb-3">
+              <Card key={agent.id} className={PLAT_ROW_CARD}>
+                <CardHeader className="p-5 pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        <Bot className="h-6 w-6 text-blue-600" />
+                      <div className="plat-item-icon !h-10 !w-10 !rounded-[10px]">
+                        <Bot className="h-[18px] w-[18px]" strokeWidth={1.75} />
                       </div>
                       <div>
-                        <CardTitle className="text-lg">{agent.name}</CardTitle>
-                        <Badge variant="outline" className="text-xs">{agent.type}</Badge>
+                        <CardTitle className="text-[15px] font-semibold">{agent.name}</CardTitle>
+                        <Badge variant="outline" className="text-xs mt-1 !border-[color:var(--line-soft)] !font-medium" style={{ color: 'var(--text-4)' }}>{agent.type}</Badge>
                       </div>
                     </div>
                     <DropdownMenu>
@@ -202,30 +210,27 @@ const AIAgentsPage = () => {
                     </DropdownMenu>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-gray-600">{agent.description}</p>
-                  
+                <CardContent className="space-y-3 p-5 pt-0">
+                  <p className="text-sm" style={{ color: 'var(--text-3)' }}>{agent.description}</p>
+
                   <div className="flex items-center justify-between">
-                    <Badge 
-                      variant={agent.status === 'Active' ? 'default' : 'secondary'}
-                      className={agent.status === 'Active' ? 'bg-green-100 text-green-800' : ''}
-                    >
+                    <span className={agent.status === 'Active' ? 'plat-pill plat-pill-ok' : 'plat-pill plat-pill-mute'}>
                       {agent.status}
-                    </Badge>
-                    <span className="text-xs text-gray-500 flex items-center">
+                    </span>
+                    <span className="text-xs flex items-center" style={{ color: 'var(--text-4)' }}>
                       <Clock className="h-3 w-3 mr-1" />
                       {agent.lastActive}
                     </span>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 pt-2 border-t">
+
+                  <div className="grid grid-cols-2 gap-4 pt-3 border-t" style={{ borderColor: 'var(--line-soft)' }}>
                     <div className="text-center">
                       <div className="text-lg font-semibold">{agent.tasksCompleted}</div>
-                      <div className="text-xs text-gray-500">Tasks Completed</div>
+                      <div className="text-xs" style={{ color: 'var(--text-4)' }}>Tasks Completed</div>
                     </div>
                     <div className="text-center">
                       <div className="text-lg font-semibold">{agent.successRate}%</div>
-                      <div className="text-xs text-gray-500">Success Rate</div>
+                      <div className="text-xs" style={{ color: 'var(--text-4)' }}>Success Rate</div>
                     </div>
                   </div>
                 </CardContent>
@@ -235,17 +240,17 @@ const AIAgentsPage = () => {
         </TabsContent>
 
         <TabsContent value="types" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {agentTypes.map((type, index) => (
-              <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
+              <Card key={index} className={PLAT_CARD}>
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="font-semibold">{type.name}</h3>
-                      <p className="text-2xl font-bold mt-2">{type.count}</p>
-                      <p className="text-sm text-gray-500">agents</p>
+                      <h3 className="text-[15px] font-semibold">{type.name}</h3>
+                      <p className="plat-num !text-[28px] mt-2">{type.count}</p>
+                      <p className="text-sm" style={{ color: 'var(--text-4)' }}>agents</p>
                     </div>
-                    <Badge className={type.color}>Active</Badge>
+                    <span className="plat-pill plat-pill-mute shrink-0">Active</span>
                   </div>
                 </CardContent>
               </Card>
@@ -254,14 +259,14 @@ const AIAgentsPage = () => {
         </TabsContent>
 
         <TabsContent value="performance" className="space-y-4">
-          <Card>
+          <Card className={PLAT_CARD}>
             <CardHeader>
-              <CardTitle>Performance Overview</CardTitle>
+              <CardTitle className="text-lg">Performance Overview</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-center py-12">
-                <TrendingUp className="h-12 w-12 text-black/50 mx-auto mb-4" />
-                <p className="text-gray-500">Performance analytics will be displayed here</p>
+                <TrendingUp className="h-12 w-12 mx-auto mb-4" style={{ color: 'var(--text-5)' }} strokeWidth={1.5} />
+                <p className="text-sm" style={{ color: 'var(--text-4)' }}>Performance analytics will be displayed here</p>
               </div>
             </CardContent>
           </Card>

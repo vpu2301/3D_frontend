@@ -9,16 +9,9 @@ import LanguageSwitcher from './LanguageSwitcher';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [scrolled, setScrolled] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const location = useLocation();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -138,49 +131,41 @@ const Header = () => {
   const renderMegaMenu = (items: any[], isOpen: boolean, wide?: boolean, talkToSales?: boolean) => {
     if (!isOpen) return null;
     const cols = wide ? 'grid-cols-4' : 'grid-cols-2';
-    const minW = wide ? 'min-w-[1080px]' : 'min-w-[740px]';
+    const minW = wide ? 'min-w-[1080px]' : 'min-w-[720px]';
     return (
       <div
-        className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 ${minW} border border-[#c8c6be] bg-white shadow-2xl shadow-black/15 z-[200] overflow-hidden dark:bg-[#1a1815] dark:border-white/18 dark:shadow-black/50`}
-        style={{ borderRadius: '18px' }}
+        className={`m-menu absolute top-[66px] left-2 ${minW} z-[200] overflow-hidden`}
         onMouseEnter={cancelClose}
         onMouseLeave={scheduleClose}
       >
         {wide && (
-          <div className="px-8 pt-4 pb-3.5 border-b border-[#c8c6be] dark:border-white/12 flex items-center justify-between">
-            <span className="text-xs text-black/40 dark:text-white/35">
-              {t('nav.integrationCategories')} —{' '}
-              <Link to="/platform/integrations" className="underline underline-offset-2 hover:text-black dark:hover:text-white transition-colors" onClick={() => setActiveDropdown(null)}>
-                {t('nav.browseAll')}
-              </Link>
-            </span>
-            <Link to="/platform/integrations" className="text-xs text-black/50 hover:text-black transition-colors flex items-center gap-1 dark:text-white/40 dark:hover:text-white" onClick={() => setActiveDropdown(null)}>
+          <div className="flex items-center justify-between px-5 pb-4 pt-1">
+            <span className="m-eyebrow-muted">{t('nav.integrationCategories')}</span>
+            <Link
+              to="/platform/integrations"
+              className="text-[13px] font-medium text-[color:var(--blue)] hover:text-[color:var(--blue-deep)]"
+              onClick={() => setActiveDropdown(null)}
+            >
               {t('nav.viewAllIntegrations')}
             </Link>
           </div>
         )}
-        <div className={`p-8 grid ${cols} gap-8`}>
+        <div className={`grid ${cols} gap-4 px-1`}>
           {items.map((category, ci) => (
             <div key={ci}>
-              <div className="text-black/35 text-[11px] font-semibold uppercase tracking-widest mb-4 px-2 dark:text-white/30">
-                {category.category}
-              </div>
-              <div className="space-y-0.5">
+              <div className="m-eyebrow-muted px-4 pb-3 pt-2">{category.category}</div>
+              <div className="flex flex-col gap-1">
                 {category.items.map((item: any, ii: number) => (
-                  <Link
-                    key={ii}
-                    to={item.href}
-                    className="flex items-start gap-3.5 px-3 py-3 hover:bg-[#141413]/5 transition-colors group dark:hover:bg-white/7"
-                    style={{ borderRadius: '11px' }}
-                    onClick={() => setActiveDropdown(null)}
-                  >
-                    <div className="w-10 h-10 bg-[#141413]/6 border border-[#c8c6be] flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[#141413]/10 transition-colors dark:bg-white/5 dark:border-white/15 dark:group-hover:bg-white/10" style={{ borderRadius: '9px' }}>
-                      <item.icon className="w-[18px] h-[18px] text-black/45 group-hover:text-black/75 transition-colors dark:text-white/35 dark:group-hover:text-white/70" />
-                    </div>
-                    <div>
-                      <div className="text-[#111111] text-[15px] font-semibold group-hover:text-black transition-colors dark:text-white/85 dark:group-hover:text-white">{item.name}</div>
-                      {item.desc && <div className="text-black/45 text-[13px] mt-0.5 leading-snug dark:text-white/38">{item.desc}</div>}
-                    </div>
+                  <Link key={ii} to={item.href} className="m-menu-item group" onClick={() => setActiveDropdown(null)}>
+                    <span className="m-menu-num bg-[color:var(--sand)] text-[color:var(--ink)] group-hover:bg-[color:var(--blue)] group-hover:text-white transition-colors">
+                      <item.icon className="h-[18px] w-[18px]" />
+                    </span>
+                    <span className="block">
+                      <span className="block text-[15px] font-semibold">{item.name}</span>
+                      {item.desc && (
+                        <span className="mt-0.5 block text-[13px] leading-snug text-[color:var(--text-3)]">{item.desc}</span>
+                      )}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -191,45 +176,30 @@ const Header = () => {
           <Link
             to="/skills-hub"
             onClick={() => setActiveDropdown(null)}
-            className="flex items-center justify-between gap-4 px-8 py-3 bg-[#1e4a7a]/[0.06] hover:bg-[#1e4a7a]/[0.11] transition-colors dark:bg-[#7ab3dc]/[0.08] dark:hover:bg-[#7ab3dc]/[0.14]"
+            className="mt-3 flex items-center justify-between gap-4 rounded-[18px] bg-[color:var(--blue-100)] px-5 py-4"
           >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <Sparkles className="w-4 h-4 flex-shrink-0 text-[#1e4a7a] dark:text-[#7ab3dc]" />
-              <span className="text-[13px] font-semibold text-[#1e4a7a] dark:text-[#7ab3dc]">
-                {t('nav.skillsHub')}
-              </span>
-              <span className="text-[12px] text-[#1e4a7a]/70 truncate dark:text-[#7ab3dc]/70">
-                — {t('nav.skillsHubDesc')}
-              </span>
-            </div>
-            <span className="text-[12px] font-medium text-[#1e4a7a] flex-shrink-0 dark:text-[#7ab3dc]">
-              {t('nav.skillsHubCta')}
+            <span className="flex min-w-0 items-center gap-2.5">
+              <Sparkles className="h-4 w-4 flex-shrink-0 text-[color:var(--blue)]" />
+              <span className="text-[13px] font-semibold text-[color:var(--ink)]">{t('nav.skillsHub')}</span>
+              <span className="truncate text-[12px] text-[color:var(--text-3)]">— {t('nav.skillsHubDesc')}</span>
             </span>
+            <span className="flex-shrink-0 text-[12px] font-semibold text-[color:var(--blue)]">{t('nav.skillsHubCta')}</span>
           </Link>
         )}
         {talkToSales && (
           <Link
             to="/contact"
             onClick={() => setActiveDropdown(null)}
-            className="group relative flex items-center justify-between gap-4 px-8 py-3 bg-gradient-to-r from-[#f59e0b]/[0.10] via-[#ec4899]/[0.10] to-[#1e4a7a]/[0.12] hover:from-[#f59e0b]/[0.18] hover:via-[#ec4899]/[0.18] hover:to-[#1e4a7a]/[0.20] transition-all dark:from-[#f59e0b]/[0.14] dark:via-[#ec4899]/[0.14] dark:to-[#7ab3dc]/[0.16] dark:hover:from-[#f59e0b]/[0.22] dark:hover:via-[#ec4899]/[0.22] dark:hover:to-[#7ab3dc]/[0.24]"
+            className="mt-3 flex items-center justify-between gap-4 rounded-[18px] bg-[color:var(--blue-100)] px-5 py-4"
           >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span
-                className="flex w-6 h-6 items-center justify-center flex-shrink-0 bg-gradient-to-br from-[#f59e0b] via-[#ec4899] to-[#1e4a7a] dark:to-[#7ab3dc]"
-                style={{ borderRadius: '7px' }}
-              >
-                <Headphones className="w-3.5 h-3.5 text-white" />
+            <span className="flex min-w-0 items-center gap-2.5">
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[color:var(--blue)]">
+                <Headphones className="h-3.5 w-3.5 text-white" />
               </span>
-              <span className="text-[13px] font-semibold bg-gradient-to-r from-[#b45309] via-[#be185d] to-[#1e4a7a] bg-clip-text text-transparent dark:from-[#f59e0b] dark:via-[#ec4899] dark:to-[#7ab3dc]">
-                {t('nav.talkToSales')}
-              </span>
-              <span className="text-[12px] text-black/55 truncate dark:text-white/55">
-                — {t('nav.talkToSalesDesc')}
-              </span>
-            </div>
-            <span className="text-[12px] font-medium text-[#be185d] flex-shrink-0 group-hover:text-[#9d174d] dark:text-[#ec4899] dark:group-hover:text-[#f472b6]">
-              {t('nav.talkToSalesCta')}
+              <span className="text-[13px] font-semibold text-[color:var(--ink)]">{t('nav.talkToSales')}</span>
+              <span className="truncate text-[12px] text-[color:var(--text-3)]">— {t('nav.talkToSalesDesc')}</span>
             </span>
+            <span className="flex-shrink-0 text-[12px] font-semibold text-[color:var(--blue)]">{t('nav.talkToSalesCta')}</span>
           </Link>
         )}
       </div>
@@ -237,93 +207,82 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 w-full z-[100] transition-all duration-200 bg-[#e8e6dc]/95 backdrop-blur-md dark:bg-[#181512]/95 ${
-      scrolled
-        ? 'border-b border-[#141413]/10 shadow-sm shadow-black/5 dark:border-white/8 dark:shadow-black/20'
-        : 'border-b border-transparent'
-    }`}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex justify-between items-center h-[60px]">
-
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-7 h-7 bg-[#141413] flex items-center justify-center dark:bg-white/90" style={{ borderRadius: '4px' }}>
-              <Bot className="w-3.5 h-3.5 text-white dark:text-[#141413]" />
-            </div>
-            <span className="text-[#141413] font-semibold text-[15px] tracking-tight dark:text-white">3Days.ai</span>
+    <header className="m-header">
+      <div className="relative mx-auto max-w-[1180px]" onMouseLeave={scheduleClose}>
+        <div className="m-navbar">
+          <Link to="/" className="m-wordmark mr-2.5 flex-shrink-0">
+            3Days<span>.ai</span>
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-0.5">
+          <nav className="hidden md:flex items-center gap-0">
             {[
               { label: t('nav.product'), key: 'product', items: productItems, wide: false, talkToSales: true },
               { label: t('nav.solutions'), key: 'solutions', items: solutionsItems, wide: false, talkToSales: true },
               { label: t('nav.integrations'), key: 'integrations', items: integrationsItems, wide: true, talkToSales: false },
               { label: t('nav.resources'), key: 'resources', items: resourcesItems, wide: false, talkToSales: false },
-            ].map(({ label, key, items, wide, talkToSales }) => (
-              <div
+            ].map(({ label, key }) => (
+              <button
                 key={key}
-                className="relative"
+                className={`m-nav-tab${activeDropdown === key ? ' is-open' : ''}`}
                 onMouseEnter={() => openDropdown(key)}
-                onMouseLeave={scheduleClose}
               >
-                <button
-                  className={`flex items-center gap-1 px-3 py-2 text-sm transition-colors rounded-sm ${
-                    activeDropdown === key
-                      ? 'text-[#111111] dark:text-white'
-                      : 'text-[#141413]/55 hover:text-[#111111] dark:text-white/50 dark:hover:text-white'
-                  }`}
-                >
-                  {label}
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === key ? 'rotate-180' : ''}`} />
-                </button>
-                {renderMegaMenu(items, activeDropdown === key, wide, talkToSales)}
-              </div>
+                {label}
+                <span className="text-[10px] opacity-60">▾</span>
+              </button>
             ))}
             <Link
               to="/pricing"
-              className={`px-3 py-2 text-sm transition-colors rounded-sm ${
-                location.pathname === '/pricing'
-                  ? 'text-[#111111] dark:text-white'
-                  : 'text-[#141413]/55 hover:text-[#111111] dark:text-white/50 dark:hover:text-white'
-              }`}
+              className={`m-nav-tab${location.pathname === '/pricing' ? ' is-active' : ''}`}
+              onMouseEnter={() => setActiveDropdown(null)}
             >
               {t('nav.pricing')}
             </Link>
           </nav>
 
-          {/* Desktop CTAs */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="flex-1" />
+
+          {/* Desktop actions */}
+          <div className="hidden md:flex items-center gap-1.5">
             <LanguageSwitcher />
             <ThemeSelector />
             <Link
               to="/login"
-              className="text-[#141413]/55 hover:text-[#111111] text-sm transition-colors px-3 py-2 dark:text-white/50 dark:hover:text-white"
+              className="flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-medium text-[color:var(--text-1)] transition-colors hover:bg-[color:var(--sand)] hover:text-[color:var(--ink)]"
             >
               {t('common.signIn')}
             </Link>
-            <Link to="/signup">
-              <button className="ml-1 px-5 py-2 bg-[#141413] hover:bg-[#2a2a28] text-white text-sm font-medium transition-all duration-200 dark:bg-white dark:text-[#141413] dark:hover:bg-white/90" style={{ borderRadius: '6px' }}>
-                {t('common.startForFree')}
-              </button>
+            <Link to="/signup" className="m-btn m-btn-primary text-sm">
+              {t('common.startForFree')}
+              <span className="m-arrow text-[13px]">→</span>
             </Link>
           </div>
 
           {/* Mobile toggle */}
           <button
-            className="md:hidden p-2 text-[#141413]/60 hover:text-[#141413] transition-colors rounded-lg dark:text-white/60 dark:hover:text-white"
+            className="ml-auto flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--ink)] transition-colors hover:bg-[color:var(--sand)] md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
-      </div>
 
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden border-t border-[#141413]/8 bg-[#e8e6dc]/98 backdrop-blur-xl dark:bg-[#181512]/98 dark:border-white/8">
-          <div className="max-w-7xl mx-auto px-6 py-5 space-y-0.5">
+        {/* Mega menus */}
+        {[
+          { key: 'product', items: productItems, wide: false, talkToSales: true },
+          { key: 'solutions', items: solutionsItems, wide: false, talkToSales: true },
+          { key: 'integrations', items: integrationsItems, wide: true, talkToSales: false },
+          { key: 'resources', items: resourcesItems, wide: false, talkToSales: false },
+        ].map(({ key, items, wide, talkToSales }) => (
+          <div key={key} className="hidden md:block">
+            {renderMegaMenu(items, activeDropdown === key, wide, talkToSales)}
+          </div>
+        ))}
+
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="m-menu absolute left-0 right-0 top-[66px] z-[200] md:hidden">
             {[
               { label: t('nav.product'), href: '/product/ai-assistants' },
               { label: t('nav.solutions'), href: '/solutions/sales' },
@@ -334,37 +293,27 @@ const Header = () => {
               <Link
                 key={item.href}
                 to={item.href}
-                className="block px-3 py-3 text-[#141413]/60 hover:text-[#111111] text-sm font-medium transition-colors dark:text-white/55 dark:hover:text-white"
+                className="block rounded-[16px] px-4 py-3 text-[15px] font-semibold text-[color:var(--ink)] hover:bg-[color:var(--sand)]"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
-            <div className="pt-3 pb-1 flex items-center gap-2 px-3">
+            <div className="flex items-center gap-2 px-4 py-3">
               <LanguageSwitcher />
               <ThemeSelector />
             </div>
-            <div className="pt-2 space-y-2">
-              <Link
-                to="/login"
-                className="block text-center px-4 py-2.5 border border-[#141413]/12 text-[#141413]/60 hover:text-[#141413] hover:border-[#141413]/20 text-sm font-medium transition-colors dark:border-white/12 dark:text-white/55 dark:hover:text-white"
-                style={{ borderRadius: '6px' }}
-                onClick={() => setIsMenuOpen(false)}
-              >
+            <div className="flex flex-col gap-2 px-2 pb-1">
+              <Link to="/login" className="m-btn m-btn-soft w-full" onClick={() => setIsMenuOpen(false)}>
                 {t('common.signIn')}
               </Link>
-              <Link
-                to="/signup"
-                className="block text-center px-4 py-2.5 bg-[#141413] hover:bg-[#2a2a28] text-white text-sm font-medium transition-colors dark:bg-white dark:text-[#141413] dark:hover:bg-white/90"
-                style={{ borderRadius: '6px' }}
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link to="/signup" className="m-btn m-btn-dark w-full" onClick={() => setIsMenuOpen(false)}>
                 {t('common.startForFree')}
               </Link>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 };

@@ -1,13 +1,18 @@
-
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useNavigate, Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CheckCircle, ArrowRight, Users, Zap, Shield } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import '@/styles/marketing.css';
+
+/**
+ * Sign-up is the login screen's twin: same standalone split-screen shell,
+ * same hero panel, same field chrome, same auth mechanics (a successful
+ * sign-up signs you in) — only the form differs.
+ */
 const Signup = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -17,28 +22,35 @@ const Signup = () => {
     confirmPassword: ''
   });
 
+  // Mirror Login: already-authenticated visitors skip straight to the app.
   useEffect(() => {
-    console.log('Signup: Component mounted and rendering');
-    console.log('Signup: Current location:', window.location.pathname);
-  }, []);
-
-  const benefits = [
-    "Free AI assistants to get started",
-    "Instant access to automation", 
-    "Easy setup in minutes",
-    "24/7 support included",
-    "No complex setup required"
-  ];
+    const isAuth =
+      localStorage.getItem('isAuthenticated') === 'true' ||
+      sessionStorage.getItem('isAuthenticated') === 'true';
+    if (isAuth) navigate('/dashboard', { replace: true });
+  }, [navigate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      toast({
+        title: 'Passwords do not match',
+        description: 'Please re-enter your password.',
+        variant: 'destructive',
+      });
       return;
     }
-    
-    console.log('Signup submitted:', { ...formData, password: '[HIDDEN]', confirmPassword: '[HIDDEN]' });
+
+    // Same auth mechanics as signing in — a fresh account goes straight to work.
+    localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('userEmail', formData.email);
+
+    toast({
+      title: `Welcome, ${formData.firstName}!`,
+      description: 'Your account is ready.',
+    });
+
     navigate('/dashboard');
   };
 
@@ -49,139 +61,146 @@ const Signup = () => {
     });
   };
 
+  const inputCls =
+    'h-11 rounded-[10px] border-[color:var(--line)] bg-white text-[color:var(--ink)] placeholder:text-[color:var(--text-5)]';
+  const labelCls = 'text-[13px] font-medium text-[color:var(--text-2)]';
+
   return (
-    <div className="min-h-screen bg-white dark:bg-[#181512]">
-      <main className="pt-[60px]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Sign Up for 3days.ai
-            </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Get started with AI assistants and transform your business operations today.
+    <div className="site3d min-h-screen lg:grid lg:grid-cols-[1fr_1fr]">
+      {/* ── Left: the story ── */}
+      <div className="flex flex-col justify-between px-8 py-10 lg:px-16 lg:py-14">
+        <Link to="/" className="m-lockup">
+          <span className="name">3DAYS</span>
+          <span className="kind">PLATFORM</span>
+        </Link>
+
+        <div className="py-14 lg:py-0">
+          <h1 className="max-w-[13ch] text-[clamp(2.4rem,4.6vw,4.1rem)] text-[color:var(--ink)]">
+            Put your first AI employee to work today
+          </h1>
+          <p className="mt-8 max-w-md text-[17px] leading-relaxed text-[color:var(--text-3)]">
+            Create your account and hand over the repetitive work — free to start, set up in
+            minutes, no credit card required.
+          </p>
+        </div>
+
+        <p className="text-sm text-[color:var(--text-4)]">
+          Copyright © {new Date().getFullYear()} All Rights Reserved by 3Days.ai
+        </p>
+      </div>
+
+      {/* ── Right: the form, floating on the brand panel ── */}
+      <div className="p-4 lg:py-6 lg:pr-6">
+        <div className="m-auth-art flex min-h-[560px] items-center justify-center p-6 lg:min-h-full">
+          <div className="relative z-10 w-full max-w-[420px] rounded-[20px] bg-white p-7 shadow-[0_30px_60px_-32px_rgba(10,16,60,0.55)] sm:p-9">
+            <h2 className="text-center text-[26px] text-[color:var(--ink)]">Sign up</h2>
+            <p className="mt-2 text-center text-[15px] text-[color:var(--text-3)]">
+              Create your account below
             </p>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-2xl">Create Your Account</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="email">Work Email</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="company">Company Name</Label>
-                    <Input
-                      id="company"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="confirmPassword">Confirm Password</Label>
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-
-                  <Button type="submit" className="w-full" size="lg">
-                    Create Account
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-
-            <div className="space-y-8">
-              <Card className="border-blue-200 bg-blue-50">
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center">
-                    <Zap className="h-6 w-6 text-blue-600 mr-2" />
-                    What You Get
-                  </h3>
-                  <ul className="space-y-3">
-                    {benefits.map((benefit, index) => (
-                      <li key={index} className="flex items-center">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Card className="text-center p-6">
-                  <Shield className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h4 className="font-semibold mb-2">Secure & Reliable</h4>
-                  <p className="text-sm text-gray-600">Enterprise-grade security for your data</p>
-                </Card>
-                
-                <Card className="text-center p-6">
-                  <Users className="h-12 w-12 text-green-600 mx-auto mb-4" />
-                  <h4 className="font-semibold mb-2">Expert Support</h4>
-                  <p className="text-sm text-gray-600">Get help when you need it</p>
-                </Card>
+            <div className="mt-7">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName" className={labelCls}>First name</Label>
+                  <Input
+                    id="firstName"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    required
+                    className={inputCls}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName" className={labelCls}>Last name</Label>
+                  <Input
+                    id="lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    required
+                    className={inputCls}
+                  />
+                </div>
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className={labelCls}>Work email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="name@company.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className={inputCls}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="company" className={labelCls}>Company name</Label>
+                <Input
+                  id="company"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleInputChange}
+                  required
+                  className={inputCls}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className={labelCls}>Password</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                  className={inputCls}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className={labelCls}>Confirm password</Label>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  required
+                  className={inputCls}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="mt-1 h-11 w-full rounded-full bg-[color:var(--ink)] text-[15px] font-semibold text-white transition-opacity hover:opacity-85"
+              >
+                Create account
+              </button>
+            </form>
+
+            <div className="my-5 flex items-center gap-4">
+              <span className="h-px flex-1 bg-[color:var(--line)]" />
+              <span className="text-[13px] text-[color:var(--text-4)]">or</span>
+              <span className="h-px flex-1 bg-[color:var(--line)]" />
+            </div>
+
+            <p className="text-center text-[13px] text-[color:var(--text-3)]">
+              Already have an account?{' '}
+              <Link to="/login" className="font-semibold text-[color:var(--ink)] underline underline-offset-2">
+                Sign in
+              </Link>
+            </p>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
