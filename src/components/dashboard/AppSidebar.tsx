@@ -18,23 +18,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   LayoutDashboard,
   MessageCircle,
-  Users,
-  Workflow,
   Puzzle,
-  Settings,
-  HelpCircle,
   ClipboardCheck,
-  CreditCard,
   Brain,
   LogOut,
-  User,
   Globe,
   Check,
-  Zap,
-  Bell,
-  CheckCheck,
   Pencil,
   MessageSquare,
+  StickyNote,
+  Phone,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -82,24 +75,32 @@ const navigationItems = [
     icon: ClipboardCheck,
   },
   {
-    title: "Staff",
-    url: "/staff",
-    icon: Users,
-  },
-  {
     title: "Company",
     url: "/company-brain",
     icon: Brain,
   },
   {
-    title: "Workflows",
-    url: "/workflows",
-    icon: Workflow,
-  },
-  {
     title: "Integrations",
     url: "/integrations",
     icon: Puzzle,
+  },
+];
+
+/**
+ * The apps that ship alongside the platform sections above. They used to sit
+ * on a fixed rail down the right edge; two tiles did not earn a whole rail, so
+ * they moved in here where the rest of the navigation already is.
+ */
+const appItems = [
+  {
+    title: "Notes",
+    url: "/notes",
+    icon: StickyNote,
+  },
+  {
+    title: "Telephony",
+    url: "/telephony",
+    icon: Phone,
   },
 ];
 
@@ -125,19 +126,6 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
   const [selectedLanguage, setSelectedLanguage] = useState('en');
 
   const userEmail = localStorage.getItem('userEmail') || '';
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [notifications, setNotifications] = useState([
-    { id: 1, title: 'Aria completed task',       body: 'Qualified 12 inbound leads from CRM',       time: '2m ago',  read: false },
-    { id: 2, title: 'Atlas escalated a ticket',  body: 'VIP ticket #9023 needs your attention',      time: '18m ago', read: false },
-    { id: 3, title: 'New team member added',     body: 'Lisa Chen joined Sales Hybrid Team',         time: '1h ago',  read: false },
-    { id: 4, title: 'Workflow completed',        body: 'Monthly invoice reconciliation finished',    time: '3h ago',  read: true  },
-    { id: 5, title: 'Maya finished campaign',    body: 'Social media content brief is ready',        time: '5h ago',  read: true  },
-  ]);
-
-  const unreadCount = notifications.filter(n => !n.read).length;
-
-  const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  const markRead = (id: number) => setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
 
   const getInitials = (email: string) => email.slice(0, 2).toUpperCase();
 
@@ -178,6 +166,28 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
+                    isActive={location.pathname === item.url || location.pathname.startsWith(item.url + '/')}
+                    tooltip={state === "collapsed" ? item.title : undefined}
+                  >
+                    <Link to={item.url}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Apps</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {appItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
                     isActive={location.pathname === item.url || location.pathname.startsWith(item.url + '/')}
                     tooltip={state === "collapsed" ? item.title : undefined}
                   >
@@ -267,39 +277,6 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" align={state === "expanded" ? "end" : "center"} className="w-64 bg-white border shadow-lg">
-              <DropdownMenuItem onClick={() => navigate('/profile')} className="flex items-center space-x-2 cursor-pointer">
-                <User className="h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/settings')} className="flex items-center space-x-2 cursor-pointer">
-                <Settings className="h-4 w-4" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/billing')} className="flex items-center space-x-2 cursor-pointer">
-                <CreditCard className="h-4 w-4" />
-                <span>Billing</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/help')} className="flex items-center space-x-2 cursor-pointer">
-                <HelpCircle className="h-4 w-4" />
-                <span>Help & Support</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <div className="px-2 py-1.5">
-                <div className="flex items-center gap-2 mb-1">
-                  <Zap className="h-3.5 w-3.5 text-[#7a8087]" />
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Current Plan</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-800">Pro</span>
-                  <button
-                    onClick={() => navigate('/billing')}
-                    className="text-xs text-[#14161a] hover:opacity-70 font-semibold underline underline-offset-2"
-                  >
-                    Upgrade
-                  </button>
-                </div>
-              </div>
-              <DropdownMenuSeparator />
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger className="flex items-center space-x-2 cursor-pointer">
                   <Globe className="h-4 w-4" />
@@ -331,56 +308,6 @@ export function AppSidebar({ chatHistory, currentChatId, onSelectChat, onNewChat
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {state === "expanded" && (
-            <DropdownMenu open={notifOpen} onOpenChange={setNotifOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative h-8 w-8 hover:bg-accent flex-shrink-0">
-                  <Bell className="h-4 w-4 text-gray-600" />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" align="end" className="w-80 bg-white border shadow-lg p-0" onCloseAutoFocus={e => e.preventDefault()}>
-                <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <Bell className="h-4 w-4 text-gray-600" />
-                    <span className="text-sm font-semibold text-gray-900">Notifications</span>
-                    {unreadCount > 0 && (
-                      <span className="bg-[#e9ebef] text-[#14161a] text-xs font-semibold px-1.5 py-0.5 rounded-full">{unreadCount}</span>
-                    )}
-                  </div>
-                  {unreadCount > 0 && (
-                    <button onClick={markAllRead} className="flex items-center gap-1 text-xs text-[#5a6067] hover:text-[#14161a] font-semibold">
-                      <CheckCheck className="h-3.5 w-3.5" />Mark all read
-                    </button>
-                  )}
-                </div>
-                <div className="max-h-72 overflow-y-auto">
-                  {notifications.length === 0 ? (
-                    <p className="text-sm text-gray-400 text-center py-8">No notifications</p>
-                  ) : (
-                    notifications.map(n => (
-                      <button
-                        key={n.id}
-                        onClick={() => markRead(n.id)}
-                        className={`w-full text-left px-4 py-3 border-b border-gray-50 last:border-b-0 hover:bg-gray-50 transition-colors ${!n.read ? 'bg-[rgba(20,22,26,0.03)]' : ''}`}
-                      >
-                        <div className="flex items-start gap-2">
-                          <div className={`mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${!n.read ? 'bg-[#14161a]' : 'bg-transparent'}`} />
-                          <div className="min-w-0 flex-1">
-                            <p className={`text-xs font-medium truncate ${!n.read ? 'text-gray-900' : 'text-gray-600'}`}>{n.title}</p>
-                            <p className="text-xs text-gray-500 truncate mt-0.5">{n.body}</p>
-                          </div>
-                          <span className="text-xs text-gray-400 flex-shrink-0 mt-0.5">{n.time}</span>
-                        </div>
-                      </button>
-                    ))
-                  )}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
         </div>
       </SidebarFooter>
     </Sidebar>

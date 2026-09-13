@@ -13,6 +13,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
 import {
   onApprovalTerminal,
+  useActiveCalls,
   usePendingApprovals,
   useDecideApproval,
   isConnected,
@@ -66,6 +67,13 @@ interface CardState {
   state: ApprovalState;
   deciding: 'approve' | 'deny' | null;
   error: string | null;
+}
+
+/** The live call behind an approval knows its thread; the card just shows it. */
+function useThreadSubjectFor() {
+  const { data: active } = useActiveCalls();
+  return (callSid: string) =>
+    (active ?? []).find((c) => c.call_sid === callSid)?.thread_subject ?? null;
 }
 
 function ApprovalStack() {
@@ -183,6 +191,8 @@ function ApprovalStack() {
     );
   };
 
+  const threadSubjectFor = useThreadSubjectFor();
+
   const toggleMute = () => {
     const next = !muted;
     setMuted(next);
@@ -201,6 +211,7 @@ function ApprovalStack() {
         <div key={c.approval.id} className="pointer-events-auto">
           <ApprovalCard
             approval={c.approval}
+            threadSubject={threadSubjectFor(c.approval.call_sid)}
             state={c.state}
             deciding={c.deciding}
             error={c.error}

@@ -16,8 +16,8 @@ import {
   Radio,
 } from 'lucide-react';
 import { useActiveCalls, useVoiceConnected, useVoiceStatus, type ActiveCall } from '@/lib/api/voice';
-import { MockedSection } from '@/components/voice/MockedBadge';
 import LiveCallModal from '@/pages/telephony/_components/voice/LiveCallModal';
+import ListenIn from '@/components/voice/listen/ListenIn';
 import StartCallModal from '@/pages/telephony/_components/voice/StartCallModal';
 import { cn } from '@/lib/utils';
 
@@ -115,11 +115,14 @@ export default function LiveView() {
           <div className="space-y-4">
             <div className="overflow-hidden rounded-[14px] border border-[var(--line-soft)] bg-white">
               {calls.map((c) => (
-                <button
+                <div
                   key={c.call_sid}
+                  className="border-b border-[var(--line-soft)] px-5 py-4 last:border-b-0"
+                >
+                <button
                   type="button"
                   onClick={() => setSelected(c)}
-                  className="group w-full border-b border-[var(--line-soft)] px-5 py-4 text-left transition-colors last:border-b-0 hover:bg-[rgba(20,22,26,0.02)]"
+                  className="group -mx-2 w-[calc(100%+1rem)] rounded-[10px] px-2 py-1 text-left transition-colors hover:bg-[rgba(20,22,26,0.02)]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
@@ -135,7 +138,12 @@ export default function LiveView() {
                           )}
                           {c.target_name || c.target_number || c.caller_number}
                         </p>
-                        <p className="truncate text-xs text-[var(--text-4)]">{c.purpose}</p>
+                        <p
+                          className="truncate text-xs text-[var(--text-4)]"
+                          title={c.briefing_task_preview || c.purpose}
+                        >
+                          {c.briefing_task_preview || c.purpose}
+                        </p>
                       </div>
                     </div>
                     <Maximize2 className="h-4 w-4 shrink-0 text-[var(--text-5)] transition-colors group-hover:text-[var(--text-4)]" />
@@ -151,17 +159,13 @@ export default function LiveView() {
                     </span>
                   </div>
                 </button>
+                  <div className="mt-2">
+                    <ListenIn call={c} />
+                  </div>
+                </div>
               ))}
             </div>
 
-            <MockedSection
-              title="Listen in from the browser"
-              reason="No audio streaming to the browser exists yet — requires a media proxy (follow-up task). Open a call for its live transcript instead, which is real."
-            >
-              <div className="flex h-14 items-center justify-center rounded-[10px] border border-[var(--line-soft)] bg-white text-xs text-[var(--text-5)]">
-                waveform placeholder
-              </div>
-            </MockedSection>
           </div>
         )}
       </div>

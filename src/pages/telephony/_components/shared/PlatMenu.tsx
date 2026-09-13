@@ -35,6 +35,8 @@ export default function PlatMenu({
   align = 'end',
   footer,
   trigger,
+  panelClassName,
+  triggerClassName,
 }: {
   sections: PlatMenuSection[];
   ariaLabel: string;
@@ -44,6 +46,14 @@ export default function PlatMenu({
   footer?: ReactNode;
   /** Custom trigger content; defaults to the three dots. */
   trigger?: ReactNode;
+  /** Extra classes on the panel — e.g. a wider `min-w` for long labels. */
+  panelClassName?: string;
+  /**
+   * Replaces the default trigger styling outright — for a trigger that has to
+   * match something it is attached to, such as the second half of a split
+   * button, rather than look like a menu button in its own right.
+   */
+  triggerClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -78,11 +88,14 @@ export default function PlatMenu({
         aria-expanded={open}
         aria-label={ariaLabel}
         onClick={() => setOpen((v) => !v)}
-        className={cn(
-          'flex items-center justify-center rounded-[8px] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] hover:text-[var(--ink)]',
-          trigger ? 'gap-1.5 px-2 py-1 text-[11px] font-medium' : 'h-6 w-6',
-          open && 'bg-[var(--sand)] text-[var(--ink)]',
-        )}
+        className={
+          triggerClassName ??
+          cn(
+            'flex items-center justify-center rounded-[8px] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] hover:text-[var(--ink)]',
+            trigger ? 'gap-1.5 px-2 py-1 text-[11px] font-medium' : 'h-6 w-6',
+            open && 'bg-[var(--sand)] text-[var(--ink)]',
+          )
+        }
       >
         {trigger ?? <MoreVertical className="h-3.5 w-3.5" />}
       </button>
@@ -95,6 +108,7 @@ export default function PlatMenu({
             'plat-menu-panel',
             direction === 'up' && 'plat-menu-up',
             align === 'start' && 'plat-menu-start',
+            panelClassName,
           )}
         >
           {sections.map((section, si) => (

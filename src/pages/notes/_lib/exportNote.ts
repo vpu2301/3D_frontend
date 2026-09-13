@@ -3,7 +3,7 @@
  * `.md` button and the command palette's `note.export`.
  *
  * The Markdown comes from `GET /v1/notes/{id}/export.md` rather than the
- * client-side renderer in `@/pages/docs/_lib/export`. The server's output is
+ * client-side renderer in `./download`. The server's output is
  * proven byte-identical to it (backend test N8), so going through the server
  * leaves exactly one renderer to keep correct.
  */
@@ -11,7 +11,7 @@
 import { notesApi } from '@/pages/notes/_lib/apiClient';
 import { deriveTitle } from '@/pages/notes/_lib/backlinks';
 import { reportError } from '@/pages/notes/_lib/errors';
-import { downloadBlob } from '@/pages/docs/_lib/export';
+import { downloadBlob } from '@/pages/notes/_lib/download';
 import type { Note } from '@/pages/notes/_lib/types';
 
 export function exportFileName(note: Note): string {

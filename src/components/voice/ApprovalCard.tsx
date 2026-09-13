@@ -48,6 +48,7 @@ export function ApprovalCard({
   onDecide,
   muted,
   onToggleMute,
+  threadSubject,
 }: {
   approval: VoiceApproval;
   state: ApprovalState;
@@ -57,6 +58,12 @@ export function ApprovalCard({
   onDecide: (decision: 'approve' | 'deny') => void;
   muted: boolean;
   onToggleMute: () => void;
+  /**
+   * S14 §4.4: the matter the requesting call belongs to. Passed in rather
+   * than looked up — the card is presentational and renders outside any
+   * query provider in tests and in the popped-out window.
+   */
+  threadSubject?: string | null;
 }) {
   const [now, setNow] = useState(() => Date.now());
   // What the ring is drawn against: the time left when the card first appeared.
@@ -143,6 +150,15 @@ export function ApprovalCard({
             Caller on hold
             <span className="font-mono text-[10px] text-[var(--text-5)]">{approval.call_sid.slice(-8)}</span>
           </p>
+          {/* Deciding mid-call is easier when you know which matter it is. */}
+          {threadSubject && (
+            <p className="mt-1 flex items-center gap-1.5 text-[11px] text-[var(--text-4)]">
+              <span aria-hidden="true">🧵</span>
+              <span className="min-w-0 truncate" title={threadSubject}>
+                {threadSubject}
+              </span>
+            </p>
+          )}
         </div>
 
         <button

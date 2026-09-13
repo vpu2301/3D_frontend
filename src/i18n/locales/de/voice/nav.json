@@ -1,0 +1,48 @@
+{
+  "groups": {
+    "owner": "Ihr Empfang",
+    "operations": "Betrieb",
+    "advanced": "Erweitert"
+  },
+  "items": {
+    "overview": "Übersicht",
+    "calls": "Anrufe",
+    "live": "Live",
+    "pendingApproval": "Freigaben",
+    "messages": "Nachrichten",
+    "planned": "Geplant",
+    "policies": "Richtlinien",
+    "assistant": "Assistent",
+    "advancedSettings": "Erweiterte Einstellungen",
+    "more": "Mehr",
+    "callsOps": "Betriebsansicht Anrufe"
+  },
+  "badges": {
+    "pastDue": "Überfällig: {{subjects}}",
+    "pastDueMore": ", +{{count}} weitere",
+    "liveCalls": "{{count}} laufende Anrufe",
+    "pending": "{{count}} offene Freigaben",
+    "unread": "{{count}} ungelesene Nachrichten",
+    "planned": "{{count}} geplante Anrufe"
+  },
+  "moreSheet": {
+    "title": "Alle Bereiche",
+    "description": "Alles, was nicht in der unteren Leiste Platz hat."
+  },
+  "banner": {
+    "active": "Empfangsdienst aktiv",
+    "activeWithNumber": "Empfangsdienst aktiv · {{number}}",
+    "inactive": "Nicht aktiv – Einrichtung abschließen",
+    "offline": "Verbindung zum Server unterbrochen",
+    "offlineHint": "Wird alle 30 Sekunden erneut versucht.",
+    "sip": "SIP-Registrierung getrennt",
+    "sipHint": "Rufumleitung auf {{number}} aktivieren",
+    "sipHintGeneric": "Rufumleitung aktivieren",
+    "checking": "Verbindung wird geprüft …"
+  },
+  "rail": {
+    "collapse": "Navigation einklappen",
+    "expand": "Navigation ausklappen",
+    "userMenu": "Konto und Sprache"
+  }
+}

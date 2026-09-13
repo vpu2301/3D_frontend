@@ -1,0 +1,10 @@
+# Nachfass-Nachrichten (FE7 §2)
+
+Route `/telephony/followups` (capability `followups`). Components `src/pages/telephony/_components/followups/*` (`FollowupsView`, `ChannelStatusCard`, `ConsentStats`, `TemplateList`, `TemplateEditor` with `LockedTokenChip`, `VariableChip`, `SmsSegmentCounter`, `WaTemplateMirror`, `ReminderSettings`); data `src/lib/api/owner/followups.ts`; namespace `voice-followups`.
+
+E2's messaging API does not exist on the server yet. The hooks call the agreed routes — `GET /api/voice/followups/channels`, `…/stats?days=`, `…/templates`, `POST …/templates {…, activate}`, `GET …/reminders` — and report `null` on 404, which shows one route banner naming E2. Real today: the opt-out count is the do-not-call list (`GET /api/voice/do-not-call`), the consent mode from `/api/voice/status`.
+
+- **Templates** — event (Terminbestätigung, Erinnerung T-24h, Rückruf-Bestätigung, Nachricht erhalten, Link senden) × channel × language. The body carries two locked tokens, `[[IDENTITY]]` and `[[OPTOUT]]`, that the editor re-inserts on every keystroke that removed them (`keepLocked`) and validates to exactly-once before save (`validateTemplateBody`, tested). Variable chips insert `{business_name}`, `{date_spoken}`, `{address}`, `{caller_name}`, `{link}`. The preview renders sample values in the browser; `date_spoken` will come from the backend renderer (ask). WhatsApp rows mirror the Meta body read-only with a Business-Manager link.
+- **SMS segments** — GSM 03.38 basic + extended (ä ö ü ß are GSM-7; `€` counts two; emoji, typographic dashes or "ő" switch to UCS-2): 160/153 vs 70/67 per segment, warning above one segment (tested).
+- **Rules** — no free-text sender to arbitrary numbers exists on the page (the intro says so). The consent basis per message and the delivery timeline in the call detail's Nachfass tab need E2; the tab keeps its badge (named E2).
+- **Reminders** — enable, lead time, calendar re-check note, quiet hours, escalation order; read-only until `…/reminders` answers; the call step is gated on `capabilities.campaigns`.

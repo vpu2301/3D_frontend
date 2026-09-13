@@ -13,7 +13,8 @@ import type { CallAction } from '@/lib/api/voice';
 import { CHIP_TONE_CLASS, denyReasonText, modeMeta, tierMeta } from '@/pages/telephony/_lib/voiceMeta';
 import { cn } from '@/lib/utils';
 
-function fmtTime(iso: string): string {
+function fmtTime(iso: string | undefined): string {
+  if (!iso) return '';
   const d = new Date(iso);
   return Number.isNaN(d.getTime())
     ? iso

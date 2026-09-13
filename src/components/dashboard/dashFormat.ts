@@ -1,4 +1,5 @@
 /** Formatting shared by the dashboard cards and their expanded detail views. */
+import type { CostHistoryDay } from '@/lib/api/dashboard';
 
 /**
  * Money here is for orientation, not accounting: always two decimals, and a
@@ -66,3 +67,31 @@ export function lastDays(n: number): string[] {
   }
   return out;
 }
+
+/**
+ * `/api/costs/history` only returns the days that had spend, so a 30-day
+ * window can arrive as three points and the axis then reads as three days.
+ * Fill the gaps with zeros — the union keeps any day the API returned from
+ * outside the local window rather than dropping it off the chart.
+ */
+export function fillDays(data: CostHistoryDay[] | undefined, days: number): CostHistoryDay[] {
+  const byDate = new Map((data ?? []).map((d) => [d.date, d]));
+  const keys = [...new Set([...lastDays(days), ...byDate.keys()])].sort();
+  return keys.map((date) => ({
+    date,
+    total_usd: byDate.get(date)?.total_usd ?? 0,
+    request_count: byDate.get(date)?.request_count ?? 0,
+  }));
+}
+
+/** `_mcp_health:*` and friends are the runtime's own bookkeeping, not work. */
+export const isInternalTool = (name: string) => name.startsWith('_');
+
+/** Call length, read out the way a person says it: "3m 07s", "1h 12m". */
+export const fmtDuration = (seconds: number | null | undefined) => {
+  if (seconds == null) return '—';
+  if (seconds < 60) return `${Math.round(seconds)}s`;
+  const m = Math.floor(seconds / 60);
+  const s = Math.round(seconds % 60);
+  return m < 60 ? `${m}m ${String(s).padStart(2, '0')}s` : `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m`;
+};

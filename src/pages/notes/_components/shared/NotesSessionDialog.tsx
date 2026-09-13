@@ -60,7 +60,7 @@ export default function NotesSessionDialog() {
             className="plat-btn !h-9 !px-4 justify-center"
             onClick={() => {
               setStatus(null);
-              navigate('/settings');
+              navigate('/login');
             }}
           >
             Reconnect

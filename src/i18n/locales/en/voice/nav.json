@@ -1,0 +1,48 @@
+{
+  "groups": {
+    "owner": "Your reception",
+    "operations": "Operations",
+    "advanced": "Advanced"
+  },
+  "items": {
+    "overview": "Overview",
+    "calls": "Calls",
+    "live": "Live",
+    "pendingApproval": "Approvals",
+    "messages": "Messages",
+    "planned": "Planned",
+    "policies": "Policies",
+    "assistant": "Assistant",
+    "advancedSettings": "Advanced settings",
+    "more": "More",
+    "callsOps": "Calls (operations view)"
+  },
+  "badges": {
+    "pastDue": "Past due: {{subjects}}",
+    "pastDueMore": ", +{{count}} more",
+    "liveCalls": "{{count}} live calls",
+    "pending": "{{count}} pending approvals",
+    "unread": "{{count}} unread messages",
+    "planned": "{{count}} planned calls"
+  },
+  "moreSheet": {
+    "title": "All areas",
+    "description": "Everything that does not fit in the bottom bar."
+  },
+  "banner": {
+    "active": "Reception service active",
+    "activeWithNumber": "Reception service active · {{number}}",
+    "inactive": "Not active – finish setup",
+    "offline": "Connection to the server lost",
+    "offlineHint": "Retrying every 30 seconds.",
+    "sip": "SIP registration lost",
+    "sipHint": "Activate call forwarding to {{number}}",
+    "sipHintGeneric": "Activate call forwarding",
+    "checking": "Checking the connection …"
+  },
+  "rail": {
+    "collapse": "Collapse navigation",
+    "expand": "Expand navigation",
+    "userMenu": "Account and language"
+  }
+}

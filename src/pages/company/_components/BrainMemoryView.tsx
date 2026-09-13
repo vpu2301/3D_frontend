@@ -17,7 +17,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { MockedBadge } from '@/components/voice/MockedBadge';
 import { forgetCompanyBrain, inspectBrainKey, teachCompanyBrain } from '@/lib/api/company';
 import { dropKey, loadKeys, upsertKey, type BrainKey } from '@/pages/company/_lib/brainKeys';
 import { useToast } from '@/hooks/use-toast';
@@ -141,9 +140,9 @@ export default function BrainMemoryView() {
           )}
         </div>
         <div className="border-t border-[var(--line-soft)] px-4 py-2.5">
-          <p className="flex items-start gap-1.5 text-[10px] leading-relaxed text-amber-800/80">
-            <MockedBadge />
-            <span>Inventory is local — memento has no list-keys tool yet. Store/inspect/forget are real.</span>
+          <p className="text-[10px] leading-relaxed text-[var(--text-4)]">
+            This list is what you stored from this browser — memento has no
+            list-keys tool, so it cannot be read back from the server.
           </p>
         </div>
       </aside>

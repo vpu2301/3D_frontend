@@ -14,6 +14,7 @@ import {
 // backend as /api/chat and /api/status, so the token, the per-browser
 // `X-Pincer-User` id and the error shape all come from pincerClient.
 import { getAuth, authHeaders, isConnected, PincerError } from "@/lib/pincerClient";
+import { request } from "@/lib/api/client";
 
 // Re-exported so voice surfaces have one import for "is there a backend?".
 export { isConnected };
@@ -23,38 +24,38 @@ import { sseFrames } from "@/lib/sse";
 /**
  * Authenticated JSON fetch against the connected Pincer backend.
  *
- * Mirrors pincerClient's private `request()` (same headers, same 401 and
- * error-detail handling) — kept here rather than widening pincerClient's
- * public surface, but reading credentials only through its exports.
+ * FE0: an alias of `request()` in `@/lib/api/client` — one client for every
+ * hook (headers, 422 field mapping, the 401 → logout contract). Kept under its
+ * old name so the hooks below and their tests read unchanged.
  */
-export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const auth = getAuth();
-  if (!auth) throw new PincerError("Not connected to Pincer backend", 0);
-  const res = await fetch(`${auth.apiUrl}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...authHeaders(auth),
-      ...(init.headers ?? {}),
-    },
-  });
-  if (!res.ok) {
-    let detail = `HTTP ${res.status}`;
-    try {
-      const body = await res.json();
-      if (body?.detail) detail = body.detail;
-      else if (body?.error) detail = body.error;
-    } catch {
-      /* keep default detail */
-    }
-    throw new PincerError(detail, res.status);
-  }
-  return res.json() as Promise<T>;
-}
+export const apiFetch = request;
+
+import type { components } from "@/lib/api/generated/schema";
+
+/**
+ * A response/request shape exactly as the contract declares it.
+ *
+ * F0 cut list §3, "hand-written response types": a type that mirrors a
+ * component in `generated/schema.d.ts` is a duplicate, and duplicates are how
+ * the UI silently lies. Wire shapes alias the generated component; the
+ * *view models* below (Thread, Commitment, InboundMessage, …) stay
+ * hand-written on purpose — they rename and default wire fields for the owner
+ * UI, and each names its wire counterpart so `scripts/check-types.mjs` can
+ * tell the two apart.
+ */
+type Wire<K extends keyof components["schemas"]> = components["schemas"][K];
 
 // ── Types (mirror src/pincer/api/voice.py schemas) ──────────────────
 
+/**
+ * @derives VoiceStatus
+ * Adds the five limit/quiet-hours counters the receptionist header reads
+ * (daily_calls_used/limit, quiet_hours_active/until, do_not_call_count). They
+ * are served but undeclared — ask filed in docs/app/api-asks.md.
+ */
 export interface VoiceStatus {
+  /** Voice feature switched on (contract field; older backends omit it). */
+  enabled?: boolean;
   engine: string;
   language: string;
   consent_mode: string;
@@ -76,18 +77,66 @@ export interface VoiceStatus {
   quiet_hours_until?: string | null;
   /** Size of the do-not-call list. */
   do_not_call_count?: number;
+  /** S15: whether the media fork for live listen-in is switched on at all. */
+  listen_in_enabled?: boolean;
 }
 
+/**
+ * @derives ActiveCall
+ * Adds thread_id/thread_subject (S14 threading, served but undeclared) and
+ * drops listener_capacity, which belongs to the operator listen-in surface.
+ */
 export interface ActiveCall {
   call_sid: string;
   direction: string;
+  /** ISO start instant (contract field; the Übersicht ticks its duration from it). */
+  started_at?: string;
+  /** Contract field: the language the call is running in. */
+  language?: string;
   caller_number: string;
   target_number: string;
   target_name: string;
   purpose: string;
+  /**
+   * First 120 chars of the task the agent is actually running under, as the
+   * backend holds it. Empty for inbound calls. This is what the live row
+   * shows: `purpose` is what a form once submitted, this is what was bound.
+   */
+  briefing_task_preview?: string;
   engine: string;
   duration_seconds: number;
+  /** S14: the matter this live call is part of, if any. */
+  thread_id?: string | null;
+  thread_subject?: string | null;
+
+  /**
+   * S15: whether this call can be listened to right now — the feature is
+   * enabled *and* Twilio's media fork actually attached. Absent on a backend
+   * without listen-in, which is why the button appears from this field rather
+   * than from a config guess.
+   */
+  listen_available?: boolean;
+  /** How many people already have the call open. */
+  listener_count?: number;
 }
+
+/**
+ * How the call went, measured rather than judged (S16 §1).
+ *
+ * Every speech field is nullable on purpose: a voicemail, a no-answer and a
+ * call that predates the feature all legitimately have nothing to report, and
+ * a zeroed bar would be a claim. `method` says whether the timing was measured
+ * or inferred — the UI has to label the inferred ones.
+ */
+export type CallAnalytics = Wire<"AnalyticsOut">;
+
+export type Sentiment = "positive" | "neutral" | "mixed" | "negative";
+export type SentimentTrajectory = "improving" | "stable" | "declining";
+export type SentimentReason = "" | "too_short" | "not_conversed" | "extraction_failed";
+export type AnalyticsMethod = "exact" | "estimated";
+
+/** Exactly what the agent was told to do on one call, as stored at dial time. */
+export type CallBriefing = Wire<"BriefingOut">;
 
 /**
  * Turn-latency roll-up for one call — from the `TURN_LATENCY` events Sprint 5
@@ -205,6 +254,12 @@ export interface CallOutcome {
   language?: string;
 }
 
+/**
+ * @derives CallSummary
+ * The owner list's row model: cost_total_usd instead of the contract's
+ * cost_usd, plus language/appointment/outcome/latency, which the endpoint
+ * serves without declaring. Ask filed in docs/app/api-asks.md.
+ */
 export interface CallSummary {
   call_sid: string;
   direction: string;
@@ -221,6 +276,8 @@ export interface CallSummary {
   language?: string | null;
   /** Sprint 9 T9.3 failure taxonomy, e.g. "no_answer", "stt_timeout". */
   failure_code?: string | null;
+  /** The backend's sentence for that code ("Completed normally"). */
+  failure_description?: string | null;
   /** Sprint 9 T9.1 `call_costs` roll-up, USD. */
   cost_total_usd?: number | null;
   /**
@@ -231,35 +288,23 @@ export interface CallSummary {
   appointment?: AppointmentInfo | null;
   outcome?: CallOutcome | null;
   latency?: CallLatency | null;
+
+  // ── S14: which matter this call belongs to. Optional throughout — a
+  // backend without threads omits them, and every surface renders nothing
+  // rather than an empty thread chip. `thread_id: ""` means "threadless".
+  thread_id?: string | null;
+  thread_subject?: string | null;
+
+  // ── S16: the compact analytics the list chips need. Null everywhere the
+  // call has no reading, which includes every call placed before the feature.
+  sentiment?: Sentiment | string | null;
+  talk_ratio?: number | null;
+  method?: AnalyticsMethod | string | null;
 }
 
-export interface TranscriptLine {
-  speaker: "agent" | "caller" | "provider" | "system" | string;
-  text: string;
-  confidence: number;
-  state: string;
-  timestamp: string;
-}
+export type TranscriptLine = Wire<"TranscriptLine">;
 
-export interface CallAction {
-  action_type: string;
-  tool_name: string;
-  input_summary: string;
-  output_summary: string;
-  user_confirmed: boolean | null;
-  timestamp: string;
-
-  // ── v3 (S11 §9): how this action was allowed to happen ──
-  /** Tool tier: R read · W write · X dangerous. */
-  tier?: ToolTier | string | null;
-  /** Which gate applied: auto · verbal · user · off. */
-  approval_mode?: ApprovalMode | string | null;
-  /**
-   * S11 §5.2 *code* (not a sentence) when the action was refused. The UI owns
-   * the code → sentence map, in both UI languages.
-   */
-  deny_reason?: string | null;
-}
+export type CallAction = Wire<"CallActionOut">;
 
 /** Tool risk tier (S11 §3). */
 export type ToolTier = "R" | "W" | "X";
@@ -285,13 +330,61 @@ export const INBOUND_INTENTS: InboundIntent[] = [
   "after_hours",
 ];
 
+/**
+ * What one call cost, per component (Sprint 9 `call_costs`). The dashboard
+ * showed only the total; this is the row behind it — carrier minutes, speech
+ * in and out, and the tokens the conversation actually burned.
+ */
+export interface CallCostBreakdown {
+  engine?: string;
+  language?: string;
+  duration_seconds?: number;
+  twilio_usd?: number;
+  stt_seconds?: number;
+  stt_usd?: number;
+  tts_characters?: number;
+  tts_usd?: number;
+  llm_input_tokens?: number;
+  llm_output_tokens?: number;
+  llm_usd?: number;
+  total_usd?: number;
+  recorded_at?: string;
+}
+
+/**
+ * @derives CallDetail
+ * As CallSummary, plus tool_timeline. See the CallSummary note.
+ */
 export interface CallDetail extends CallSummary {
+  /** Per-component cost. Null for calls the accounting never saw. */
+  cost?: CallCostBreakdown | null;
+  /** Null for inbound calls and for anything placed before briefings existed. */
+  briefing?: CallBriefing | null;
+  /** Null for calls that predate the feature, and for calls with no speech. */
+  analytics?: CallAnalytics | null;
   transcript: TranscriptLine[];
   actions: CallAction[];
+  /** E1: the same actions as an owner-readable timeline (`outcome` ok | denied | deferred). */
+  tool_timeline?: ToolTimelineEntry[];
   /** Detail carries the candidates/attempts the list summary leaves out. */
   appointment?: AppointmentDetail | null;
 }
 
+export interface ToolTimelineEntry {
+  tool: string;
+  tier: string;
+  outcome: "ok" | "denied" | "deferred" | string;
+  ms: number;
+  approval: string;
+  reason: string;
+  timestamp: string;
+}
+
+/**
+ * @derives Contact
+ * Carries opted_out (the DNC join the list endpoint applies) rather than the
+ * contract's category, which no owner surface reads.
+ */
 export interface Contact {
   name: string;
   phone_number: string;
@@ -300,16 +393,9 @@ export interface Contact {
   opted_out?: boolean;
 }
 
-export interface InitiateCallIn {
-  target_number: string;
-  purpose: string;
-  target_name?: string;
-  language?: string;
-}
+export type InitiateCallIn = Wire<"InitiateCallIn">;
 
-export interface InitiateCallOut {
-  call_sid: string;
-}
+export type InitiateCallOut = Wire<"InitiateCallOut">;
 
 // ── Hooks ────────────────────────────────────────────────────────────
 // All queries are gated on a connected backend: with no token stored there
@@ -332,16 +418,9 @@ export function useVoiceStatus() {
 
 // ── Voice config: runtime-switchable turn model (Sprint 5 T5.4) ─────
 
-export interface TurnModelChoice {
-  value: string; // "" (default) | "<model>" | "<provider>:<model>"
-  label: string;
-}
+export type TurnModelChoice = Wire<"TurnModelChoice">;
 
-export interface VoiceConfig {
-  voice_turn_model: string;
-  default_model: string;
-  choices: TurnModelChoice[];
-}
+export type VoiceConfig = Wire<"VoiceConfig">;
 
 export function useVoiceConfig() {
   return useQuery<VoiceConfig, PincerError>({
@@ -372,7 +451,7 @@ export function useActiveCalls() {
   return useQuery<ActiveCall[], PincerError>({
     queryKey: ["voice", "active"],
     queryFn: () => apiFetch("/api/voice/active"),
-    refetchInterval: 2_000, // live section polls faster
+    refetchInterval: 2_000, // live section polls faster than the history
     enabled: isConnected(),
   });
 }
@@ -531,6 +610,9 @@ export function useInitiateCall() {
       qc.invalidateQueries({ queryKey: ["voice", "calls"] });
       // Placing a call moves the daily-limit counter in the header strip.
       qc.invalidateQueries({ queryKey: ["voice", "status"] });
+      // …and adds an entry to whichever thread it landed in.
+      qc.invalidateQueries({ queryKey: ["voice", "threads"] });
+      qc.invalidateQueries({ queryKey: ["voice", "thread"] });
     },
   });
 }
@@ -605,22 +687,14 @@ export function normalizeOutcome(raw: unknown): CallOutcome | null {
  * `schedule_appointment_call` tool. Auth semantics are the same as
  * `POST /api/voice/calls`: the request IS the approval.
  */
-export interface ScheduleAppointmentIn {
-  target_number: string;
-  target_name?: string;
-  /** What the appointment is about — the agent's briefing. */
-  topic: string;
-  /** Inclusive ISO date (YYYY-MM-DD) bounds of the acceptable window. */
-  timeframe_start: string;
-  timeframe_end: string;
-  duration_minutes: number;
-  /** Omitted means "auto" — the agent follows the callee. */
-  language?: string;
-  /** Email addresses invited to the resulting calendar event. */
-  attendees?: string[];
-  create_meet_link?: boolean;
-}
+export type ScheduleAppointmentIn = Wire<"ScheduleAppointmentIn">;
 
+/**
+ * @derives ScheduleAppointmentOut
+ * The contract declares only `message`/`status`; the endpoint also returns the
+ * call sid, which every caller needs to link the toast to the call. Listed as
+ * an ask (docs/app/api-asks.md) — declare `call_sid` and this becomes an alias.
+ */
 export interface ScheduleAppointmentOut {
   call_sid: string;
 }
@@ -642,6 +716,8 @@ export function useScheduleAppointment() {
       qc.invalidateQueries({ queryKey: ["voice", "active"] });
       qc.invalidateQueries({ queryKey: ["voice", "calls"] });
       qc.invalidateQueries({ queryKey: ["voice", "status"] });
+      qc.invalidateQueries({ queryKey: ["voice", "threads"] });
+      qc.invalidateQueries({ queryKey: ["voice", "thread"] });
     },
   });
 }
@@ -911,6 +987,9 @@ export interface InboundMessage {
   created_at: string;
   read_at?: string | null;
   call?: InboundMessageCall | null;
+  /** S14: the thread the message's call belongs to, so a call-back lands in it. */
+  thread_id?: string | null;
+  thread_subject?: string | null;
 }
 
 export interface MessagesPage {
@@ -1036,6 +1115,14 @@ export function useReceptionistProfile() {
   });
 }
 
+/** Counts, not percentages: the strip decides whether the sample earns a bar. */
+export type SentimentDistribution = Wire<"SentimentDistribution">;
+
+/**
+ * @derives ReceptionistStats
+ * The Übersicht's stat model: the seven owner-facing rates the endpoint
+ * computes but does not declare. Ask filed in docs/app/api-asks.md.
+ */
 export interface ReceptionistStats {
   answered: number;
   intents: Partial<Record<InboundIntent, number>>;
@@ -1045,6 +1132,8 @@ export interface ReceptionistStats {
   messages_taken: number;
   busy_capacity: number;
   silent_hangups: number;
+  /** S16: how callers sounded over the window. Absent on an older backend. */
+  sentiment_distribution?: SentimentDistribution;
 }
 
 export function useReceptionistStats(days = 7) {
@@ -1128,3 +1217,440 @@ export function useVoicePolicy() {
     retry: false,
   });
 }
+
+// ═══════════════════════════════════════════════════════════════════════
+// v4 — call threads (S14, against the S13 API)
+// ═══════════════════════════════════════════════════════════════════════
+//
+// One matter, many calls. The thread is what the owner reads; the calls are
+// the evidence underneath it.
+//
+// Naming note: S13 §9 calls the per-thread obligation `Commitment`, but this
+// module already exports a `Commitment` — the per-call one inside `CallOutcome`
+// — and the two are different shapes (`when` vs `due_at` + `status`). Two
+// exports cannot share a name, so the thread-level one is `ThreadCommitment`.
+
+export type ThreadStatus = "open" | "resolved" | "closed";
+
+/** Why a call belongs to its thread. `manual` is the curation escape hatch. */
+export type ThreadAttachKind =
+  | "origin"
+  | "retry"
+  | "followup"
+  | "inbound_matched"
+  | "manual";
+
+/** Which transitions the API accepts, mirrored so the UI never offers more. */
+export const THREAD_TRANSITIONS: Record<ThreadStatus, ThreadStatus[]> = {
+  open: ["resolved"],
+  resolved: ["open", "closed"],
+  closed: [],
+};
+
+export type CommitmentStatus = "open" | "done" | "expired";
+
+export interface ThreadCommitment {
+  /** 'callee' | 'agent' | 'user' — who owes the thing. */
+  who: string;
+  what: string;
+  /** ISO-8601, or null when the call never pinned a date. */
+  due_at: string | null;
+  status: CommitmentStatus | string;
+}
+
+export interface Thread {
+  id: string;
+  subject: string;
+  status: ThreadStatus | string;
+  contact_name: string | null;
+  contact_number: string;
+  language?: string | null;
+  call_count: number;
+  created_at: string;
+  updated_at: string;
+  /**
+   * Last line of `rolling_summary` — "where this stands". The list row shows
+   * it without having to pull every thread's full summary.
+   */
+  state_line?: string | null;
+  /** How many commitments are past due; drives the ❗ dot and the nav badge. */
+  expired_commitment_count?: number;
+}
+
+/** A call as it appears inside its thread. */
+export interface ThreadCall extends CallSummary {
+  thread_attach_kind: ThreadAttachKind | string;
+  /** One line of what the call achieved (from the structured outcome). */
+  task_result?: string | null;
+  /** Retention removed the transcript; the entry itself stays. */
+  transcript_purged?: boolean;
+}
+
+/**
+ * @derives ThreadDetail
+ * View model, not the wire shape: ThreadDetailWire below is the contract's
+ * ThreadDetail, and toThread()/toCommitment() map it — thread_id → id,
+ * primary_number → contact_number, due → due_at — and derive state_line and
+ * expired_commitment_count for the UI.
+ */
+export interface ThreadDetail extends Thread {
+  rolling_summary: string;
+  /** "updated after call N" — 1-based index into `calls`. */
+  summary_updated_after_call?: number | null;
+  commitments: ThreadCommitment[];
+  calls: ThreadCall[];
+}
+
+export interface ThreadsPage {
+  threads: Thread[];
+  total: number;
+}
+
+// ── Wire shapes (what the merged S13 API actually sends) ────────────
+//
+// The API speaks `thread_id` / `primary_number` / `open_commitments`, carries
+// the rolling summary on the list row, and sends thread calls as stubs rather
+// than whole calls. The UI types above are what the screens were built on, so
+// the translation happens once, here, instead of in nine components.
+
+type CommitmentWire = Wire<"CommitmentOut">;
+
+type ThreadWire = Wire<"ThreadOut">;
+
+type ThreadCallWire = Wire<"ThreadCallOut">;
+
+type ThreadDetailWire = Wire<"ThreadDetail">;
+
+const toCommitment = (c: CommitmentWire): ThreadCommitment => ({
+  who: c.who ?? "",
+  what: c.what ?? "",
+  due_at: c.due ?? null,
+  status: c.status ?? "open",
+});
+
+/** "Where this stands" is the last line the summary ends on. */
+export function stateLineOf(summary: string | undefined | null): string {
+  const lines = (summary ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
+  return lines[lines.length - 1] ?? "";
+}
+
+function toThread(w: ThreadWire): Thread {
+  const commitments = (w.open_commitments ?? []).map(toCommitment);
+  return {
+    id: w.thread_id,
+    subject: w.subject ?? "",
+    status: w.status ?? "open",
+    contact_name: w.contact_name || null,
+    contact_number: w.primary_number ?? "",
+    language: w.language ?? null,
+    call_count: w.call_count ?? 0,
+    created_at: w.created_at ?? "",
+    updated_at: w.updated_at ?? w.created_at ?? "",
+    state_line: stateLineOf(w.rolling_summary),
+    expired_commitment_count: commitments.filter((c) => c.status === "expired").length,
+  };
+}
+
+/**
+ * A thread call is a stub, not a `CallSummary`: the numbers and the language
+ * belong to the thread, and the length is the difference between its two
+ * timestamps. Filled in here so the timeline can show a call row without a
+ * second request per entry.
+ */
+function toThreadCall(c: ThreadCallWire, w: ThreadWire): ThreadCall {
+  const started = c.started_at ?? "";
+  const ms = c.ended_at && started ? Date.parse(c.ended_at) - Date.parse(started) : NaN;
+  const inbound = c.direction === "inbound";
+  const number = w.primary_number ?? "";
+  return {
+    call_sid: c.call_sid,
+    direction: c.direction ?? "",
+    status: c.ended_at ? "completed" : "active",
+    from_number: inbound ? number : "",
+    to_number: inbound ? "" : number,
+    started_at: started,
+    ended_at: c.ended_at ?? null,
+    duration_seconds: Number.isFinite(ms) ? Math.max(0, Math.round(ms / 1000)) : 0,
+    language: w.language ?? null,
+    failure_code: c.failure_code || null,
+    outcome: c.outcome || c.task_result ? { outcome: c.outcome ?? "", task_result: c.task_result } : null,
+    thread_attach_kind: c.thread_attach_kind ?? "manual",
+    sentiment: c.sentiment ?? null,
+    task_result: c.task_result || null,
+    transcript_purged: !!c.purged,
+  };
+}
+
+function toThreadDetail(w: ThreadDetailWire): ThreadDetail {
+  const calls = (w.calls ?? []).map((c) => toThreadCall(c, w));
+  return {
+    ...toThread(w),
+    call_count: w.call_count ?? calls.length,
+    rolling_summary: w.rolling_summary ?? "",
+    summary_updated_after_call: calls.length || null,
+    commitments: (w.open_commitments ?? []).map(toCommitment),
+    calls,
+  };
+}
+
+export interface ThreadQuery {
+  /** Server-side status filter; omitted means the API's default. */
+  status?: ThreadStatus[];
+  /** Server-side text search over subject and contact. */
+  q?: string;
+  /** Only threads carrying at least one expired commitment. */
+  expiredOnly?: boolean;
+}
+
+/** The API sends a bare array; an envelope is accepted too. */
+function asThreadsPage(raw: unknown): ThreadsPage {
+  if (Array.isArray(raw)) {
+    const threads = (raw as ThreadWire[]).map(toThread);
+    return { threads, total: threads.length };
+  }
+  const env = (raw ?? {}) as { threads?: ThreadWire[]; total?: number };
+  const threads = (env.threads ?? []).map(toThread);
+  return { threads, total: env.total ?? threads.length };
+}
+
+function threadQs({ status, q, expiredOnly }: ThreadQuery): string {
+  const qs = new URLSearchParams();
+  for (const s of status ?? []) qs.append("status", s);
+  if (q?.trim()) qs.set("q", q.trim());
+  if (expiredOnly) qs.set("has_expired_commitments", "true");
+  const s = qs.toString();
+  return s ? `?${s}` : "";
+}
+
+export function useThreads(params: ThreadQuery = {}) {
+  const { status, q, expiredOnly } = params;
+  return useQuery<ThreadsPage, PincerError>({
+    queryKey: ["voice", "threads", { status, q, expiredOnly: !!expiredOnly }],
+    queryFn: async () => asThreadsPage(await apiFetch(`/api/voice/threads${threadQs(params)}`)),
+    refetchInterval: VOICE_REFETCH,
+    enabled: isConnected(),
+    retry: false,
+  });
+}
+
+export function useThread(id: string | null) {
+  return useQuery<ThreadDetail, PincerError>({
+    queryKey: ["voice", "thread", id],
+    queryFn: async () =>
+      toThreadDetail(await apiFetch<ThreadDetailWire>(`/api/voice/threads/${encodeURIComponent(id!)}`)),
+    enabled: isConnected() && !!id,
+    refetchInterval: VOICE_REFETCH,
+    // A 404 is an answer, not a network blip: the deep link is stale.
+    retry: false,
+  });
+}
+
+/** Everything a thread mutation touches: the list, the thread, the calls. */
+function invalidateThreads(qc: ReturnType<typeof useQueryClient>, id?: string) {
+  qc.invalidateQueries({ queryKey: ["voice", "threads"] });
+  if (id) qc.invalidateQueries({ queryKey: ["voice", "thread", id] });
+  qc.invalidateQueries({ queryKey: ["voice", "calls"] });
+}
+
+export interface ThreadPatch {
+  id: string;
+  subject?: string;
+  status?: ThreadStatus;
+}
+
+/**
+ * Rename a thread, or move it along the status machine.
+ *
+ * The subject edit is optimistic — typing a title should feel like typing —
+ * and rolls back on error; the caller shows the server's message. Status is
+ * never forced locally: a rejected transition must leave the chip where the
+ * server says it is (§6).
+ */
+export function usePatchThread() {
+  const qc = useQueryClient();
+  return useMutation<ThreadDetail, PincerError, ThreadPatch, { previous?: ThreadDetail }>({
+    mutationFn: async ({ id, ...body }) =>
+      toThreadDetail(
+        await apiFetch<ThreadDetailWire>(`/api/voice/threads/${encodeURIComponent(id)}`, {
+          method: "PATCH",
+          body: JSON.stringify(body),
+        }),
+      ),
+    onMutate: async ({ id, subject }) => {
+      if (subject == null) return {};
+      await qc.cancelQueries({ queryKey: ["voice", "thread", id] });
+      const previous = qc.getQueryData<ThreadDetail>(["voice", "thread", id]);
+      if (previous) qc.setQueryData<ThreadDetail>(["voice", "thread", id], { ...previous, subject });
+      return { previous };
+    },
+    onError: (_err, { id }, ctx) => {
+      if (ctx?.previous) qc.setQueryData(["voice", "thread", id], ctx.previous);
+    },
+    onSettled: (_data, _err, { id }) => invalidateThreads(qc, id),
+  });
+}
+
+export interface CreateThreadIn {
+  subject: string;
+  contact_number: string;
+  contact_name?: string;
+  language?: string;
+}
+
+export function useCreateThread() {
+  const qc = useQueryClient();
+  return useMutation<ThreadDetail, PincerError, CreateThreadIn>({
+    mutationFn: async ({ contact_number, ...rest }) =>
+      toThreadDetail(
+        await apiFetch<ThreadDetailWire>("/api/voice/threads", {
+          method: "POST",
+          body: JSON.stringify({ ...rest, primary_number: contact_number }),
+        }),
+      ),
+    onSuccess: (t) => invalidateThreads(qc, t?.id),
+  });
+}
+
+export interface AssignCallIn {
+  /** Thread the call should end up in. */
+  threadId: string;
+  call_sid: string;
+}
+
+/** Attach a call to a thread — `manual` attach kind, the correction path. */
+export function useAssignCall() {
+  const qc = useQueryClient();
+  return useMutation<ThreadDetail, PincerError, AssignCallIn>({
+    mutationFn: async ({ threadId, call_sid }) =>
+      toThreadDetail(
+        await apiFetch<ThreadDetailWire>(`/api/voice/threads/${encodeURIComponent(threadId)}/assign`, {
+          method: "POST",
+          body: JSON.stringify({ call_sid }),
+        }),
+      ),
+    onSettled: (_d, _e, { threadId }) => invalidateThreads(qc, threadId),
+  });
+}
+
+export interface MergeThreadsIn {
+  /** The thread that survives. */
+  threadId: string;
+  /** The thread whose calls move over, and which is then closed. */
+  source_thread_id: string;
+}
+
+export function useMergeThreads() {
+  const qc = useQueryClient();
+  return useMutation<ThreadDetail, PincerError, MergeThreadsIn>({
+    mutationFn: async ({ threadId, source_thread_id }) =>
+      toThreadDetail(
+        await apiFetch<ThreadDetailWire>(`/api/voice/threads/${encodeURIComponent(threadId)}/merge`, {
+          method: "POST",
+          body: JSON.stringify({ source_thread_id }),
+        }),
+      ),
+    onSettled: (_d, _e, { threadId, source_thread_id }) => {
+      invalidateThreads(qc, threadId);
+      qc.invalidateQueries({ queryKey: ["voice", "thread", source_thread_id] });
+    },
+  });
+}
+
+// ── Do-not-call list (Sprint 8 T8.3) ─────────────────────────────────
+//
+// The one policy the dashboard can actually change: a number on this list is
+// refused by the backend before a call is placed, whoever asks.
+
+export type DoNotCallEntry = Wire<"DoNotCallEntry">;
+
+export function useDoNotCall() {
+  return useQuery<DoNotCallEntry[], PincerError>({
+    queryKey: ["voice", "do-not-call"],
+    queryFn: () => apiFetch("/api/voice/do-not-call"),
+    enabled: isConnected(),
+    retry: false,
+  });
+}
+
+/** Adding is the whole point: the list is what stops the agent dialling. */
+export function useAddDoNotCall() {
+  const qc = useQueryClient();
+  return useMutation<DoNotCallEntry, PincerError, { phone_number: string; reason?: string }>({
+    mutationFn: (body) =>
+      apiFetch("/api/voice/do-not-call", { method: "POST", body: JSON.stringify(body) }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["voice", "do-not-call"] });
+      // The header strip counts them.
+      qc.invalidateQueries({ queryKey: ["voice", "status"] });
+      qc.invalidateQueries({ queryKey: ["voice", "contacts"] });
+    },
+  });
+}
+
+export function useRemoveDoNotCall() {
+  const qc = useQueryClient();
+  return useMutation<unknown, PincerError, string>({
+    mutationFn: (phoneNumber) =>
+      apiFetch(`/api/voice/do-not-call/${encodeURIComponent(phoneNumber)}`, { method: "DELETE" }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["voice", "do-not-call"] });
+      qc.invalidateQueries({ queryKey: ["voice", "status"] });
+      qc.invalidateQueries({ queryKey: ["voice", "contacts"] });
+    },
+  });
+}
+
+// ── Scheduled calls (S17) ────────────────────────────────────────────
+//
+// A call the owner wants placed later. The backend stores it as a one-off
+// schedule and, when it comes due, places it down the ordinary outbound path —
+// so a scheduled call meets the same do-not-call list, quiet hours and daily
+// caps as one placed by hand, and its briefing is validated when it is
+// written rather than at 23:10 with nobody watching.
+
+export type ScheduledCall = Wire<"ScheduledCallOut">;
+
+export type ScheduleCallIn = Wire<"ScheduledCallIn">;
+
+export function useScheduledCalls() {
+  return useQuery<ScheduledCall[], PincerError>({
+    queryKey: ["voice", "scheduled-calls"],
+    queryFn: () => apiFetch("/api/voice/calls/scheduled"),
+    refetchInterval: VOICE_REFETCH * 6,
+    enabled: isConnected(),
+    retry: false,
+  });
+}
+
+export function useScheduleCall() {
+  const qc = useQueryClient();
+  return useMutation<ScheduledCall, PincerError, ScheduleCallIn>({
+    mutationFn: (body) =>
+      apiFetch("/api/voice/calls/scheduled", {
+        method: "POST",
+        body: JSON.stringify({
+          // The server reads a naive time in this zone; sending it makes
+          // "09:15" mean the same thing on both sides of the wire.
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          ...body,
+        }),
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["voice", "scheduled-calls"] });
+      // It also becomes a row in the agent's schedule list.
+      qc.invalidateQueries({ queryKey: ["dash", "schedules"] });
+    },
+  });
+}
+
+export function useCancelScheduledCall() {
+  const qc = useQueryClient();
+  return useMutation<unknown, PincerError, number>({
+    mutationFn: (id) => apiFetch(`/api/voice/calls/scheduled/${id}`, { method: "DELETE" }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["voice", "scheduled-calls"] });
+      qc.invalidateQueries({ queryKey: ["dash", "schedules"] });
+    },
+  });
+}
+

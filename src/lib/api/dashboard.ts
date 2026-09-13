@@ -107,6 +107,13 @@ export interface SchedulesOut {
   past_count: number;
 }
 
+/** One day of the audit log, counted rather than paged. */
+export interface AuditDay {
+  date: string;
+  total: number;
+  failed: number;
+}
+
 export interface SkillEntry {
   name: string;
   description: string;
@@ -179,6 +186,60 @@ export function useAuditStats(sinceIsoDate?: string) {
     queryKey: ["dash", "audit-stats", sinceIsoDate ?? "all"],
     queryFn: () => apiFetch(`/api/audit/stats${qs}`),
     refetchInterval: DASH_REFETCH * 3,
+    enabled: isConnected(),
+  });
+}
+
+/**
+ * Local midnights for the last `n` days, plus tomorrow's, so consecutive
+ * entries bracket exactly one day. `iso` is the same instant in UTC: the
+ * backend compares `since` as a string against ISO timestamps, and a local
+ * date string would bucket the small hours into the previous day.
+ */
+function dayBoundaries(days: number): { key: string; iso: string }[] {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const first = new Date();
+  first.setHours(0, 0, 0, 0);
+  first.setDate(first.getDate() - (days - 1));
+
+  return Array.from({ length: days + 1 }, (_, i) => {
+    const d = new Date(first);
+    d.setDate(first.getDate() + i);
+    return {
+      key: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+      iso: d.toISOString(),
+    };
+  });
+}
+
+/**
+ * Actions per day over a window.
+ *
+ * `/api/audit` pages newest-first, so on a busy agent a 200-row page covers
+ * minutes, not days, and a chart bucketed from those rows shows one bar at the
+ * right edge and thirteen empty days. There is no per-day endpoint, but
+ * `/api/audit/stats?since=` is cumulative — consecutive boundaries subtract
+ * into an exact daily count, whatever the volume.
+ */
+export function useAuditDaily(days = 14) {
+  return useQuery<AuditDay[], PincerError>({
+    queryKey: ["dash", "audit-daily", days],
+    queryFn: async () => {
+      const bounds = dayBoundaries(days);
+      const stats = await Promise.all(
+        bounds.map((b) => apiFetch<AuditStats>(`/api/audit/stats?since=${encodeURIComponent(b.iso)}`)),
+      );
+      return bounds.slice(0, -1).map((b, i) => ({
+        date: b.key,
+        // Clamped: an entry written between the two calls would otherwise
+        // read as a negative day.
+        total: Math.max(0, stats[i].total_entries - stats[i + 1].total_entries),
+        failed: Math.max(0, stats[i].failed_actions - stats[i + 1].failed_actions),
+      }));
+    },
+    // One open detail is `days + 1` requests, so poll it far more slowly than
+    // the single-shot cards.
+    refetchInterval: DASH_REFETCH * 12,
     enabled: isConnected(),
   });
 }

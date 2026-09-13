@@ -27,7 +27,7 @@ import {
   PhoneOutgoing,
   Sparkles,
 } from 'lucide-react';
-import { MockedBadge } from '@/components/voice/MockedBadge';
+import { useCapabilities } from '@/lib/capabilities';
 import { useToast } from '@/hooks/use-toast';
 import { PincerError } from '@/lib/pincerClient';
 import { generateCallSummary } from '@/lib/api/voice';
@@ -366,6 +366,8 @@ function fmtCallLength(seconds: number): string {
 // ── Follow-up toolbox ───────────────────────────────────────────────
 
 export default function CallOutcomePanel({ detail }: { detail: CallDetail }) {
+  // FE10: follow-up actions exist only when the backend declares `followups`.
+  const followupsDeclared = useCapabilities().isDeclared('followups');
   const { toast } = useToast();
   const outcome = useMemo(() => outcomeOf(detail), [detail]);
   const approvals = useMemo(
@@ -488,10 +490,10 @@ export default function CallOutcomePanel({ detail }: { detail: CallDetail }) {
       )}
 
       {/* The options open upwards: this sits at the foot of a scrolling rail. */}
+      {followupsDeclared && (
       <div className="flex items-center gap-2 rounded-[10px] border border-[var(--line-soft)] bg-white px-3 py-2">
         <p className="plat-eyebrow truncate">Follow up on this call</p>
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
-          <MockedBadge />
           <PlatMenu
             ariaLabel="Follow-up options for this call"
             direction="up"
@@ -539,6 +541,7 @@ export default function CallOutcomePanel({ detail }: { detail: CallDetail }) {
           />
         </div>
       </div>
+      )}
 
       {composer && (
         <StartCallModal

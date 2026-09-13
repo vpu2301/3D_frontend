@@ -1,0 +1,13 @@
+# Integrationen (FE7 §3) & Live-Ereignisse (FE7 §4)
+
+Route `/telephony/integrations`. Components `src/pages/telephony/_components/integrations/*` (`IntegrationsView`, `WebhookList`, `WebhookEditor`, `SecretOnce`, `DeliveriesTable`, `CrmCard`, `RecipeSnippet`); data `src/lib/api/owner/integrations.ts`; namespace `voice-integrations`. Events: `src/lib/api/owner/events.ts`.
+
+E3's webhook subscriptions, deliveries, CRM connectors and recipes do not exist on the server. The hooks call the agreed routes and badge on 404 (one banner naming E3): `GET/POST /api/webhooks` (create returns `secret` once), `GET /api/webhooks/{id}/deliveries?limit=100` (15 s while open), `POST …/test`, `POST …/deliveries/{d}/replay`, `POST …/dlq/replay`, `GET /api/integrations/crm`. Real today: connected accounts from `GET /api/integrations`.
+
+- **Webhooks** — https required (`validateWebhookUrl`), events checklist over the canonical names, masking level (masked by default; full only with the consent sentence). The secret follows a three-state machine `idle → revealed → hidden` that can never re-enter `revealed` (`secretReducer`, tested); after "Ich habe es gespeichert" the string is gone from the DOM (e2e asserts on `page.content()`). Lists show the host only.
+- **CRM** — HubSpot and Pipedrive cards wait for E3 (badge); Salesforce is "Bald" by decision. Mapping and a masked example are fixed text.
+- **Recipes** — n8n / Zapier / Make snippets show placeholders in the page; URL and secret are inserted only inside the copy handler from a ref that never renders (`renderRecipe`, tested).
+
+## Live events
+
+`useEventStream()` (mounted once in `TelephonyHome` inside the QueryClientProvider, only while connected) opens `GET /api/events/stream` with `fetch` + bearer header — no EventSource polyfill, no query token needed — and parses it with the shared `sseFrames`. Each event name maps to query keys (`EVENT_KEYS`, tested): `call.started` → active/status, `call.completed` → active/calls/call/threads, `message.left`/`attention.changed` → messages/calls, `followup.*`, `crawl.progress` → knowledge sources, `selftest.progress` → numbers, `webhook.*`. A `call_sid` in the payload targets `['voice','call',sid]`. While the stream is up, `useLiveInterval(ms)` returns `false` and the active (2 s), history (30 s) and messages lists stop polling; when it is down they poll as before — no banner. Silence longer than two heartbeats (15 s) reconnects with backoff (1 s → 30 s; a 404 waits 60 s); a hidden tab closes the stream and reopens on return. The route is an ask; until it exists the client backs off quietly and everything polls.

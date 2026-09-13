@@ -1,73 +1,54 @@
-# Welcome to your Lovable project
+# 3Days.ai — frontend
 
-## Project info
+React + TypeScript + Vite front end for the Pincer platform: a sign-in flow, the
+platform screens (Dashboard, Chat, Tasks, Company Brain, Integrations), the
+Notes app, and the Telephony owner app.
 
-**URL**: https://lovable.dev/projects/34e3271c-4064-4696-a86c-6de21ff064fc
+Every screen in here reads an endpoint the backend actually serves. Surfaces
+whose API does not exist were removed rather than left rendering demo data —
+`npm run count-mocks` holds that line in CI.
 
-## How can I edit this code?
+## Requirements
 
-There are several ways of editing your application.
+- Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/34e3271c-4064-4696-a86c-6de21ff064fc) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Getting started
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The dev server runs on **:3000** (`strictPort`).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Backends
 
-**Use GitHub Codespaces**
+| App       | Service                                   | Configure with           |
+| --------- | ----------------------------------------- | ------------------------ |
+| Platform  | `pincer` (`/api/*`)                        | set at sign-in           |
+| Telephony | `pincer` (`/api/voice/*`)                  | set at sign-in           |
+| Notes     | `pincer_extensions/notes_app` (`:8000`)    | `VITE_NOTES_API_URL`     |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Notes calls are same-origin-proxied in dev: point `VITE_NOTES_API_URL` at
+`/notes-api` in `.env.local` to use the proxy, and override the upstream with
+`NOTES_API_TARGET` if the service is not on `:8000`.
 
-## What technologies are used for this project?
+## Scripts
 
-This project is built with:
+| Command                  | What it does                                             |
+| ------------------------ | -------------------------------------------------------- |
+| `npm run dev`            | Dev server on :3000                                       |
+| `npm run build`          | Production build                                          |
+| `npm test`               | Unit tests (vitest)                                       |
+| `npm run e2e`            | End-to-end tests (playwright)                             |
+| `npm run lint`           | ESLint over the repo                                      |
+| `npm run type-check`     | `tsc --noEmit` over the app                               |
+| `npm run i18n:check`     | Owner-app translations complete in de/en, no unused keys  |
+| `npm run count-mocks`    | Fails if a mocked surface appears without its badge       |
+| `npm run check:api`      | Frontend contract vs. the pinned pincer commit            |
+| `npm run check:bundle`   | Owner-app initial JS budget                               |
+| `npm run ci:voice`       | The full gate, in CI order                                |
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Tech
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/34e3271c-4064-4696-a86c-6de21ff064fc) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Vite · TypeScript · React · shadcn-ui · Tailwind CSS · TanStack Query · i18next

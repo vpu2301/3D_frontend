@@ -108,7 +108,10 @@ const Login = () => {
       // Hard navigation. Don't reset isConnecting — letting React re-render
       // Login after we've scheduled navigation can race the browser's
       // location change and leave us stuck on /login.
-      window.location.href = '/chat';
+      // FE0: the owner app's auth guard sends people here with ?returnTo=;
+      // only same-origin paths are honoured, never a full URL.
+      const returnTo = new URLSearchParams(window.location.search).get('returnTo');
+      window.location.href = returnTo && returnTo.startsWith('/') && !returnTo.startsWith('//') ? returnTo : '/chat';
       return;
     } catch (err) {
       const msg =

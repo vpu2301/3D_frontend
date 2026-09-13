@@ -3,7 +3,7 @@
  *
  * This replaces the mocked calls view as the default telephony screen. Per the
  * de-mock task contract, sections the backend cannot serve yet stay visible but
- * are wrapped in <MockedSection> with the reason spelled out. Styling is ported
+ * were wrapped in a badged section with the reason spelled out (FE10: hidden behind capability flags now). Styling is ported
  * from the old mocked telephony views (white cards, gray hairlines, green live
  * dots) so the app still reads as one system.
  *
@@ -17,7 +17,7 @@
  * ratio; the count is pinned by src/test/voice/mockInventory.test.ts.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ArrowDown,
   ArrowDownLeft,
@@ -44,10 +44,12 @@ import {
 } from 'lucide-react';
 import {
   type ActiveCall,
+  type Sentiment,
   CALL_HISTORY_CHUNK,
   useActiveCalls,
   useCallDetail,
   useCallHistoryAll,
+  useThread,
   useContacts,
   useInitiateCall,
   useUnreadMessageCount,
@@ -57,7 +59,6 @@ import {
   useVoiceStatus,
   type CallSummary,
 } from '@/lib/api/voice';
-import { MockedSection } from '@/components/voice/MockedBadge';
 import {
   AppointmentMark,
   CostCell,
@@ -67,8 +68,6 @@ import {
   OutcomeChip,
   RetryCounter,
 } from '@/pages/telephony/_components/voice/CallChips';
-import AppointmentPanel from '@/pages/telephony/_components/voice/AppointmentPanel';
-import LatencyPanel from '@/pages/telephony/_components/voice/LatencyPanel';
 import LimitsStrip from '@/pages/telephony/_components/voice/LimitsStrip';
 import {
   CHIP_TONE_CLASS,
@@ -79,12 +78,29 @@ import {
   parseLanguageSwitch,
 } from '@/pages/telephony/_lib/voiceMeta';
 import PlatSelect from '@/pages/telephony/_components/shared/PlatSelect';
-import TranscriptModal from '@/pages/telephony/_components/voice/TranscriptModal';
+import TranscriptModal, { type ThreadNav } from '@/pages/telephony/_components/voice/TranscriptModal';
 import LiveCallModal from '@/pages/telephony/_components/voice/LiveCallModal';
 import StartCallModal from '@/pages/telephony/_components/voice/StartCallModal';
-import CallActionsTimeline from '@/pages/telephony/_components/voice/CallActionsTimeline';
+import CallDetailBody from '@/pages/telephony/_components/voice/CallDetailBody';
+import ThreadsView from '@/pages/telephony/_components/threads/ThreadsView';
+import ListenIn from '@/components/voice/listen/ListenIn';
+import SentimentDot from '@/components/voice/analytics/SentimentDot';
+import {
+  ESTIMATED_MARK,
+  ESTIMATED_TOOLTIP,
+  FILTER_ALL,
+  FILTER_PAGE_ONLY,
+  FILTER_UNASSESSED,
+  SENTIMENT,
+  SENTIMENTS,
+  isEstimated,
+  isSentiment,
+  t,
+} from '@/components/voice/analytics/sentimentCopy';
+import { ThreadChip } from '@/pages/telephony/_components/threads/ThreadBits';
 import ReceptionistPanel from '@/pages/telephony/_components/voice/ReceptionistPanel';
 import { Input } from '@/components/ui/input';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 function fmtDuration(s: number) {
@@ -207,7 +223,11 @@ function ActiveCallsSection() {
                     {c.target_name || c.target_number || c.caller_number}
                   </span>
                 </div>
-                <div className="truncate text-xs text-[var(--text-5)]">{c.purpose}</div>
+                {/* What the backend holds, not what a form submitted: if the two ever
+                    differ, this is the one the agent is actually running. */}
+                <div className="truncate text-xs text-[var(--text-5)]" title={c.briefing_task_preview || c.purpose}>
+                  {c.briefing_task_preview || c.purpose}
+                </div>
               </div>
               <div className="ml-3 shrink-0 text-right text-xs">
                 <div className="flex items-center justify-end gap-1.5 font-medium text-green-600">
@@ -215,9 +235,12 @@ function ActiveCallsSection() {
                   live · {fmtDuration(c.duration_seconds)}
                 </div>
                 <div className="text-[var(--text-5)]">{c.engine}</div>
-              </div>
-              </button>
-            </li>
+                  </div>
+                  </button>
+                  <div className="px-5 pb-3">
+                    <ListenIn call={c} />
+                  </div>
+                </li>
           ))}
         </ul>
       )}
@@ -399,7 +422,7 @@ function StatusPill({ status }: { status: string }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium',
+        'inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-medium',
         live
           ? 'border-green-200 bg-green-50 text-green-700'
           : 'border-[var(--line)] text-[var(--text-3)]',
@@ -408,6 +431,176 @@ function StatusPill({ status }: { status: string }) {
       {live && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500" />}
       {status}
     </span>
+  );
+}
+
+type HistoryView = 'threads' | 'calls';
+
+const HISTORY_VIEW_KEY = 'telephony.history.view';
+
+/** Threads by default (§2); the last choice wins on the next visit. */
+function initialHistoryView(): HistoryView {
+  try {
+    return localStorage.getItem(HISTORY_VIEW_KEY) === 'calls' ? 'calls' : 'threads';
+  } catch {
+    return 'threads';
+  }
+}
+
+function HistoryViewToggle({
+  view,
+  onChange,
+}: {
+  view: HistoryView;
+  onChange: (v: HistoryView) => void;
+}) {
+  return (
+    <div className="flex items-center gap-0.5 rounded-full border border-[var(--line)] p-0.5">
+      {([
+        { id: 'threads', label: 'Threads' },
+        { id: 'calls', label: 'All calls' },
+      ] as const).map((o) => (
+        <button
+          key={o.id}
+          type="button"
+          onClick={() => {
+            onChange(o.id);
+            try {
+              localStorage.setItem(HISTORY_VIEW_KEY, o.id);
+            } catch {
+              /* private mode: the choice just does not stick */
+            }
+          }}
+          aria-pressed={view === o.id}
+          className={cn(
+            'rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors',
+            view === o.id
+              ? 'bg-[var(--ink)] text-white'
+              : 'text-[var(--text-4)] hover:text-[var(--ink)]',
+          )}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ── Sentiment in the list (S16 §4) ───────────────────────────────────
+
+type SentimentFilter = Sentiment | 'unassessed';
+
+/**
+ * The agent's share of the talking, at 40 px. The full split lives in the
+ * tooltip — this is a glance, not a report.
+ */
+function TalkRatioMini({
+  ratio,
+  method,
+}: {
+  ratio: number | null | undefined;
+  method: string | null | undefined;
+}) {
+  const { i18n } = useTranslation();
+  if (ratio == null) return null;
+
+  const agent = Math.round(Math.min(1, Math.max(0, ratio)) * 100);
+  const mark = isEstimated(method) ? `${ESTIMATED_MARK} ` : '';
+  return (
+    <span
+      className="inline-flex h-1.5 w-10 overflow-hidden rounded-full bg-[var(--sand-deep)] align-middle"
+      title={`${mark}Agent ${agent}% · Caller ${100 - agent}%${isEstimated(method) ? `\n${t(ESTIMATED_TOOLTIP, i18n.language)}` : ''}`}
+      role="img"
+      aria-label={`Agent ${agent}%, caller ${100 - agent}%`}
+    >
+      <span className="bg-[var(--ink)]" style={{ width: `${agent}%` }} />
+    </span>
+  );
+}
+
+/** Multi-select over the four readings plus "no reading at all". */
+function SentimentFilterMenu({
+  selected,
+  onChange,
+  hasAny,
+}: {
+  selected: SentimentFilter[];
+  onChange: (v: SentimentFilter[]) => void;
+  hasAny: boolean;
+}) {
+  const { i18n } = useTranslation();
+  const [open, setOpen] = useState(false);
+  if (!hasAny) return null;
+
+  const lang = i18n.language;
+  const toggle = (v: SentimentFilter) =>
+    onChange(selected.includes(v) ? selected.filter((x) => x !== v) : [...selected, v]);
+
+  const label = selected.length
+    ? selected
+        .map((v) => (v === 'unassessed' ? t(FILTER_UNASSESSED, lang) : t(SENTIMENT[v].label, lang)))
+        .join(', ')
+    : t(FILTER_ALL, lang);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className={cn(
+          'flex h-8 max-w-[220px] items-center gap-1.5 rounded-full border px-3 text-[11px] font-medium transition-colors',
+          selected.length
+            ? 'border-[var(--ink)] text-[var(--ink)]'
+            : 'border-[var(--line)] text-[var(--text-3)] hover:bg-[var(--sand)]',
+        )}
+      >
+        <span className="truncate">{label}</span>
+        <ChevronDown className="h-3 w-3 shrink-0" />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} aria-hidden="true" />
+          <div className="absolute z-20 mt-1 w-56 overflow-hidden rounded-[10px] border border-[var(--line)] bg-white py-1 shadow-lg">
+            {[...SENTIMENTS, 'unassessed' as const].map((v) => {
+              const on = selected.includes(v);
+              return (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => toggle(v)}
+                  aria-pressed={on}
+                  className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-[var(--text-2)] transition-colors hover:bg-[var(--sand)]"
+                >
+                  <span
+                    className={cn(
+                      'flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-[4px] border',
+                      on ? 'border-[var(--ink)] bg-[var(--ink)] text-white' : 'border-[var(--line)]',
+                    )}
+                  >
+                    {on && <Check className="h-2.5 w-2.5" />}
+                  </span>
+                  {v === 'unassessed' ? (
+                    t(FILTER_UNASSESSED, lang)
+                  ) : (
+                    <>
+                      <span className={cn('h-2 w-2 rounded-full', SENTIMENT[v].dotClass)} />
+                      {t(SENTIMENT[v].label, lang)}
+                    </>
+                  )}
+                </button>
+              );
+            })}
+            {/* The list endpoint has no sentiment filter, so this one can only
+                see what the browser has pulled. Say so rather than imply the
+                whole history was searched. */}
+            <p className="border-t border-[var(--line-soft)] px-3 pb-1 pt-1.5 text-[10px] text-[var(--text-5)]">
+              {t(FILTER_PAGE_ONLY, lang)}
+            </p>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -430,7 +623,12 @@ function HistorySection({
     return (n: string) => byNumber.get(n);
   }, [contacts]);
 
+  // Threads are how history reads now (S14 §2); the flat table stays one
+  // click away and remembers which one was last used.
+  const [view, setView] = useState<HistoryView>(initialHistoryView);
   const [q, setQ] = useState('');
+  const [threadlessOnly, setThreadlessOnly] = useState(false);
+  const [sentiments, setSentiments] = useState<SentimentFilter[]>([]);
   const [direction, setDirection] = useState<DirectionFilter>('all');
   const [status, setStatus] = useState<StatusFilter>('all');
   const [range, setRange] = useState<RangeFilter>('all');
@@ -458,7 +656,11 @@ function HistorySection({
     let hasCost = false;
     let hasLatency = false;
     let hasAppointment = false;
+    let hasSentiment = false;
     for (const c of calls) {
+      // Key presence, not a value: the merged API always sends these fields,
+      // and `null` is a legitimate answer ("no reading"), not an absent feature.
+      if ('sentiment' in c || 'talk_ratio' in c) hasSentiment = true;
       if (c.outcome?.outcome) outcomes.add(c.outcome.outcome);
       if (c.failure_code) failures.add(c.failure_code);
       const code = langCode(c.language);
@@ -479,7 +681,8 @@ function HistorySection({
       hasAppointment,
       hasLanguage: languages.size > 0,
       hasResult: outcomes.size > 0 || failures.size > 0,
-    };
+      hasSentiment,
+      };
   }, [calls]);
 
   const filtered = useMemo(() => {
@@ -498,6 +701,12 @@ function HistorySection({
       if (language !== 'all' && langCode(c.language) !== language) return false;
       if (intent !== 'all' && String(c.inbound_intent ?? '') !== intent) return false;
       if (apptOnly && !c.appointment) return false;
+      // Curation aid: what the linking rules have not picked up (§4.1).
+      if (threadlessOnly && c.thread_id) return false;
+      if (sentiments.length) {
+        const key: SentimentFilter = isSentiment(c.sentiment) ? c.sentiment : 'unassessed';
+        if (!sentiments.includes(key)) return false;
+      }
       if (needle) {
         const hay = `${c.from_number} ${c.to_number} ${c.call_sid} ${c.status} ${c.direction} ${nameFor(peerNumber(c)) ?? ''} ${c.failure_code ?? ''} ${c.outcome?.outcome ?? ''} ${c.language ?? ''}`.toLowerCase();
         if (!hay.includes(needle)) return false;
@@ -520,7 +729,7 @@ function HistorySection({
       return sortAsc ? cmp : -cmp;
     });
     return rows;
-  }, [calls, q, direction, status, range, minDur, result, language, intent, apptOnly, sortKey, sortAsc, nameFor]);
+  }, [calls, q, direction, status, range, minDur, result, language, intent, apptOnly, threadlessOnly, sentiments, sortKey, sortAsc, nameFor]);
 
   const stats = useMemo(() => {
     const talk = filtered.reduce((n, c) => n + c.duration_seconds, 0);
@@ -558,6 +767,8 @@ function HistorySection({
     result !== 'all' ||
     language !== 'all' ||
     apptOnly ||
+    threadlessOnly ||
+    sentiments.length > 0 ||
     intent !== 'all';
   const clearFilters = () => {
     setQ('');
@@ -568,6 +779,8 @@ function HistorySection({
     setResult('all');
     setLanguage('all');
     setApptOnly(false);
+    setThreadlessOnly(false);
+    setSentiments([]);
     setPage(1);
   };
 
@@ -609,7 +822,7 @@ function HistorySection({
     label: string;
     className?: string;
   }) => (
-    <th className={cn('font-medium', className)}>
+    <th className={cn('whitespace-nowrap font-medium', className)}>
       <button
         type="button"
         onClick={() => toggleSort(forKey)}
@@ -627,16 +840,19 @@ function HistorySection({
     <section className="rounded-[14px] border border-[var(--line)] bg-white p-5">
       {/* Title row */}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-baseline gap-2">
-          <h3 className="text-sm font-semibold text-[var(--ink)]">Call history</h3>
-          <span className="text-[11px] text-[var(--text-5)]">
-            {hasFilters
-              ? `${filtered.length} of ${calls.length} calls`
-              : `${calls.length} call${calls.length === 1 ? '' : 's'}`}
-            {isLoadingMore && ' · loading older…'}
-          </span>
+        <div className="flex flex-wrap items-baseline gap-2">
+          <h3 className="text-sm font-semibold text-[var(--ink)]">History</h3>
+          <HistoryViewToggle view={view} onChange={setView} />
+          {view === 'calls' && (
+            <span className="text-[11px] text-[var(--text-5)]">
+              {hasFilters
+                ? `${filtered.length} of ${calls.length} calls`
+                : `${calls.length} call${calls.length === 1 ? '' : 's'}`}
+              {isLoadingMore && ' · loading older…'}
+            </span>
+          )}
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className={cn('flex items-center gap-1.5', view === 'threads' && 'hidden')}>
           {hasFilters && (
             <button
               type="button"
@@ -668,440 +884,528 @@ function HistorySection({
         </div>
       </div>
 
-      {/* Stats strip */}
-      <div className="mt-3 flex divide-x divide-[var(--line-soft)] border-y border-[var(--line-soft)]">
-        <StatCell label="Calls" value={String(stats.total)} />
-        <StatCell label="Inbound" value={String(stats.inbound)} />
-        <StatCell label="Outbound" value={String(stats.outbound)} />
-        <StatCell label="Live now" value={String(stats.active)} />
-        <StatCell label="Talk time" value={fmtTalkTime(stats.talk)} />
-        <StatCell label="Avg length" value={fmtDuration(stats.avg)} />
-        {options.hasCost && (
-          <StatCell
-            label={
-              stats.pricedCount === stats.total
-                ? 'Cost'
-                : `Cost (${stats.pricedCount} of ${stats.total} priced)`
-            }
-            value={fmtCostUsd(stats.cost)}
-          />
-        )}
-      </div>
-
-      {/* Filter bar */}
-      <div className="my-3 flex flex-wrap items-center gap-2">
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-5)]" />
-          <Input
-            value={q}
-            onChange={(e) => {
-              setQ(e.target.value);
-              setPage(1);
-            }}
-            placeholder="Number, name, sid, status…"
-            className="h-8 w-56 pl-8 text-xs"
-          />
+      {view === 'threads' ? (
+        <ThreadsView onShowAllCalls={() => setView('calls')} />
+      ) : (
+        <>
+        {/* Stats strip */}
+        <div className="mt-3 flex divide-x divide-[var(--line-soft)] border-y border-[var(--line-soft)]">
+          <StatCell label="Calls" value={String(stats.total)} />
+          <StatCell label="Inbound" value={String(stats.inbound)} />
+          <StatCell label="Outbound" value={String(stats.outbound)} />
+          <StatCell label="Live now" value={String(stats.active)} />
+          <StatCell label="Talk time" value={fmtTalkTime(stats.talk)} />
+          <StatCell label="Avg length" value={fmtDuration(stats.avg)} />
+          {options.hasCost && (
+            <StatCell
+              label={
+                stats.pricedCount === stats.total
+                  ? 'Cost'
+                  : `Cost (${stats.pricedCount} of ${stats.total} priced)`
+              }
+              value={fmtCostUsd(stats.cost)}
+            />
+          )}
         </div>
 
-        <div className="flex items-center rounded-full border border-[var(--line)] bg-white p-0.5">
-          {(['all', 'inbound', 'outbound'] as const).map((d) => (
-            <button
-              key={d}
-              type="button"
-              onClick={() => withReset(setDirection)(d)}
-              className={cn(
-                'rounded-full px-2.5 py-1 text-[11px] font-medium capitalize transition-colors',
-                direction === d ? 'bg-[var(--ink)] text-white' : 'text-[var(--text-4)] hover:text-[var(--ink)]',
-              )}
+        {/* Filter bar */}
+        <div className="my-3 flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-5)]" />
+            <Input
+              value={q}
+              onChange={(e) => {
+                setQ(e.target.value);
+                setPage(1);
+              }}
+              placeholder="Number, name, sid, status…"
+              className="h-8 w-56 pl-8 text-xs"
+            />
+          </div>
+
+          <div className="flex items-center rounded-full border border-[var(--line)] bg-white p-0.5">
+            {(['all', 'inbound', 'outbound'] as const).map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => withReset(setDirection)(d)}
+                className={cn(
+                  'rounded-full px-2.5 py-1 text-[11px] font-medium capitalize transition-colors',
+                  direction === d ? 'bg-[var(--ink)] text-white' : 'text-[var(--text-4)] hover:text-[var(--ink)]',
+                )}
+              >
+                {d === 'all' ? 'All' : d}
+              </button>
+            ))}
+          </div>
+
+          <FilterSelect
+            value={status}
+            onChange={(v) => withReset(setStatus)(v as StatusFilter)}
+            ariaLabel="Filter by status"
+          >
+            <option value="all">Any status</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+          </FilterSelect>
+
+          <FilterSelect
+            value={range}
+            onChange={(v) => withReset(setRange)(v as RangeFilter)}
+            ariaLabel="Filter by time range"
+          >
+            <option value="all">Any time</option>
+            <option value="today">Last 24h</option>
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+          </FilterSelect>
+
+          <FilterSelect
+            value={minDur}
+            onChange={(v) => withReset(setMinDur)(Number(v) as MinDurFilter)}
+            ariaLabel="Filter by minimum duration"
+          >
+            <option value={0}>Any duration</option>
+            <option value={30}>≥ 30 sec</option>
+            <option value={60}>≥ 1 min</option>
+            <option value={300}>≥ 5 min</option>
+          </FilterSelect>
+
+          {options.hasResult && (
+            <FilterSelect
+              value={result}
+              onChange={(v) => withReset(setResult)(v as ResultFilter)}
+              ariaLabel="Filter by outcome or failure code"
             >
-              {d === 'all' ? 'All' : d}
-            </button>
-          ))}
-        </div>
+              <option value="all">Any result</option>
+              {options.outcomes.length > 0 && (
+                <optgroup label="Outcome">
+                  {options.outcomes.map((o) => (
+                    <option key={o} value={`o:${o}`}>
+                      {humanizeCode(o)}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {options.failures.length > 0 && (
+                <optgroup label="Failure code">
+                  {options.failures.map((f) => (
+                    <option key={f} value={`f:${f}`}>
+                      {humanizeCode(f)}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+            </FilterSelect>
+          )}
 
-        <FilterSelect
-          value={status}
-          onChange={(v) => withReset(setStatus)(v as StatusFilter)}
-          ariaLabel="Filter by status"
-        >
-          <option value="all">Any status</option>
-          <option value="active">Active</option>
-          <option value="completed">Completed</option>
-        </FilterSelect>
+          {options.hasLanguage && (
+            <FilterSelect
+              value={language}
+              onChange={(v) => withReset(setLanguage)(v)}
+              ariaLabel="Filter by call language"
+            >
+              <option value="all">Any language</option>
+              {options.languages.map((l) => (
+                <option key={l} value={l}>
+                  {l.toUpperCase()}
+                </option>
+              ))}
+            </FilterSelect>
+          )}
 
-        <FilterSelect
-          value={range}
-          onChange={(v) => withReset(setRange)(v as RangeFilter)}
-          ariaLabel="Filter by time range"
-        >
-          <option value="all">Any time</option>
-          <option value="today">Last 24h</option>
-          <option value="7d">Last 7 days</option>
-          <option value="30d">Last 30 days</option>
-          <option value="90d">Last 90 days</option>
-        </FilterSelect>
+          {options.hasIntent && (
+            <FilterSelect
+              value={intent}
+              onChange={(v) => withReset(setIntent)(v)}
+              ariaLabel="Filter by inbound intent"
+            >
+              <option value="all">Any intent</option>
+              {options.intents.map((i) => (
+                <option key={i} value={i}>
+                  {intentMeta(i)?.label ?? i}
+                </option>
+              ))}
+            </FilterSelect>
+          )}
 
-        <FilterSelect
-          value={minDur}
-          onChange={(v) => withReset(setMinDur)(Number(v) as MinDurFilter)}
-          ariaLabel="Filter by minimum duration"
-        >
-          <option value={0}>Any duration</option>
-          <option value={30}>≥ 30 sec</option>
-          <option value={60}>≥ 1 min</option>
-          <option value={300}>≥ 5 min</option>
-        </FilterSelect>
+          <SentimentFilterMenu
+            selected={sentiments}
+            onChange={withReset(setSentiments)}
+            hasAny={options.hasSentiment}
+          />
 
-        {options.hasResult && (
-          <FilterSelect
-            value={result}
-            onChange={(v) => withReset(setResult)(v as ResultFilter)}
-            ariaLabel="Filter by outcome or failure code"
-          >
-            <option value="all">Any result</option>
-            {options.outcomes.length > 0 && (
-              <optgroup label="Outcome">
-                {options.outcomes.map((o) => (
-                  <option key={o} value={`o:${o}`}>
-                    {humanizeCode(o)}
-                  </option>
-                ))}
-              </optgroup>
-            )}
-            {options.failures.length > 0 && (
-              <optgroup label="Failure code">
-                {options.failures.map((f) => (
-                  <option key={f} value={`f:${f}`}>
-                    {humanizeCode(f)}
-                  </option>
-                ))}
-              </optgroup>
-            )}
-          </FilterSelect>
-        )}
-
-        {options.hasLanguage && (
-          <FilterSelect
-            value={language}
-            onChange={(v) => withReset(setLanguage)(v)}
-            ariaLabel="Filter by call language"
-          >
-            <option value="all">Any language</option>
-            {options.languages.map((l) => (
-              <option key={l} value={l}>
-                {l.toUpperCase()}
-              </option>
-            ))}
-          </FilterSelect>
-        )}
-
-        {options.hasIntent && (
-          <FilterSelect
-            value={intent}
-            onChange={(v) => withReset(setIntent)(v)}
-            ariaLabel="Filter by inbound intent"
-          >
-            <option value="all">Any intent</option>
-            {options.intents.map((i) => (
-              <option key={i} value={i}>
-                {intentMeta(i)?.label ?? i}
-              </option>
-            ))}
-          </FilterSelect>
-        )}
-
-        {options.hasAppointment && (
           <button
             type="button"
-            onClick={() => withReset(setApptOnly)(!apptOnly)}
-            aria-pressed={apptOnly}
+            onClick={() => withReset(setThreadlessOnly)(!threadlessOnly)}
+            aria-pressed={threadlessOnly}
+            title="Calls the linking rules have not put in a thread yet"
             className={cn(
               'flex h-8 items-center gap-1.5 rounded-full border px-3 text-[11px] font-medium transition-colors',
-              apptOnly
+              threadlessOnly
                 ? 'border-[var(--ink)] bg-[var(--ink)] text-white'
                 : 'border-[var(--line)] text-[var(--text-3)] hover:bg-[var(--sand)]',
             )}
           >
-            <CalendarCheck2 className="h-3.5 w-3.5" />
-            Appointments only
+            <span aria-hidden="true">🧵</span>
+            Threadless only
           </button>
-        )}
-      </div>
 
-      {isError ? (
-        <div className="flex items-center justify-between gap-3 rounded-[10px] border border-red-200 bg-red-50 px-3 py-2.5 text-xs text-red-700">
-          <span>Could not load call history — {error?.message}</span>
-          <button
-            type="button"
-            onClick={() => void refetch()}
-            className="rounded-full border border-red-200 px-2.5 py-1 font-medium hover:bg-white"
-          >
-            Retry
-          </button>
+          {options.hasAppointment && (
+            <button
+              type="button"
+              onClick={() => withReset(setApptOnly)(!apptOnly)}
+              aria-pressed={apptOnly}
+              className={cn(
+                'flex h-8 items-center gap-1.5 rounded-full border px-3 text-[11px] font-medium transition-colors',
+                apptOnly
+                  ? 'border-[var(--ink)] bg-[var(--ink)] text-white'
+                  : 'border-[var(--line)] text-[var(--text-3)] hover:bg-[var(--sand)]',
+              )}
+            >
+              <CalendarCheck2 className="h-3.5 w-3.5" />
+              Appointments only
+            </button>
+          )}
         </div>
-      ) : isLoading ? (
-        <div className="space-y-1.5 py-1">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-9 animate-pulse rounded-[8px] bg-[var(--sand)]" />
-          ))}
-        </div>
-      ) : !calls.length ? (
-        <div className="flex flex-col items-center gap-1 py-12 text-center">
-          <PhoneCall className="h-7 w-7 text-[var(--text-5)] opacity-40" />
-          <p className="text-sm text-[var(--text-4)]">No calls yet.</p>
-          <p className="text-xs text-[var(--text-5)]">Calls appear here as soon as the agent places or answers one.</p>
-        </div>
-      ) : !filtered.length ? (
-        <div className="flex flex-col items-center gap-2 py-12 text-center">
-          <p className="text-sm text-[var(--text-4)]">Nothing matches the current filters.</p>
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="rounded-full border border-[var(--line)] px-3 py-1 text-xs font-medium text-[var(--text-3)] hover:bg-[var(--sand)]"
-          >
-            Clear filters
-          </button>
-        </div>
-      ) : (
-        <>
-          <div className="-mx-1 overflow-x-auto">
-            <table className="w-full min-w-[860px] text-sm">
-              <thead className="text-left text-[11px] uppercase tracking-wide text-[var(--text-5)] [&_th]:bg-[var(--sand)] [&_th]:px-2 [&_th]:py-2 [&_th:first-child]:rounded-l-[8px] [&_th:last-child]:rounded-r-[8px]">
-                <tr>
-                  <SortHead forKey="when" label="When" />
-                  <SortHead forKey="direction" label="Dir" />
-                  {options.hasLanguage && <th className="w-10 font-medium">Lang</th>}
-                  <SortHead forKey="number" label="Contact / number" />
-                  <SortHead forKey="status" label="Status" />
-                  {options.hasResult && <th className="font-medium">Result</th>}
-                  {options.hasIntent && <th className="font-medium">Intent</th>}
-                  {options.hasLatency && <SortHead forKey="latency" label="Latency" />}
-                  {options.hasCost && <SortHead forKey="cost" label="Cost" className="text-right" />}
-                  <SortHead forKey="duration" label="Duration" className="text-right" />
-                  <th className="hidden font-medium lg:table-cell">Ended</th>
-                  <th className="hidden font-medium xl:table-cell">Call SID</th>
-                  <th className="w-8" aria-label="Actions" />
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((c: CallSummary) => {
-                  const when = fmtWhen(c.started_at);
-                  const peer = peerNumber(c);
-                  const name = nameFor(peer);
-                  return (
-                    <tr
-                      key={c.call_sid}
-                      tabIndex={0}
-                      onClick={() => onSelect(c.call_sid)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          onSelect(c.call_sid);
-                        }
-                      }}
+
+        {isError ? (
+          <div className="flex items-center justify-between gap-3 rounded-[10px] border border-red-200 bg-red-50 px-3 py-2.5 text-xs text-red-700">
+            <span>Could not load call history — {error?.message}</span>
+            <button
+              type="button"
+              onClick={() => void refetch()}
+              className="rounded-full border border-red-200 px-2.5 py-1 font-medium hover:bg-white"
+            >
+              Retry
+            </button>
+          </div>
+        ) : isLoading ? (
+          <div className="space-y-1.5 py-1">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-9 animate-pulse rounded-[8px] bg-[var(--sand)]" />
+            ))}
+          </div>
+        ) : !calls.length ? (
+          <div className="flex flex-col items-center gap-1 py-12 text-center">
+            <PhoneCall className="h-7 w-7 text-[var(--text-5)] opacity-40" />
+            <p className="text-sm text-[var(--text-4)]">No calls yet.</p>
+            <p className="text-xs text-[var(--text-5)]">Calls appear here as soon as the agent places or answers one.</p>
+          </div>
+        ) : !filtered.length ? (
+          <div className="flex flex-col items-center gap-2 py-12 text-center">
+            <p className="text-sm text-[var(--text-4)]">Nothing matches the current filters.</p>
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="rounded-full border border-[var(--line)] px-3 py-1 text-xs font-medium text-[var(--text-3)] hover:bg-[var(--sand)]"
+            >
+              Clear filters
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="plat-scroll-x -mx-1">
+              <table className="w-full min-w-[860px] text-sm">
+                <thead className="text-left text-[11px] uppercase tracking-wide text-[var(--text-5)] [&_th]:bg-[var(--sand)] [&_th]:px-2 [&_th]:py-2 [&_th:first-child]:rounded-l-[8px] [&_th:last-child]:rounded-r-[8px]">
+                  <tr>
+                    <SortHead forKey="when" label="When" />
+                    <SortHead forKey="direction" label="Dir" />
+                    {options.hasLanguage && <th className="w-10 whitespace-nowrap font-medium">Lang</th>}
+                    <SortHead forKey="number" label="Contact" className="w-[150px]" />
+                    <th className="w-[150px] whitespace-nowrap font-medium">Thread</th>
+                    {options.hasSentiment && <th className="w-14 whitespace-nowrap font-medium">Mood</th>}
+                    {options.hasSentiment && <th className="w-16 whitespace-nowrap font-medium">Talk</th>}
+                    <SortHead forKey="status" label="Status" className="w-[104px]" />
+                    {options.hasResult && <th className="font-medium">Result</th>}
+                    {options.hasIntent && <th className="font-medium">Intent</th>}
+                    {options.hasLatency && <SortHead forKey="latency" label="Latency" />}
+                    {options.hasCost && <SortHead forKey="cost" label="Cost" className="text-right" />}
+                    <SortHead forKey="duration" label="Duration" className="text-right" />
+                    <th className="hidden font-medium lg:table-cell">Ended</th>
+                    <th className="hidden font-medium xl:table-cell">Call SID</th>
+                    <th className="w-8" aria-label="Actions" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((c: CallSummary) => {
+                    const when = fmtWhen(c.started_at);
+                    const peer = peerNumber(c);
+                    const name = nameFor(peer);
+                    return (
+                      <tr
+                        key={c.call_sid}
+                        tabIndex={0}
+                        onClick={() => onSelect(c.call_sid)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            onSelect(c.call_sid);
+                          }
+                        }}
+                        className={cn(
+                          'cursor-pointer border-t border-[var(--line-soft)] text-[var(--text-2)] outline-none hover:bg-[rgba(20,22,26,0.02)] focus-visible:bg-[rgba(20,22,26,0.04)] [&>td]:px-2',
+                          selected === c.call_sid && 'bg-[rgba(20,22,26,0.05)]',
+                        )}
+                      >
+                        <td className="py-2 whitespace-nowrap">
+                          <div className="text-[13px] text-[var(--ink)]">
+                            {when.date} · {when.time}
+                          </div>
+                          <div className="text-[10px] text-[var(--text-5)]">{fmtRelative(c.started_at)}</div>
+                        </td>
+                        <td>
+                          <span className="flex items-center gap-1 text-xs capitalize">
+                            {c.direction === 'outbound' ? (
+                              <ArrowUpRight className="h-3.5 w-3.5 text-[var(--text-5)]" />
+                            ) : (
+                              <ArrowDownLeft className="h-3.5 w-3.5 text-[var(--text-5)]" />
+                            )}
+                            {c.direction}
+                          </span>
+                        </td>
+                        {options.hasLanguage && (
+                          <td>
+                            <LanguageFlag language={c.language} />
+                          </td>
+                        )}
+                        <td className="w-[150px]">
+                          <div className="flex max-w-[142px] items-center gap-1.5">
+                            <AppointmentMark appointment={c.appointment} />
+                            <span className="min-w-0">
+                              {name && <span className="block truncate text-[13px] text-[var(--ink)]">{name}</span>}
+                              <span className="block truncate font-mono text-xs text-[var(--text-4)]">{peer || '—'}</span>
+                            </span>
+                          </div>
+                          <RetryCounter appointment={c.appointment} />
+                          </td>
+                          <td className="w-[150px]">
+                            <div className="max-w-[142px]">
+                              <ThreadChip threadId={c.thread_id} subject={c.thread_subject} className="max-w-full" />
+                            </div>
+                          </td>
+                          {options.hasSentiment && (
+                            <td>
+                              {/* Nothing at all for a call with no reading: an empty cell is the
+                                  truth, a grey dot would read as "neutral". */}
+                              <SentimentDot sentiment={c.sentiment} />
+                            </td>
+                          )}
+                          {options.hasSentiment && (
+                            <td>
+                              <TalkRatioMini ratio={c.talk_ratio} method={c.method} />
+                            </td>
+                          )}
+                        <td>
+                          <StatusPill status={c.status} />
+                        </td>
+                        {options.hasResult && (
+                          <td className="w-[130px]">
+                            <div className="max-w-[122px]">
+                              <OutcomeChip call={c} />
+                            </div>
+                          </td>
+                        )}
+                        {options.hasIntent && (
+                          <td className="max-w-[120px]">
+                            <IntentChip intent={c.inbound_intent} />
+                          </td>
+                        )}
+                        {options.hasLatency && (
+                          <td>
+                            <LatencyChip latency={c.latency} />
+                          </td>
+                        )}
+                        {options.hasCost && (
+                          <td className="text-right">
+                            <CostCell usd={c.cost_total_usd} />
+                          </td>
+                        )}
+                        <td className="text-right font-mono text-xs tabular-nums">
+                          {fmtDuration(c.duration_seconds)}
+                        </td>
+                        <td className="hidden whitespace-nowrap text-xs text-[var(--text-4)] lg:table-cell">
+                          {c.ended_at ? fmtWhen(c.ended_at).time : '—'}
+                        </td>
+                        <td className="hidden xl:table-cell">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              copySid(c.call_sid);
+                            }}
+                            className="flex max-w-[160px] items-center gap-1 font-mono text-[11px] text-[var(--text-5)] transition-colors hover:text-[var(--ink)]"
+                            title="Copy call SID"
+                          >
+                            <span className="max-w-[110px] truncate">{c.call_sid}</span>
+                            {copiedSid === c.call_sid ? (
+                              <Check className="h-3 w-3 shrink-0 text-green-600" />
+                            ) : (
+                              <Copy className="h-3 w-3 shrink-0" />
+                            )}
+                          </button>
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onExpand(c.call_sid);
+                            }}
+                            className="rounded-full p-1 text-[var(--text-5)] transition-colors hover:bg-[var(--sand-deep)] hover:text-[var(--ink)]"
+                            aria-label="Open full transcript"
+                            title="Open full transcript"
+                          >
+                            <Maximize2 className="h-3.5 w-3.5" />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-soft)] pt-3">
+              <div className="flex items-center gap-2 text-[11px] text-[var(--text-5)]">
+                <span>
+                  {start + 1}–{Math.min(start + pageSize, filtered.length)} of {filtered.length}
+                </span>
+                <FilterSelect
+                  value={pageSize}
+                  onChange={(v) => changePageSize(Number(v))}
+                  ariaLabel="Rows per page"
+                >
+                  {PAGE_SIZES.map((n) => (
+                    <option key={n} value={n}>
+                      {n} / page
+                    </option>
+                  ))}
+                </FilterSelect>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  disabled={safePage === 1}
+                  onClick={() => setPage(1)}
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] disabled:cursor-not-allowed disabled:opacity-30"
+                  aria-label="First page"
+                >
+                  <ChevronsLeft className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  disabled={safePage === 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] disabled:cursor-not-allowed disabled:opacity-30"
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                </button>
+
+                {pageItems(safePage, totalPages).map((p, i) =>
+                  p === '…' ? (
+                    <span key={`gap-${i}`} className="px-1 text-[11px] text-[var(--text-5)]">
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => setPage(p)}
+                      aria-current={safePage === p ? 'page' : undefined}
                       className={cn(
-                        'cursor-pointer border-t border-[var(--line-soft)] text-[var(--text-2)] outline-none hover:bg-[rgba(20,22,26,0.02)] focus-visible:bg-[rgba(20,22,26,0.04)] [&>td]:px-2',
-                        selected === c.call_sid && 'bg-[rgba(20,22,26,0.05)]',
+                        'flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 text-[11px] font-medium transition-colors',
+                        safePage === p
+                          ? 'bg-[var(--ink)] text-white'
+                          : 'text-[var(--text-4)] hover:bg-[var(--sand)] hover:text-[var(--ink)]',
                       )}
                     >
-                      <td className="py-2 whitespace-nowrap">
-                        <div className="text-[13px] text-[var(--ink)]">
-                          {when.date} · {when.time}
-                        </div>
-                        <div className="text-[10px] text-[var(--text-5)]">{fmtRelative(c.started_at)}</div>
-                      </td>
-                      <td>
-                        <span className="flex items-center gap-1 text-xs capitalize">
-                          {c.direction === 'outbound' ? (
-                            <ArrowUpRight className="h-3.5 w-3.5 text-[var(--text-5)]" />
-                          ) : (
-                            <ArrowDownLeft className="h-3.5 w-3.5 text-[var(--text-5)]" />
-                          )}
-                          {c.direction}
-                        </span>
-                      </td>
-                      {options.hasLanguage && (
-                        <td>
-                          <LanguageFlag language={c.language} />
-                        </td>
-                      )}
-                      <td className="max-w-[220px]">
-                        <div className="flex items-center gap-1.5">
-                          <AppointmentMark appointment={c.appointment} />
-                          <span className="min-w-0">
-                            {name && <span className="block truncate text-[13px] text-[var(--ink)]">{name}</span>}
-                            <span className="block truncate font-mono text-xs text-[var(--text-4)]">{peer || '—'}</span>
-                          </span>
-                        </div>
-                        <RetryCounter appointment={c.appointment} />
-                      </td>
-                      <td>
-                        <StatusPill status={c.status} />
-                      </td>
-                      {options.hasResult && (
-                        <td className="max-w-[160px]">
-                          <OutcomeChip call={c} />
-                        </td>
-                      )}
-                      {options.hasIntent && (
-                        <td className="max-w-[120px]">
-                          <IntentChip intent={c.inbound_intent} />
-                        </td>
-                      )}
-                      {options.hasLatency && (
-                        <td>
-                          <LatencyChip latency={c.latency} />
-                        </td>
-                      )}
-                      {options.hasCost && (
-                        <td className="text-right">
-                          <CostCell usd={c.cost_total_usd} />
-                        </td>
-                      )}
-                      <td className="text-right font-mono text-xs tabular-nums">
-                        {fmtDuration(c.duration_seconds)}
-                      </td>
-                      <td className="hidden whitespace-nowrap text-xs text-[var(--text-4)] lg:table-cell">
-                        {c.ended_at ? fmtWhen(c.ended_at).time : '—'}
-                      </td>
-                      <td className="hidden xl:table-cell">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            copySid(c.call_sid);
-                          }}
-                          className="flex max-w-[160px] items-center gap-1 font-mono text-[11px] text-[var(--text-5)] transition-colors hover:text-[var(--ink)]"
-                          title="Copy call SID"
-                        >
-                          <span className="truncate">{c.call_sid}</span>
-                          {copiedSid === c.call_sid ? (
-                            <Check className="h-3 w-3 shrink-0 text-green-600" />
-                          ) : (
-                            <Copy className="h-3 w-3 shrink-0" />
-                          )}
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onExpand(c.call_sid);
-                          }}
-                          className="rounded-full p-1 text-[var(--text-5)] transition-colors hover:bg-[var(--sand-deep)] hover:text-[var(--ink)]"
-                          aria-label="Open full transcript"
-                          title="Open full transcript"
-                        >
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      {p}
+                    </button>
+                  ),
+                )}
 
-          {/* Pagination */}
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-soft)] pt-3">
-            <div className="flex items-center gap-2 text-[11px] text-[var(--text-5)]">
-              <span>
-                {start + 1}–{Math.min(start + pageSize, filtered.length)} of {filtered.length}
-              </span>
-              <FilterSelect
-                value={pageSize}
-                onChange={(v) => changePageSize(Number(v))}
-                ariaLabel="Rows per page"
-              >
-                {PAGE_SIZES.map((n) => (
-                  <option key={n} value={n}>
-                    {n} / page
-                  </option>
-                ))}
-              </FilterSelect>
+                <button
+                  type="button"
+                  disabled={safePage === totalPages}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] disabled:cursor-not-allowed disabled:opacity-30"
+                  aria-label="Next page"
+                >
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  disabled={safePage === totalPages}
+                  onClick={() => setPage(totalPages)}
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] disabled:cursor-not-allowed disabled:opacity-30"
+                  aria-label="Last page"
+                >
+                  <ChevronsRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
 
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                disabled={safePage === 1}
-                onClick={() => setPage(1)}
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] disabled:cursor-not-allowed disabled:opacity-30"
-                aria-label="First page"
-              >
-                <ChevronsLeft className="h-3.5 w-3.5" />
-              </button>
-              <button
-                type="button"
-                disabled={safePage === 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] disabled:cursor-not-allowed disabled:opacity-30"
-                aria-label="Previous page"
-              >
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </button>
-
-              {pageItems(safePage, totalPages).map((p, i) =>
-                p === '…' ? (
-                  <span key={`gap-${i}`} className="px-1 text-[11px] text-[var(--text-5)]">
-                    …
-                  </span>
-                ) : (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => setPage(p)}
-                    aria-current={safePage === p ? 'page' : undefined}
-                    className={cn(
-                      'flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 text-[11px] font-medium transition-colors',
-                      safePage === p
-                        ? 'bg-[var(--ink)] text-white'
-                        : 'text-[var(--text-4)] hover:bg-[var(--sand)] hover:text-[var(--ink)]',
-                    )}
-                  >
-                    {p}
-                  </button>
-                ),
-              )}
-
-              <button
-                type="button"
-                disabled={safePage === totalPages}
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] disabled:cursor-not-allowed disabled:opacity-30"
-                aria-label="Next page"
-              >
-                <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-              <button
-                type="button"
-                disabled={safePage === totalPages}
-                onClick={() => setPage(totalPages)}
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--line)] text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] disabled:cursor-not-allowed disabled:opacity-30"
-                aria-label="Last page"
-              >
-                <ChevronsRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          </div>
-
-          {cappedAt !== null && (
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-[var(--text-5)]">
-              <span>Loaded the {cappedAt} most recent calls — older ones are on the server.</span>
-              <button
-                type="button"
-                onClick={loadMore}
-                className="rounded-full border border-[var(--line)] px-2.5 py-1 font-medium text-[var(--text-3)] hover:bg-[var(--sand)]"
-              >
-                Load {CALL_HISTORY_CHUNK} older
-              </button>
-            </div>
-          )}
+            {cappedAt !== null && (
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-[var(--text-5)]">
+                <span>Loaded the {cappedAt} most recent calls — older ones are on the server.</span>
+                <button
+                  type="button"
+                  onClick={loadMore}
+                  className="rounded-full border border-[var(--line)] px-2.5 py-1 font-medium text-[var(--text-3)] hover:bg-[var(--sand)]"
+                >
+                  Load {CALL_HISTORY_CHUNK} older
+                </button>
+              </div>
+            )}
+          </>
+        )}
         </>
       )}
     </section>
   );
+}
+
+/**
+ * The full-screen call detail, told where it sits in its thread (§4.2).
+ *
+ * The thread is looked up from the call's own `thread_id`, so walking to a
+ * neighbour is a matter of swapping the sid the modal is showing — no second
+ * copy of the timeline's ordering rules.
+ */
+function ThreadAwareTranscriptModal({
+  callSid,
+  onClose,
+  onNavigate,
+}: {
+  callSid: string;
+  onClose: () => void;
+  onNavigate: (sid: string) => void;
+}) {
+  const { data: call } = useCallDetail(callSid);
+  const { data: thread } = useThread(call?.thread_id ? call.thread_id : null);
+
+  const nav = useMemo((): ThreadNav | undefined => {
+    if (!thread) return undefined;
+    const i = thread.calls.findIndex((c) => c.call_sid === callSid);
+    if (i < 0) return undefined;
+    const prev = thread.calls[i - 1];
+    const next = thread.calls[i + 1];
+    return {
+      threadId: thread.id,
+      subject: thread.subject,
+      index: i + 1,
+      total: thread.calls.length,
+      onPrev: prev ? () => onNavigate(prev.call_sid) : undefined,
+      onNext: next ? () => onNavigate(next.call_sid) : undefined,
+    };
+  }, [thread, callSid, onNavigate]);
+
+  return <TranscriptModal callSid={callSid} open onClose={onClose} threadNav={nav} />;
 }
 
 function TranscriptPanel({
@@ -1141,50 +1445,7 @@ function TranscriptPanel({
         </div>
       </div>
       {isLoading && <div className="text-sm text-[var(--text-5)]">Loading…</div>}
-      {d && (
-        <>
-          {d.appointment && (
-            <div className="mb-3">
-              <AppointmentPanel appointment={d.appointment} />
-            </div>
-          )}
-          {d.latency && (
-            <div className="mb-3">
-              <LatencyPanel latency={d.latency} />
-            </div>
-          )}
-          <div className="max-h-96 space-y-2 overflow-y-auto pr-2">
-            {d.transcript.length === 0 && (
-              <div className="text-sm text-[var(--text-5)]">No transcript recorded.</div>
-            )}
-            {d.transcript.map((t, i) => {
-              // A SYSTEM language-switch entry is not a line anyone said — it
-              // reads as a divider between the two halves of the conversation.
-              const sw = parseLanguageSwitch(t);
-              if (sw) return <LanguageSwitchDivider key={i} sw={sw} />;
-              return (
-                <div key={i}>
-                  <span
-                    className={cn(
-                      'mr-2 text-[10px] font-semibold uppercase tracking-wide',
-                      t.speaker === 'agent' ? 'text-[var(--blue)]' : 'text-[var(--text-5)]',
-                    )}
-                  >
-                    {t.speaker}
-                  </span>
-                  <span className={cn('text-sm', t.speaker === 'agent' ? 'text-[var(--text-2)]' : 'text-[var(--ink)]')}>
-                    {t.text}
-                  </span>
-                  {t.state === 'undelivered' && (
-                    <span className="ml-2 text-[10px] text-amber-600">⚠ not delivered as audio</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          <CallActionsTimeline actions={d.actions} compact />
-        </>
-      )}
+      {d && <CallDetailBody detail={d} />}
     </aside>
   );
 }
@@ -1259,6 +1520,12 @@ export default function VoicePage() {
   const navigate = useNavigate();
   const unreadMessages = useUnreadMessageCount();
   const [selected, setSelected] = useState<string | null>(null);
+  // FE1: the Übersicht deep-links a call as ?call=<sid> (an opaque id, no PII).
+  const [voiceSearchParams] = useSearchParams();
+  const deepLinkedSid = voiceSearchParams.get('call');
+  useEffect(() => {
+    if (deepLinkedSid) setSelected(deepLinkedSid);
+  }, [deepLinkedSid]);
   const [modalSid, setModalSid] = useState<string | null>(null);
   const [startOpen, setStartOpen] = useState(false);
 
@@ -1334,32 +1601,21 @@ export default function VoicePage() {
             {startOpen && <StartCallModal onClose={() => setStartOpen(false)} />}
 
             {modalSid && (
-              <TranscriptModal
+              <ThreadAwareTranscriptModal
                 callSid={modalSid}
-                open={!!modalSid}
                 onClose={() => setModalSid(null)}
+                onNavigate={setModalSid}
               />
             )}
 
-            {/* ─────────── Still mocked — visibly badged per task contract ─────────── */}
-            <MockedSection
-              title="Live listen-in"
-              reason="No audio streaming to the browser exists yet — requires a media proxy (follow-up task)."
-            >
-              <div className="flex h-16 items-center justify-center rounded-[10px] border border-[var(--line-soft)] bg-white text-xs text-[var(--text-5)]">
-                waveform placeholder
-              </div>
-            </MockedSection>
+            {/* Nothing is badged here any more.
+                S16 made sentiment and talk ratio real. S15 replaced the
+                listen-in placeholder with the real player, which lives on the
+                active-call row and appears only when the backend says that
+                call can be listened to (`listen_available`) — no endpoint, no
+                surface, which is the same contract as a badge without a badge
+                to forget to remove. */}
 
-            {/* Per-call cost lost its badge in v2: `call_costs` (Sprint 9 T9.1)
-                makes it real, and it now lives in the history table and the
-                stats strip. What is left here is what is still not computed. */}
-            <MockedSection
-              title="Sentiment & talk ratio"
-              reason="Neither is computed anywhere in the pipeline yet — no sentiment model runs on the transcript, and speaking time is not measured per speaker."
-            >
-              <div className="text-xs text-[var(--text-5)]">sentiment — · talk ratio —:—</div>
-            </MockedSection>
           </div>
         )}
       </div>

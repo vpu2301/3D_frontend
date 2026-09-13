@@ -1,0 +1,108 @@
+name: frontend-ci
+
+on:
+  pull_request:
+  push:
+    branches: [main, voice]
+
+concurrency:
+  group: fe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: lint · types · unit · i18n · mocks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint (owner app, incl. no-literal-string)
+        run: npm run lint:voice
+      - name: Lint (whole repo, informational until the 86 legacy errors are cleared)
+        run: npm run lint || echo "::warning::repo-wide lint has pre-existing errors — see docs/app/FE0-audit.md §6"
+      - name: Type-check (owner app, strict null checks)
+        run: npm run type-check:voice
+      - name: Type-check (whole repo, informational until the 15 legacy errors are cleared)
+        run: npm run type-check || echo "::warning::repo-wide type-check has pre-existing errors — see docs/app/FE0-audit.md §1"
+      - run: npm test
+      - run: npm run i18n:check
+      - name: Mock badge count (may not increase)
+        run: node scripts/count-mocks.mjs --summary
+      - name: No hand-written type shadows the contract (F0 cut list §6)
+        run: node scripts/check-types.mjs --summary
+
+  contract:
+    name: API contract (pinned pincer commit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Read pinned backend commit
+        id: lock
+        run: echo "commit=$(node -p "require('./api-contract.lock').pincer_commit")" >> "$GITHUB_OUTPUT"
+      - name: Check out pincer at the pinned commit
+        uses: actions/checkout@v4
+        with:
+          repository: pincerhq/pincer
+          ref: ${{ steps.lock.outputs.commit }}
+          path: pincer
+          token: ${{ secrets.PINCER_REPO_TOKEN }}
+      - uses: astral-sh/setup-uv@v3
+      - name: Build the OpenAPI document from source (no server needed)
+        working-directory: pincer
+        run: |
+          uv sync --frozen
+          PINCER_VOICE_ENABLED=1 uv run python -c "import json; from pincer.api.server import create_app; print(json.dumps(create_app().openapi()))" > ../openapi.live.json
+      - name: Drift check — fails on any response-model change
+        run: node scripts/check-api.mjs --from openapi.live.json
+
+  e2e:
+    name: e2e · a11y (chromium + iPhone 12)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Run e2e
+        env:
+          CI: "1"
+          # Set these repository secrets to run the @backend flows against a
+          # seeded instance (FE0 API ask: `make demo-seed`). Without them the
+          # smoke and a11y suites run backend-free.
+          PINCER_E2E_URL: ${{ secrets.PINCER_E2E_URL }}
+          PINCER_E2E_TOKEN: ${{ secrets.PINCER_E2E_TOKEN }}
+        run: npm run e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
+
+  bundle:
+    name: bundle budget (owner app ≤ 250 KB gz initial)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Owner-app initial JS ≤ 250 KB gz (FE10 §1)
+        run: npm run check:bundle
+      - name: Report chunk sizes
+        run: node scripts/bundle-report.mjs --summary

@@ -12,6 +12,8 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   Copy,
   Download,
@@ -27,13 +29,22 @@ import CallOutcomePanel, { parseOutcome } from '@/pages/telephony/_components/vo
 import AppointmentPanel from '@/pages/telephony/_components/voice/AppointmentPanel';
 import LatencyPanel from '@/pages/telephony/_components/voice/LatencyPanel';
 import CallActionsTimeline from '@/pages/telephony/_components/voice/CallActionsTimeline';
+import BriefingPanel from '@/pages/telephony/_components/voice/BriefingPanel';
+import CostPanel from '@/pages/telephony/_components/voice/CostPanel';
+import AnalyticsPanel from '@/components/voice/analytics/AnalyticsPanel';
 import {
+  BriefingDivider,
   CostCell,
   LanguageFlag,
   LanguageSwitchDivider,
   OutcomeChip,
 } from '@/pages/telephony/_components/voice/CallChips';
-import { CHIP_TONE_CLASS, intentMeta, parseLanguageSwitch } from '@/pages/telephony/_lib/voiceMeta';
+import {
+  CHIP_TONE_CLASS,
+  intentMeta,
+  parseBriefingLine,
+  parseLanguageSwitch,
+} from '@/pages/telephony/_lib/voiceMeta';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -80,14 +91,27 @@ function lineToText(t: TranscriptLine, withTime: boolean): string {
   return `${time}${t.speaker.toUpperCase()}: ${t.text}`;
 }
 
+/** Where this call sits in its thread, and how to walk the neighbours (§4.2). */
+export interface ThreadNav {
+  threadId: string;
+  subject: string;
+  /** 1-based, for "call 2/3". */
+  index: number;
+  total: number;
+  onPrev?: () => void;
+  onNext?: () => void;
+}
+
 export default function TranscriptModal({
   callSid,
   open,
   onClose,
+  threadNav,
 }: {
   callSid: string;
   open: boolean;
   onClose: () => void;
+  threadNav?: ThreadNav;
 }) {
   const { data: d, isLoading } = useCallDetail(open ? callSid : null);
   const { toast } = useToast();
@@ -146,9 +170,63 @@ export default function TranscriptModal({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="flex h-[92vh] w-[94vw] max-w-[1500px] flex-col gap-0 overflow-hidden p-0 sm:max-w-[1500px]">
+      <DialogContent
+        className="flex h-[92vh] w-[94vw] max-w-[1500px] flex-col gap-0 overflow-hidden p-0 sm:max-w-[1500px]"
+        // ←/→ walk the thread while the panel has focus (§4.2). Typing in the
+        // search box must still move the caret, not the call.
+        onKeyDown={(e) => {
+          if (!threadNav) return;
+          const tag = (e.target as HTMLElement).tagName;
+          if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+          if (e.key === 'ArrowLeft' && threadNav.onPrev) {
+            e.preventDefault();
+            threadNav.onPrev();
+          }
+          if (e.key === 'ArrowRight' && threadNav.onNext) {
+            e.preventDefault();
+            threadNav.onNext();
+          }
+        }}
+      >
         {/* Header */}
         <div className="border-b border-[var(--line-soft)] px-6 py-4">
+          {threadNav && (
+            <div className="mb-1.5 flex flex-wrap items-center gap-2">
+              <Link
+                to={`/telephony/threads/${encodeURIComponent(threadNav.threadId)}`}
+                className="flex min-w-0 items-center gap-1.5 text-xs text-[var(--text-3)] transition-colors hover:text-[var(--ink)]"
+                title={`Open thread: ${threadNav.subject}`}
+              >
+                <span aria-hidden="true">🧵</span>
+                <span className="max-w-[420px] truncate underline decoration-dotted">{threadNav.subject}</span>
+              </Link>
+              <span className="text-xs text-[var(--text-5)]">
+                · call {threadNav.index}/{threadNav.total}
+              </span>
+              <span className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={threadNav.onPrev}
+                  disabled={!threadNav.onPrev}
+                  className="rounded-full border border-[var(--line)] p-1 text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] hover:text-[var(--ink)] disabled:opacity-40"
+                  aria-label="Previous call in thread"
+                  title="Previous call in thread (←)"
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={threadNav.onNext}
+                  disabled={!threadNav.onNext}
+                  className="rounded-full border border-[var(--line)] p-1 text-[var(--text-4)] transition-colors hover:bg-[var(--sand)] hover:text-[var(--ink)] disabled:opacity-40"
+                  aria-label="Next call in thread"
+                  title="Next call in thread (→)"
+                >
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </button>
+              </span>
+            </div>
+          )}
           <DialogTitle className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-base font-semibold text-[var(--ink)]">
             Transcript
             <span className="font-mono text-xs font-normal text-[var(--text-5)]">{callSid}</span>
@@ -303,6 +381,9 @@ export default function TranscriptModal({
                 // divider rather than a speaker row.
                 const sw = parseLanguageSwitch(t);
                 if (sw) return <LanguageSwitchDivider key={t.index} sw={sw} />;
+                // The briefing was handed to the agent, not spoken to anyone.
+                const briefed = parseBriefingLine(t);
+                if (briefed !== null) return <BriefingDivider key={t.index} text={briefed} />;
                 return (
                 <div
                   key={t.index}
@@ -368,9 +449,14 @@ export default function TranscriptModal({
             </div>
           </div>
 
-          {/* Actions rail: outcome + follow-up toolbox + remaining tool calls */}
+          {/* The record of the call, in the order someone reads it: what the
+              agent was told, how it went, what came of it, and what it cost.
+              The transcript on the left is the evidence for all of it. */}
           {d && (
-            <aside className="w-80 shrink-0 overflow-y-auto overflow-x-hidden border-l border-[var(--line-soft)] bg-[rgba(20,22,26,0.015)] px-4 py-4">
+            <aside className="plat-scroll-y w-[360px] shrink-0 overflow-y-auto overflow-x-hidden border-l border-[var(--line-soft)] bg-[rgba(20,22,26,0.015)] px-4 py-4">
+              <BriefingPanel call={d} />
+              <AnalyticsPanel call={d} />
+              <CallOutcomePanel detail={d} />
               {d.appointment && (
                 <div className="mb-3">
                   <AppointmentPanel appointment={d.appointment} />
@@ -381,7 +467,7 @@ export default function TranscriptModal({
                   <LatencyPanel latency={d.latency} />
                 </div>
               )}
-              <CallOutcomePanel detail={d} />
+              <CostPanel cost={d.cost} />
               <CallActionsTimeline actions={d.actions.filter((a) => !parseOutcome(a))} />
             </aside>
           )}

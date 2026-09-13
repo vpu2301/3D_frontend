@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright
+test-results/
+playwright-report/
+
+# built widget bundle (npm run build:widget)
+public/w.js
+public/w.*.js

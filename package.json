@@ -1,7 +1,7 @@
 {
   "name": "vite_react_shadcn_ts",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,19 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "type-check": "tsc --noEmit -p tsconfig.app.json",
+    "type-check:voice": "tsc --noEmit -p tsconfig.voice.json",
+    "gen:api": "node scripts/gen-api.mjs",
+    "check:api": "node scripts/check-api.mjs",
+    "check:types": "node scripts/check-types.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs",
+    "count-mocks": "node scripts/count-mocks.mjs",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "ci:voice": "npm run lint:voice && npm run type-check:voice && npm run test && npm run i18n:check && npm run count-mocks && npm run check:api && npm run check:types && npm run build && npm run check:bundle",
+    "lint:voice": "eslint src/pages/telephony src/components/voice src/components/ui/empty-state.tsx src/components/ui/data-table.tsx src/lib/api src/lib/format.ts src/lib/capabilities.ts src/stores/session.ts src/i18n/voice.ts e2e scripts",
+    "check:bundle": "node scripts/check-bundle-size.mjs"
   },
   "dependencies": {
     "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
@@ -97,7 +109,9 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^9.9.0",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/typography": "^0.5.15",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -109,12 +123,13 @@
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.9.0",
+    "eslint-plugin-i18next": "^6.1.5",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "fake-indexeddb": "^6.2.5",
     "globals": "^15.9.0",
     "jsdom": "^29.1.0",
-    "lovable-tagger": "^1.1.7",
+    "openapi-typescript": "^7.13.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",

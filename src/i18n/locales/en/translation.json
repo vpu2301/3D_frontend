@@ -180,7 +180,16 @@
     "footerPricing": "Pricing",
     "footerAbout": "About",
     "footerContact": "Contact",
-    "footerCareers": "Careers"
+    "footerCareers": "Careers",
+    "demoCallTitle": "Try it now — the agent calls you",
+    "demoCallPlaceholder": "+49 170 1234567",
+    "demoCallButton": "Call me now",
+    "demoCallCalling": "Connecting…",
+    "demoCallConsent": "This is my number and I want to be called.",
+    "demoCallDone": "Your phone will ring in a moment. Pick up and just talk.",
+    "demoCallHint": "A short demo call, two minutes at most. No signup, no recording.",
+    "demoCallOff": "The demo line is not available right now. Book a demo and we will call you back.",
+    "demoCallFailed": "The call could not be started."
   },
   "workflows": {
     "pageTitle": "Workflows",

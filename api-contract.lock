@@ -1,0 +1,9 @@
+{
+  "pincer_commit": "309f87f966534a88529e443bc301ebfd3c85ed9f+uncommitted-C1-C2-C3-B1-D1-D2",
+  "spec_sha256": "e62e2dedd8f2d7338bc2cc2430cfd46b18f6c8c6b93e41e7a4bb602123f4ec27",
+  "api_title": "Pincer API",
+  "api_version": "0.8.0",
+  "paths": 120,
+  "generated_at": "2026-09-06T19:17:17.936Z",
+  "source": "file"
+}

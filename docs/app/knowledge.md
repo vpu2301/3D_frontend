@@ -1,0 +1,11 @@
+# Wissen (FE5 §1)
+
+Route `/telephony/knowledge`. Components `src/pages/telephony/_components/knowledge/*`; data `src/lib/api/owner/knowledge.ts`; namespace `voice-knowledge`. Bound to D1 as it ships (`GET/POST /api/voice/knowledge/sources`, `POST …/sources/upload`, `POST …/{id}/recrawl`, `DELETE`, `GET …/{id}/chunks`, `POST …/search`, `GET …/unanswered`, `POST …/faq`).
+
+- **Sources** (`GET …/sources?profile_id=` → `{sources, stats}`, 30 s / 3 s while reading): kind icon, title, owner status (`sourceView`: Wird gelesen · Bereit · Fehler with the server's reason), "38 Seiten, 412 Abschnitte", last read, weekly note for websites; the stats line counts sensitive sections excluded. Actions: Neu einlesen (`POST …/{id}/recrawl`), Entfernen (confirm; `DELETE`). Pause/resume is an ask.
+- **Website hinzufügen**: URL → preview (domain, robots note, 300-page cap) → `POST …/sources {kind:"website", uri, title, profile_id}`.
+- **Datei hochladen**: drag & drop or choose, PDF/DOCX/TXT/MD ≤ 25 MB, OCR note; `POST …/sources/upload?profile_id=&title=` multipart via XHR with a progress bar; size/type rejected locally, 413/422 verbatim.
+- **Sensible Inhalte** (`GET …/{id}/chunks` filtered `sensitive`): kinds (Telefonnummer, E-Mail, IBAN, …), page, heading, text — read-only. The per-chunk release D1 §3 describes has no route yet (ask); the panel says so. There is no bulk enable and will not be.
+- **Testkonsole** (`POST …/search {q, k, profile_id}`): the passage the assistant would answer from (the top hit — the spoken sentence is an ask), source chips from the hits, confidence as Sicher / Unsicher / "Keine Antwort — …" (`confidenceOf`: `no_knowledge` → none, a score within a margin of the threshold → unsure), a note when search is degraded. Retrieval time only with `?debug`. Last 20 questions of the session.
+- **Unbeantwortete Fragen** (`GET …/unanswered?days=30`, 60 s): flat rows grouped by exact text (case-insensitive) in the FE; count, last asked, example call link; Antwort hinzufügen → `POST …/faq {question, answer, profile_id, unanswered_id}` (the newest row's id is marked answered) → chip Beantwortet; Ignorieren hides for the session (a server ignore is an ask).
+- **Schnellantworten**: count from the active profile against the backend's `MAX_FAQ` (50), link to the profile section.

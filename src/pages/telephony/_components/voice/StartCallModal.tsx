@@ -1,32 +1,37 @@
 /**
  * The call composer — one large modal for everything outbound.
  *
- *   Appointment → REAL: POST /api/voice/schedule. The agent calls, offers
- *                 slots inside the timeframe, agrees one, and writes the
- *                 calendar event (Sprint 6 T6.1). This is the default.
- *   Free-form   → REAL: POST /api/voice/calls, the agent dials immediately
- *                 with nothing but the purpose as its briefing.
- *   Queue       → MOCKED (badged): no call-queue endpoint on the backend yet.
- *                 Fully clickable and persisted locally so the flow can be
- *                 demoed, and it says exactly why it is not hitting the server.
+ *   Call now     → POST /api/voice/calls. The agent dials immediately with
+ *                  nothing but the purpose as its briefing. The default.
+ *   Schedule a   → POST /api/voice/calls/scheduled. The server places it at
+ *   call           the moment you pick.
+ *   Schedule an  → POST /api/voice/schedule. The agent calls, offers slots
+ *   appointment    inside the timeframe, agrees one, and writes the calendar
+ *                  event (Sprint 6 T6.1).
+ *
+ * These used to be three equal pills across the header, which gave the two
+ * rarer ones the same weight as the one people came for. They are a split
+ * button now: the mode you want is already showing, the others are behind the
+ * chevron beside it, and `MODES` is the single table both halves read.
+ *
+ * There is no fourth mode. The call-queue one used to save a series of calls
+ * to localStorage because no endpoint places one — a composer that looked
+ * like it dialed and did not — so it is gone rather than badged.
  *
  * Contacts are a searchable picker column (real, /api/voice/contacts) —
- * scales past the handful that chips could hold. In queue mode the same
- * picker adds entries instead of filling the form. Opted-out contacts are
+ * scales past the handful that chips could hold. Opted-out contacts are
  * disabled: the backend would 403 them, and the UI should not pretend
  * otherwise (Sprint 8 T8.3).
  */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Ban,
   BookUser,
   CalendarCheck2,
-  CalendarClock,
-  ListOrdered,
+  ChevronDown,
+  Clock3,
   PhoneOutgoing,
-  Plus,
   Search,
-  Trash2,
   User,
   Video,
   X,
@@ -34,29 +39,112 @@ import {
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useContacts, useInitiateCall, useScheduleAppointment } from '@/lib/api/voice';
-import { MockedBadge } from '@/components/voice/MockedBadge';
+import { AutoTextarea } from '@/components/ui/textarea';
+import { useTranslation } from 'react-i18next';
+import type { PincerError } from '@/lib/pincerClient';
+import {
+  COUNTER_FROM_CHARS,
+  MAX_TASK_CHARS,
+  PASTE_FLASH_CHARS,
+  briefingError,
+  briefingExamples,
+  briefingSentNote,
+  charCount,
+  clampBriefing,
+  truncatedToast,
+  type BriefingField,
+} from '@/pages/telephony/_lib/briefing';
+import {
+  useContacts,
+  useInitiateCall,
+  useScheduleAppointment,
+  useScheduleCall,
+} from '@/lib/api/voice';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
-type Mode = 'appointment' | 'now' | 'queue';
+type Mode = 'appointment' | 'now' | 'later';
 
-interface QueueEntry {
-  number: string;
-  name: string;
-}
+/**
+ * The three things this modal can do, in menu order — dialling now first,
+ * because it is the default and the reason the modal is usually open.
+ *
+ * One table, two readers: the split button renders the active row, the menu
+ * renders all of them. They cannot drift out of step the way three hand-written
+ * pills could.
+ */
+const MODES: {
+  id: Mode;
+  label: string;
+  icon: typeof PhoneOutgoing;
+  /** Right-hand note in the menu — what the agent does with it. */
+  hint: string;
+  /** Sits beside the button, so the choice explains itself without opening it. */
+  blurb: string;
+}[] = [
+  {
+    id: 'now',
+    label: 'Call now',
+    icon: PhoneOutgoing,
+    hint: 'instant',
+    blurb: 'The agent dials straight away with your purpose as its briefing.',
+  },
+  {
+    id: 'later',
+    label: 'Schedule a call',
+    icon: Clock3,
+    hint: 'at a time',
+    blurb: 'The server places the call at the moment you pick.',
+  },
+  {
+    id: 'appointment',
+    label: 'Schedule appointment',
+    icon: CalendarCheck2,
+    hint: 'books a slot',
+    blurb: 'The agent calls, agrees a slot in your timeframe and writes the calendar event.',
+  },
+];
 
-type Timeframe = 'tomorrow' | 'next_week' | 'custom';
+/**
+ * When a scheduled call should go out. "In 20 minutes" is how people actually
+ * think about a call they want to make shortly — a date picker forces them to
+ * do clock arithmetic to say it, and at 23:50 to get the date right too.
+ */
+type Lead = 5 | 15 | 30 | 60 | 120 | 'custom';
+
+const LEAD_PRESETS: { value: Lead; label: string }[] = [
+  { value: 5, label: 'in 5 min' },
+  { value: 15, label: 'in 15 min' },
+  { value: 30, label: 'in 30 min' },
+  { value: 60, label: 'in 1 hour' },
+  { value: 120, label: 'in 2 hours' },
+  { value: 'custom', label: 'pick a time' },
+];
+
+type Timeframe = 'today' | 'tomorrow' | 'next_week' | 'custom';
 
 const DURATIONS = [15, 30, 45, 60] as const;
 
+/**
+ * The languages the agent can hold a call in.
+ *
+ * Mirrors the backend's `KNOWN_LANGUAGES` in `voice/language.py`, which is what
+ * `PINCER_VOICE_SUPPORTED_LANGUAGES` is filtered against (default `en,de,uk`)
+ * and what ConversationRelay has a locale and a voice for. Offering anything
+ * else here would just get resolved away to the default mid-call.
+ *
+ * The endonyms come from `voiceMeta`, the same table the call history and the
+ * transcript header read — so a language is spelled one way across the app.
+ * This list used to be hand-written next to those, which is how Ukrainian came
+ * to be missing from the picker while the rest of the app already knew it.
+ */
+const CALL_LANGUAGES = ['en', 'de', 'uk'] as const;
+
 /** `auto` lets the agent follow the callee — the language-consistency default. */
-const LANGUAGES = [
+const LANGUAGES: { value: string; label: string }[] = [
   { value: '', label: 'Auto — follow the callee' },
-  { value: 'en', label: 'English' },
-  { value: 'de', label: 'Deutsch' },
-] as const;
+  ...CALL_LANGUAGES.map((code) => ({ value: code, label: languageNative(code) })),
+];
 
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 
@@ -76,6 +164,10 @@ function resolveTimeframe(
   customStart: string,
   customEnd: string,
 ): { start: string; end: string } {
+  if (tf === 'today') {
+    const t = isoDate(new Date());
+    return { start: t, end: t };
+  }
   if (tf === 'tomorrow') {
     const t = isoDate(addDays(1));
     return { start: t, end: t };
@@ -102,35 +194,180 @@ function fmtRange(start: string, end: string): string {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+import PlatMenu from '@/pages/telephony/_components/shared/PlatMenu';
 import PlatSelect from '@/pages/telephony/_components/shared/PlatSelect';
-import {
-  addPlanned as storeAddPlanned,
-  loadPlanned,
-  removePlanned as storeRemovePlanned,
-  type PlannedCall,
-} from '@/pages/telephony/_lib/planned';
+import { languageNative } from '@/pages/telephony/_lib/voiceMeta';
+import { fromLocalInput, leadTimeLabel, stampIn } from '@/pages/telephony/_lib/planned';
 
 const labelCls = 'text-xs font-medium text-[var(--text-3)]';
 const inputCls =
   'rounded-[10px] border-[var(--line)] bg-[var(--sand)] text-[var(--ink)] placeholder:text-[var(--text-5)] focus-visible:ring-[rgba(20,22,26,0.25)]';
 
+/**
+ * The purpose field — the text that becomes the agent's briefing.
+ *
+ * Everything here exists because of one bug: a purpose that did not reach the
+ * call. So the field shows the paste landed (a flash on a big one), shows how
+ * much room is left before the server's ceiling, refuses to drop a tail
+ * silently, and says what is wrong in the server's own words before the
+ * request is even made.
+ */
+function PurposeField({
+  id,
+  label,
+  hint,
+  value,
+  onChange,
+  field,
+  serverError,
+  fieldRef,
+}: {
+  id: string;
+  label: string;
+  hint: string;
+  value: string;
+  onChange: (v: string) => void;
+  field: BriefingField;
+  /** A 422 the API answered with — shown verbatim, and it wins over ours. */
+  serverError?: string | null;
+  fieldRef?: React.RefObject<HTMLTextAreaElement>;
+}) {
+  const { toast } = useToast();
+  const { i18n } = useTranslation();
+  const lang = i18n.language;
+  const [touched, setTouched] = useState(false);
+  const [flash, setFlash] = useState(false);
+  const [maxPx, setMaxPx] = useState(() =>
+    typeof window === 'undefined' ? 420 : Math.round(window.innerHeight * 0.5),
+  );
+
+  useEffect(() => {
+    const onResize = () => setMaxPx(Math.round(window.innerHeight * 0.5));
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const localError = briefingError(value, field, lang);
+  const error = serverError || (touched && value.trim() ? localError : null);
+  const count = value.length;
+  const showCount = count >= COUNTER_FROM_CHARS;
+
+  const set = (next: string) => {
+    const { value: clamped, truncated } = clampBriefing(next);
+    if (truncated) {
+      toast({ title: truncatedToast(lang), variant: 'destructive' });
+    }
+    onChange(clamped);
+    return clamped.length - value.length;
+  };
+
+  return (
+    <div className="space-y-1.5">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <Label htmlFor={id} className={labelCls}>
+          {label}
+        </Label>
+        {showCount && (
+          <span
+            className={cn(
+              'font-mono text-[10.5px] tabular-nums',
+              count >= MAX_TASK_CHARS ? 'text-red-600' : 'text-[var(--text-5)]',
+            )}
+            aria-live="polite"
+          >
+            {charCount(count, lang)}
+          </span>
+        )}
+      </div>
+
+      <AutoTextarea
+        id={id}
+        ref={fieldRef}
+        value={value}
+        onChange={(e) => set(e.target.value)}
+        onBlur={() => setTouched(true)}
+        onPaste={(e) => {
+          const pasted = e.clipboardData?.getData('text') ?? '';
+          if (pasted.length < PASTE_FLASH_CHARS) return;
+          // Confirm the paste landed in full — the whole point of this field.
+          setFlash(true);
+          setTimeout(() => setFlash(false), 700);
+        }}
+        required
+        minRows={3}
+        maxRows={40}
+        maxHeightPx={maxPx}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : `${id}-hint`}
+        className={cn(
+          inputCls,
+          'transition-[border-color,box-shadow] duration-300',
+          flash && 'border-[var(--blue)] shadow-[0_0_0_3px_var(--blue-100)]',
+          error && 'border-red-300',
+        )}
+      />
+
+      {error ? (
+        <p id={`${id}-error`} role="alert" className="text-[11px] text-red-600">
+          {error}
+        </p>
+      ) : (
+        <p id={`${id}-hint`} className="text-[11px] text-[var(--text-5)]">
+          {hint}
+        </p>
+      )}
+
+      <BriefingHints lang={lang} />
+    </div>
+  );
+}
+
+/** Three examples: two goals, one non-goal. Illustration, never validation. */
+function BriefingHints({ lang }: { lang: string }) {
+  return (
+    <ul className="space-y-0.5 pt-0.5">
+      {briefingExamples(lang).map((ex) => (
+        <li key={ex.text} className="flex gap-1.5 text-[10.5px] leading-relaxed">
+          <span className={ex.good ? 'text-green-600' : 'text-[var(--text-5)]'} aria-hidden="true">
+            {ex.good ? '✓' : '✗'}
+          </span>
+          <span className={ex.good ? 'text-[var(--text-4)]' : 'text-[var(--text-5)]'}>
+            “{ex.text}”
+            {ex.why && <span className="italic"> ({ex.why})</span>}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function StartCallModal({
   onClose,
-  initialMode = 'appointment',
+  initialMode = 'now',
   initialNumber = '',
   initialName = '',
   initialPurpose = '',
+  initialLanguage = '',
+  thread,
 }: {
   onClose: () => void;
   initialMode?: Mode;
   initialNumber?: string;
   initialName?: string;
   initialPurpose?: string;
+  initialLanguage?: string;
+  /**
+   * S14 §3.4: the matter this call continues. Shown as a removable chip —
+   * removing it means "actually, this is a new matter", and the backend then
+   * decides where the call lands instead of being told.
+   */
+  thread?: { id: string; subject: string };
 }) {
   const { toast } = useToast();
   const { data: contacts } = useContacts();
   const initiate = useInitiateCall();
   const schedule = useScheduleAppointment();
+  const scheduleCall = useScheduleCall();
 
   const [mode, setMode] = useState<Mode>(initialMode);
   const [contactQuery, setContactQuery] = useState('');
@@ -146,7 +383,7 @@ export default function StartCallModal({
   const [customStart, setCustomStart] = useState(isoDate(addDays(1)));
   const [customEnd, setCustomEnd] = useState(isoDate(addDays(7)));
   const [duration, setDuration] = useState<number>(30);
-  const [language, setLanguage] = useState('');
+  const [language, setLanguage] = useState(initialLanguage);
   const [attendees, setAttendees] = useState<string[]>([]);
   const [attendeeDraft, setAttendeeDraft] = useState('');
   const [meetLink, setMeetLink] = useState(true);
@@ -160,11 +397,25 @@ export default function StartCallModal({
     setAttendeeDraft('');
   };
 
-  // Queue state
-  const [queue, setQueue] = useState<QueueEntry[]>([]);
+  // A 422 belongs on the field that caused it, not in a toast stack (§5).
+  const [purposeError, setPurposeError] = useState<string | null>(null);
+  const purposeRef = useRef<HTMLTextAreaElement>(null);
+  const { i18n } = useTranslation();
 
-  // Demo-persisted planned work
-  const [planned, setPlanned] = useState<PlannedCall[]>(loadPlanned);
+  const failValidation = (err: PincerError) => {
+    if (err.status !== 422) return false;
+    setPurposeError(err.message);
+    purposeRef.current?.focus();
+    return true;
+  };
+
+  // Attach to the thread it was opened from, until the owner says otherwise.
+  const [attachThread, setAttachThread] = useState(true);
+  const threadId = thread && attachThread ? thread.id : undefined;
+
+  // Scheduled-call state (demo store — nothing dials on its own)
+  const [lead, setLead] = useState<Lead>(15);
+  const [customAt, setCustomAt] = useState('');
 
   const filteredContacts = useMemo(() => {
     const q = contactQuery.trim().toLowerCase();
@@ -174,8 +425,6 @@ export default function StartCallModal({
       (c) => c.name.toLowerCase().includes(q) || c.phone_number.includes(q),
     );
   }, [contacts, contactQuery]);
-
-  const inQueue = (num: string) => queue.some((e) => e.number === num);
 
   /**
    * A number typed by hand can still be one the picker would have refused.
@@ -190,27 +439,9 @@ export default function StartCallModal({
     // Belt and braces: the button is disabled, but a keyboard path or a stale
     // render must not be able to load an opted-out number into the form.
     if (optedOut) return;
-    if (mode === 'queue') {
-      setQueue((prev) =>
-        inQueue(phone)
-          ? prev.filter((e) => e.number !== phone)
-          : [...prev, { number: phone, name: contactName }],
-      );
-    } else {
-      setNumber(phone);
-      setName(contactName);
-    }
+    setNumber(phone);
+    setName(contactName);
   };
-
-  const addManualToQueue = () => {
-    if (!number.trim() || inQueue(number.trim())) return;
-    setQueue((prev) => [...prev, { number: number.trim(), name: name.trim() }]);
-    setNumber('');
-    setName('');
-  };
-
-  const addPlanned = (entry: Omit<PlannedCall, 'id' | 'created'>) => setPlanned(storeAddPlanned(entry));
-  const removePlanned = (id: string) => setPlanned(storeRemovePlanned(id));
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -219,28 +450,34 @@ export default function StartCallModal({
       schedule.mutate(
         {
           target_number: number.trim(),
-          ...(name.trim() ? { target_name: name.trim() } : {}),
+          // `contact_name` is required (minLength 1); the number stands in when
+          // the caller did not name anyone.
+          contact_name: name.trim() || number.trim(),
           topic: topic.trim(),
-          timeframe_start: range.start,
-          timeframe_end: range.end,
+          // The server takes one free-text window, not a start/end pair.
+          timeframe: `${range.start} – ${range.end}`,
           duration_minutes: duration,
           ...(language ? { language } : {}),
-          ...(attendees.length ? { attendees } : {}),
-          create_meet_link: meetLink,
+          ...(attendees.length ? { attendees: attendees.join(', ') } : {}),
+          ...(meetLink ? { location_or_meet: 'meet' } : {}),
+          ...(threadId ? { thread_id: threadId } : {}),
         },
         {
           onSuccess: (r) => {
             toast({
               title: 'Appointment call started',
-              description: `${r.call_sid} — it will appear under Active calls shortly.`,
+              description: `${r.call_sid} — ${briefingSentNote(topic.trim().length, i18n.language)}`,
             });
             onClose();
           },
           // The backend's own words: "no free slots", daily limit, quiet hours,
           // opt-out and validation are all different problems, and paraphrasing
-          // them here would hide which guardrail actually fired.
-          onError: (err) =>
-            toast({ title: 'Could not schedule', description: err.message, variant: 'destructive' }),
+          // them here would hide which guardrail actually fired. A 422 is about
+          // the text in the field, so it goes to the field instead (§5).
+          onError: (err) => {
+            if (failValidation(err)) return;
+            toast({ title: 'Could not schedule', description: err.message, variant: 'destructive' });
+          },
         },
       );
       return;
@@ -248,52 +485,87 @@ export default function StartCallModal({
 
     if (mode === 'now') {
       initiate.mutate(
-        { target_number: number, purpose, ...(name.trim() ? { target_name: name.trim() } : {}) },
+        {
+          target_number: number,
+          purpose,
+          ...(name.trim() ? { target_name: name.trim() } : {}),
+          ...(threadId ? { thread_id: threadId } : {}),
+        },
         {
           onSuccess: (r) => {
-            toast({ title: 'Dialing…', description: r.call_sid });
+            // The count is the confirmation that the text went with the call.
+            toast({
+              title: 'Dialing…',
+              description: `${briefingSentNote(purpose.trim().length, i18n.language)}${r.call_sid ? ` · ${r.call_sid}` : ''}`,
+            });
             onClose();
           },
-          onError: (err) =>
-            toast({ title: 'Call failed', description: err.message, variant: 'destructive' }),
+          onError: (err) => {
+            if (failValidation(err)) return;
+            toast({ title: 'Call failed', description: err.message, variant: 'destructive' });
+          },
         },
       );
       return;
     }
 
-    // queue
-    addPlanned({ kind: 'queue', numbers: queue, purpose });
-    toast({
-      title: `Queue of ${queue.length} saved (demo)`,
-      description: 'Saved locally — the backend has no call-queue endpoint yet.',
-    });
-    setQueue([]);
-    setPurpose('');
+    if (mode === 'later') {
+      scheduleCall.mutate(
+        {
+          target_number: number.trim(),
+          purpose,
+          ...(lead === 'custom'
+            ? { at: fromLocalInput(customAt) }
+            : { run_in_minutes: lead }),
+          ...(name.trim() ? { target_name: name.trim() } : {}),
+          ...(language ? { language } : {}),
+          ...(threadId ? { thread_id: threadId } : {}),
+        },
+        {
+          onSuccess: (call) => {
+            toast({
+              title: 'Call scheduled',
+              description: [call.target_number, call.next_run_at ? new Date(call.next_run_at).toLocaleString() : null, briefingSentNote(purpose.trim().length, i18n.language)].filter(Boolean).join(' · '),
+            });
+            onClose();
+          },
+          // 422 covers both a purpose the agent could not open with and a
+          // moment that has passed; the first belongs on the field.
+          onError: (err) => {
+            if (failValidation(err)) return;
+            toast({ title: 'Not scheduled', description: err.message, variant: 'destructive' });
+          },
+        },
+      );
+    }
   };
 
+  // The briefing gate is the server's, mirrored: a purpose the API would
+  // refuse must not be dialable from here (§1.1).
+  const topicOk = !briefingError(topic, 'topic', i18n.language);
+  const purposeOk = !briefingError(purpose, 'task', i18n.language);
+  const scheduledAt = lead === 'custom' ? fromLocalInput(customAt) : stampIn(lead);
   const canSubmit =
     mode === 'appointment'
-      ? number.trim() !== '' && topic.trim() !== '' && range.start !== '' && range.end !== ''
+      ? number.trim() !== '' && topicOk && range.start !== '' && range.end !== ''
       : mode === 'now'
-        ? number.trim() !== '' && purpose.trim() !== ''
-        : queue.length > 0 && purpose.trim() !== '';
+        ? number.trim() !== '' && purposeOk
+        : number.trim() !== '' && purposeOk && (lead !== 'custom' || customAt !== '');
 
-  const pending = initiate.isPending || schedule.isPending;
+  const pending = initiate.isPending || schedule.isPending || scheduleCall.isPending;
 
-  const tabs: { id: Mode; label: string; icon: typeof PhoneOutgoing; mocked?: boolean }[] = [
-    { id: 'appointment', label: 'Schedule appointment', icon: CalendarCheck2 },
-    { id: 'now', label: 'Free-form call', icon: PhoneOutgoing },
-    { id: 'queue', label: 'Queue', icon: ListOrdered, mocked: true },
-  ];
+  // One split control, not three equal pills: dialling now is what the button
+  // says, and the two scheduled variants sit behind the chevron next to it.
+  // `MODES` stays the single source for the label and icon of each — the
+  // button renders the active one, the menu renders all three.
+  const active = MODES.find((m) => m.id === mode) ?? MODES[0];
 
   const submitLabel =
     mode === 'appointment'
       ? schedule.isPending ? 'Starting…' : 'Call & book'
       : mode === 'now'
         ? initiate.isPending ? 'Dialing…' : 'Call'
-        : `Start queue (${queue.length})`;
-
-  const myPlanned = planned.filter((p) => p.kind === 'queue');
+        : scheduleCall.isPending ? 'Scheduling…' : 'Schedule call';
 
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
@@ -306,34 +578,42 @@ export default function StartCallModal({
             </div>
             Start calls
           </DialogTitle>
-          <div className="mt-3 flex items-center gap-1">
-            {tabs.map(({ id, label, icon: Icon, mocked }) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => setMode(id)}
-                className={cn(
-                  'flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors',
-                  mode === id
-                    ? 'bg-[var(--ink)] text-white'
-                    : 'text-[var(--text-4)] hover:bg-[var(--sand)] hover:text-[var(--ink)]',
-                )}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                {label}
-                {mocked && <MockedBadge />}
-              </button>
-            ))}
+          <div className="mt-3 flex items-center gap-2">
+            {/* No `overflow-hidden` here, however tempting it is for the rounded
+                ends: the menu panel is an absolutely-positioned child of the
+                PlatMenu inside this wrapper, so clipping the wrapper clips the
+                open menu down to the height of the button. The two ends are
+                rounded individually instead. */}
+            <div className="inline-flex items-stretch rounded-full bg-[var(--ink)] text-white">
+              <span className="flex h-8 items-center gap-1.5 rounded-l-full pl-3.5 pr-2.5 text-xs font-medium" data-testid="call-mode">
+                <active.icon className="h-3.5 w-3.5" aria-hidden="true" />
+                {active.label}
+              </span>
+              <span className="my-1.5 w-px bg-white/25" aria-hidden="true" />
+              <PlatMenu
+                ariaLabel="Change call type"
+                align="start"
+                panelClassName="min-w-[304px]"
+                triggerClassName="flex h-8 items-center rounded-r-full px-2 text-white transition-colors hover:bg-white/15"
+                trigger={<ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />}
+                sections={[
+                  {
+                    items: MODES.map((m) => ({
+                      key: m.id,
+                      label: m.label,
+                      icon: m.icon,
+                      hint: m.hint,
+                      selected: m.id === mode,
+                      onSelect: () => setMode(m.id),
+                    })),
+                  },
+                ]}
+              />
+            </div>
+            <p className="text-xs text-[var(--text-4)]">{active.blurb}</p>
           </div>
         </div>
 
-        {/* Mocked-mode notice */}
-        {mode === 'queue' && (
-          <div className="border-b border-amber-200 bg-amber-50 px-6 py-2 text-[11px] text-amber-800">
-            The backend has no call-queue endpoint yet — queues are saved locally so the flow is
-            testable, and nothing will actually dial.
-          </div>
-        )}
 
         <div className="flex min-h-0 flex-1">
           {/* ── Contact picker column ── */}
@@ -342,7 +622,6 @@ export default function StartCallModal({
               <p className="plat-eyebrow mb-2 flex items-center gap-1.5 px-1">
                 <BookUser className="h-3.5 w-3.5" />
                 Contacts
-                {mode === 'queue' && <span className="normal-case text-[var(--text-5)]">— click to add</span>}
               </p>
               <div className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-5)]" />
@@ -361,7 +640,7 @@ export default function StartCallModal({
                 </p>
               ) : (
                 filteredContacts.map((c) => {
-                  const active = mode === 'queue' ? inQueue(c.phone_number) : number === c.phone_number;
+                  const active = number === c.phone_number;
                   const optedOut = c.opted_out === true;
                   return (
                     <button
@@ -402,9 +681,6 @@ export default function StartCallModal({
                           opted out
                         </span>
                       )}
-                      {mode === 'queue' && active && !optedOut && (
-                        <span className="ml-auto text-[10px] font-semibold text-[var(--text-4)]">#{queue.findIndex(q => q.number === c.phone_number) + 1}</span>
-                      )}
                     </button>
                   );
                 })
@@ -415,92 +691,69 @@ export default function StartCallModal({
           {/* ── Form column ── */}
           <form onSubmit={submit} className="flex min-h-0 flex-1 flex-col">
             <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5">
-              {mode === 'queue' ? (
-                <>
-                  {/* Queue list */}
-                  <div>
-                    <p className="plat-eyebrow mb-2">
-                      Call queue — dialed one after another
-                    </p>
-                    {queue.length === 0 ? (
-                      <p className="rounded-[10px] border border-dashed border-[var(--line)] px-4 py-6 text-center text-xs text-[var(--text-5)]">
-                        Pick contacts on the left, or add a number below.
-                      </p>
-                    ) : (
-                      <div className="space-y-1.5">
-                        {queue.map((entry, i) => (
-                          <div key={entry.number} className="flex items-center gap-3 rounded-[10px] border border-[var(--line-soft)] bg-[rgba(20,22,26,0.02)] px-3 py-2">
-                            <span className="w-5 text-center font-mono text-xs text-[var(--text-5)]">{i + 1}</span>
-                            <span className="min-w-0 flex-1 truncate text-sm text-[var(--ink)]">
-                              {entry.name || 'Unknown'}
-                              <span className="ml-2 font-mono text-xs text-[var(--text-5)]">{entry.number}</span>
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => setQueue((prev) => prev.filter((q) => q.number !== entry.number))}
-                              className="rounded p-1 text-[var(--text-5)] hover:bg-[var(--sand-deep)] hover:text-[var(--text-3)]"
-                              aria-label={`Remove ${entry.number} from queue`}
-                            >
-                              <X className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="call-number" className={labelCls}>Number *</Label>
+                  <Input
+                    id="call-number"
+                    placeholder="+49…"
+                    value={number}
+                    onChange={(e) => setNumber(e.target.value)}
+                    required
+                    className={inputCls}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="call-name" className={labelCls}>Name (optional)</Label>
+                  <Input
+                    id="call-name"
+                    placeholder="Who is being called"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className={inputCls}
+                  />
+                </div>
+              </div>
 
-                  {/* Manual add */}
-                  <div className="grid grid-cols-[1fr_1fr_auto] items-end gap-2">
-                    <div className="space-y-1.5">
-                      <Label className={labelCls}>Number</Label>
-                      <Input placeholder="+49…" value={number} onChange={(e) => setNumber(e.target.value)} className={inputCls} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className={labelCls}>Name (optional)</Label>
-                      <Input placeholder="Who is being called" value={name} onChange={(e) => setName(e.target.value)} className={inputCls} />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={addManualToQueue}
-                      disabled={!number.trim() || inQueue(number.trim())}
-                      className={cn(
-                        'flex h-10 items-center gap-1 rounded-[10px] px-3 text-xs font-medium',
-                        number.trim() && !inQueue(number.trim())
-                          ? 'bg-[var(--sand)] text-[var(--text-2)] hover:bg-[var(--sand-deep)]'
-                          : 'cursor-not-allowed bg-[var(--sand)] text-[var(--text-5)]',
-                      )}
-                    >
-                      <Plus className="h-3.5 w-3.5" /> Add
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="call-number" className={labelCls}>Number *</Label>
-                    <Input
-                      id="call-number"
-                      placeholder="+49…"
-                      value={number}
-                      onChange={(e) => setNumber(e.target.value)}
-                      required
-                      className={inputCls}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="call-name" className={labelCls}>Name (optional)</Label>
-                    <Input
-                      id="call-name"
-                      placeholder="Who is being called"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className={inputCls}
-                    />
-                  </div>
+              {/* Which matter this call belongs to (S14 §3.4). Removable:
+                  "actually, new matter" is a real case and the owner owns it. */}
+              {thread && (
+                <div className="flex flex-wrap items-center gap-2 rounded-[10px] border border-[var(--line)] bg-[var(--sand)] px-3 py-2">
+                  {attachThread ? (
+                    <>
+                      <span className="flex min-w-0 items-center gap-1.5 text-[11px] text-[var(--text-3)]">
+                        <span aria-hidden="true">🧵</span>
+                        in thread:
+                        <span className="truncate font-medium text-[var(--ink)]">{thread.subject}</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setAttachThread(false)}
+                        className="ml-auto rounded-full p-1 text-[var(--text-5)] transition-colors hover:bg-white hover:text-[var(--ink)]"
+                        aria-label={`Do not attach this call to ${thread.subject}`}
+                        title="Start a new matter instead"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-[11px] text-[var(--text-4)]">
+                        This call will start its own thread.
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setAttachThread(true)}
+                        className="ml-auto text-[11px] font-medium text-[var(--text-3)] underline decoration-dotted hover:text-[var(--ink)]"
+                      >
+                        Put it back in “{thread.subject}”
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
 
-              {typedOptOut && mode !== 'queue' && (
+              {typedOptOut && (
                 <div className="flex items-start gap-2 rounded-[10px] border border-red-200 bg-red-50 px-3 py-2.5">
                   <Ban className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-500" />
                   <p className="text-[11px] leading-relaxed text-red-700">
@@ -511,37 +764,74 @@ export default function StartCallModal({
               )}
 
               {mode === 'appointment' ? (
-                <div className="space-y-1.5">
-                  <Label htmlFor="appt-topic" className={labelCls}>Topic *</Label>
-                  <Textarea
-                    id="appt-topic"
-                    placeholder="What is the meeting about? e.g. 'Kick-off for the warehouse rollout — 30 minutes with Anna and Tom.'"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    required
-                    rows={3}
-                    className={inputCls}
-                  />
-                  <p className="text-[11px] text-[var(--text-5)]">
-                    The agent explains this on the call before offering slots.
-                  </p>
-                </div>
+                <PurposeField
+                  id="appt-topic"
+                  label="Topic *"
+                  hint="The agent explains this on the call before offering slots. The field grows as you type — drag its corner for more room."
+                  value={topic}
+                  onChange={(v) => {
+                    setPurposeError(null);
+                    setTopic(v);
+                  }}
+                  field="topic"
+                  serverError={purposeError}
+                  fieldRef={purposeRef}
+                />
               ) : (
+                <PurposeField
+                  id="call-purpose"
+                  label="Purpose *"
+                  hint="This text is the agent's briefing, word for word — line breaks included."
+                  value={purpose}
+                  onChange={(v) => {
+                    setPurposeError(null);
+                    setPurpose(v);
+                  }}
+                  field="task"
+                  serverError={purposeError}
+                  fieldRef={purposeRef}
+                />
+              )}
+
+              {/* When the call itself goes out. Minutes first: "in 20 minutes"
+                  is how someone actually thinks about a call they want to make
+                  shortly, and a date picker makes them do the arithmetic. */}
+              {mode === 'later' && (
                 <div className="space-y-1.5">
-                  <Label htmlFor="call-purpose" className={labelCls}>
-                    {mode === 'queue' ? 'Purpose — applies to every call in the queue *' : 'Purpose *'}
-                  </Label>
-                  <Textarea
-                    id="call-purpose"
-                    placeholder="What should the agent do? e.g. 'Confirm Thursday's appointment, move it if 14:00 no longer works.'"
-                    value={purpose}
-                    onChange={(e) => setPurpose(e.target.value)}
-                    required
-                    rows={3}
-                    className={inputCls}
-                  />
+                  <Label className={labelCls}>When *</Label>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {LEAD_PRESETS.map((opt) => (
+                      <button
+                        key={String(opt.value)}
+                        type="button"
+                        onClick={() => setLead(opt.value)}
+                        aria-pressed={lead === opt.value}
+                        className={cn(
+                          'flex h-10 items-center gap-1 rounded-[10px] px-3 text-xs font-medium transition-colors',
+                          lead === opt.value
+                            ? 'bg-[var(--ink)] text-white'
+                            : 'border border-[var(--line)] text-[var(--text-3)] hover:bg-[var(--sand)]',
+                        )}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {lead === 'custom' && (
+                    <Input
+                      type="datetime-local"
+                      value={customAt}
+                      onChange={(e) => setCustomAt(e.target.value)}
+                      aria-label="Date and time for the call"
+                      className={cn(inputCls, 'mt-1 w-64')}
+                    />
+                  )}
+
                   <p className="text-[11px] text-[var(--text-5)]">
-                    Be specific — this is the agent's entire briefing for the call.
+                    {lead === 'custom' && !customAt
+                      ? 'Pick the moment the call should go out.'
+                      : `The agent dials at ${scheduledAt}${lead === 'custom' ? '' : ` · ${leadTimeLabel(scheduledAt)}`}. Quiet hours and the do-not-call list still apply then.`}
                   </p>
                 </div>
               )}
@@ -553,6 +843,7 @@ export default function StartCallModal({
                     <Label className={labelCls}>Timeframe *</Label>
                     <div className="flex flex-wrap items-center gap-1.5">
                       {([
+                        { id: 'today', label: 'Today' },
                         { id: 'tomorrow', label: 'Tomorrow' },
                         { id: 'next_week', label: 'Next week' },
                         { id: 'custom', label: 'Custom range' },
@@ -724,35 +1015,6 @@ export default function StartCallModal({
                 </div>
               )}
 
-              {/* Demo-persisted planned items for the active mocked mode */}
-              {mode === 'queue' && myPlanned.length > 0 && (
-                <div className="border-t border-[var(--line-soft)] pt-4">
-                  <p className="plat-eyebrow mb-2 flex items-center gap-2">
-                    Saved queues <MockedBadge />
-                  </p>
-                  <div className="space-y-1.5">
-                    {myPlanned.map((item) => (
-                      <div key={item.id} className="flex items-center gap-3 rounded-[10px] border border-dashed border-amber-300/70 bg-amber-50/40 px-3 py-2 text-xs">
-                        <CalendarClock className="h-3.5 w-3.5 shrink-0 text-amber-500" />
-                        <span className="min-w-0 flex-1 truncate text-[var(--text-2)]">
-                          {item.kind === 'scheduled'
-                            ? `${item.numbers[0]?.name || item.numbers[0]?.number} · ${item.at}`
-                            : `${item.numbers.length} calls · ${item.numbers.map((entry) => entry.name || entry.number).join(', ')}`}
-                          <span className="ml-2 text-[var(--text-5)]">— {item.purpose}</span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => removePlanned(item.id)}
-                          className="rounded p-1 text-[var(--text-5)] hover:bg-amber-100 hover:text-[var(--text-3)]"
-                          aria-label="Delete planned item"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Footer */}

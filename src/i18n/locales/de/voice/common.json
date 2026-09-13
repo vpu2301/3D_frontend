@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "3days.ai",
+    "section": "Telefonie"
+  },
+  "status": {
+    "connected": "Verbunden",
+    "disconnected": "Nicht verbunden",
+    "loading": "Wird geladen …"
+  },
+  "auth": {
+    "title": "Nicht mit Ihrem Assistenten verbunden",
+    "body": "Melden Sie sich an, um Anrufe, Einrichtung und Berichte zu sehen. Sie kommen danach genau hierher zurück.",
+    "expired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "action": "Zur Anmeldung",
+    "retry": "Erneut versuchen"
+  },
+  "errors": {
+    "network": "Der Server ist gerade nicht erreichbar.",
+    "retry": "Erneut laden",
+    "boundary": "Diese Ansicht konnte nicht geladen werden.",
+    "boundaryHint": "Der Fehler wurde festgehalten. Sie können die Ansicht neu laden, alle anderen Bereiche funktionieren weiter."
+  },
+  "table": {
+    "empty": "Keine Einträge",
+    "sortAsc": "Aufsteigend sortiert",
+    "sortDesc": "Absteigend sortiert",
+    "sortBy": "Nach {{column}} sortieren"
+  },
+  "language": {
+    "label": "Sprache",
+    "de": "Deutsch",
+    "en": "Englisch"
+  },
+  "masked": {
+    "reveal": "Vollständige Nummer anzeigen",
+    "hide": "Nummer wieder verbergen",
+    "copy": "Nummer kopieren",
+    "copied": "Kopiert"
+  }
+}

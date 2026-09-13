@@ -6,9 +6,14 @@
  * mock era's IndexedDB cleanup moved to `@/lib/legacyNotesIdb` so that the notes
  * module carries no local-persistence dependency at all (FE-1, gate F13).
  *
- * What survives here is one import path: `newId` and `docsStorage` are used
- * across the notes app and are re-exported from a single place.
+ * What survives here is `newId`, the client-side id used for optimistic rows
+ * and chat turns before the server hands back a real one. It used to be
+ * re-exported from the Docs app; that app is gone, so it lives here now.
  */
 
-export { newId, docsStorage } from '@/pages/docs/_lib/storage';
+/** A sortable, collision-resistant local id — never sent as a server key. */
+export function newId(prefix = 'id'): string {
+  return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
 export { clearLegacyNotesStores } from '@/lib/legacyNotesIdb';

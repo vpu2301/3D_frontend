@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "3days.ai",
+    "section": "Telephony"
+  },
+  "status": {
+    "connected": "Connected",
+    "disconnected": "Not connected",
+    "loading": "Loading …"
+  },
+  "auth": {
+    "title": "Not connected to your assistant",
+    "body": "Sign in to see calls, setup and reports. You will be brought straight back here.",
+    "expired": "Your session has expired. Please sign in again.",
+    "action": "Go to sign-in",
+    "retry": "Try again"
+  },
+  "errors": {
+    "network": "The server cannot be reached right now.",
+    "retry": "Reload",
+    "boundary": "This view could not be loaded.",
+    "boundaryHint": "The error has been recorded. You can reload this view; every other area keeps working."
+  },
+  "table": {
+    "empty": "No entries",
+    "sortAsc": "Sorted ascending",
+    "sortDesc": "Sorted descending",
+    "sortBy": "Sort by {{column}}"
+  },
+  "language": {
+    "label": "Language",
+    "de": "German",
+    "en": "English"
+  },
+  "masked": {
+    "reveal": "Show full number",
+    "hide": "Hide number again",
+    "copy": "Copy number",
+    "copied": "Copied"
+  }
+}

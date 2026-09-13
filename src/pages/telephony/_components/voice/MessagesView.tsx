@@ -24,6 +24,9 @@ import {
 } from '@/lib/api/voice';
 import { CHIP_TONE_CLASS, intentMeta } from '@/pages/telephony/_lib/voiceMeta';
 import StartCallModal from '@/pages/telephony/_components/voice/StartCallModal';
+import { ThreadChip } from '@/pages/telephony/_components/threads/ThreadBits';
+import { callBackPurpose } from '@/pages/telephony/_lib/briefing';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 function fmtWhen(iso: string): string {
@@ -103,6 +106,9 @@ function MessageRow({
           {message.caller_number || '—'}
           {message.number_unverified && <UnverifiedDot what="Number" />}
         </span>
+        {/* Which matter this message came out of (§4.3). Inside a button, so
+            it is a label here rather than a nested link. */}
+        <ThreadChip as="text" threadId={message.thread_id} subject={message.thread_subject} />
       </div>
       <p className={cn('line-clamp-2 text-xs', unread ? 'text-[var(--text-2)]' : 'text-[var(--text-4)]')}>
         {message.matter}
@@ -216,6 +222,7 @@ function MessageDrawer({
 }
 
 export default function MessagesView() {
+  const { i18n } = useTranslation();
   const connected = useVoiceConnected();
   const [onlyUnread, setOnlyUnread] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -327,7 +334,19 @@ export default function MessagesView() {
           initialMode="now"
           initialNumber={callBack.caller_number ?? ''}
           initialName={callBack.caller_name ?? ''}
-          initialPurpose={`Calling back about: ${callBack.matter}`}
+          initialPurpose={callBackPurpose(
+            callBack.caller_name ?? '',
+            callBack.matter,
+            i18n.language,
+          )}
+          initialLanguage={callBack.call?.language ?? ''}
+          // The call-back belongs to the matter the message came from (§4.3):
+          // the loop the inbound matcher closes from the other side.
+          thread={
+            callBack.thread_id && callBack.thread_subject
+              ? { id: callBack.thread_id, subject: callBack.thread_subject }
+              : undefined
+          }
         />
       )}
     </div>

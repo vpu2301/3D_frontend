@@ -1,188 +1,109 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
+import '@/i18n/voice';
 import TelephonyLayout from '@/pages/telephony/_components/shared/TelephonyLayout';
+import ViewSkeleton from '@/pages/telephony/_components/shared/ViewSkeleton';
+import VoiceAuthGuard from '@/pages/telephony/_components/shared/VoiceAuthGuard';
+import ViewErrorBoundary from '@/pages/telephony/_components/shared/ViewErrorBoundary';
 import TelephonyMiniRail from '@/pages/telephony/_components/sidebar/TelephonyMiniRail';
-import VoicePage from '@/pages/telephony/_components/voice/VoicePage';
-import LiveView from '@/pages/telephony/_components/voice/LiveView';
-import PendingApprovalView from '@/pages/telephony/_components/voice/PendingApprovalView';
-import PlannedCallsView from '@/pages/telephony/_components/voice/PlannedCallsView';
-import MessagesView from '@/pages/telephony/_components/voice/MessagesView';
-import PolicyPanel from '@/pages/telephony/_components/voice/PolicyPanel';
-import CallDetailView from '@/pages/telephony/_components/calls/CallDetailView';
-import NumbersView from '@/pages/telephony/_components/numbers/NumbersView';
-import UsageView from '@/pages/telephony/_components/usage/UsageView';
-import PoliciesView from '@/pages/telephony/_components/policies/PoliciesView';
-import AuditView from '@/pages/telephony/_components/audit/AuditView';
-import { MockedRouteBanner } from '@/components/voice/MockedBadge';
+import MobileTabBar from '@/pages/telephony/_components/sidebar/MobileTabBar';
+import { useSession } from '@/stores/session';
+import StatusBanner from '@/pages/telephony/_components/shared/StatusBanner';
+import { ROUTES, } from '@/pages/telephony/_lib/routes';
 
 import { queryClient } from '@/lib/queryClient';
 
-function SettingsView() {
-  return (
-    <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="border-b border-[var(--line-soft)] px-6 pt-5 pb-4">
-        <p className="plat-crumb" style={{ color: 'var(--text-4)' }}>3days.telephony</p>
-        <h1 className="mt-1 text-[26px] text-[var(--ink)]">Settings</h1>
-        <p className="mt-1 text-xs text-[var(--text-4)]">Twilio credentials · webhooks · voice defaults</p>
-      </div>
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
-        {/* Tool policy — real, read-only, the S11 mirror of `pincer doctor` */}
-        <section>
-          <h2 className="mb-3 text-sm font-semibold text-[var(--ink)]">
-            In-call tool policy
-          </h2>
-          <PolicyPanel />
-        </section>
+// FE10 §1 performance: every view is its own chunk; the shell stays small.
+//
+// The list is short by design: a view is mounted here only when the backend
+// actually serves what it reads. Screens whose endpoints do not exist on the
+// server (Einrichtung, Wissen, Regeln, Berichte, Kampagnen, Nachfass,
+// Integrationen, Datenschutz, Vertrauen, Werkzeuge, Team, Vorlagen, Widget,
+// Rufnummern, Nutzung, Protokoll, Aufmerksamkeit) were removed rather than
+// left to render demo data or a permanent error state.
+const OverviewView = lazy(() => import('@/pages/telephony/_components/overview/OverviewView'));
+const CallsListView = lazy(() => import('@/pages/telephony/_components/owner-calls/CallsListView'));
+const CallDetailPage = lazy(() => import('@/pages/telephony/_components/owner-calls/CallDetailPage'));
+const VoicePage = lazy(() => import('@/pages/telephony/_components/voice/VoicePage'));
+const LiveView = lazy(() => import('@/pages/telephony/_components/voice/LiveView'));
+const PendingApprovalView = lazy(() => import('@/pages/telephony/_components/voice/PendingApprovalView'));
+const PlannedCallsView = lazy(() => import('@/pages/telephony/_components/voice/PlannedCallsView'));
+const MessagesView = lazy(() => import('@/pages/telephony/_components/voice/MessagesView'));
+const ThreadDetailView = lazy(() => import('@/pages/telephony/_components/threads/ThreadDetailView'));
+const PoliciesView = lazy(() => import('@/pages/telephony/_components/policies/PoliciesView'));
+const VoiceSettingsView = lazy(() => import('@/pages/telephony/_components/settings/VoiceSettingsView'));
+const ChatPage = lazy(() => import('@/pages/Chat'));
 
-        {/* Twilio connection */}
-        <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-5">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm">Twilio connection</h2>
-            <span className="flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-medium text-green-700">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" /> Connected
-            </span>
-          </div>
-          <div className="space-y-3">
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-3)]">Account SID</label>
-              <div className="flex items-center gap-2 rounded-[10px] border border-[var(--line)] bg-[var(--sand)] px-3 py-2">
-                <span className="flex-1 font-mono text-sm text-[var(--text-2)]">AC••••••••••••••••••••••••••••••••</span>
-                <button type="button" className="text-xs text-[var(--text-5)] hover:text-[var(--text-3)]">Edit</button>
-              </div>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-3)]">Auth Token</label>
-              <div className="flex items-center gap-2 rounded-[10px] border border-[var(--line)] bg-[var(--sand)] px-3 py-2">
-                <span className="flex-1 font-mono text-sm text-[var(--text-2)]">••••••••••••••••••••••••••••••••</span>
-                <button type="button" className="text-xs text-[var(--text-5)] hover:text-[var(--text-3)]">Edit</button>
-              </div>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="mt-4 rounded-full border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--text-3)] hover:bg-[var(--sand)]"
-          >
-            Test connection
-          </button>
-        </div>
-
-        {/* Webhook URLs */}
-        <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-5">
-          <h2 className="mb-4 text-sm">Webhook URLs</h2>
-          <p className="mb-3 text-xs text-[var(--text-5)]">Configure these in your Twilio console</p>
-          <div className="space-y-2">
-            {[
-              { label: 'Voice webhook', url: 'https://api.pincer.sh/webhooks/twilio/voice' },
-              { label: 'Status callback', url: 'https://api.pincer.sh/webhooks/twilio/status' },
-              { label: 'ConversationRelay', url: 'https://api.pincer.sh/webhooks/relay' },
-            ].map((w) => (
-              <div key={w.label}>
-                <p className="mb-1 text-xs font-medium text-[var(--text-3)]">{w.label}</p>
-                <div className="flex items-center gap-2 rounded-[10px] border border-[var(--line)] bg-[var(--sand)] px-3 py-2">
-                  <span className="flex-1 font-mono text-xs text-[var(--text-2)]">{w.url}</span>
-                  <button type="button" className="text-xs text-[var(--text-5)] hover:text-[var(--text-3)]">Copy</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Sub-processor disclosure */}
-        <div className="rounded-[14px] border border-[var(--line)] bg-[var(--sand)] p-4 text-xs text-[var(--text-4)]">
-          <p className="font-medium text-[var(--text-2)] mb-1">Sub-processor disclosure</p>
-          <p>Twilio Inc. acts as a sub-processor for voice communications under our Data Processing Agreement. By using this feature you confirm that Twilio's DPA is in place for your organization.</p>
-          <button type="button" className="mt-2 font-semibold text-[var(--ink)] hover:underline">Download DPA →</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Wraps a view that still renders demo data with the loud amber banner the
- * de-mock contract requires: visible, and honest about why.
- */
-function MockedRoute({ reason, children }: { reason: string; children: React.ReactNode }) {
-  return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-      <MockedRouteBanner reason={reason} />
-      <div className="flex min-h-0 flex-1 overflow-hidden">{children}</div>
-    </div>
-  );
-}
+// FE1 PR-4: the owner web chat, mounted as-is (it brings the platform shell).
 
 export default function TelephonyHome() {
+  const tenantKey = useSession((s) => s.tenantId ?? 'single');
   const location = useLocation();
-  const params = useParams<{ callSid?: string }>();
+  const params = useParams<{ callSid?: string; threadId?: string }>();
   const path = location.pathname;
 
+
+  // Assistent: the existing web chat page renders its own platform shell, so
+  // it is mounted outside the telephony layout rather than nested inside it.
+  if (path === ROUTES.ASSISTANT) {
+    return (
+      <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400" />}>
+        <ChatPage />
+      </Suspense>
+    );
+  }
+  if (path === ROUTES.OVERVIEW_ALIAS) return <Navigate to={ROUTES.HOME} replace />;
+
   const renderContent = () => {
-    // Deep link into the OLD mocked call explorer (mock-data call ids).
-    if (params.callSid) {
-      return (
-        <MockedRoute reason="Deep-linked call details still come from the demo dataset; real call transcripts open from the Voice page's history table.">
-          <CallDetailView callSid={params.callSid} onBack={() => window.history.back()} />
-        </MockedRoute>
-      );
-    }
+    // A single matter, end to end (S14 §3) — the centerpiece of the history.
+    if (params.threadId) return <ThreadDetailView threadId={params.threadId} />;
+
+    // One call, end to end — the owner's detail page (FE2 §2).
+    if (params.callSid) return <CallDetailPage callSid={params.callSid} />;
 
     // Messages: the receptionist's inbox (S12 §11) — real rows, no demo data.
-    if (path === '/telephony/messages') return <MessagesView />;
+    if (path === ROUTES.MESSAGES) return <MessagesView />;
 
     // Live: real active-call monitor with expandable call detail.
-    if (path === '/telephony/calls/live') return <LiveView />;
+    if (path === ROUTES.CALLS_LIVE) return <LiveView />;
 
-    // Pending Approval: its own screen — gates resolve live in-call today,
-    // the parked-queue part is demo and badged as such.
-    if (path === '/telephony/calls/pending-approval') return <PendingApprovalView />;
+    // Pending Approval: gates the agent parks mid-call, from /approvals.
+    if (path === ROUTES.CALLS_PENDING) return <PendingApprovalView />;
 
-    // Planned: locally-stored scheduled calls + queues from the composer (demo).
-    if (path === '/telephony/planned') return <PlannedCallsView />;
+    // Planned: server-side scheduled calls.
+    if (path === ROUTES.PLANNED) return <PlannedCallsView />;
 
-    if (path === '/telephony/numbers')
-      return (
-        <MockedRoute reason="There is no number-management API on the backend yet.">
-          <NumbersView />
-        </MockedRoute>
-      );
-    if (path === '/telephony/usage')
-      return (
-        <MockedRoute reason="Costs are tracked per LLM budget, not per call yet (planned: Sprint 4 T4.5 character counting).">
-          <UsageView />
-        </MockedRoute>
-      );
-    if (path === '/telephony/policies')
-      return (
-        <MockedRoute reason="The policy engine is not exposed over the API yet.">
-          <PoliciesView />
-        </MockedRoute>
-      );
-    if (path === '/telephony/audit')
-      return (
-        <MockedRoute reason="Voice actions are audited per call (see a call's transcript panel); a cross-call audit endpoint does not exist yet.">
-          <AuditView />
-        </MockedRoute>
-      );
-    if (path === '/telephony/settings')
-      return (
-        <MockedRoute reason="Twilio credentials and webhooks are configured server-side via environment; there is no settings API yet.">
-          <SettingsView />
-        </MockedRoute>
-      );
+    // Policies: the do-not-call list is real CRUD and the consent facts are
+    // read from the server.
+    if (path === ROUTES.POLICIES) return <PoliciesView />;
 
-    // Default (/telephony, /telephony/calls, /telephony/calls/live,
-    // /telephony/calls/pending-approval): the REAL voice page on backend data.
+    // Settings: the server's own status plus the one setting its API accepts.
+    if (path === ROUTES.SETTINGS) return <VoiceSettingsView />;
+
+    // Übersicht (FE1): the owner's home screen.
+    if (path === ROUTES.HOME) return <OverviewView />;
+    // Anrufe (FE2): the owner's history.
+    if (path === ROUTES.CALLS) return <CallsListView />;
+
+    // /telephony/calls/ops: the operator-flavoured voice page (threads, latency, cost).
     return <VoicePage />;
   };
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TelephonyLayout>
+      <TelephonyLayout key={tenantKey}>
         <div className="flex min-h-0 flex-1 overflow-hidden">
           <TelephonyMiniRail />
-          <div className="flex min-h-0 flex-1 overflow-hidden md:mr-14">
-            {renderContent()}
+          <div className="owner-app-touch flex min-h-0 flex-1 flex-col overflow-hidden pb-16 md:pb-0">
+            <StatusBanner />
+            <ViewErrorBoundary key={path}>
+              <VoiceAuthGuard>
+                <Suspense fallback={<ViewSkeleton />}>{renderContent()}</Suspense>
+              </VoiceAuthGuard>
+            </ViewErrorBoundary>
           </div>
+          <MobileTabBar />
         </div>
       </TelephonyLayout>
     </QueryClientProvider>

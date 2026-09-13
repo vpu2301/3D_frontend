@@ -40,7 +40,7 @@ import {
   type CallOutcome,
   type CallSummary,
 } from '@/lib/api/voice';
-import { MockedBadge } from '@/components/voice/MockedBadge';
+import { useCapabilities } from '@/lib/capabilities';
 import { LanguageSwitchDivider, LanguageFlag } from '@/pages/telephony/_components/voice/CallChips';
 import AppointmentPanel from '@/pages/telephony/_components/voice/AppointmentPanel';
 import CallActionsTimeline from '@/pages/telephony/_components/voice/CallActionsTimeline';
@@ -336,6 +336,8 @@ export default function LiveCallModal({
   call: ActiveCall;
   onClose: () => void;
 }) {
+  // FE10: call controls need a media proxy + control endpoint; shown only when the backend declares `call_controls`.
+  const controlsDeclared = useCapabilities().isDeclared('call_controls');
   const { data: detail } = useLiveCallDetail(call.call_sid);
   const { data: status } = useVoiceStatus();
   const { data: cfg } = useVoiceConfig();
@@ -597,13 +599,8 @@ export default function LiveCallModal({
             )}
           </div>
 
-          <div className="border-t border-amber-200 bg-amber-50/60 px-6 py-3">
-            <div className="mb-2 flex items-center gap-2">
-              <MockedBadge />
-              <span className="text-[11px] text-amber-800">
-                Call controls need a media proxy + control endpoint — not built yet, buttons are inert.
-              </span>
-            </div>
+          {controlsDeclared && (
+          <div className="border-t border-[var(--line-soft)] px-6 py-3">
             <div className="flex flex-wrap gap-2 opacity-60">
               {controls.map(({ icon: Icon, label, danger }) => (
                 <button
@@ -623,6 +620,7 @@ export default function LiveCallModal({
               ))}
             </div>
           </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
