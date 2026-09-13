@@ -1,0 +1,19 @@
+# Einrichtungsassistent (FE4)
+
+Routes `/telephony/setup` (Willkommen) and `/telephony/setup/{company,hours,services,contacts,telephony,calendar,knowledge,voice,test-call,go-live}`. Components `src/pages/telephony/_components/setup/*`; step machine and C2 hooks `src/lib/api/owner/setup.ts`; namespace `voice-setup`.
+
+**One data model.** Every profile step renders the FE3 section on the one form from `useProfileForm` (also used by the editor), so the wizard is a sequence over the same data and every step is re-enterable from Einrichtung. Completion of profile-derived steps is evaluated from the data, not from clicks, so the stepper is right even for steps never visited.
+
+**Progress.** C2 numbers its steps 1–10 (template, business, telephony, calendar, knowledge, voice, escalation, privacy/operator, testcall, golive) and checks each exit criterion itself (`gates`). The eleven screens map onto them (`STEPS[].backendStep`; company/hours/services share step 2 and complete it on the last screen; the responsible person of step 8 is collected on the contacts screen). "Weiter" runs the screen's action (activate the profile, write step data) then `POST /setup/complete {step}`; "Später" writes the explicit choice (`calendar.no_booking`, `knowledge.skipped`) and calls `POST /setup/skip` — a 409 with the gate is shown translated (`gates.*`). "Am Computer fortsetzen" copies `…/telephony/login?returnTo=/telephony/setup/<step>`.
+
+**Steps.** Willkommen (industry only; templates come with FE9) · Unternehmen · Öffnungszeiten · Leistungen & Terminbuchung · Ansprechpartner (skippable, says what is lost) · Telefonie (decision cards → FE3 guide + self-test, SIP profile with its required fields, purchase badged C2) · Kalender & Konten (skippable) · Wissen (only when the backend reports `capabilities.knowledge`; v1 = add a URL) · Begrüßung & Stimme · Testanruf (real call required — decision §10) · Go-live.
+
+**Kalender & Konten.** Google: scopes in plain German, `GET /api/integrations/google/oauth/start?services=calendar` returns the consent URL (JSON) and the app sends the browser there; the backend's callback redirects to `{dashboard_url}/setup?step=4&google=ok|error`, which the app's `/setup` route hands to the calendar screen; `GET /google/oauth/status` is polled every 5 s on return until `calendar=true`, then `data.calendar.connected` is written. Microsoft 365: `POST /ms365/device-code/start {services}` → big copyable code, link, countdown from `expires_at`, `GET /ms365/device-code/{flow_id}` polled every 5 s (`pending|ok|error`). Calendar select from `GET /google/calendars` → `data.calendar.calendar_id` in the setup state. Tokens never visible. Disconnect has no route yet (ask).
+
+**Testanruf.** Shows the number, watches `/api/voice/active` and `/calls` for an inbound call after the screen opened, reads `GET /api/voice/calls/{sid}/checklist` (disclosure, intent, booking-or-message) and ticks "kommt an", "KI-Hinweis gehört", "Nachricht aufnehmen" and "Sprache stimmt" automatically; records `data.testcall.success_sid` for the step-9 gate. A failed test links to the Telefonie and Begrüßung screens.
+
+**Go-live.** `GET /api/voice/setup/golive?lang=de` → the voice subset of the security doctor, translated; `toGoLiveChecks` maps pass/warning/critical to GREEN/AMBER/RED, groups by check name and attaches fix links. CRITICAL blocks, WARNING needs the acknowledgement checkbox; `POST /api/voice/setup/activate` (409 with the gate while CRITICAL) → `finished` → success screen (number, hours, after-hours, report recipients, the disclosure sentence).
+
+**German-first CI.** `npm run i18n:check` covers every owner-app namespace; the `no-literal-string` lint covers every owner-app surface built since FE0 (legacy operator views are migrated as their sprints touch them).
+
+**Remaining asks** after C2 landed: `~/Desktop/BACKEND-FE4-api-asks.md`.

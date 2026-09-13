@@ -1,0 +1,33 @@
+{
+  "title": "Tools",
+  "subtitle": "What the assistant may do on inbound calls.",
+  "tier": {
+    "R": "Read only",
+    "W": "Write",
+    "X": "Not on the phone"
+  },
+  "tierHint": {
+    "R": "Reads only, changes nothing.",
+    "W": "Changes something, e.g. an appointment – reversible.",
+    "X": "Can never be used on a call."
+  },
+  "default": "Default",
+  "approval": "Only with approval",
+  "empty": "The server does not serve a tool list yet.",
+  "outcome": {
+    "done": "done",
+    "denied": "declined",
+    "failed": "failed",
+    "deferred": "failed – done later"
+  },
+  "approvalBy": {
+    "user": "approved by you",
+    "verbal": "confirmed by the caller",
+    "auto": "automatic",
+    "off": "without approval"
+  },
+  "timeline": {
+    "duration": "{{ms}} ms",
+    "none": "The assistant used no tools on this call."
+  }
+}

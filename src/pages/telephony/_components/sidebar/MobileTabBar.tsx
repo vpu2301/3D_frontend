@@ -1,0 +1,157 @@
+/**
+ * Bottom tabs for phones (FE1 §2, Block I rule 4): Übersicht · Anrufe ·
+ * Aufmerksamkeit · Mehr. "Mehr" opens a sheet with every other area, grouped
+ * exactly like the desktop rail — one nav model, two shells — plus language
+ * and logout at the bottom.
+ */
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { LogOut, MoreHorizontal } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { useSession, type VoiceLocale } from '@/stores/session';
+import { useVoiceT } from '@/i18n/voice';
+import { isNavItemActive, PRIMARY_ITEMS, useVisibleNavGroups, type NavItem } from './telephonyNav';
+import { useNavBadges } from './TelephonyMiniRail';
+import { useLogout } from './UserMenu';
+
+export default function MobileTabBar() {
+  const navigate = useNavigate();
+  const { pathname, hash } = useLocation();
+  const t = useVoiceT('voice-nav');
+  const tc = useVoiceT('voice-common');
+  const ta = useVoiceT('voice-auth');
+  const groups = useVisibleNavGroups();
+  const { badgeFor } = useNavBadges();
+  const locale = useSession((s) => s.locale);
+  const setLocale = useSession((s) => s.setLocale);
+  const doLogout = useLogout();
+  const [open, setOpen] = useState(false);
+
+  const primaryKeys = new Set(PRIMARY_ITEMS.map((i) => i.key));
+  const locales: VoiceLocale[] = ['de', 'en'];
+  // Flatten submenus into their own group in the sheet.
+  const sheetGroups: Array<{ key: string; labelKey: string; items: NavItem[] }> = [];
+  for (const g of groups) {
+    const flat: NavItem[] = [];
+    for (const item of g.items) {
+      if (primaryKeys.has(item.key)) continue;
+      if (item.children && item.children.length > 0) {
+        sheetGroups.push({ key: item.key, labelKey: `items.${item.labelKey}`, items: item.children });
+      } else flat.push(item);
+    }
+    if (flat.length) sheetGroups.push({ key: g.key, labelKey: `groups.${g.key}`, items: flat });
+  }
+  const moreActive = sheetGroups.some((g) => g.items.some((i) => isNavItemActive(i, pathname, hash)));
+
+  const tabClass = (active: boolean) =>
+    cn(
+      'flex min-w-0 flex-1 flex-col items-center justify-center gap-1 px-1 py-2 text-[11px] leading-none transition-colors',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--blue)]',
+      active ? 'font-semibold text-[var(--ink)]' : 'text-[var(--text-3)]',
+    );
+
+  return (
+    <>
+      <nav
+        className="fixed inset-x-0 bottom-0 z-30 flex border-t border-[var(--line-soft)] bg-[var(--paper)] pb-[env(safe-area-inset-bottom)] md:hidden"
+        aria-label={t('groups.owner')}
+      >
+        {PRIMARY_ITEMS.map((item) => {
+          const active = isNavItemActive(item, pathname, hash);
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => navigate(item.path)}
+              aria-current={active ? 'page' : undefined}
+              className={tabClass(active)}
+            >
+              <span className="relative">
+                <Icon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <span className="max-w-full truncate">{t(`items.${item.labelKey}`)}</span>
+            </button>
+          );
+        })}
+        <button type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open} className={tabClass(moreActive)}>
+          <MoreHorizontal className="h-5 w-5" aria-hidden="true" />
+          <span>{t('items.more')}</span>
+        </button>
+      </nav>
+
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-[14px] pb-[calc(env(safe-area-inset-bottom)+1rem)]">
+          <SheetHeader className="text-left">
+            <SheetTitle>{t('moreSheet.title')}</SheetTitle>
+            <SheetDescription>{t('moreSheet.description')}</SheetDescription>
+          </SheetHeader>
+          <div className="mt-4 space-y-5">
+            {sheetGroups.map((group) => (
+              <div key={group.key}>
+                <p className="plat-eyebrow !text-[var(--text-3)] mb-2">{t(group.labelKey)}</p>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {group.items.map((item) => {
+                    const Icon = item.icon;
+                    const active = isNavItemActive(item, pathname, hash);
+                    return (
+                      <button
+                        key={item.key}
+                        type="button"
+                        onClick={() => {
+                          setOpen(false);
+                          navigate(item.path);
+                        }}
+                        aria-current={active ? 'page' : undefined}
+                        className={cn(
+                          'flex items-center gap-2 rounded-[10px] px-3 py-2.5 text-left text-sm',
+                          active ? 'bg-[rgba(20,22,26,0.07)] font-semibold text-[var(--ink)]' : 'text-[var(--text-2)] hover:bg-[rgba(20,22,26,0.04)]',
+                        )}
+                      >
+                        <Icon className="h-4 w-4 shrink-0 text-[var(--text-4)]" aria-hidden="true" />
+                        <span className="min-w-0 flex-1 truncate">{t(`items.${item.labelKey}`)}</span>
+                        {badgeFor(item.key)}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+            <div className="border-t border-[var(--line-soft)] pt-4">
+              <p className="plat-eyebrow !text-[var(--text-3)] mb-2">{tc('language.label')}</p>
+              <div className="flex gap-1.5" role="radiogroup" aria-label={tc('language.label')}>
+                {locales.map((l) => (
+                  <button
+                    key={l}
+                    type="button"
+                    role="radio"
+                    aria-checked={locale === l}
+                    onClick={() => setLocale(l)}
+                    className={cn(
+                      'rounded-[10px] border px-3 py-1.5 text-sm',
+                      locale === l ? 'border-[var(--ink)] bg-[rgba(20,22,26,0.07)] font-semibold text-[var(--ink)]' : 'border-[var(--line)] text-[var(--text-2)]',
+                    )}
+                  >
+                    {tc(`language.${l}`)}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  doLogout();
+                }}
+                className="mt-4 flex items-center gap-2 rounded-[10px] px-3 py-2 text-sm text-[var(--bad-fg)] hover:bg-[rgba(179,56,46,0.06)]"
+              >
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+                {ta('logout')}
+              </button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
+  );
+}

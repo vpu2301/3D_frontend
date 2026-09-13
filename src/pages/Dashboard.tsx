@@ -15,9 +15,14 @@
  *   1. "How is today going?"   → three big numbers with a budget bar
  *   2. "What is it doing?"     → activity rows + spend, left column
  *   3. "What is set up?"       → agent/channels, actions, automation, right rail
+ *   4. "What else?"            → a board of dashboards (voice, calls, text,
+ *      images, phone numbers…) the person adds from the ＋ gallery and drags
+ *      into the order they want — see DashboardBoard.tsx
  *
- * Same de-mock contract as the telephony app — sections the backend cannot
- * serve yet (workforce/teams numbers) stay visible inside <MockedSection>.
+ * Every section reads an endpoint the backend serves. The Workforce Overview
+ * that used to sit at the bottom under a MOCK badge is gone — there is no
+ * workforce/teams API, so its headcount and productivity figures were demo
+ * numbers with nothing behind them.
  */
 import { useState, useEffect, useMemo } from 'react';
 import {
@@ -38,7 +43,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import CreateAgentWizard from '@/components/dashboard/CreateAgentWizard';
-import { MockedSection } from '@/components/voice/MockedBadge';
 import { queryClient } from '@/lib/queryClient';
 import { isConnected } from '@/lib/pincerClient';
 import {
@@ -53,38 +57,17 @@ import {
 } from '@/lib/api/dashboard';
 import { cn } from '@/lib/utils';
 import { Expandable, useDetail } from '@/components/dashboard/DetailView';
+import { SectionHeader } from '@/components/dashboard/SectionHeader';
+import { DashboardBoard } from '@/components/dashboard/DashboardBoard';
 import {
   ActivityDetail,
   AgentDetail,
   AutomationDetail,
   RequestsDetail,
   SpendDetail,
-  WorkforceDetail,
 } from '@/components/dashboard/dashboardDetails';
 import { fmtUsd, timeAgo, todayIso } from '@/components/dashboard/dashFormat';
 import '@/styles/platform.css';
-
-// ── Helpers ─────────────────────────────────────────────────────────
-
-/** Spaced-mono eyebrow + hairline — one consistent way to start a section. */
-function SectionHeader({
-  label,
-  hint,
-  action,
-}: {
-  label: string;
-  hint?: string;
-  action?: React.ReactNode;
-}) {
-  return (
-    <div className="mb-4 flex items-baseline gap-3">
-      <h2 className="plat-eyebrow">{label}</h2>
-      {hint && <span className="text-[11px]" style={{ color: 'var(--text-5)' }}>{hint}</span>}
-      <div className="h-px flex-1" style={{ background: 'var(--line-soft)' }} />
-      {action}
-    </div>
-  );
-}
 
 // ── Connect strip ────────────────────────────────────────────────────
 
@@ -356,7 +339,6 @@ function QuickActions({ onDeploy }: { onDeploy: () => void }) {
     { label: 'Create AI Worker', sub: 'Deploy a new agent', icon: Bot, onClick: onDeploy },
     { label: 'Open Chat', sub: 'Talk to your agents', icon: MessageSquare, onClick: () => navigate('/chat') },
     { label: 'Voice Calls', sub: 'Start or schedule calls', icon: Phone, onClick: () => navigate('/telephony') },
-    { label: 'Skills Hub', sub: 'Extend what agents can do', icon: Sparkles, onClick: () => navigate('/skills-hub') },
   ];
   return (
     <div className="plat-panel !px-4">
@@ -509,35 +491,9 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                {/* ─────────── Still mocked — visibly badged per task contract ─────────── */}
-                <MockedSection
-                  title="Workforce Overview"
-                  reason="There is no workforce/teams API on the backend — worker counts, teams and productivity are demo numbers."
-                >
-                  <Expandable
-                    trigger="card"
-                    title="Workforce"
-                    subtitle="Headcount, teams and productivity (demo data)"
-                    detail={<WorkforceDetail />}
-                  >
-                  <div className="plat-panel !py-8">
-                    <div className="plat-bigstat">
-                      <div>
-                        <p className="n">24</p>
-                        <p className="c">AI workers · 73% of workforce</p>
-                      </div>
-                      <div>
-                        <p className="n">9</p>
-                        <p className="c">Human workers · 4 active teams</p>
-                      </div>
-                      <div>
-                        <p className="n">340%</p>
-                        <p className="c">Worker productivity · +23% this month</p>
-                      </div>
-                    </div>
-                  </div>
-                  </Expandable>
-                </MockedSection>
+                {/* 4 · The board: dashboards the person picks and arranges */}
+                <DashboardBoard />
+
               </main>
             </SidebarInset>
           </div>

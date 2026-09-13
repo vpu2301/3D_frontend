@@ -180,7 +180,16 @@
     "footerPricing": "Preise",
     "footerAbout": "Über uns",
     "footerContact": "Kontakt",
-    "footerCareers": "Karriere"
+    "footerCareers": "Karriere",
+    "demoCallTitle": "Jetzt testen — der Agent ruft Sie an",
+    "demoCallPlaceholder": "+49 170 1234567",
+    "demoCallButton": "Jetzt anrufen lassen",
+    "demoCallCalling": "Anruf wird aufgebaut…",
+    "demoCallConsent": "Das ist meine Nummer und ich möchte angerufen werden.",
+    "demoCallDone": "Ihr Telefon klingelt gleich. Heben Sie ab und sprechen Sie ganz normal.",
+    "demoCallHint": "Ein kurzer Demo-Anruf, höchstens zwei Minuten. Keine Anmeldung, keine Aufzeichnung.",
+    "demoCallOff": "Die Demo-Leitung ist gerade nicht verfügbar. Buchen Sie eine Demo — wir rufen zurück.",
+    "demoCallFailed": "Der Anruf konnte nicht gestartet werden."
   },
   "workflows": {
     "pageTitle": "Workflows",

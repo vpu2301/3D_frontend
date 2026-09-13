@@ -3,9 +3,11 @@
  *
  *   Scheduled  → /api/schedules?include_past=true   (the cron scheduler)
  *   Journal    → /api/audit                          (every action the agent took)
- *   Approvals  → still mocked, visibly badged: web approvals are resolved live
- *                over SSE inside a Chat turn (asyncio futures) — there is no
- *                "pending approvals queue" endpoint to list from.
+ *
+ * There is no Approvals tab: web approvals are resolved live over SSE inside a
+ * Chat turn (asyncio futures) and no endpoint lists pending ones, so the queue
+ * that used to sit here was demo rows. Approval cards appear in Chat while the
+ * agent is actually waiting.
  *
  * Table chrome, filter pills and tab styling are kept from the old mocked page
  * so the platform still reads as one system.
@@ -23,9 +25,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import {
-  CheckCircle, XCircle, Clock, Bot, DollarSign, Users,
-  ClipboardList, Activity, BookMarked, Search, Filter, ArrowUpDown,
+import { Clock, Bot, Activity, BookMarked, Search, Filter, ArrowUpDown,
   ChevronDown, ChevronLeft, ChevronRight, CalendarClock, MessageSquare, Plug,
   Download, Copy, Check,
 } from 'lucide-react';
@@ -38,9 +38,8 @@ import {
   type AuditEntry,
   type ScheduledTask,
 } from '@/lib/api/dashboard';
-import { MockedSection } from '@/components/voice/MockedBadge';
 
-type TabKey = 'scheduled' | 'journal' | 'approvals';
+type TabKey = 'scheduled' | 'journal';
 
 // ── Shared bits ──────────────────────────────────────────────────────
 
@@ -761,118 +760,6 @@ function JournalTable() {
   );
 }
 
-// ── Approvals (still mocked — badged) ────────────────────────────────
-
-type PendingTask = {
-  id: number;
-  title: string;
-  assistant: string;
-  description: string;
-  priority: string;
-  timestamp: Date;
-  icon: React.ElementType;
-  iconColor: string;
-  bgColor: string;
-};
-
-const PRIORITY_STYLE: Record<string, string> = {
-  High: 'bg-[rgba(179,56,46,0.1)] text-[color:var(--bad-fg)]',
-  Medium: 'plat-pill-warn',
-  Low: 'plat-pill-mute',
-};
-
-function ApprovalsMock() {
-  const navigate = useNavigate();
-  const [pendingTasks, setPendingTasks] = useState<PendingTask[]>([
-    {
-      id: 1,
-      title: 'Customer Refund Request - $150',
-      assistant: 'Emma (Sales Assistant)',
-      description: 'Customer requesting refund for Order #12345 due to product defect',
-      priority: 'High',
-      timestamp: new Date(Date.now() - 1000 * 60 * 30),
-      icon: DollarSign,
-      iconColor: 'text-red-600',
-      bgColor: 'from-red-100 to-pink-100',
-    },
-    {
-      id: 2,
-      title: 'New Employee Onboarding Approval',
-      assistant: 'Aria (HR Assistant)',
-      description: 'Approve onboarding checklist for John Smith starting Monday',
-      priority: 'Medium',
-      timestamp: new Date(Date.now() - 1000 * 60 * 45),
-      icon: Users,
-      iconColor: 'text-blue-600',
-      bgColor: 'from-blue-100 to-cyan-100',
-    },
-  ]);
-
-  return (
-    <MockedSection
-      title="Approval queue"
-      reason="Web approvals are resolved live inside a Chat turn (SSE + in-memory futures) — the backend has no endpoint to list pending approvals, so this queue is demo data. Real approval cards appear in Chat while the agent is waiting."
-    >
-      <div className="mb-3">
-        <button
-          type="button"
-          onClick={() => navigate('/chat')}
-          className="plat-btn !h-8 !px-3.5 !text-xs"
-        >
-          <MessageSquare className="h-3.5 w-3.5" />
-          Open Chat to respond to live approvals
-        </button>
-      </div>
-      {pendingTasks.length === 0 ? (
-        <div className="py-8 text-center">
-          <CheckCircle className="mx-auto mb-3 h-12 w-12" style={{ color: 'var(--ok-fg)' }} />
-          <p className="text-sm" style={{ color: 'var(--text-3)' }}>Demo queue cleared.</p>
-        </div>
-      ) : (
-        <Card className="overflow-hidden rounded-[14px] border-[color:var(--line-soft)] bg-[color:var(--paper)] shadow-none">
-          <table className="w-full text-sm">
-            <tbody>
-              {pendingTasks.map(task => (
-                <tr key={task.id} className="border-b border-[color:var(--line-soft)] last:border-b-0">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px]"
-                        style={{ background: 'var(--sand)' }}
-                      >
-                        <task.icon className="h-4 w-4" style={{ color: 'var(--ink)' }} />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="truncate font-medium" style={{ color: 'var(--ink)' }}>{task.title}</p>
-                        <p className="truncate text-xs" style={{ color: 'var(--text-3)' }}>{task.description} · {task.assistant}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="hidden px-4 py-3 md:table-cell">
-                    <span className={cn('plat-pill', PRIORITY_STYLE[task.priority])}>
-                      {task.priority}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button onClick={() => setPendingTasks(p => p.filter(t => t.id !== task.id))} size="sm" className="plat-btn !h-7 !rounded-full !bg-[color:var(--ink)] !px-3 !text-xs !text-white hover:!opacity-90">
-                        <CheckCircle className="mr-1 h-3.5 w-3.5" />Approve
-                      </Button>
-                      <Button onClick={() => setPendingTasks(p => p.filter(t => t.id !== task.id))} variant="outline" size="sm" className="plat-btn-ghost !h-7 !rounded-full !border-[color:var(--line)] !bg-transparent !px-3 !text-xs">
-                        <XCircle className="mr-1 h-3.5 w-3.5" />Reject
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
-      )}
-    </MockedSection>
-  );
-}
-
 // ── Page ─────────────────────────────────────────────────────────────
 
 const TasksInner = () => {
@@ -893,7 +780,6 @@ const TasksInner = () => {
   const tabs = [
     { key: 'scheduled' as TabKey, label: `Scheduled${schedules ? ` (${schedules.total})` : ''}`, icon: Activity },
     { key: 'journal' as TabKey, label: `Journal${audit ? ` (${audit.total})` : ''}`, icon: BookMarked },
-    { key: 'approvals' as TabKey, label: 'Approvals', icon: ClipboardList },
   ];
 
   return (
@@ -936,7 +822,6 @@ const TasksInner = () => {
 
               {activeTab === 'scheduled' && <ScheduledTable />}
               {activeTab === 'journal' && <JournalTable />}
-              {activeTab === 'approvals' && <ApprovalsMock />}
             </main>
           </SidebarInset>
         </div>

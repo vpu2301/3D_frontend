@@ -18,9 +18,9 @@ import { useNotesUiStore } from '@/pages/notes/_hooks/use-notes-ui-store';
 import { clearActiveEditor, setActiveEditor } from '@/pages/notes/_lib/editorBridge';
 import { useNoteAutosave } from '@/pages/notes/_hooks/use-note-autosave';
 import { useOutcomesStore } from '@/pages/notes/_hooks/use-outcomes-store';
-import { useDocsSettingsStore } from '@/pages/docs/_hooks/use-docs-settings-store';
+import { useNotesSettingsStore } from '@/pages/notes/_hooks/use-notes-settings-store';
 import { suggestTags } from '@/pages/notes/_lib/aiClient';
-import { GhostText } from '@/pages/docs/_lib/extensions/ghostText';
+import { GhostText } from '@/pages/notes/_lib/extensions/ghostText';
 import { WikiLink } from '@/pages/notes/_lib/extensions/wikiLink';
 import { InlineTag } from '@/pages/notes/_lib/extensions/inlineTag';
 import { ReminderNode } from '@/pages/notes/_lib/extensions/reminder';
@@ -70,7 +70,7 @@ export default function NoteEditor({ noteId }: Props) {
   const pendingSourceQuote = useNotesUiStore((s) => s.pendingSourceQuote);
   const setPendingSourceQuote = useNotesUiStore((s) => s.setPendingSourceQuote);
   const refreshOutcomes = useOutcomesStore((s) => s.refreshNote);
-  const settings = useDocsSettingsStore();
+  const settings = useNotesSettingsStore();
 
   const [wikiTrigger, setWikiTrigger] = useState<WikiTriggerState | null>(null);
   const [slashState, setSlashState] = useState<SlashState | null>(null);

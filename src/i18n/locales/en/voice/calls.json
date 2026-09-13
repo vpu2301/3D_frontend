@@ -1,0 +1,211 @@
+{
+  "title": "Calls",
+  "today": "Today",
+  "count_one": "{{count}} call",
+  "count_other": "{{count}} calls",
+  "ofTotal": "of {{total}} loaded",
+  "loadMore": "Load older calls",
+  "empty": "No calls in this period.",
+  "emptyFiltered": "No call matches these filters.",
+  "resetFilters": "Reset filters",
+  "opsView": "Operations view",
+  "filters": {
+    "period": "Period",
+    "periods": {
+      "today": "Today",
+      "7d": "7 days",
+      "30d": "30 days",
+      "all": "All"
+    },
+    "direction": "Direction",
+    "result": "Result",
+    "intent": "Request",
+    "language": "Language",
+    "hasAppointment": "With appointment",
+    "needsAttention": "Needs you",
+    "all": "All",
+    "search": "Search by name",
+    "searchHint": "Names are searched; a typed phone number is only matched exactly and never stored in the address."
+  },
+  "columns": {
+    "time": "Time",
+    "contact": "Contact",
+    "result": "Result",
+    "intent": "Request",
+    "duration": "Duration",
+    "appointment": "Appointment",
+    "attention": "Needs you"
+  },
+  "direction": {
+    "inbound": "Inbound",
+    "outbound": "Outbound",
+    "all": "All"
+  },
+  "result": {
+    "booked": "Appointment booked",
+    "message": "Message left",
+    "handoff": "Transferred",
+    "done": "Done",
+    "not_reached": "Not reached",
+    "declined": "Declined",
+    "failed": "Failed",
+    "in_progress": "In progress"
+  },
+  "failureTip": {
+    "generic": "The call could not be completed as planned.",
+    "briefing_lost": "System error, not your fault – please start the call again."
+  },
+  "intent": {
+    "appointment": "Appointment",
+    "message": "Message",
+    "question": "Question",
+    "human": "Transfer",
+    "after_hours": "After hours",
+    "unknown": "Other"
+  },
+  "live": {
+    "title": "On a call right now",
+    "listen": "Listen in",
+    "listenHint": "Listen-in lives in the operations console; the player in this app is deferred (post-GA).",
+    "listenSprint": "post-GA"
+  },
+  "export": {
+    "button": "Export CSV",
+    "hint": "Phone numbers stay masked in the export; a full-number export follows once the server audits it.",
+    "done": "Export created ({{count}} rows)",
+    "headers": [
+      "Time",
+      "Direction",
+      "Contact",
+      "Number (masked)",
+      "Result",
+      "Request",
+      "Duration (s)",
+      "Appointment",
+      "Language"
+    ]
+  },
+  "detail": {
+    "back": "Back to calls",
+    "notFound": "This call is not available (any more).",
+    "inbound": "Inbound call",
+    "outbound": "Outbound call",
+    "duration": "Duration",
+    "cost": "Cost",
+    "language": "Language",
+    "markHandled": "Mark as done",
+    "markOpen": "Reopen",
+    "handledLocalHint": "The server has no done-state for calls yet (arrives with reports, FE8). Until then only this browser remembers the mark.",
+    "callBack": "Call back",
+    "tabs": {
+      "transcript": "Transcript",
+      "appointment": "Appointment",
+      "actions": "Actions",
+      "followups": "Follow-ups",
+      "briefing": "Brief",
+      "details": "Details"
+    },
+    "handledLocalTag": "this browser only"
+  },
+  "summary": {
+    "title": "Summary",
+    "none": "There is no summary for this call yet.",
+    "commitments": "Promised",
+    "facts": "Key facts",
+    "next": "Suggested next steps",
+    "who": {
+      "agent": "Assistant",
+      "callee": "Caller",
+      "caller": "Caller"
+    },
+    "copy": "Copy text",
+    "copied": "Copied"
+  },
+  "transcript": {
+    "speakers": {
+      "caller": "Caller",
+      "assistant": "Assistant",
+      "system": "System"
+    },
+    "events": {
+      "briefing": "Brief handed to the assistant",
+      "language_switch": "Language switch",
+      "disclosure": "AI disclosure played",
+      "tool": "Tool used",
+      "handoff": "Transfer",
+      "system": "System event"
+    },
+    "search": "Search the transcript",
+    "matches_one": "{{count}} match",
+    "matches_other": "{{count}} matches",
+    "showFull": "Show full",
+    "showMasked": "Mask numbers again",
+    "fullNote": "The full view follows once the server audits the reveal.",
+    "fullAudited": "Revealing is recorded on the server.",
+    "empty": "No transcript recorded.",
+    "purged": "The transcript was deleted per the retention period.",
+    "undelivered": "not delivered as audio",
+    "copy": "Copy transcript"
+  },
+  "appointment": {
+    "status": "Status",
+    "statuses": {
+      "proposed": "Proposed",
+      "verified": "Verified",
+      "calendar_created": "Added to the calendar",
+      "invitations_sent": "Invitations sent",
+      "failed": "Failed",
+      "no_slot": "No suitable slot",
+      "declined": "Declined",
+      "calendar_write_failed": "Calendar entry failed"
+    },
+    "slot": "Agreed slot",
+    "noSlot": "No slot agreed yet",
+    "duration": "{{minutes}} minutes",
+    "calendarLink": "Open in calendar",
+    "retry": "Attempt {{n}} of {{max}}",
+    "writeFailedTitle": "The appointment was discussed but not written to the calendar.",
+    "writeFailedHint": "Check the calendar connection under Setup › Calendar & accounts and add the appointment by hand if needed.",
+    "none": "No appointment was discussed on this call."
+  },
+  "briefing": {
+    "title": "Brief",
+    "source": "Source",
+    "copy": "Copy brief",
+    "copied": "Copied",
+    "adherenceDone": "Result according to the assistant: {{result}}",
+    "adherenceMissing": "The call ended without a recorded result.",
+    "adherenceNone": "The call did not take place.",
+    "none": "No brief is stored for this call (older call)."
+  },
+  "details": {
+    "hint": "Technical facts for support – not for everyday use.",
+    "engine": "Engine",
+    "failureCode": "Failure code",
+    "status": "Status",
+    "sid": "Call ID",
+    "method": "Method",
+    "none": "—"
+  },
+  "attention": {
+    "title": "Attention",
+    "subtitle": "Messages and calls the reception could not finish on its own.",
+    "empty": "Nothing open – all done.",
+    "showHandled": "Show handled",
+    "hideHandled": "Hide handled",
+    "message": "Message",
+    "urgent": "Urgent",
+    "callbackNumber": "Callback number",
+    "requestedAt": "Called",
+    "matter": "Matter",
+    "handled": "Done",
+    "open": "Open",
+    "markHandled": "Done",
+    "markOpen": "Reopen",
+    "callBack": "Call back",
+    "openCall": "Open call",
+    "approvals": "In-call approvals live under Operations › Approvals.",
+    "approvalsLink": "Go to approvals",
+    "unverified": "Stated by the caller, not verified"
+  }
+}

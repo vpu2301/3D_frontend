@@ -1,0 +1,75 @@
+{
+  "title": "Overview",
+  "computed": "computed in browser",
+  "computedHint": "The server does not deliver these numbers yet; they are counted in the browser from today's loaded calls.",
+  "today": {
+    "title": "Today",
+    "inbound": "Inbound",
+    "outbound": "Outbound",
+    "answered": "Answered",
+    "missed": "Missed",
+    "afterHours": "After hours",
+    "bookings": "Bookings",
+    "messages": "Messages",
+    "empty": "No calls yet today."
+  },
+  "now": {
+    "title": "Now",
+    "empty": "No call in progress.",
+    "inbound": "Inbound",
+    "outbound": "Outbound",
+    "since": "for {{duration}}",
+    "unknownPurpose": "Capturing the request …",
+    "all": "Live view"
+  },
+  "attention": {
+    "title": "Needs you",
+    "empty": "Nothing open – all done.",
+    "all": "Show all",
+    "kinds": {
+      "message": "Message left",
+      "urgent_message": "Urgent message",
+      "callback": "Callback requested",
+      "handoff_failed": "Handoff failed",
+      "unanswered": "Unanswered question",
+      "human": "Wanted to talk to someone"
+    },
+    "from": "from {{number}}"
+  },
+  "status": {
+    "title": "Status",
+    "number": "Phone number",
+    "mode": "Mode",
+    "modes": {
+      "forwarding": "Call forwarding",
+      "sip": "SIP trunk",
+      "twilio": "Own number",
+      "unknown": "Not set"
+    },
+    "notConfigured": "Not set up yet",
+    "calendar": "Calendar",
+    "calendarConnected": "Connected ({{name}})",
+    "calendarMissing": "Not connected",
+    "residency": "Data residency",
+    "residencyModes": {
+      "eu_verified": "EU (verified)",
+      "eu_native": "EU-native",
+      "on_prem": "On-prem",
+      "unknown": "Not set"
+    },
+    "residencyLink": "Privacy settings",
+    "check": "Check",
+    "checkOk": "All good",
+    "checkHints_one": "{{count}} note",
+    "checkHints_other": "{{count}} notes",
+    "checkUnavailable": "No check available",
+    "opsLink": "Details in the ops console"
+  },
+  "costs": {
+    "title": "Costs today",
+    "hint": "Today's AI service usage, billed in US dollars.",
+    "requests_one": "{{count}} request",
+    "requests_other": "{{count}} requests"
+  },
+  "loadError": "This card could not be loaded."
+}

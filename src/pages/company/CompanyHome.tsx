@@ -5,9 +5,11 @@
  *   Search   REAL   agent runs memento `search`, answers with sources
  *   Memory   REAL   store / inspect / forget keys via memento tools
  *                    (key inventory is local — memento has no list tool)
- *   Library  DEMO   document browser needs a REST proxy for MCP tools
- *   Photos   DEMO   image similarity search needs the same proxy
  *   Sync     REAL-ish  health check runs memento `sync_status` via the agent
+ *
+ * Library and Photos used to sit between Memory and Sync. Both needed a REST
+ * proxy for the MCP tools that nobody built, so both rendered demo documents
+ * and demo image hits — they are gone rather than badged.
  */
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -17,8 +19,6 @@ import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import {
   Brain,
   Database,
-  FolderOpen,
-  Image,
   RefreshCw,
   Search,
 } from 'lucide-react';
@@ -28,15 +28,11 @@ import { isConnected } from '@/lib/pincerClient';
 import { findMemento, useIntegrations } from '@/lib/api/company';
 import BrainSearchView from '@/pages/company/_components/BrainSearchView';
 import BrainMemoryView from '@/pages/company/_components/BrainMemoryView';
-import BrainLibraryView from '@/pages/company/_components/BrainLibraryView';
-import BrainPhotosView from '@/pages/company/_components/BrainPhotosView';
 import BrainSyncView from '@/pages/company/_components/BrainSyncView';
 
 const NAV = [
   { href: '/company-brain', label: 'Search', icon: Search, exact: true },
   { href: '/company-brain/memory', label: 'Memory', icon: Database },
-  { href: '/company-brain/library', label: 'Library', icon: FolderOpen },
-  { href: '/company-brain/photos', label: 'Photos', icon: Image },
   { href: '/company-brain/sync', label: 'Sync', icon: RefreshCw },
 ];
 
@@ -115,8 +111,6 @@ const CompanyHomeInner = () => {
 
   const renderView = () => {
     if (pathname === '/company-brain/memory') return <BrainMemoryView />;
-    if (pathname === '/company-brain/library') return <BrainLibraryView />;
-    if (pathname === '/company-brain/photos') return <BrainPhotosView />;
     if (pathname === '/company-brain/sync') return <BrainSyncView />;
     return <BrainSearchView />;
   };

@@ -1,0 +1,211 @@
+{
+  "title": "Anrufe",
+  "today": "Heute",
+  "count_one": "{{count}} Anruf",
+  "count_other": "{{count}} Anrufe",
+  "ofTotal": "von {{total}} geladenen",
+  "loadMore": "Ältere Anrufe laden",
+  "empty": "Keine Anrufe in diesem Zeitraum.",
+  "emptyFiltered": "Kein Anruf passt zu diesen Filtern.",
+  "resetFilters": "Filter zurücksetzen",
+  "opsView": "Betriebsansicht",
+  "filters": {
+    "period": "Zeitraum",
+    "periods": {
+      "today": "Heute",
+      "7d": "7 Tage",
+      "30d": "30 Tage",
+      "all": "Alle"
+    },
+    "direction": "Richtung",
+    "result": "Ergebnis",
+    "intent": "Anliegen",
+    "language": "Sprache",
+    "hasAppointment": "Mit Termin",
+    "needsAttention": "Braucht Sie",
+    "all": "Alle",
+    "search": "Nach Name suchen",
+    "searchHint": "Namen werden gesucht; eine eingegebene Rufnummer wird nur exakt verglichen und nie in der Adresse gespeichert."
+  },
+  "columns": {
+    "time": "Zeit",
+    "contact": "Kontakt",
+    "result": "Ergebnis",
+    "intent": "Anliegen",
+    "duration": "Dauer",
+    "appointment": "Termin",
+    "attention": "Braucht Sie"
+  },
+  "direction": {
+    "inbound": "Eingehend",
+    "outbound": "Ausgehend",
+    "all": "Alle"
+  },
+  "result": {
+    "booked": "Termin gebucht",
+    "message": "Nachricht hinterlassen",
+    "handoff": "Weitergeleitet",
+    "done": "Erledigt",
+    "not_reached": "Nicht erreicht",
+    "declined": "Abgelehnt",
+    "failed": "Fehlgeschlagen",
+    "in_progress": "Läuft"
+  },
+  "failureTip": {
+    "generic": "Der Anruf konnte nicht wie geplant abgeschlossen werden.",
+    "briefing_lost": "Systemfehler, nicht Ihr Fehler – bitte den Anruf erneut starten."
+  },
+  "intent": {
+    "appointment": "Termin",
+    "message": "Nachricht",
+    "question": "Frage",
+    "human": "Weiterleitung",
+    "after_hours": "Außerhalb der Zeiten",
+    "unknown": "Sonstiges"
+  },
+  "live": {
+    "title": "Gerade im Gespräch",
+    "listen": "Mithören",
+    "listenHint": "Mithören gibt es in der Betriebskonsole; der Player in dieser App ist zurückgestellt (nach GA).",
+    "listenSprint": "nach GA"
+  },
+  "export": {
+    "button": "CSV exportieren",
+    "hint": "Rufnummern bleiben im Export maskiert; ein Export mit vollständigen Nummern folgt, sobald der Server ihn protokolliert.",
+    "done": "Export erstellt ({{count}} Zeilen)",
+    "headers": [
+      "Zeit",
+      "Richtung",
+      "Kontakt",
+      "Rufnummer (maskiert)",
+      "Ergebnis",
+      "Anliegen",
+      "Dauer (s)",
+      "Termin",
+      "Sprache"
+    ]
+  },
+  "detail": {
+    "back": "Zurück zu den Anrufen",
+    "notFound": "Dieser Anruf ist nicht (mehr) verfügbar.",
+    "inbound": "Eingehender Anruf",
+    "outbound": "Ausgehender Anruf",
+    "duration": "Dauer",
+    "cost": "Kosten",
+    "language": "Sprache",
+    "markHandled": "Als erledigt markieren",
+    "markOpen": "Wieder öffnen",
+    "handledLocalHint": "Der Server kennt noch keinen Erledigt-Status für Anrufe (kommt mit den Berichten, FE8). Bis dahin merkt sich nur dieser Browser die Markierung.",
+    "callBack": "Zurückrufen",
+    "tabs": {
+      "transcript": "Verlauf",
+      "appointment": "Termin",
+      "actions": "Aktionen",
+      "followups": "Nachfass",
+      "briefing": "Auftrag",
+      "details": "Details"
+    },
+    "handledLocalTag": "nur dieser Browser"
+  },
+  "summary": {
+    "title": "Zusammenfassung",
+    "none": "Für diesen Anruf liegt noch keine Zusammenfassung vor.",
+    "commitments": "Zugesagt",
+    "facts": "Wichtige Fakten",
+    "next": "Vorgeschlagene nächste Schritte",
+    "who": {
+      "agent": "Assistent",
+      "callee": "Anrufer",
+      "caller": "Anrufer"
+    },
+    "copy": "Text kopieren",
+    "copied": "Kopiert"
+  },
+  "transcript": {
+    "speakers": {
+      "caller": "Anrufer",
+      "assistant": "Assistent",
+      "system": "System"
+    },
+    "events": {
+      "briefing": "Auftrag an den Assistenten",
+      "language_switch": "Sprachwechsel",
+      "disclosure": "KI-Hinweis vorgelesen",
+      "tool": "Werkzeug verwendet",
+      "handoff": "Weiterleitung",
+      "system": "Systemereignis"
+    },
+    "search": "Im Verlauf suchen",
+    "matches_one": "{{count}} Treffer",
+    "matches_other": "{{count}} Treffer",
+    "showFull": "Vollständig anzeigen",
+    "showMasked": "Nummern wieder maskieren",
+    "fullNote": "Vollständige Ansicht folgt, sobald der Server das Aufdecken protokolliert.",
+    "fullAudited": "Das Aufdecken wird auf dem Server protokolliert.",
+    "empty": "Kein Gesprächsverlauf aufgezeichnet.",
+    "purged": "Der Verlauf wurde gemäß Aufbewahrungsfrist gelöscht.",
+    "undelivered": "nicht als Audio ausgegeben",
+    "copy": "Verlauf kopieren"
+  },
+  "appointment": {
+    "status": "Status",
+    "statuses": {
+      "proposed": "Vorgeschlagen",
+      "verified": "Geprüft",
+      "calendar_created": "Im Kalender eingetragen",
+      "invitations_sent": "Einladungen verschickt",
+      "failed": "Fehlgeschlagen",
+      "no_slot": "Kein passender Termin",
+      "declined": "Abgelehnt",
+      "calendar_write_failed": "Kalendereintrag fehlgeschlagen"
+    },
+    "slot": "Vereinbarter Termin",
+    "noSlot": "Noch kein Termin vereinbart",
+    "duration": "{{minutes}} Minuten",
+    "calendarLink": "Im Kalender öffnen",
+    "retry": "Versuch {{n}} von {{max}}",
+    "writeFailedTitle": "Der Termin wurde besprochen, aber nicht in den Kalender geschrieben.",
+    "writeFailedHint": "Prüfen Sie die Kalender-Verbindung unter Einrichtung › Kalender & Konten und tragen Sie den Termin gegebenenfalls von Hand ein.",
+    "none": "Bei diesem Anruf wurde kein Termin besprochen."
+  },
+  "briefing": {
+    "title": "Auftrag",
+    "source": "Quelle",
+    "copy": "Auftrag kopieren",
+    "copied": "Kopiert",
+    "adherenceDone": "Ergebnis laut Assistent: {{result}}",
+    "adherenceMissing": "Der Anruf wurde beendet, ohne dass ein Ergebnis festgehalten wurde.",
+    "adherenceNone": "Der Anruf hat nicht stattgefunden.",
+    "none": "Zu diesem Anruf ist kein Auftrag hinterlegt (älterer Anruf)."
+  },
+  "details": {
+    "hint": "Technische Angaben für die Betreuung – nicht für den Alltag.",
+    "engine": "Engine",
+    "failureCode": "Fehlercode",
+    "status": "Status",
+    "sid": "Anruf-ID",
+    "method": "Methode",
+    "none": "—"
+  },
+  "attention": {
+    "title": "Aufmerksamkeit",
+    "subtitle": "Nachrichten und Anrufe, die der Empfang nicht allein erledigen konnte.",
+    "empty": "Nichts offen – alles erledigt.",
+    "showHandled": "Erledigte anzeigen",
+    "hideHandled": "Erledigte ausblenden",
+    "message": "Nachricht",
+    "urgent": "Dringend",
+    "callbackNumber": "Rückrufnummer",
+    "requestedAt": "Angerufen",
+    "matter": "Anliegen",
+    "handled": "Erledigt",
+    "open": "Offen",
+    "markHandled": "Erledigt",
+    "markOpen": "Wieder öffnen",
+    "callBack": "Zurückrufen",
+    "openCall": "Anruf öffnen",
+    "approvals": "Freigaben während eines Gesprächs finden Sie unter Betrieb › Freigaben.",
+    "approvalsLink": "Zu den Freigaben",
+    "unverified": "Vom Anrufer angegeben, nicht geprüft"
+  }
+}

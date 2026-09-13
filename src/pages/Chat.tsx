@@ -240,18 +240,17 @@ const Chat = () => {
     if (pincerOn) {
       void dispatchToPincer(userText);
     } else {
-      // Mock fallback so the UI still works without a Pincer backend.
-      setTimeout(() => {
-        const reply: ChatMessage = {
+      // No backend, no answer. The old fallback echoed the question back as if
+      // the agent had replied, which reads as a working assistant and is not.
+      setMessages(p => [
+        ...p,
+        {
           id: Date.now(),
-          text: attachments.length
-            ? `I can see you've shared ${attachments.length} file(s). I'll analyze them and help you with: "${userText || 'the attached files'}".`
-            : `I understand you're asking about: "${userText}". (Demo mode — connect to a Pincer backend for a real reply.)`,
+          text: 'Not connected to a Pincer backend — nothing was sent and there is no reply.',
           sender: 'assistant',
           timestamp: new Date(),
-        };
-        setMessages(p => [...p, reply]);
-      }, 600);
+        },
+      ]);
     }
   };
 

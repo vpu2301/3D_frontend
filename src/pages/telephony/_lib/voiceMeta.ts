@@ -175,12 +175,20 @@ export function humanizeCode(code: string): string {
  * The single chip a history row shows: the failure code if the call failed,
  * otherwise the extracted outcome. Null when the backend has told us neither.
  */
-export function rowChip(call: CallSummary): { label: string; tone: ChipTone; title: string } | null {
+export function rowChip(
+  call: CallSummary,
+  lang?: string,
+): { label: string; tone: ChipTone; title: string } | null {
   if (call.failure_code) {
+    const explained = FAILURE_TOOLTIPS[call.failure_code.toLowerCase()];
     return {
       label: failureLabel(call.failure_code),
       tone: 'red',
-      title: `Failure code: ${call.failure_code}`,
+      // Our own sentence where we have one (it says who is to blame), the
+      // backend's where it does not, and the bare code only as a last resort.
+      title: explained
+        ? failureTitle(call.failure_code, lang)
+        : call.failure_description || failureTitle(call.failure_code, lang),
     };
   }
   const outcome = call.outcome?.outcome;
@@ -249,7 +257,28 @@ const FAILURE_LABELS: Record<string, string> = {
   blocked: 'blocked caller',
   busy_capacity: 'line at capacity',
   silent_hangup: 'silent hangup',
+  briefing_lost: 'briefing lost (system)',
 };
+
+/**
+ * Failures whose cause is the system, not the person who placed the call.
+ * `briefing_lost` means the agent's task never reached the call and it was
+ * terminated rather than improvised — the user must not read that as "my
+ * purpose was bad".
+ */
+const FAILURE_TOOLTIPS: Record<string, { en: string; de: string }> = {
+  briefing_lost: {
+    en: 'The call was terminated because the agent’s briefing did not reach the call. This is a system error — please retry.',
+    de: 'Der Anruf wurde beendet, weil die Anweisung den Anruf nicht erreicht hat. Das ist ein Systemfehler — bitte erneut versuchen.',
+  },
+};
+
+/** The tooltip for a failure chip: the explanation where we have one. */
+export function failureTitle(code: string, lang?: string): string {
+  const entry = FAILURE_TOOLTIPS[code.toLowerCase()];
+  if (!entry) return `Failure code: ${code}`;
+  return lang?.startsWith('de') ? entry.de : entry.en;
+}
 
 export function failureLabel(code: string): string {
   return FAILURE_LABELS[code.toLowerCase()] ?? humanizeCode(code);
@@ -301,6 +330,22 @@ export function modeMeta(raw: string | null | undefined): ModeMeta | null {
   const key = (raw ?? '').trim().toLowerCase();
   if (!key) return null;
   return MODE_META[key] ?? { label: humanizeCode(key), title: `Approval mode: ${key}`, tone: 'grey' };
+}
+
+// ── Briefing transcript entry ────────────────────────────────────────
+
+/**
+ * The briefing is written into the transcript as a SYSTEM line so "what was
+ * the agent told?" is answerable from the transcript alone. It was never
+ * audio, so it must not render as something someone said — same reasoning as
+ * the language-switch divider.
+ */
+export function parseBriefingLine(line: { speaker: string; text: string; state?: string }): string | null {
+  const text = (line.text ?? '').trim();
+  const isSystem = (line.speaker ?? '').toLowerCase() === 'system' || line.state === 'briefing';
+  if (!isSystem) return null;
+  const m = /^\[BRIEFING\]\s*([\s\S]*)$/i.exec(text);
+  return m ? m[1].trim() : null;
 }
 
 // ── Deny reasons (S11 §5.2 codes → sentences, both UI languages) ─────
@@ -358,12 +403,12 @@ const DENY_REASONS: Record<string, { en: string; de: string }> = {
 };
 
 /** `lang` is the UI language, not the language of the call. */
-export function denyReasonText(code: string | null | undefined, lang = 'en'): string | null {
+export function denyReasonText(code: string | null | undefined, lang?: string): string | null {
   const key = (code ?? '').trim().toLowerCase();
   if (!key) return null;
   const entry = DENY_REASONS[key];
   if (!entry) return key; // raw code, never a guess
-  return lang.startsWith('de') ? entry.de : entry.en;
+  return lang?.startsWith('de') ? entry.de : entry.en;
 }
 
 /** Exported so a test can pin EN and DE coverage in step. */

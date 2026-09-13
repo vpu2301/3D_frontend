@@ -1,0 +1,75 @@
+{
+  "title": "Übersicht",
+  "computed": "berechnet im Browser",
+  "computedHint": "Der Server liefert diese Zahlen noch nicht fertig; sie werden aus den geladenen Anrufen dieses Tages im Browser gezählt.",
+  "today": {
+    "title": "Heute",
+    "inbound": "Eingehend",
+    "outbound": "Ausgehend",
+    "answered": "Angenommen",
+    "missed": "Verpasst",
+    "afterHours": "Außerhalb der Zeiten",
+    "bookings": "Termine",
+    "messages": "Nachrichten",
+    "empty": "Heute noch keine Anrufe."
+  },
+  "now": {
+    "title": "Jetzt",
+    "empty": "Gerade kein Gespräch.",
+    "inbound": "Eingehend",
+    "outbound": "Ausgehend",
+    "since": "seit {{duration}}",
+    "unknownPurpose": "Anliegen wird erfasst …",
+    "all": "Live-Ansicht"
+  },
+  "attention": {
+    "title": "Braucht Sie",
+    "empty": "Nichts offen – alles erledigt.",
+    "all": "Alle anzeigen",
+    "kinds": {
+      "message": "Nachricht hinterlassen",
+      "urgent_message": "Dringende Nachricht",
+      "callback": "Rückruf gewünscht",
+      "handoff_failed": "Weiterleitung fehlgeschlagen",
+      "unanswered": "Unbeantwortete Frage",
+      "human": "Wollte jemanden sprechen"
+    },
+    "from": "von {{number}}"
+  },
+  "status": {
+    "title": "Status",
+    "number": "Rufnummer",
+    "mode": "Betrieb",
+    "modes": {
+      "forwarding": "Rufumleitung",
+      "sip": "SIP-Anbindung",
+      "twilio": "Eigene Nummer",
+      "unknown": "Nicht festgelegt"
+    },
+    "notConfigured": "Noch nicht eingerichtet",
+    "calendar": "Kalender",
+    "calendarConnected": "Verbunden ({{name}})",
+    "calendarMissing": "Nicht verbunden",
+    "residency": "Datenstandort",
+    "residencyModes": {
+      "eu_verified": "EU (verifiziert)",
+      "eu_native": "EU-native",
+      "on_prem": "On-Prem",
+      "unknown": "Nicht festgelegt"
+    },
+    "residencyLink": "Datenschutz-Einstellungen",
+    "check": "Prüfung",
+    "checkOk": "Alles in Ordnung",
+    "checkHints_one": "{{count}} Hinweis",
+    "checkHints_other": "{{count}} Hinweise",
+    "checkUnavailable": "Keine Prüfung verfügbar",
+    "opsLink": "Details in der Betriebskonsole"
+  },
+  "costs": {
+    "title": "Kosten heute",
+    "hint": "Verbrauch der KI-Dienste heute, in US-Dollar abgerechnet.",
+    "requests_one": "{{count}} Anfrage",
+    "requests_other": "{{count}} Anfragen"
+  },
+  "loadError": "Diese Karte konnte nicht geladen werden."
+}

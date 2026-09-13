@@ -418,21 +418,6 @@ button.plat-item:hover {
   font-weight: 600;
 }
 
-/* ── Right apps rail ────────────────────────────────────────────────────
-   It is mounted by ProtectedRoute, outside the `.plat` page wrapper, so it
-   is matched from the shared shell instead. Same viewport-anchored gradient
-   as above, so the wash runs unbroken from the sidebar to the right edge;
-   only a hairline marks the boundary. */
-.platform [data-appsbar] {
-  background:
-    radial-gradient(900px 600px at 6% -4%, rgba(62, 82, 217, 0.035), transparent 60%),
-    radial-gradient(1100px 750px at 96% 8%, rgba(191, 206, 248, 0.14), transparent 55%),
-    linear-gradient(165deg, #fcfcfd 0%, #f7f8fa 52%, #f1f3f6 100%) !important;
-  background-attachment: fixed, fixed, fixed !important;
-  border-left-color: rgba(20, 22, 26, 0.07) !important;
-  backdrop-filter: none;
-}
-
 /* ── Shell neutralisation ───────────────────────────────────────────────
    Platform pages historically painted their own page background (bg-white,
    bg-gray-50, bg-[hsl(30,25%,97%)]) on the page root and on SidebarInset.
@@ -980,4 +965,245 @@ button.plat-item:hover {
   font-family: var(--mono);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+/* ── Dashboard board ─────────────────────────────────────────────────
+   The widget frames someone arranges on the dashboard page. Same panel
+   vocabulary as everything else; the only new idea is the handle, and the
+   dashed slot that shows where a dragged card will land. */
+
+.plat-widget {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.16s ease, opacity 0.16s ease;
+}
+
+.plat-widget-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.plat-widget-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  width: 26px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-5);
+  transition: color 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.plat-widget:hover .plat-widget-btn,
+.plat-widget-btn:focus-visible {
+  border-color: var(--line-soft);
+  background: var(--paper);
+  color: var(--text-3);
+}
+
+.plat-widget-btn:hover {
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.plat-widget-grab {
+  cursor: grab;
+}
+
+.plat-widget-grab:active {
+  cursor: grabbing;
+}
+
+.plat-widget-dragging {
+  opacity: 0.4;
+}
+
+/* Where the dragged card lands, and the tile that adds a new one. */
+.plat-dropslot,
+.plat-addtile {
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  min-height: 132px;
+}
+
+.plat-dropslot {
+  background: var(--sand);
+}
+
+.plat-addtile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  text-align: center;
+  color: var(--text-5);
+  background: transparent;
+  transition: border-color 0.16s ease, color 0.16s ease;
+}
+
+.plat-addtile:hover {
+  border-color: var(--ink);
+  color: var(--text-3);
+}
+
+/* The ＋ picker: a narrow detail dialog, one row per dashboard. */
+
+.plat-picker {
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(82vh, 720px);
+}
+
+.plat-picker-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 22px;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.plat-pick {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px 14px;
+  text-align: left;
+  border-radius: 12px;
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.plat-pick:hover {
+  border-color: var(--ink);
+}
+
+.plat-pick-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--sand);
+  color: var(--text-3);
+}
+
+.plat-pick-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--text-4);
+}
+
+.plat-pick-on {
+  border-color: var(--ink);
+  background: var(--sand);
+}
+
+.plat-pick-on .plat-pick-icon,
+.plat-pick-on .plat-pick-state {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Quiet horizontal scrolling ──────────────────────────────────────
+   A wide table has to scroll on a narrow window, but the platform default
+   is a full-height opaque bar that reads as a UI element in its own right —
+   brighter and heavier than the hairlines around it. This is the same
+   affordance at the weight of the rest of the page: thin, transparent
+   track, and a thumb that only darkens while the pointer is over the
+   region it scrolls. */
+
+.plat-scroll-x {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  /* Room for the thumb so it never sits on the last row's baseline. */
+  padding-bottom: 2px;
+}
+
+.plat-scroll-x::-webkit-scrollbar {
+  height: 8px;
+}
+
+.plat-scroll-x::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.plat-scroll-x::-webkit-scrollbar-thumb {
+  background: var(--line-soft);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.plat-scroll-x:hover::-webkit-scrollbar-thumb {
+  background: var(--line);
+  background-clip: content-box;
+}
+
+.plat-scroll-x::-webkit-scrollbar-thumb:hover {
+  background: var(--text-5);
+  background-clip: content-box;
+}
+
+/* Same treatment for a column that scrolls vertically — the detail rails. */
+.plat-scroll-y {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+.plat-scroll-y::-webkit-scrollbar {
+  width: 8px;
+}
+
+.plat-scroll-y::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.plat-scroll-y::-webkit-scrollbar-thumb {
+  background: var(--line-soft);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.plat-scroll-y:hover::-webkit-scrollbar-thumb {
+  background: var(--line);
+  background-clip: content-box;
+}
+
+
+/* FE10 §1 mobile — ≥ 44 px touch targets for every actionable control in the owner app on phones.
+   Scoped to the owner app's content column; desktop keeps the compact controls. */
+@media (max-width: 639px) {
+  .owner-app-touch button,
+  .owner-app-touch [role="button"],
+  .owner-app-touch [role="tab"],
+  .owner-app-touch a[class*="rounded-"] {
+    min-height: 44px;
+  }
+  .owner-app-touch input[type="checkbox"],
+  .owner-app-touch input[type="radio"] {
+    width: 22px;
+    height: 22px;
+  }
 }

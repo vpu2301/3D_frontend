@@ -1,299 +1,420 @@
-import { useState } from 'react';
-import { Save, Shield, Clock, Euro, Globe, Bell, Mic } from 'lucide-react';
+/**
+ * Call policies — the rails the backend actually enforces.
+ *
+ * This screen used to be a form of sliders that saved nothing: retention days,
+ * cost ceilings, approval thresholds, all local state with a Save button that
+ * only flashed green. Everything here now reads from the server, and the one
+ * thing that can be changed from a browser — the do-not-call list — really
+ * changes it. What the backend does not expose says so instead of offering a
+ * control that lies.
+ */
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Ban, Loader2, Plus, Shield, ShieldCheck, Trash2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import {
+  useAddDoNotCall,
+  useDoNotCall,
+  useRemoveDoNotCall,
+  useVoiceConnected,
+  useVoiceStatus,
+  type DoNotCallEntry,
+  type VoiceStatus,
+} from '@/lib/api/voice';
+import PolicyPanel from '@/pages/telephony/_components/voice/PolicyPanel';
+import { useCapabilities } from '@/lib/capabilities';
 
 function Section({
   icon: Icon,
   title,
+  hint,
   children,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-[14px] border border-[var(--line-soft)] bg-white p-5">
-      <div className="mb-4 flex items-center gap-2.5">
-        <div className="rounded-[10px] bg-[var(--sand)] p-1.5">
-          <Icon className="h-4 w-4 text-[var(--ink)]" />
-        </div>
-        <h2 className="text-sm">{title}</h2>
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function Field({
-  label,
-  hint,
-  children,
-}: {
-  label: string;
   hint?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="mb-4 last:mb-0">
-      <label className="mb-1 block text-xs font-medium text-[var(--text-3)]">{label}</label>
-      {hint && <p className="mb-1.5 text-[11px] text-[var(--text-5)]">{hint}</p>}
+    <section className="rounded-[14px] border border-[var(--line-soft)] bg-white p-5">
+      <div className="mb-3 flex flex-wrap items-baseline gap-2">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
+          <Icon className="h-4 w-4 text-[var(--text-5)]" />
+          {title}
+        </h2>
+        {hint && <span className="text-[11px] text-[var(--text-5)]">{hint}</span>}
+      </div>
       {children}
-    </div>
+    </section>
   );
 }
 
-function Toggle({
-  checked,
-  onChange,
-  label,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  label: string;
-}) {
+/** A fact the server reports and the dashboard cannot change. */
+function Fact({ label, value, tone = 'plain' }: { label: string; value: string; tone?: 'plain' | 'ok' | 'warn' }) {
   return (
-    <div className="flex items-center justify-between py-2">
-      <span className="text-sm text-[var(--text-2)]">{label}</span>
-      <button
-        type="button"
-        onClick={() => onChange(!checked)}
+    <div className="flex items-baseline justify-between gap-3 border-t border-[var(--line-soft)] py-2 first:border-t-0">
+      <span className="text-[12px] text-[var(--text-3)]">{label}</span>
+      <span
         className={cn(
-          'relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors',
-          checked ? 'bg-[var(--ink)]' : 'bg-[var(--sand-deep)]',
+          'shrink-0 text-[12px] font-medium',
+          tone === 'ok' ? 'text-green-700' : tone === 'warn' ? 'text-amber-700' : 'text-[var(--ink)]',
         )}
       >
-        <span
-          className={cn(
-            'inline-block h-4 w-4 rounded-full bg-white shadow transition-transform',
-            checked ? 'translate-x-4' : 'translate-x-0',
-          )}
-        />
-      </button>
+        {value}
+      </span>
     </div>
   );
 }
 
-function NumberInput({
-  value,
-  onChange,
-  suffix,
-  min,
-  max,
-}: {
-  value: number;
-  onChange: (v: number) => void;
-  suffix?: string;
-  min?: number;
-  max?: number;
-}) {
+function DoNotCallRow({ entry, onRemove, busy }: { entry: DoNotCallEntry; onRemove: () => void; busy: boolean }) {
   return (
-    <div className="flex items-center gap-2">
-      <input
-        type="number"
-        value={value}
-        min={min}
-        max={max}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="w-24 rounded-[10px] border border-[var(--line)] px-3 py-1.5 text-sm outline-none focus:border-[var(--ink)]"
+    <li className="flex items-center gap-3 border-t border-[var(--line-soft)] py-2 first:border-t-0">
+      <Ban className="h-3.5 w-3.5 shrink-0 text-[var(--text-5)]" />
+      <span className="min-w-0 flex-1">
+        <span className="block truncate font-mono text-[12px] text-[var(--ink)]">{entry.phone_number}</span>
+        {(entry.reason || entry.source) && (
+          <span className="block truncate text-[11px] text-[var(--text-5)]">
+            {[entry.reason, entry.source && `via ${entry.source}`].filter(Boolean).join(' · ')}
+          </span>
+        )}
+      </span>
+      <button
+        type="button"
+        onClick={onRemove}
+        disabled={busy}
+        className="rounded-full p-1.5 text-[var(--text-5)] transition-colors hover:bg-[var(--sand)] hover:text-[var(--ink)] disabled:opacity-40"
+        aria-label={`Remove ${entry.phone_number} from the do-not-call list`}
+        title="Remove"
+      >
+        <Trash2 className="h-3.5 w-3.5" />
+      </button>
+    </li>
+  );
+}
+
+function DoNotCallSection() {
+  const { toast } = useToast();
+  const { data, isLoading, isError, error } = useDoNotCall();
+  const add = useAddDoNotCall();
+  const remove = useRemoveDoNotCall();
+
+  const [number, setNumber] = useState('');
+  const [reason, setReason] = useState('');
+
+  const entries = useMemo(
+    () => [...(data ?? [])].sort((a, b) => a.phone_number.localeCompare(b.phone_number)),
+    [data],
+  );
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const phone_number = number.trim();
+    if (!phone_number) return;
+    add.mutate(
+      { phone_number, ...(reason.trim() ? { reason: reason.trim() } : {}) },
+      {
+        onSuccess: () => {
+          toast({ title: 'Added to the do-not-call list', description: phone_number });
+          setNumber('');
+          setReason('');
+        },
+        // E.164 validation is the server's; its sentence names the format.
+        onError: (err) =>
+          toast({ title: 'Not added', description: err.message, variant: 'destructive' }),
+      },
+    );
+  };
+
+  const drop = (entry: DoNotCallEntry) =>
+    remove.mutate(entry.phone_number, {
+      onSuccess: () => toast({ title: 'Removed', description: entry.phone_number }),
+      onError: (err) => toast({ title: 'Not removed', description: err.message, variant: 'destructive' }),
+    });
+
+  return (
+    <Section
+      icon={Ban}
+      title="Do not call"
+      hint="the agent refuses these numbers before dialling"
+    >
+      <form onSubmit={submit} className="mb-3 flex flex-wrap items-center gap-2">
+        <Input
+          value={number}
+          onChange={(e) => setNumber(e.target.value)}
+          placeholder="+4930123456"
+          aria-label="Phone number to block"
+          className="h-9 w-48 bg-white text-xs"
+        />
+        <Input
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          placeholder="Reason (optional)"
+          aria-label="Reason"
+          className="h-9 w-56 bg-white text-xs"
+        />
+        <button
+          type="submit"
+          disabled={!number.trim() || add.isPending}
+          className="flex h-9 items-center gap-1.5 rounded-full bg-[var(--ink)] px-3.5 text-xs font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-40"
+        >
+          {add.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+          Add
+        </button>
+      </form>
+
+      {isLoading ? (
+        <p className="text-xs text-[var(--text-4)]">Loading the list…</p>
+      ) : isError ? (
+        <p className="text-xs text-[var(--text-4)]">
+          {error?.status === 404
+            ? 'This backend has no do-not-call endpoint yet.'
+            : (error?.message ?? 'The list could not be loaded.')}
+        </p>
+      ) : !entries.length ? (
+        <p className="text-xs text-[var(--text-5)]">
+          Nobody has opted out. Numbers land here when a caller asks not to be called again, or when
+          you add one.
+        </p>
+      ) : (
+        <ul>
+          {entries.map((entry) => (
+            <DoNotCallRow
+              key={entry.phone_number}
+              entry={entry}
+              onRemove={() => drop(entry)}
+              busy={remove.isPending}
+            />
+          ))}
+        </ul>
+      )}
+    </Section>
+  );
+}
+
+function ConsentSection() {
+  const { data: status } = useVoiceStatus();
+  const { i18n } = useTranslation();
+  const de = i18n.language?.startsWith('de');
+
+  const consent = status?.consent_mode ?? '';
+  const twoParty = consent === 'two_party';
+
+  return (
+    <Section icon={ShieldCheck} title="Consent & announcement" hint="set on the server, not here">
+      <Fact
+        label="Consent mode"
+        value={consent ? consent.replace('_', ' ') : '—'}
+        tone={twoParty ? 'ok' : 'plain'}
       />
-      {suffix && <span className="text-xs text-[var(--text-4)]">{suffix}</span>}
+      <Fact
+        label="Outbound calling"
+        value={status?.outbound_enabled ? 'enabled' : 'off'}
+        tone={status?.outbound_enabled ? 'plain' : 'warn'}
+      />
+      <p className="mt-3 text-[11px] leading-relaxed text-[var(--text-5)]">
+        {twoParty
+          ? de
+            ? 'Zwei-Parteien-Zustimmung: Der Agent holt zu Beginn des Gesprächs eine Bestätigung ein.'
+            : 'Two-party consent: the agent asks for confirmation at the start of the call.'
+          : de
+            ? 'Ein-Parteien-Zustimmung: Der Agent kündigt an, dass er ein KI-Assistent ist.'
+            : 'One-party consent: the agent announces that it is an AI assistant.'}{' '}
+        {de
+          ? 'Änderbar nur über die Server-Konfiguration (PINCER_VOICE_CONSENT_MODE).'
+          : 'Changed on the server only (PINCER_VOICE_CONSENT_MODE).'}
+      </p>
+    </Section>
+  );
+}
+
+// ── Limits the server enforces but does not expose ───────────────────
+//
+// These are real settings — the names, ranges and defaults below come from
+// `pincer.config.channels` — but there is no API to read the value this
+// deployment is actually running, let alone change it. So they are shown as
+// what they are: the documented knob and its default, badged, with the
+// environment variable that sets it. Guessing that the default is the live
+// value would be worse than saying nothing.
+
+interface KnobSpec {
+  label: string;
+  env: string;
+  fallback: string;
+  hint: string;
+  /** Filled in from the server where an endpoint happens to carry it. */
+  live?: string | null;
+}
+
+function Knob({ spec }: { spec: KnobSpec }) {
+  const known = spec.live != null && spec.live !== '';
+  return (
+    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-t border-[var(--line-soft)] py-2.5 first:border-t-0">
+      <span className="min-w-0">
+        <span className="block text-[12px] text-[var(--text-2)]">{spec.label}</span>
+        <span className="block text-[11px] text-[var(--text-5)]">{spec.hint}</span>
+        <span className="mt-0.5 block font-mono text-[10.5px] text-[var(--text-5)]">{spec.env}</span>
+      </span>
+      <span className="shrink-0 text-right">
+        <span
+          className={cn(
+            'block font-mono text-[12px]',
+            known ? 'text-[var(--ink)]' : 'text-[var(--text-4)]',
+          )}
+        >
+          {known ? spec.live : spec.fallback}
+        </span>
+        <span className="block text-[10px] text-[var(--text-5)]">
+          {known ? 'live' : 'default'}
+        </span>
+      </span>
     </div>
+  );
+}
+
+function LimitsSection({ status }: { status: VoiceStatus | undefined }) {
+  // Two of these the status endpoint can already answer; the rest cannot be
+  // read from anywhere, and the difference is labelled per row.
+  const knobs: KnobSpec[] = [
+    {
+      label: 'Max call duration',
+      env: 'PINCER_VOICE_MAX_CALL_DURATION',
+      fallback: '600 s',
+      hint: 'the call is ended after this, whatever is being said',
+    },
+    {
+      label: 'Max hold time',
+      env: 'PINCER_VOICE_MAX_HOLD_TIME',
+      fallback: '300 s',
+      hint: 'how long the agent waits in an IVR queue',
+    },
+    {
+      label: 'Outbound calls per day',
+      env: 'PINCER_VOICE_DAILY_CALL_LIMIT',
+      fallback: '20',
+      hint: 'server-wide cap, across every user and channel',
+      live:
+        status?.daily_calls_limit != null
+          ? `${status.daily_calls_used ?? 0} / ${status.daily_calls_limit}`
+          : null,
+    },
+    {
+      label: 'Outbound calls per user per day',
+      env: 'PINCER_VOICE_OUTBOUND_MAX_DAILY',
+      fallback: '10',
+      hint: 'the per-caller share of that cap',
+    },
+    {
+      label: 'Quiet hours',
+      env: 'PINCER_VOICE_QUIET_HOURS',
+      fallback: '20:00–08:00',
+      hint: 'no outbound calls in this local-time window',
+      live: status?.quiet_hours_active
+        ? `active until ${status.quiet_hours_until ?? '—'}`
+        : status?.quiet_hours_active === false
+          ? 'not active now'
+          : null,
+    },
+    {
+      label: 'Redial attempts',
+      env: 'PINCER_VOICE_RETRY_ATTEMPTS',
+      fallback: '2',
+      hint: 'automatic retries after voicemail or no answer',
+    },
+  ];
+
+  return (
+    <Section icon={Shield} title="Hard limits" hint="rows marked live come from /api/voice/status">
+      <div className="rounded-[10px] border border-[var(--line-soft)] bg-white px-4 py-1">
+        {knobs.map((spec) => (
+          <Knob key={spec.env} spec={spec} />
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function RetentionSection() {
+  const knobs: KnobSpec[] = [
+    {
+      label: 'Transcript retention',
+      env: 'PINCER_VOICE_TRANSCRIPT_RETENTION_DAYS',
+      fallback: '90 days',
+      hint: 'after this the transcript is purged; the call row stays (0 = keep forever)',
+    },
+    {
+      label: 'Call recording',
+      env: 'PINCER_VOICE_RECORDING_ENABLED',
+      fallback: 'off',
+      hint: 'recording is a separate decision from live monitoring',
+    },
+    {
+      label: 'Approval mode for write tools',
+      env: 'PINCER_VOICE_TOOL_APPROVAL',
+      fallback: 'verbal',
+      hint: 'auto · verbal · user · off — what a Tier W tool needs mid-call',
+    },
+    {
+      label: 'Per-tool overrides',
+      env: 'PINCER_VOICE_TOOL_APPROVAL_OVERRIDES',
+      fallback: 'none',
+      hint: 'tool_name:mode pairs, e.g. payments.refund:user',
+    },
+  ];
+
+  return (
+    <Section icon={ShieldCheck} title="Retention & approvals" hint="enforced server-side">
+      <div className="rounded-[10px] border border-[var(--line-soft)] bg-white px-4 py-1">
+        {knobs.map((spec) => (
+          <Knob key={spec.env} spec={spec} />
+        ))}
+      </div>
+      <p className="mt-2 text-[11px] leading-relaxed text-[var(--text-5)]">
+        PII masking is not a setting: every read surface on this API masks phone numbers and
+        addresses before they leave the server.
+      </p>
+    </Section>
   );
 }
 
 export default function PoliciesView() {
-  const [saved, setSaved] = useState(false);
-
-  // Hard limits
-  const [maxDuration, setMaxDuration] = useState(600);
-  const [maxDailyCalls, setMaxDailyCalls] = useState(20);
-  const [maxCostPerCall, setMaxCostPerCall] = useState(2.0);
-  const [maxMonthlySpend, setMaxMonthlySpend] = useState(100);
-
-  // Approval rules
-  const [outboundApproval, setOutboundApproval] = useState<'always' | 'threshold' | 'never'>('always');
-  const [approvalThreshold, setApprovalThreshold] = useState(1.0);
-  const [confirmFinancial, setConfirmFinancial] = useState(true);
-  const [confirmMedical, setConfirmMedical] = useState(true);
-  const [confirmLegal, setConfirmLegal] = useState(true);
-  const [confirmPersonalData, setConfirmPersonalData] = useState(false);
-
-  // Recording & retention
-  const [piiMasking, setPiiMasking] = useState(true);
-  const [recordingConsent, setRecordingConsent] = useState(true);
-  const [retentionDays, setRetentionDays] = useState(90);
-
-  const onSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
-  };
+  // FE10: no endpoint reports or sets these values; the blocks show only when the backend declares `limits_api`.
+  const limitsDeclared = useCapabilities().isDeclared('limits_api');
+  const connected = useVoiceConnected();
+  const { data: status } = useVoiceStatus();
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-6 pt-5 pb-4">
-        <div>
-          <p className="plat-crumb" style={{ color: 'var(--text-4)' }}>3days.telephony</p>
-          <h1 className="mt-1 text-[26px] text-[var(--ink)]">Call Policies</h1>
-          <p className="mt-1 text-xs text-[var(--text-4)]">Safety rails & compliance settings for your tenant</p>
-        </div>
-        <button
-          type="button"
-          onClick={onSave}
-          className={cn(
-            'flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors',
-            saved
-              ? 'bg-green-500 text-white'
-              : 'bg-[var(--ink)] text-white hover:opacity-85',
-          )}
-        >
-          <Save className="h-4 w-4" />
-          {saved ? 'Saved!' : 'Save changes'}
-        </button>
+      <div className="border-b border-[var(--line-soft)] px-6 pb-4 pt-5">
+        <p className="plat-crumb" style={{ color: 'var(--text-4)' }}>
+          3days.telephony
+        </p>
+        <h1 className="mt-1 text-[26px] text-[var(--ink)]">Call policies</h1>
+        <p className="mt-1 text-xs text-[var(--text-4)]">
+          What the agent is allowed to do on a call — as the server enforces it
+        </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
-        {/* Hard limits */}
-        <Section icon={Shield} title="Hard limits">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field label="Max call duration" hint="Calls are terminated after this time">
-              <NumberInput value={maxDuration} onChange={setMaxDuration} suffix="seconds" min={60} max={3600} />
-            </Field>
-            <Field label="Max daily calls" hint="Outbound + inbound combined">
-              <NumberInput value={maxDailyCalls} onChange={setMaxDailyCalls} suffix="calls/day" min={1} max={500} />
-            </Field>
-            <Field label="Max cost per call" hint="Single call budget ceiling">
-              <NumberInput value={maxCostPerCall} onChange={setMaxCostPerCall} suffix="€" min={0.1} max={50} />
-            </Field>
-            <Field label="Max monthly spend" hint="Tenant-wide ceiling; alerts at 75% and 95%">
-              <NumberInput value={maxMonthlySpend} onChange={setMaxMonthlySpend} suffix="€/month" min={10} max={5000} />
-            </Field>
-          </div>
-        </Section>
+      <div className="flex-1 space-y-4 overflow-y-auto p-6">
+        {!connected ? (
+          <p className="text-sm text-[var(--text-4)]">
+            Connect this browser to a Pincer backend to see the policies it enforces.
+          </p>
+        ) : (
+          <>
+            <DoNotCallSection />
 
-        {/* Approval rules */}
-        <Section icon={Clock} title="Outbound approval">
-          <Field label="Approval requirement">
-            <div className="flex gap-2">
-              {(['always', 'threshold', 'never'] as const).map((opt) => (
-                <button
-                  key={opt}
-                  type="button"
-                  onClick={() => setOutboundApproval(opt)}
-                  className={cn(
-                    'rounded-full border px-3 py-1.5 text-xs capitalize transition-colors',
-                    outboundApproval === opt
-                      ? 'border-[var(--ink)] bg-[rgba(20,22,26,0.06)] text-[var(--ink)]'
-                      : 'border-[var(--line)] text-[var(--text-3)] hover:bg-[var(--sand)]',
-                  )}
-                >
-                  {opt === 'threshold' ? 'Above threshold' : opt}
-                </button>
-              ))}
-            </div>
-          </Field>
-          {outboundApproval === 'threshold' && (
-            <Field label="Cost threshold">
-              <NumberInput value={approvalThreshold} onChange={setApprovalThreshold} suffix="€" min={0.1} max={10} />
-            </Field>
-          )}
+            <Section icon={Shield} title="In-call tool policy" hint="resolved server-side, read-only">
+              <PolicyPanel />
+            </Section>
 
-          <div className="mt-3 divide-y divide-[var(--line-soft)] overflow-hidden rounded-[12px] border border-[var(--line-soft)]">
-            <div className="px-4">
-              <Toggle checked={confirmFinancial} onChange={setConfirmFinancial} label="Pause for financial commitments" />
-            </div>
-            <div className="px-4">
-              <Toggle checked={confirmMedical} onChange={setConfirmMedical} label="Pause for medical information" />
-            </div>
-            <div className="px-4">
-              <Toggle checked={confirmLegal} onChange={setConfirmLegal} label="Pause for legal commitments" />
-            </div>
-            <div className="px-4">
-              <Toggle checked={confirmPersonalData} onChange={setConfirmPersonalData} label="Pause for personal data sharing" />
-            </div>
-          </div>
-        </Section>
+            <ConsentSection />
 
-        {/* Recording & retention */}
-        <Section icon={Mic} title="Recording & retention">
-          <div className="divide-y divide-[var(--line-soft)] overflow-hidden rounded-[12px] border border-[var(--line-soft)]">
-            <div className="px-4">
-              <Toggle checked={piiMasking} onChange={setPiiMasking} label="PII masking in transcripts (default: on)" />
-            </div>
-            <div className="px-4">
-              <Toggle checked={recordingConsent} onChange={setRecordingConsent} label='Play "This call may be recorded" announcement' />
-            </div>
-          </div>
-          <div className="mt-4">
-            <Field label="Transcript retention" hint="Transcripts older than this are permanently deleted">
-              <NumberInput value={retentionDays} onChange={setRetentionDays} suffix="days" min={7} max={2555} />
-            </Field>
-          </div>
-          {!piiMasking && (
-            <div className="mt-2 rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800">
-              ⚠️ PII masking disabled. This requires DPO sign-off. Ensure DSGVO Art. 5(1)(e) compliance.
-            </div>
-          )}
-        </Section>
-
-        {/* Allowed countries */}
-        <Section icon={Globe} title="Number policy">
-          <Field label="Allowed call destinations">
-            <div className="flex flex-wrap gap-2">
-              {['🇩🇪 DE', '🇦🇹 AT', '🇨🇭 CH'].map((c) => (
-                <span key={c} className="rounded-full bg-[rgba(20,22,26,0.06)] border border-[var(--ink)] px-3 py-1 text-xs text-[var(--ink)]">
-                  {c}
-                </span>
-              ))}
-              <button type="button" className="rounded-full border border-dashed border-[var(--line)] px-3 py-1 text-xs text-[var(--text-5)] hover:border-[var(--line)]">
-                + Add country
-              </button>
-            </div>
-          </Field>
-          <Field label="Blocked numbers (E.164, one per line)">
-            <textarea
-              placeholder="+49123456789&#10;+43987654321"
-              rows={3}
-              className="w-full rounded-[10px] border border-[var(--line)] px-3 py-2 text-sm font-mono outline-none placeholder:text-[var(--text-5)] focus:border-[var(--ink)]"
-            />
-          </Field>
-        </Section>
-
-        {/* Notifications */}
-        <Section icon={Bell} title="Notifications">
-          <p className="text-xs text-[var(--text-5)] mb-3">Choose when to notify which channel</p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="[&_th]:bg-[var(--sand)] [&_th]:px-3 [&_th]:py-2 [&_th:first-child]:rounded-l-[8px] [&_th:last-child]:rounded-r-[8px]">
-                  <th className="text-left font-medium text-[var(--text-4)]">Event</th>
-                  <th className="text-center font-medium text-[var(--text-4)]">Email</th>
-                  <th className="text-center font-medium text-[var(--text-4)]">Telegram</th>
-                  <th className="text-center font-medium text-[var(--text-4)]">Slack</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--line-soft)]">
-                {[
-                  'Call completed',
-                  'Call failed',
-                  'Call awaiting approval',
-                  'Budget at 75%',
-                  'Budget at 95%',
-                  'PII revealed',
-                ].map((event) => (
-                  <tr key={event}>
-                    <td className="py-2 text-[var(--text-2)]">{event}</td>
-                    {['email', 'telegram', 'slack'].map((ch) => (
-                      <td key={ch} className="py-2 text-center">
-                        <input type="checkbox" defaultChecked={ch === 'email'} className="accent-[var(--ink)]" />
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Section>
+            {limitsDeclared && <LimitsSection status={status} />}
+            {limitsDeclared && <RetentionSection />}
+          </>
+        )}
       </div>
     </div>
   );

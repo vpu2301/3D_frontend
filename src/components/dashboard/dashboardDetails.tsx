@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import {
   useAgentStatus,
+  useAuditDaily,
   useAuditStats,
   useCostHistory,
   useCostsByModel,
@@ -15,6 +16,7 @@ import {
   useSchedules,
   useSkills,
   useTodayCosts,
+  type AuditDay,
   type AuditEntry,
   type ScheduledTask,
 } from '@/lib/api/dashboard';
@@ -30,10 +32,12 @@ import { Figure, Legend, RankBars, StatusBars, TimeSeries, type Point } from './
 import {
   dateTime,
   dayKey,
+  fillDays,
   fmtMs,
   fmtNum,
   fmtUsd,
   fmtUsdTick,
+  isInternalTool,
   lastDays,
   longDay,
   shortDay,
@@ -66,6 +70,21 @@ function bucketAudit(entries: AuditEntry[], days: number) {
   return keys.map((k) => ({ label: shortDay(k), full: longDay(k), ...acc.get(k)! }));
 }
 
+/**
+ * The daily bars. Counted per day where the backend can count them, and
+ * bucketed from the page of rows only as a fallback — that page is the newest
+ * N actions, which on a busy agent is minutes of history, not fourteen days.
+ */
+function dailyBuckets(daily: AuditDay[] | undefined, entries: AuditEntry[] | undefined, days: number) {
+  if (!daily) return bucketAudit(entries ?? [], days);
+  return daily.map((d) => ({
+    label: shortDay(d.date),
+    full: longDay(d.date),
+    ok: Math.max(0, d.total - d.failed),
+    bad: d.failed,
+  }));
+}
+
 function ResultPill({ ok }: { ok: boolean }) {
   return (
     <span className={`plat-pill ${ok ? 'plat-pill-ok' : ''}`} style={ok ? undefined : { background: 'var(--warn-bg)', color: 'var(--bad-fg)' }}>
@@ -82,27 +101,62 @@ export function SpendDetail() {
   const { data: models } = useCostsByModel(HISTORY_DAYS);
   const { data: tools } = useCostsByTool(HISTORY_DAYS);
   const { data: today } = useTodayCosts();
+  // Fallback for the tool panel: the backend prices per model, not per tool,
+  // so when the cost breakdown comes back empty the audit log still knows
+  // which tools ran over the same window.
+  const windowStart = useMemo(() => lastDays(HISTORY_DAYS)[0], []);
+  const { data: toolActivity } = useAuditStats(windowStart);
+
+  const daily = useMemo(() => fillDays(history?.data, HISTORY_DAYS), [history]);
 
   const series: Point[] = useMemo(
     () =>
-      (history?.data ?? []).map((d) => ({
+      daily.map((d) => ({
         label: shortDay(d.date),
         full: longDay(d.date),
         value: d.total_usd,
         sub: `${fmtNum(d.request_count)} requests`,
       })),
-    [history],
+    [daily],
+  );
+
+  const requestSeries: Point[] = useMemo(
+    () =>
+      daily.map((d) => ({
+        label: shortDay(d.date),
+        full: longDay(d.date),
+        value: d.request_count,
+        sub: fmtUsd(d.total_usd),
+      })),
+    [daily],
   );
 
   const topModel = models?.models?.[0];
   const dailyRows = useMemo(() => [...(history?.data ?? [])].reverse(), [history]);
+
+  // The API averages over the days it has rows for; the window average is
+  // total over every day in the window, including the quiet ones.
+  const windowAvg = history ? history.totals.total_usd / Math.max(daily.length, 1) : undefined;
+
+  /** Priced per tool where the backend can, call counts where it cannot. */
+  const priced = useMemo(() => tools?.tools ?? [], [tools]);
+  const toolRows = useMemo(() => {
+    if (priced.length) {
+      return priced.map((t) => ({ tool: t.tool, usd: t.total_usd, calls: t.call_count, avg: t.avg_cost }));
+    }
+    return Object.entries(toolActivity?.by_tool ?? {})
+      .filter(([name]) => !isInternalTool(name))
+      .sort((a, b) => b[1] - a[1])
+      .map(([tool, calls]) => ({ tool, usd: null, calls, avg: null }));
+  }, [priced, toolActivity]);
+  const toolCalls = toolRows.reduce((n, r) => n + r.calls, 0);
 
   return (
     <>
       <DetailStats
         items={[
           { label: `Last ${HISTORY_DAYS}d`, value: fmtUsd(history?.totals.total_usd), sub: `${fmtNum(history?.totals.total_requests)} requests` },
-          { label: 'Average day', value: fmtUsd(history?.totals.avg_daily_usd), sub: 'across the window' },
+          { label: 'Average day', value: fmtUsd(windowAvg), sub: `across ${daily.length} days` },
           {
             label: 'Today',
             value: fmtUsd(today?.total_usd),
@@ -135,26 +189,29 @@ export function SpendDetail() {
             />
           </div>
         </Figure>
-        <Figure title="Cost by tool" hint="what the agent spends money doing">
+        <Figure
+          title={priced.length ? 'Cost by tool' : 'Tool calls'}
+          hint={
+            priced.length
+              ? 'what the agent spends money doing'
+              : `${fmtNum(toolCalls)} calls · cost is tracked per model, not per tool`
+          }
+        >
           <div className="pt-1">
             <RankBars
-              rows={(tools?.tools ?? []).slice(0, 6).map((t) => ({
+              rows={toolRows.slice(0, 6).map((t) => ({
                 label: t.tool,
-                value: t.total_usd,
-                sub: `${fmtNum(t.call_count)} calls`,
+                value: t.usd ?? t.calls,
+                sub: t.usd != null ? `${fmtNum(t.calls)} calls` : undefined,
               }))}
-              format={fmtUsd}
-              emptyLabel="No tool costs recorded yet"
+              format={priced.length ? fmtUsd : (n) => fmtNum(Math.round(n))}
+              emptyLabel="No tool calls recorded yet"
             />
           </div>
         </Figure>
         <Figure title="Requests per day" hint="volume behind the spend">
           <TimeSeries
-            data={series.map((p, i) => ({
-              ...p,
-              value: history?.data[i]?.request_count ?? 0,
-              sub: fmtUsd(history?.data[i]?.total_usd),
-            }))}
+            data={requestSeries}
             kind="bar"
             height={210}
             format={(n) => fmtNum(Math.round(n))}
@@ -181,16 +238,21 @@ export function SpendDetail() {
         />
         <DataTable
           title="By tool"
-          hint={`${tools?.tools.length ?? 0} tools`}
-          rows={tools?.tools ?? []}
+          hint={`${toolRows.length} tools`}
+          rows={toolRows}
           rowKey={(t) => t.tool}
           columns={[
             { key: 'tool', label: 'Tool', render: (t) => <span className="font-mono">{t.tool}</span> },
-            { key: 'calls', label: 'Calls', num: true, render: (t) => fmtNum(t.call_count) },
-            { key: 'avg', label: 'Avg', num: true, render: (t) => fmtUsd(t.avg_cost) },
-            { key: 'total', label: 'Total', num: true, render: (t) => fmtUsd(t.total_usd) },
+            { key: 'calls', label: 'Calls', num: true, render: (t) => fmtNum(t.calls) },
+            // Two columns of dashes say nothing: drop them until costs are priced.
+            ...(priced.length
+              ? [
+                  { key: 'avg', label: 'Avg', num: true, render: (t) => fmtUsd(t.avg) },
+                  { key: 'total', label: 'Total', num: true, render: (t) => fmtUsd(t.usd) },
+                ]
+              : []),
           ]}
-          empty="No tool costs recorded yet"
+          empty="No tool calls recorded yet"
         />
       </DetailTables>
       <DataTable
@@ -309,11 +371,12 @@ export function RequestsDetail() {
 
 export function ActivityDetail() {
   const { data: audit } = useRecentAudit(200);
+  const { data: daily } = useAuditDaily(14);
   const { data: allStats } = useAuditStats();
   const { data: todayStats } = useAuditStats(todayIso());
 
   const entries = audit?.entries ?? [];
-  const buckets = useMemo(() => bucketAudit(audit?.entries ?? [], 14), [audit]);
+  const buckets = useMemo(() => dailyBuckets(daily, audit?.entries, 14), [daily, audit]);
   const failed = allStats?.failed_actions ?? 0;
   const total = allStats?.total_entries ?? 0;
 
@@ -360,7 +423,7 @@ export function ActivityDetail() {
         ]}
       />
 
-      <DetailDivider label="Diagrams" hint="last 14 days · newest 200 actions" />
+      <DetailDivider label="Diagrams" hint="last 14 days · every audited action" />
       <DetailCharts>
         <Figure
           title="Actions per day"
@@ -408,12 +471,13 @@ export function ActivityDetail() {
 export function AgentDetail() {
   const { data: st } = useAgentStatus();
   const { data: audit } = useRecentAudit(60);
+  const { data: daily } = useAuditDaily(14);
   const { data: stats } = useAuditStats();
 
   const channels = Object.entries(st?.channels ?? {});
   const online = channels.filter(([, on]) => on).length;
   const entries = audit?.entries ?? [];
-  const buckets = useMemo(() => bucketAudit(audit?.entries ?? [], 14), [audit]);
+  const buckets = useMemo(() => dailyBuckets(daily, audit?.entries, 14), [daily, audit]);
 
   return (
     <>
@@ -610,58 +674,3 @@ const WORKFORCE_TEAMS = [
   { team: 'Finance', ai: 5, human: 1, tasks: 402, productivity: '288%' },
   { team: 'Operations', ai: 3, human: 1, tasks: 219, productivity: '241%' },
 ];
-
-export function WorkforceDetail() {
-  return (
-    <>
-      <div className="rounded-[10px] border border-dashed border-amber-300/70 bg-amber-50/60 px-4 py-2.5 text-[11.5px] text-amber-800">
-        Demo data — there is no workforce/teams API on the backend yet, so every number below is
-        illustrative.
-      </div>
-
-      <DetailStats
-        items={[
-          { label: 'AI workers', value: '24', sub: '73% of the workforce' },
-          { label: 'Human workers', value: '9', sub: 'across 4 teams' },
-          { label: 'Productivity', value: '340%', sub: '+23% this month' },
-          { label: 'Tasks this month', value: '2,768', sub: '88% handled by AI' },
-        ]}
-      />
-
-      <DetailDivider label="Diagrams" hint="last 6 months" />
-      <DetailCharts>
-        <Figure title="AI headcount" hint="workers deployed">
-          <TimeSeries
-            data={WORKFORCE_MONTHS.map((m, i) => ({ label: m, value: WORKFORCE_AI[i], sub: 'AI workers' }))}
-            kind="area"
-            height={200}
-            format={(n) => String(Math.round(n))}
-          />
-        </Figure>
-        <Figure title="Human headcount" hint="workers on payroll">
-          <TimeSeries
-            data={WORKFORCE_MONTHS.map((m, i) => ({ label: m, value: WORKFORCE_HUMAN[i], sub: 'human workers' }))}
-            kind="bar"
-            height={200}
-            format={(n) => String(Math.round(n))}
-            color="var(--ink)"
-          />
-        </Figure>
-      </DetailCharts>
-
-      <DetailDivider label="Data" />
-      <DataTable
-        title="Teams"
-        rows={WORKFORCE_TEAMS}
-        rowKey={(t) => t.team}
-        columns={[
-          { key: 'team', label: 'Team', render: (t) => <span className="font-medium" style={{ color: 'var(--ink)' }}>{t.team}</span> },
-          { key: 'ai', label: 'AI workers', num: true, render: (t) => t.ai },
-          { key: 'human', label: 'Humans', num: true, render: (t) => t.human },
-          { key: 'tasks', label: 'Tasks / mo', num: true, render: (t) => fmtNum(t.tasks) },
-          { key: 'prod', label: 'Productivity', num: true, render: (t) => t.productivity },
-        ]}
-      />
-    </>
-  );
-}

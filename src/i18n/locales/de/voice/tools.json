@@ -1,0 +1,33 @@
+{
+  "title": "Werkzeuge",
+  "subtitle": "Was der Assistent bei eingehenden Anrufen tun darf.",
+  "tier": {
+    "R": "Nur lesen",
+    "W": "Schreiben",
+    "X": "Nicht am Telefon"
+  },
+  "tierHint": {
+    "R": "Liest nur, ändert nichts.",
+    "W": "Ändert etwas, z. B. einen Termin – rückgängig machbar.",
+    "X": "Kann am Telefon nie verwendet werden."
+  },
+  "default": "Standard",
+  "approval": "Nur mit Freigabe",
+  "empty": "Der Server liefert noch keine Werkzeugliste.",
+  "outcome": {
+    "done": "erledigt",
+    "denied": "abgelehnt",
+    "failed": "fehlgeschlagen",
+    "deferred": "fehlgeschlagen – später nachgeholt"
+  },
+  "approvalBy": {
+    "user": "von Ihnen freigegeben",
+    "verbal": "vom Anrufer bestätigt",
+    "auto": "automatisch",
+    "off": "ohne Freigabe"
+  },
+  "timeline": {
+    "duration": "{{ms}} ms",
+    "none": "Der Assistent hat bei diesem Anruf keine Werkzeuge verwendet."
+  }
+}

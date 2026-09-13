@@ -312,7 +312,7 @@ export function DataTable<T>({
           {empty}
         </p>
       ) : (
-        <div className="overflow-auto" style={{ maxHeight }}>
+        <div className="plat-scroll-x overflow-y-auto" style={{ maxHeight }}>
           <table className="plat-table">
             <thead>
               <tr>

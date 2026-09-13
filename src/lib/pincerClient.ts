@@ -5,7 +5,10 @@
  *
  * Auth model:
  *   - Shared bearer token (PINCER_DASHBOARD_TOKEN or PINCER_WEB_CHAT_TOKEN on
- *     the backend). Stored in localStorage under `pincer.web.auth`.
+ *     the backend). Stored under `pincer.web.auth` — in sessionStorage (plus
+ *     an in-memory copy) by default since FE1, in localStorage only when the
+ *     person opted into "remember this device". Readers check the session
+ *     record first, so a remembered token and a one-off one never conflict.
  *   - Each browser gets a stable UUID (`pincer.web.userId`), sent as
  *     `X-Pincer-User`. That UUID is how the backend keys conversation state —
  *     there are no user accounts on the Pincer side.
@@ -18,32 +21,89 @@ export type PincerAuth = { apiUrl: string; token: string };
 
 // ───────────────────── config / identity ─────────────────────
 
-export function getAuth(): PincerAuth | null {
+// In-memory copy of the session-scoped record: survives a storage that throws
+// (private mode, blocked site data) for the life of the page.
+let memoryAuth: PincerAuth | null = null;
+
+function readStorage(storage: Storage | undefined): PincerAuth | null {
   try {
-    const raw = localStorage.getItem(AUTH_KEY);
-    if (!raw) {
-      const envUrl = (import.meta.env.VITE_PINCER_API_URL as string | undefined)?.trim();
-      const envToken = (import.meta.env.VITE_PINCER_TOKEN as string | undefined)?.trim();
-      if (envUrl && envToken) return { apiUrl: stripTrailingSlash(envUrl), token: envToken };
-      return null;
-    }
+    const raw = storage?.getItem(AUTH_KEY);
+    if (!raw) return null;
     const parsed = JSON.parse(raw) as PincerAuth;
     if (!parsed?.apiUrl || !parsed?.token) return null;
-    return { apiUrl: stripTrailingSlash(parsed.apiUrl), token: parsed.token };
+    return { apiUrl: normalizeApiUrl(parsed.apiUrl), token: parsed.token };
   } catch {
     return null;
   }
 }
 
-export function setAuth(auth: PincerAuth) {
-  localStorage.setItem(AUTH_KEY, JSON.stringify({
-    apiUrl: stripTrailingSlash(auth.apiUrl),
-    token: auth.token,
-  }));
+export function getAuth(): PincerAuth | null {
+  if (memoryAuth) return memoryAuth;
+  const session = readStorage(typeof sessionStorage !== "undefined" ? sessionStorage : undefined);
+  if (session) {
+    memoryAuth = session;
+    return session;
+  }
+  try {
+    const raw = localStorage.getItem(AUTH_KEY);
+    if (!raw) {
+      const envUrl = (import.meta.env.VITE_PINCER_API_URL as string | undefined)?.trim();
+      const envToken = (import.meta.env.VITE_PINCER_TOKEN as string | undefined)?.trim();
+      if (envUrl && envToken) return { apiUrl: normalizeApiUrl(envUrl), token: envToken };
+      return null;
+    }
+    const parsed = JSON.parse(raw) as PincerAuth;
+    if (!parsed?.apiUrl || !parsed?.token) return null;
+    return { apiUrl: normalizeApiUrl(parsed.apiUrl), token: parsed.token };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Store a connection. `persist: true` remembers the device (localStorage);
+ * the default keeps it for this tab's session only (sessionStorage + memory).
+ * Either way the previous record in the other storage is removed, so exactly
+ * one token is live.
+ */
+export function setAuth(auth: PincerAuth, opts: { persist?: boolean } = {}) {
+  const record = JSON.stringify({ apiUrl: normalizeApiUrl(auth.apiUrl), token: auth.token });
+  const persist = opts.persist ?? true;
+  memoryAuth = { apiUrl: normalizeApiUrl(auth.apiUrl), token: auth.token };
+  try {
+    if (persist) {
+      localStorage.setItem(AUTH_KEY, record);
+      sessionStorage.removeItem(AUTH_KEY);
+    } else {
+      sessionStorage.setItem(AUTH_KEY, record);
+      localStorage.removeItem(AUTH_KEY);
+    }
+  } catch {
+    /* storage unavailable — the in-memory copy still serves this page */
+  }
 }
 
 export function clearAuth() {
-  localStorage.removeItem(AUTH_KEY);
+  memoryAuth = null;
+  try {
+    localStorage.removeItem(AUTH_KEY);
+  } catch {
+    /* ignore */
+  }
+  try {
+    sessionStorage.removeItem(AUTH_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** True when the token is in localStorage (the device is remembered). */
+export function isAuthPersisted(): boolean {
+  try {
+    return localStorage.getItem(AUTH_KEY) !== null;
+  } catch {
+    return false;
+  }
 }
 
 export function isConnected(): boolean {
@@ -67,6 +127,27 @@ export function resetUserId(): string {
 
 function stripTrailingSlash(s: string): string {
   return s.replace(/\/+$/, "");
+}
+
+/**
+ * What a person types is not always a URL `fetch()` can parse.
+ *
+ * "127.0.0.1:8080" reads as a scheme called `127.0.0.1:` — engines reject it
+ * before the request leaves the browser, and WebKit's wording for that ("The
+ * string did not match the expected pattern.") tells the owner nothing. So a
+ * missing scheme is filled in here, once, for everything that reads the
+ * stored credentials: http for loopback and bare IPs, https for a hostname,
+ * which is what a tunnel or a deployment will be.
+ */
+export function normalizeApiUrl(raw: string): string {
+  const url = stripTrailingSlash(raw.trim());
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  // A scheme we do not speak is left alone: better a clear failure than a
+  // silent rewrite of what someone deliberately configured.
+  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(url)) return url;
+  const local = /^(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0|\d{1,3}(\.\d{1,3}){3})(:\d+)?([/?#]|$)/i.test(url);
+  return `${local ? "http" : "https"}://${url}`;
 }
 
 // ───────────────────── low-level fetch ─────────────────────
@@ -125,7 +206,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
 /** Validate an (apiUrl, token) pair by calling `/api/status`. */
 export async function pingStatus(apiUrl: string, token: string): Promise<{ version: string }> {
-  const url = `${stripTrailingSlash(apiUrl)}/api/status`;
+  const url = `${normalizeApiUrl(apiUrl)}/api/status`;
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });

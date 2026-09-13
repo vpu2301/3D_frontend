@@ -102,6 +102,12 @@ const MINE: VoiceApproval = {
 
 const SOMEONE_ELSES: VoiceApproval = { ...MINE, id: 'apr_other', call_sid: 'CA-other' };
 
+let declared = true;
+vi.mock('@/lib/capabilities', () => ({
+  // FE10: operator features with no backend show only when the capability is declared; tests toggle it.
+  useCapabilities: () => ({ caps: {}, isLoading: false, isOff: () => false, isDeclared: () => declared }),
+  useHealth: () => ({ data: undefined }),
+}));
 vi.mock('@/lib/api/voice', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/api/voice')>();
   return {
@@ -211,11 +217,21 @@ describe('live call modal', () => {
     });
   });
 
-  it('keeps the mocked call controls badged and inert', () => {
+  it('FE10: call controls exist only when the backend declares them, and are inert until it serves them', () => {
     renderModal();
-    expect(screen.getByText(/Call controls need a media proxy/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /hang up/i })).toBeDisabled();
     // …while the things that DO work are enabled.
     expect(screen.getByRole('button', { name: /copy transcript/i })).toBeEnabled();
+  });
+
+  it('FE10: hides the call controls when the capability is not declared', () => {
+    declared = false;
+    try {
+      renderModal();
+      expect(screen.queryByRole('button', { name: /hang up/i })).toBeNull();
+      expect(screen.getByRole('button', { name: /copy transcript/i })).toBeEnabled();
+    } finally {
+      declared = true;
+    }
   });
 });

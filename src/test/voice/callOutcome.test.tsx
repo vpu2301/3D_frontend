@@ -54,6 +54,11 @@ const detail: CallDetail = {
   actions: [outcomeAction(BACKEND_PAYLOAD)],
 };
 
+vi.mock('@/lib/capabilities', () => ({
+  // FE10: operator features with no backend show only when the capability is declared; tests declare it.
+  useCapabilities: () => ({ caps: {}, isLoading: false, isOff: () => false, isDeclared: () => true }),
+  useHealth: () => ({ data: undefined }),
+}));
 vi.mock('@/lib/api/voice', async (orig) => {
   const actual = await orig<typeof import('@/lib/api/voice')>();
   return { ...actual, useCallDetail: () => ({ data: detail, isLoading: false }) };

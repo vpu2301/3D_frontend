@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Home, ArrowLeft, Search } from 'lucide-react';
+import { Home, ArrowLeft } from 'lucide-react';
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const NotFound = () => {
           <h1 className="text-9xl font-bold text-[color:var(--blue)]">404</h1>
           <h2 className="text-3xl font-bold text-[color:var(--ink)] mb-4">Page Not Found</h2>
           <p className="text-lg text-[color:var(--text-2)] mb-8">
-            Sorry, we couldn't find the page you're looking for. 
+            Sorry, we couldn't find the page you're looking for.
             It might have been moved, deleted, or you entered the wrong URL.
           </p>
         </div>
@@ -39,19 +39,6 @@ const NotFound = () => {
           </Button>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-[color:var(--line)]">
-          <p className="text-sm text-[color:var(--text-2)] mb-4">
-            Need help finding something?
-          </p>
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate('/contact')}
-            className="text-[color:var(--blue)] hover:text-[color:var(--blue)]"
-          >
-            <Search className="mr-2 h-4 w-4" />
-            Contact Support
-          </Button>
-        </div>
       </div>
     </div>
   );

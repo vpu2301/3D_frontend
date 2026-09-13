@@ -6,7 +6,8 @@
  * Every one of them renders `null` when the backend has not sent the field —
  * the page shows real data or nothing, never a placeholder zero.
  */
-import { CalendarCheck2, Gauge, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
+import { CalendarCheck2, ClipboardList, Gauge, RefreshCw } from 'lucide-react';
 import {
   LATENCY_TARGET_GOOD_MS,
   type AppointmentInfo,
@@ -24,6 +25,7 @@ import {
   type ChipTone,
   type LanguageSwitch,
 } from '@/pages/telephony/_lib/voiceMeta';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 // ── Language ─────────────────────────────────────────────────────────
@@ -63,6 +65,41 @@ export function LanguageSwitchDivider({ sw }: { sw: LanguageSwitch }) {
   );
 }
 
+/**
+ * The `[BRIEFING]` system line, drawn as a divider rather than an utterance:
+ * it was never audio. Expands to the recorded text, which is the first 200
+ * chars of the task — the Briefing panel above has it in full.
+ */
+export function BriefingDivider({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  const { i18n } = useTranslation();
+  const label = i18n.language?.startsWith('de') ? 'Agent instruiert' : 'agent briefed';
+
+  return (
+    <div className="my-2">
+      <div className="flex items-center gap-2">
+        <span className="h-px flex-1 bg-[var(--line)]" />
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="flex items-center gap-1 rounded-full border border-[var(--line)] bg-[var(--sand)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-4)] transition-colors hover:text-[var(--ink)]"
+          aria-expanded={open}
+          title={text}
+        >
+          <ClipboardList className="h-3 w-3" />
+          — {label} —
+        </button>
+        <span className="h-px flex-1 bg-[var(--line)]" />
+      </div>
+      {open && (
+        <p className="mt-1.5 whitespace-pre-wrap rounded-[8px] bg-[var(--sand)] px-2.5 py-2 font-mono text-[11px] leading-relaxed text-[var(--text-3)]">
+          {text}
+        </p>
+      )}
+    </div>
+  );
+}
+
 // ── Outcome / failure ────────────────────────────────────────────────
 
 export function Chip({
@@ -80,7 +117,7 @@ export function Chip({
     <span
       title={title}
       className={cn(
-        'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium',
+        'inline-flex max-w-full items-center gap-1 truncate whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-medium',
         CHIP_TONE_CLASS[tone],
         className,
       )}
@@ -91,7 +128,10 @@ export function Chip({
 }
 
 export function OutcomeChip({ call }: { call: CallSummary }) {
-  const chip = rowChip(call);
+  // The failure tooltip is a sentence, and `briefing_lost` says "this was us,
+  // not you" — it has to be readable in the UI language.
+  const { i18n } = useTranslation();
+  const chip = rowChip(call, i18n.language);
   if (!chip) return null;
   return (
     <Chip tone={chip.tone} title={chip.title}>

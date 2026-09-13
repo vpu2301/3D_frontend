@@ -1,0 +1,8946 @@
+{
+ "components": {
+  "schemas": {
+   "ActivateIn": {
+    "properties": {
+     "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "version"
+    ],
+    "title": "ActivateIn",
+    "type": "object"
+   },
+   "ActiveCall": {
+    "properties": {
+     "briefing_task_preview": {
+      "default": "",
+      "title": "Briefing Task Preview",
+      "type": "string"
+     },
+     "call_sid": {
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "caller_number": {
+      "default": "",
+      "title": "Caller Number",
+      "type": "string"
+     },
+     "direction": {
+      "title": "Direction",
+      "type": "string"
+     },
+     "duration_seconds": {
+      "default": 0,
+      "title": "Duration Seconds",
+      "type": "integer"
+     },
+     "engine": {
+      "default": "",
+      "title": "Engine",
+      "type": "string"
+     },
+     "language": {
+      "default": "",
+      "title": "Language",
+      "type": "string"
+     },
+     "listen_available": {
+      "default": false,
+      "title": "Listen Available",
+      "type": "boolean"
+     },
+     "listener_capacity": {
+      "default": 0,
+      "title": "Listener Capacity",
+      "type": "integer"
+     },
+     "listener_count": {
+      "default": 0,
+      "title": "Listener Count",
+      "type": "integer"
+     },
+     "purpose": {
+      "default": "",
+      "title": "Purpose",
+      "type": "string"
+     },
+     "started_at": {
+      "default": "",
+      "title": "Started At",
+      "type": "string"
+     },
+     "target_name": {
+      "default": "",
+      "title": "Target Name",
+      "type": "string"
+     },
+     "target_number": {
+      "default": "",
+      "title": "Target Number",
+      "type": "string"
+     }
+    },
+    "required": [
+     "call_sid",
+     "direction"
+    ],
+    "title": "ActiveCall",
+    "type": "object"
+   },
+   "AlertOut": {
+    "properties": {
+     "detail": {
+      "title": "Detail",
+      "type": "string"
+     },
+     "rule": {
+      "title": "Rule",
+      "type": "string"
+     },
+     "runbook": {
+      "default": "",
+      "title": "Runbook",
+      "type": "string"
+     },
+     "severity": {
+      "title": "Severity",
+      "type": "string"
+     },
+     "threshold": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Threshold"
+     },
+     "title": {
+      "title": "Title",
+      "type": "string"
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value"
+     }
+    },
+    "required": [
+     "rule",
+     "severity",
+     "title",
+     "detail"
+    ],
+    "title": "AlertOut",
+    "type": "object"
+   },
+   "AnalyticsOut": {
+    "description": "§1 fields. Speech values are null when no conversation happened —\nthe UI must render that as \"not assessed\", never as a zeroed bar.",
+    "properties": {
+     "agent_speech_ms": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Agent Speech Ms"
+     },
+     "caller_speech_ms": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Caller Speech Ms"
+     },
+     "interruptions": {
+      "default": 0,
+      "title": "Interruptions",
+      "type": "integer"
+     },
+     "method": {
+      "default": "estimated",
+      "title": "Method",
+      "type": "string"
+     },
+     "overlap_ms": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Overlap Ms"
+     },
+     "sentiment": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sentiment"
+     },
+     "sentiment_rationale": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sentiment Rationale"
+     },
+     "sentiment_reason": {
+      "default": "",
+      "title": "Sentiment Reason",
+      "type": "string"
+     },
+     "sentiment_trajectory": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sentiment Trajectory"
+     },
+     "silence_ms": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Silence Ms"
+     },
+     "talk_ratio": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Talk Ratio"
+     }
+    },
+    "title": "AnalyticsOut",
+    "type": "object"
+   },
+   "ApplyIn": {
+    "properties": {
+     "draft_id": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Draft Id",
+      "type": "integer"
+     },
+     "fields": {
+      "items": {
+       "type": "string"
+      },
+      "maxItems": 40,
+      "title": "Fields",
+      "type": "array"
+     },
+     "profile_id": {
+      "default": "default",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     }
+    },
+    "title": "ApplyIn",
+    "type": "object"
+   },
+   "ApprovalIn": {
+    "properties": {
+     "approval_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Approval Id",
+      "type": "string"
+     },
+     "approved": {
+      "title": "Approved",
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "approval_id",
+     "approved"
+    ],
+    "title": "ApprovalIn",
+    "type": "object"
+   },
+   "AutoProfileIn": {
+    "properties": {
+     "profile_id": {
+      "default": "default",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     },
+     "url": {
+      "default": "",
+      "maxLength": 2000,
+      "title": "Url",
+      "type": "string"
+     }
+    },
+    "title": "AutoProfileIn",
+    "type": "object"
+   },
+   "Body_sources_upload_api_voice_knowledge_sources_upload_post": {
+    "properties": {
+     "file": {
+      "contentMediaType": "application/octet-stream",
+      "title": "File",
+      "type": "string"
+     }
+    },
+    "required": [
+     "file"
+    ],
+    "title": "Body_sources_upload_api_voice_knowledge_sources_upload_post",
+    "type": "object"
+   },
+   "BriefingOut": {
+    "properties": {
+     "source": {
+      "default": "",
+      "title": "Source",
+      "type": "string"
+     },
+     "target_name": {
+      "default": "",
+      "title": "Target Name",
+      "type": "string"
+     },
+     "task": {
+      "default": "",
+      "title": "Task",
+      "type": "string"
+     }
+    },
+    "title": "BriefingOut",
+    "type": "object"
+   },
+   "BundleIn": {
+    "properties": {
+     "address": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Address",
+      "type": "string"
+     },
+     "company_name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Company Name",
+      "type": "string"
+     },
+     "contact_name": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Contact Name",
+      "type": "string"
+     },
+     "country": {
+      "default": "DE",
+      "maxLength": 2,
+      "title": "Country",
+      "type": "string"
+     },
+     "document_name": {
+      "default": "",
+      "maxLength": 200,
+      "title": "Document Name",
+      "type": "string"
+     },
+     "document_size": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Document Size",
+      "type": "integer"
+     },
+     "registry_id": {
+      "default": "",
+      "maxLength": 60,
+      "title": "Registry Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "company_name",
+     "address"
+    ],
+    "title": "BundleIn",
+    "type": "object"
+   },
+   "ByocIn": {
+    "properties": {
+     "apply": {
+      "default": false,
+      "title": "Apply",
+      "type": "boolean"
+     },
+     "domain_name": {
+      "default": "pincer",
+      "maxLength": 40,
+      "title": "Domain Name",
+      "type": "string"
+     },
+     "provider": {
+      "maxLength": 40,
+      "minLength": 1,
+      "title": "Provider",
+      "type": "string"
+     },
+     "trunk_id": {
+      "default": "",
+      "maxLength": 80,
+      "title": "Trunk Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "provider"
+    ],
+    "title": "ByocIn",
+    "type": "object"
+   },
+   "CallActionOut": {
+    "properties": {
+     "action_type": {
+      "title": "Action Type",
+      "type": "string"
+     },
+     "approval_mode": {
+      "default": "",
+      "title": "Approval Mode",
+      "type": "string"
+     },
+     "deny_reason": {
+      "default": "",
+      "title": "Deny Reason",
+      "type": "string"
+     },
+     "input_summary": {
+      "default": "",
+      "title": "Input Summary",
+      "type": "string"
+     },
+     "output_summary": {
+      "default": "",
+      "title": "Output Summary",
+      "type": "string"
+     },
+     "tier": {
+      "default": "",
+      "title": "Tier",
+      "type": "string"
+     },
+     "timestamp": {
+      "default": "",
+      "title": "Timestamp",
+      "type": "string"
+     },
+     "tool_name": {
+      "default": "",
+      "title": "Tool Name",
+      "type": "string"
+     },
+     "user_confirmed": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "User Confirmed"
+     }
+    },
+    "required": [
+     "action_type"
+    ],
+    "title": "CallActionOut",
+    "type": "object"
+   },
+   "CallDetail": {
+    "properties": {
+     "actions": {
+      "items": {
+       "$ref": "#/components/schemas/CallActionOut"
+      },
+      "title": "Actions",
+      "type": "array"
+     },
+     "analytics": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/AnalyticsOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "briefing": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/BriefingOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "call_sid": {
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "cost": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cost"
+     },
+     "cost_usd": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cost Usd"
+     },
+     "direction": {
+      "title": "Direction",
+      "type": "string"
+     },
+     "duration_seconds": {
+      "default": 0,
+      "title": "Duration Seconds",
+      "type": "integer"
+     },
+     "ended_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ended At"
+     },
+     "failure_code": {
+      "default": "",
+      "title": "Failure Code",
+      "type": "string"
+     },
+     "failure_description": {
+      "default": "",
+      "title": "Failure Description",
+      "type": "string"
+     },
+     "from_number": {
+      "default": "",
+      "title": "From Number",
+      "type": "string"
+     },
+     "inbound_intent": {
+      "default": "",
+      "title": "Inbound Intent",
+      "type": "string"
+     },
+     "method": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Method"
+     },
+     "sentiment": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sentiment"
+     },
+     "started_at": {
+      "default": "",
+      "title": "Started At",
+      "type": "string"
+     },
+     "status": {
+      "title": "Status",
+      "type": "string"
+     },
+     "talk_ratio": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Talk Ratio"
+     },
+     "thread_attach_kind": {
+      "default": "",
+      "title": "Thread Attach Kind",
+      "type": "string"
+     },
+     "thread_id": {
+      "default": "",
+      "title": "Thread Id",
+      "type": "string"
+     },
+     "thread_subject": {
+      "default": "",
+      "title": "Thread Subject",
+      "type": "string"
+     },
+     "to_number": {
+      "default": "",
+      "title": "To Number",
+      "type": "string"
+     },
+     "transcript": {
+      "items": {
+       "$ref": "#/components/schemas/TranscriptLine"
+      },
+      "title": "Transcript",
+      "type": "array"
+     }
+    },
+    "required": [
+     "call_sid",
+     "direction",
+     "status"
+    ],
+    "title": "CallDetail",
+    "type": "object"
+   },
+   "CallSummary": {
+    "properties": {
+     "call_sid": {
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "cost_usd": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cost Usd"
+     },
+     "direction": {
+      "title": "Direction",
+      "type": "string"
+     },
+     "duration_seconds": {
+      "default": 0,
+      "title": "Duration Seconds",
+      "type": "integer"
+     },
+     "ended_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ended At"
+     },
+     "failure_code": {
+      "default": "",
+      "title": "Failure Code",
+      "type": "string"
+     },
+     "failure_description": {
+      "default": "",
+      "title": "Failure Description",
+      "type": "string"
+     },
+     "from_number": {
+      "default": "",
+      "title": "From Number",
+      "type": "string"
+     },
+     "inbound_intent": {
+      "default": "",
+      "title": "Inbound Intent",
+      "type": "string"
+     },
+     "method": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Method"
+     },
+     "sentiment": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sentiment"
+     },
+     "started_at": {
+      "default": "",
+      "title": "Started At",
+      "type": "string"
+     },
+     "status": {
+      "title": "Status",
+      "type": "string"
+     },
+     "talk_ratio": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Talk Ratio"
+     },
+     "thread_attach_kind": {
+      "default": "",
+      "title": "Thread Attach Kind",
+      "type": "string"
+     },
+     "thread_id": {
+      "default": "",
+      "title": "Thread Id",
+      "type": "string"
+     },
+     "thread_subject": {
+      "default": "",
+      "title": "Thread Subject",
+      "type": "string"
+     },
+     "to_number": {
+      "default": "",
+      "title": "To Number",
+      "type": "string"
+     }
+    },
+    "required": [
+     "call_sid",
+     "direction",
+     "status"
+    ],
+    "title": "CallSummary",
+    "type": "object"
+   },
+   "CanaryRunOut": {
+    "properties": {
+     "call_sid": {
+      "default": "",
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "duration_s": {
+      "default": 0,
+      "title": "Duration S",
+      "type": "number"
+     },
+     "ok": {
+      "title": "Ok",
+      "type": "boolean"
+     },
+     "ran_at": {
+      "title": "Ran At",
+      "type": "string"
+     },
+     "reason": {
+      "default": "",
+      "title": "Reason",
+      "type": "string"
+     },
+     "skipped": {
+      "default": false,
+      "title": "Skipped",
+      "type": "boolean"
+     },
+     "turns": {
+      "default": 0,
+      "title": "Turns",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "ran_at",
+     "ok"
+    ],
+    "title": "CanaryRunOut",
+    "type": "object"
+   },
+   "CanaryTriggerOut": {
+    "properties": {
+     "call_sid": {
+      "default": "",
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "duration_s": {
+      "default": 0,
+      "title": "Duration S",
+      "type": "number"
+     },
+     "ok": {
+      "title": "Ok",
+      "type": "boolean"
+     },
+     "reason": {
+      "default": "",
+      "title": "Reason",
+      "type": "string"
+     },
+     "skipped": {
+      "title": "Skipped",
+      "type": "boolean"
+     },
+     "turns": {
+      "default": 0,
+      "title": "Turns",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "ok",
+     "skipped"
+    ],
+    "title": "CanaryTriggerOut",
+    "type": "object"
+   },
+   "ChatIn": {
+    "properties": {
+     "text": {
+      "maxLength": 20000,
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+     }
+    },
+    "required": [
+     "text"
+    ],
+    "title": "ChatIn",
+    "type": "object"
+   },
+   "CommitmentOut": {
+    "properties": {
+     "due": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Due"
+     },
+     "source_call_sid": {
+      "default": "",
+      "title": "Source Call Sid",
+      "type": "string"
+     },
+     "status": {
+      "default": "open",
+      "title": "Status",
+      "type": "string"
+     },
+     "what": {
+      "default": "",
+      "title": "What",
+      "type": "string"
+     },
+     "who": {
+      "default": "",
+      "title": "Who",
+      "type": "string"
+     }
+    },
+    "title": "CommitmentOut",
+    "type": "object"
+   },
+   "Contact": {
+    "properties": {
+     "category": {
+      "default": "",
+      "title": "Category",
+      "type": "string"
+     },
+     "name": {
+      "title": "Name",
+      "type": "string"
+     },
+     "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+     },
+     "phone_number": {
+      "title": "Phone Number",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name",
+     "phone_number"
+    ],
+    "title": "Contact",
+    "type": "object"
+   },
+   "DemoCallIn": {
+    "properties": {
+     "consent": {
+      "default": false,
+      "title": "Consent",
+      "type": "boolean"
+     },
+     "language": {
+      "default": "",
+      "maxLength": 8,
+      "title": "Language",
+      "type": "string"
+     },
+     "name": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Name",
+      "type": "string"
+     },
+     "phone_number": {
+      "maxLength": 20,
+      "minLength": 4,
+      "title": "Phone Number",
+      "type": "string"
+     }
+    },
+    "required": [
+     "phone_number"
+    ],
+    "title": "DemoCallIn",
+    "type": "object"
+   },
+   "DemoCallOut": {
+    "properties": {
+     "message": {
+      "default": "",
+      "title": "Message",
+      "type": "string"
+     },
+     "status": {
+      "default": "calling",
+      "title": "Status",
+      "type": "string"
+     }
+    },
+    "title": "DemoCallOut",
+    "type": "object"
+   },
+   "DeviceCodeStart": {
+    "properties": {
+     "services": {
+      "default": [
+       "calendar"
+      ],
+      "items": {
+       "type": "string"
+      },
+      "title": "Services",
+      "type": "array"
+     }
+    },
+    "title": "DeviceCodeStart",
+    "type": "object"
+   },
+   "DoNotCallEntry": {
+    "properties": {
+     "added_at": {
+      "default": "",
+      "title": "Added At",
+      "type": "string"
+     },
+     "call_sid": {
+      "default": "",
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "phone_number": {
+      "title": "Phone Number",
+      "type": "string"
+     },
+     "reason": {
+      "default": "",
+      "title": "Reason",
+      "type": "string"
+     },
+     "source": {
+      "default": "",
+      "title": "Source",
+      "type": "string"
+     }
+    },
+    "required": [
+     "phone_number"
+    ],
+    "title": "DoNotCallEntry",
+    "type": "object"
+   },
+   "DoNotCallIn": {
+    "properties": {
+     "phone_number": {
+      "maxLength": 20,
+      "minLength": 4,
+      "title": "Phone Number",
+      "type": "string"
+     },
+     "reason": {
+      "default": "",
+      "maxLength": 500,
+      "title": "Reason",
+      "type": "string"
+     }
+    },
+    "required": [
+     "phone_number"
+    ],
+    "title": "DoNotCallIn",
+    "type": "object"
+   },
+   "EnableIn": {
+    "properties": {
+     "enabled": {
+      "title": "Enabled",
+      "type": "boolean"
+     },
+     "profile_id": {
+      "default": "default",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "enabled"
+    ],
+    "title": "EnableIn",
+    "type": "object"
+   },
+   "FailureBreakdownOut": {
+    "properties": {
+     "codes": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "title": "Codes",
+      "type": "array"
+     },
+     "total": {
+      "title": "Total",
+      "type": "integer"
+     },
+     "window_hours": {
+      "title": "Window Hours",
+      "type": "number"
+     }
+    },
+    "required": [
+     "window_hours",
+     "total"
+    ],
+    "title": "FailureBreakdownOut",
+    "type": "object"
+   },
+   "FaqIn": {
+    "properties": {
+     "answer": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Answer",
+      "type": "string"
+     },
+     "profile_id": {
+      "default": "default",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     },
+     "question": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Question",
+      "type": "string"
+     },
+     "unanswered_id": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Unanswered Id",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "question",
+     "answer"
+    ],
+    "title": "FaqIn",
+    "type": "object"
+   },
+   "GACriterionOut": {
+    "properties": {
+     "evidence": {
+      "additionalProperties": true,
+      "title": "Evidence",
+      "type": "object"
+     },
+     "key": {
+      "title": "Key",
+      "type": "string"
+     },
+     "needed": {
+      "default": "",
+      "title": "Needed",
+      "type": "string"
+     },
+     "summary": {
+      "title": "Summary",
+      "type": "string"
+     },
+     "title": {
+      "title": "Title",
+      "type": "string"
+     },
+     "verdict": {
+      "title": "Verdict",
+      "type": "string"
+     }
+    },
+    "required": [
+     "key",
+     "title",
+     "verdict",
+     "summary"
+    ],
+    "title": "GACriterionOut",
+    "type": "object"
+   },
+   "GAGateOut": {
+    "properties": {
+     "criteria": {
+      "items": {
+       "$ref": "#/components/schemas/GACriterionOut"
+      },
+      "title": "Criteria",
+      "type": "array"
+     },
+     "generated_at": {
+      "title": "Generated At",
+      "type": "string"
+     },
+     "ready": {
+      "title": "Ready",
+      "type": "boolean"
+     },
+     "summary": {
+      "additionalProperties": {
+       "type": "integer"
+      },
+      "title": "Summary",
+      "type": "object"
+     },
+     "thresholds": {
+      "additionalProperties": true,
+      "title": "Thresholds",
+      "type": "object"
+     },
+     "window_days": {
+      "title": "Window Days",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "generated_at",
+     "window_days",
+     "ready",
+     "summary",
+     "thresholds",
+     "criteria"
+    ],
+    "title": "GAGateOut",
+    "type": "object"
+   },
+   "GoldenSignalsOut": {
+    "properties": {
+     "generated_at": {
+      "title": "Generated At",
+      "type": "string"
+     },
+     "signals": {
+      "additionalProperties": {
+       "$ref": "#/components/schemas/SignalOut"
+      },
+      "title": "Signals",
+      "type": "object"
+     }
+    },
+    "required": [
+     "generated_at",
+     "signals"
+    ],
+    "title": "GoldenSignalsOut",
+    "type": "object"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "title": "Detail",
+      "type": "array"
+     }
+    },
+    "title": "HTTPValidationError",
+    "type": "object"
+   },
+   "InboundMessageOut": {
+    "properties": {
+     "call_sid": {
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "callback_number": {
+      "default": "",
+      "title": "Callback Number",
+      "type": "string"
+     },
+     "callback_unverified": {
+      "default": false,
+      "title": "Callback Unverified",
+      "type": "boolean"
+     },
+     "caller_name": {
+      "default": "",
+      "title": "Caller Name",
+      "type": "string"
+     },
+     "caller_name_unverified": {
+      "default": false,
+      "title": "Caller Name Unverified",
+      "type": "boolean"
+     },
+     "created_at": {
+      "default": "",
+      "title": "Created At",
+      "type": "string"
+     },
+     "delivered_to_owner_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Delivered To Owner At"
+     },
+     "id": {
+      "title": "Id",
+      "type": "integer"
+     },
+     "matter": {
+      "default": "",
+      "title": "Matter",
+      "type": "string"
+     },
+     "urgent": {
+      "default": false,
+      "title": "Urgent",
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "id",
+     "call_sid"
+    ],
+    "title": "InboundMessageOut",
+    "type": "object"
+   },
+   "InitiateCallIn": {
+    "properties": {
+     "instructions": {
+      "default": "",
+      "maxLength": 4000,
+      "title": "Instructions",
+      "type": "string"
+     },
+     "language": {
+      "default": "",
+      "maxLength": 8,
+      "title": "Language",
+      "type": "string"
+     },
+     "purpose": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Purpose",
+      "type": "string"
+     },
+     "target_name": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Target Name",
+      "type": "string"
+     },
+     "target_number": {
+      "maxLength": 20,
+      "minLength": 4,
+      "title": "Target Number",
+      "type": "string"
+     },
+     "thread_id": {
+      "default": "",
+      "maxLength": 32,
+      "title": "Thread Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "target_number",
+     "purpose"
+    ],
+    "title": "InitiateCallIn",
+    "type": "object"
+   },
+   "InitiateCallOut": {
+    "properties": {
+     "call_sid": {
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "message": {
+      "default": "",
+      "title": "Message",
+      "type": "string"
+     },
+     "status": {
+      "title": "Status",
+      "type": "string"
+     }
+    },
+    "required": [
+     "call_sid",
+     "status"
+    ],
+    "title": "InitiateCallOut",
+    "type": "object"
+   },
+   "LimitsIn": {
+    "properties": {
+     "allowed_countries": {
+      "default": "",
+      "maxLength": 200,
+      "title": "Allowed Countries",
+      "type": "string"
+     },
+     "allowed_tools": {
+      "default": "",
+      "maxLength": 2000,
+      "title": "Allowed Tools",
+      "type": "string"
+     },
+     "daily_calls": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Daily Calls",
+      "type": "integer"
+     },
+     "daily_minutes": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Daily Minutes",
+      "type": "integer"
+     },
+     "max_concurrent": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Max Concurrent",
+      "type": "integer"
+     },
+     "monthly_budget_eur": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Monthly Budget Eur",
+      "type": "number"
+     },
+     "quiet_hours": {
+      "default": "",
+      "maxLength": 20,
+      "title": "Quiet Hours",
+      "type": "string"
+     }
+    },
+    "title": "LimitsIn",
+    "type": "object"
+   },
+   "MemberIn": {
+    "properties": {
+     "role": {
+      "default": "viewer",
+      "pattern": "^(owner|admin|viewer)$",
+      "title": "Role",
+      "type": "string"
+     },
+     "user_id": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "User Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_id"
+    ],
+    "title": "MemberIn",
+    "type": "object"
+   },
+   "NumberAssignIn": {
+    "properties": {
+     "e164": {
+      "maxLength": 20,
+      "minLength": 4,
+      "title": "E164",
+      "type": "string"
+     },
+     "profile_id": {
+      "default": "",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "e164"
+    ],
+    "title": "NumberAssignIn",
+    "type": "object"
+   },
+   "NumberIn": {
+    "properties": {
+     "e164": {
+      "maxLength": 20,
+      "minLength": 4,
+      "title": "E164",
+      "type": "string"
+     },
+     "forwarding_source": {
+      "default": "",
+      "maxLength": 20,
+      "title": "Forwarding Source",
+      "type": "string"
+     },
+     "forwarding_trigger": {
+      "default": "",
+      "maxLength": 20,
+      "title": "Forwarding Trigger",
+      "type": "string"
+     },
+     "kind": {
+      "default": "forwarded_target",
+      "maxLength": 20,
+      "title": "Kind",
+      "type": "string"
+     },
+     "label": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Label",
+      "type": "string"
+     },
+     "profile_id": {
+      "default": "default",
+      "maxLength": 64,
+      "title": "Profile Id",
+      "type": "string"
+     },
+     "profile_path": {
+      "default": "",
+      "maxLength": 300,
+      "title": "Profile Path",
+      "type": "string"
+     },
+     "provider": {
+      "default": "generic",
+      "maxLength": 20,
+      "title": "Provider",
+      "type": "string"
+     }
+    },
+    "required": [
+     "e164"
+    ],
+    "title": "NumberIn",
+    "type": "object"
+   },
+   "PreviewIn": {
+    "properties": {
+     "language": {
+      "default": "de",
+      "maxLength": 5,
+      "title": "Language",
+      "type": "string"
+     },
+     "text": {
+      "maxLength": 400,
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+     },
+     "voice": {
+      "default": "",
+      "maxLength": 80,
+      "title": "Voice",
+      "type": "string"
+     }
+    },
+    "required": [
+     "text"
+    ],
+    "title": "PreviewIn",
+    "type": "object"
+   },
+   "ProfileIn": {
+    "properties": {
+     "activate": {
+      "default": true,
+      "title": "Activate",
+      "type": "boolean"
+     },
+     "data": {
+      "additionalProperties": true,
+      "title": "Data",
+      "type": "object"
+     },
+     "id": {
+      "default": "default",
+      "maxLength": 40,
+      "title": "Id",
+      "type": "string"
+     },
+     "note": {
+      "default": "",
+      "maxLength": 200,
+      "title": "Note",
+      "type": "string"
+     }
+    },
+    "required": [
+     "data"
+    ],
+    "title": "ProfileIn",
+    "type": "object"
+   },
+   "ProfileUpdate": {
+    "properties": {
+     "activate": {
+      "default": true,
+      "title": "Activate",
+      "type": "boolean"
+     },
+     "data": {
+      "additionalProperties": true,
+      "title": "Data",
+      "type": "object"
+     },
+     "note": {
+      "default": "",
+      "maxLength": 200,
+      "title": "Note",
+      "type": "string"
+     }
+    },
+    "required": [
+     "data"
+    ],
+    "title": "ProfileUpdate",
+    "type": "object"
+   },
+   "ReceptionistStats": {
+    "properties": {
+     "sentiment_distribution": {
+      "$ref": "#/components/schemas/SentimentDistribution"
+     },
+     "window_days": {
+      "default": 7,
+      "title": "Window Days",
+      "type": "integer"
+     }
+    },
+    "title": "ReceptionistStats",
+    "type": "object"
+   },
+   "ReorderIn": {
+    "properties": {
+     "priorities": {
+      "additionalProperties": {
+       "type": "integer"
+      },
+      "title": "Priorities",
+      "type": "object"
+     },
+     "profile_id": {
+      "default": "default",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "priorities"
+    ],
+    "title": "ReorderIn",
+    "type": "object"
+   },
+   "RuleIn": {
+    "properties": {
+     "profile_id": {
+      "default": "default",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     },
+     "rule": {
+      "additionalProperties": true,
+      "title": "Rule",
+      "type": "object"
+     }
+    },
+    "required": [
+     "rule"
+    ],
+    "title": "RuleIn",
+    "type": "object"
+   },
+   "SLOOut": {
+    "properties": {
+     "actual": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Actual"
+     },
+     "budget_spent": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Budget Spent"
+     },
+     "budget_total": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Budget Total"
+     },
+     "burn_pct": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Burn Pct"
+     },
+     "confidence": {
+      "default": "measured",
+      "title": "Confidence",
+      "type": "string"
+     },
+     "detail": {
+      "additionalProperties": true,
+      "title": "Detail",
+      "type": "object"
+     },
+     "met": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Met"
+     },
+     "name": {
+      "title": "Name",
+      "type": "string"
+     },
+     "sample_size": {
+      "default": 0,
+      "title": "Sample Size",
+      "type": "integer"
+     },
+     "target": {
+      "title": "Target",
+      "type": "number"
+     },
+     "unit": {
+      "default": "",
+      "title": "Unit",
+      "type": "string"
+     },
+     "window": {
+      "default": "",
+      "title": "Window",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name",
+     "target"
+    ],
+    "title": "SLOOut",
+    "type": "object"
+   },
+   "SLOReportOut": {
+    "properties": {
+     "feature_freeze": {
+      "title": "Feature Freeze",
+      "type": "boolean"
+     },
+     "freeze_min_sample": {
+      "title": "Freeze Min Sample",
+      "type": "integer"
+     },
+     "freeze_reason": {
+      "default": "",
+      "title": "Freeze Reason",
+      "type": "string"
+     },
+     "freeze_threshold_pct": {
+      "title": "Freeze Threshold Pct",
+      "type": "number"
+     },
+     "generated_at": {
+      "title": "Generated At",
+      "type": "string"
+     },
+     "slos": {
+      "items": {
+       "$ref": "#/components/schemas/SLOOut"
+      },
+      "title": "Slos",
+      "type": "array"
+     }
+    },
+    "required": [
+     "generated_at",
+     "freeze_threshold_pct",
+     "freeze_min_sample",
+     "feature_freeze"
+    ],
+    "title": "SLOReportOut",
+    "type": "object"
+   },
+   "ScheduleAppointmentIn": {
+    "properties": {
+     "attendees": {
+      "default": "",
+      "maxLength": 2000,
+      "title": "Attendees",
+      "type": "string"
+     },
+     "contact_name": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Contact Name",
+      "type": "string"
+     },
+     "duration_minutes": {
+      "default": 30,
+      "maximum": 480,
+      "minimum": 5,
+      "title": "Duration Minutes",
+      "type": "integer"
+     },
+     "language": {
+      "default": "",
+      "maxLength": 8,
+      "title": "Language",
+      "type": "string"
+     },
+     "location_or_meet": {
+      "default": "",
+      "maxLength": 500,
+      "title": "Location Or Meet",
+      "type": "string"
+     },
+     "target_number": {
+      "maxLength": 20,
+      "minLength": 4,
+      "title": "Target Number",
+      "type": "string"
+     },
+     "thread_id": {
+      "default": "",
+      "maxLength": 32,
+      "title": "Thread Id",
+      "type": "string"
+     },
+     "timeframe": {
+      "default": "",
+      "maxLength": 64,
+      "title": "Timeframe",
+      "type": "string"
+     },
+     "topic": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Topic",
+      "type": "string"
+     }
+    },
+    "required": [
+     "target_number",
+     "contact_name",
+     "topic"
+    ],
+    "title": "ScheduleAppointmentIn",
+    "type": "object"
+   },
+   "ScheduleAppointmentOut": {
+    "properties": {
+     "message": {
+      "title": "Message",
+      "type": "string"
+     },
+     "status": {
+      "title": "Status",
+      "type": "string"
+     }
+    },
+    "required": [
+     "status",
+     "message"
+    ],
+    "title": "ScheduleAppointmentOut",
+    "type": "object"
+   },
+   "ScheduledCallIn": {
+    "properties": {
+     "at": {
+      "default": "",
+      "maxLength": 40,
+      "title": "At",
+      "type": "string"
+     },
+     "instructions": {
+      "default": "",
+      "maxLength": 4000,
+      "title": "Instructions",
+      "type": "string"
+     },
+     "language": {
+      "default": "",
+      "maxLength": 8,
+      "title": "Language",
+      "type": "string"
+     },
+     "purpose": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Purpose",
+      "type": "string"
+     },
+     "run_in_minutes": {
+      "anyOf": [
+       {
+        "maximum": 129600,
+        "minimum": 1,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Run In Minutes"
+     },
+     "target_name": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Target Name",
+      "type": "string"
+     },
+     "target_number": {
+      "maxLength": 20,
+      "minLength": 4,
+      "title": "Target Number",
+      "type": "string"
+     },
+     "thread_id": {
+      "default": "",
+      "maxLength": 32,
+      "title": "Thread Id",
+      "type": "string"
+     },
+     "timezone": {
+      "default": "",
+      "maxLength": 64,
+      "title": "Timezone",
+      "type": "string"
+     }
+    },
+    "required": [
+     "target_number",
+     "purpose"
+    ],
+    "title": "ScheduledCallIn",
+    "type": "object"
+   },
+   "ScheduledCallOut": {
+    "properties": {
+     "created_at": {
+      "default": "",
+      "title": "Created At",
+      "type": "string"
+     },
+     "id": {
+      "title": "Id",
+      "type": "integer"
+     },
+     "language": {
+      "default": "",
+      "title": "Language",
+      "type": "string"
+     },
+     "next_run_at": {
+      "default": "",
+      "title": "Next Run At",
+      "type": "string"
+     },
+     "purpose": {
+      "title": "Purpose",
+      "type": "string"
+     },
+     "target_name": {
+      "default": "",
+      "title": "Target Name",
+      "type": "string"
+     },
+     "target_number": {
+      "title": "Target Number",
+      "type": "string"
+     },
+     "thread_id": {
+      "default": "",
+      "title": "Thread Id",
+      "type": "string"
+     },
+     "timezone": {
+      "default": "",
+      "title": "Timezone",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "target_number",
+     "purpose"
+    ],
+    "title": "ScheduledCallOut",
+    "type": "object"
+   },
+   "SearchIn": {
+    "properties": {
+     "k": {
+      "default": 5,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "K",
+      "type": "integer"
+     },
+     "profile_id": {
+      "default": "",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     },
+     "q": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Q",
+      "type": "string"
+     }
+    },
+    "required": [
+     "q"
+    ],
+    "title": "SearchIn",
+    "type": "object"
+   },
+   "SecretIn": {
+    "properties": {
+     "name": {
+      "maxLength": 60,
+      "minLength": 1,
+      "pattern": "^[a-z_]+$",
+      "title": "Name",
+      "type": "string"
+     },
+     "value": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Value",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name",
+     "value"
+    ],
+    "title": "SecretIn",
+    "type": "object"
+   },
+   "SentimentDistribution": {
+    "properties": {
+     "assessed": {
+      "default": 0,
+      "title": "Assessed",
+      "type": "integer"
+     },
+     "mixed": {
+      "default": 0,
+      "title": "Mixed",
+      "type": "integer"
+     },
+     "negative": {
+      "default": 0,
+      "title": "Negative",
+      "type": "integer"
+     },
+     "neutral": {
+      "default": 0,
+      "title": "Neutral",
+      "type": "integer"
+     },
+     "positive": {
+      "default": 0,
+      "title": "Positive",
+      "type": "integer"
+     }
+    },
+    "title": "SentimentDistribution",
+    "type": "object"
+   },
+   "SignalOut": {
+    "properties": {
+     "detail": {
+      "additionalProperties": true,
+      "title": "Detail",
+      "type": "object"
+     },
+     "min_sample": {
+      "default": 1,
+      "title": "Min Sample",
+      "type": "integer"
+     },
+     "name": {
+      "title": "Name",
+      "type": "string"
+     },
+     "sample_size": {
+      "default": 0,
+      "title": "Sample Size",
+      "type": "integer"
+     },
+     "sufficient_data": {
+      "default": false,
+      "title": "Sufficient Data",
+      "type": "boolean"
+     },
+     "target": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Target"
+     },
+     "unit": {
+      "default": "",
+      "title": "Unit",
+      "type": "string"
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value"
+     },
+     "window": {
+      "default": "",
+      "title": "Window",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name"
+    ],
+    "title": "SignalOut",
+    "type": "object"
+   },
+   "SipAccountIn": {
+    "properties": {
+     "kind": {
+      "default": "trunk",
+      "maxLength": 20,
+      "title": "Kind",
+      "type": "string"
+     },
+     "name": {
+      "maxLength": 40,
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "title": "Name",
+      "type": "string"
+     },
+     "numbers": {
+      "items": {
+       "type": "string"
+      },
+      "minItems": 1,
+      "title": "Numbers",
+      "type": "array"
+     },
+     "password_env": {
+      "maxLength": 60,
+      "minLength": 1,
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "title": "Password Env",
+      "type": "string"
+     },
+     "provider": {
+      "maxLength": 40,
+      "minLength": 1,
+      "title": "Provider",
+      "type": "string"
+     },
+     "registrar": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Registrar",
+      "type": "string"
+     },
+     "username": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Username",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name",
+     "provider",
+     "username",
+     "password_env",
+     "numbers"
+    ],
+    "title": "SipAccountIn",
+    "type": "object"
+   },
+   "SourceIn": {
+    "properties": {
+     "kind": {
+      "default": "website",
+      "pattern": "^(website|pdf|docx|txt|md)$",
+      "title": "Kind",
+      "type": "string"
+     },
+     "profile_id": {
+      "default": "default",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     },
+     "title": {
+      "default": "",
+      "maxLength": 200,
+      "title": "Title",
+      "type": "string"
+     },
+     "uri": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Uri",
+      "type": "string"
+     }
+    },
+    "required": [
+     "uri"
+    ],
+    "title": "SourceIn",
+    "type": "object"
+   },
+   "StateUpdate": {
+    "properties": {
+     "data": {
+      "additionalProperties": true,
+      "title": "Data",
+      "type": "object"
+     },
+     "step": {
+      "anyOf": [
+       {
+        "maximum": 10,
+        "minimum": 1,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Step"
+     }
+    },
+    "title": "StateUpdate",
+    "type": "object"
+   },
+   "StepIn": {
+    "properties": {
+     "step": {
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Step",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "step"
+    ],
+    "title": "StepIn",
+    "type": "object"
+   },
+   "TenantIn": {
+    "properties": {
+     "id": {
+      "maxLength": 40,
+      "minLength": 1,
+      "title": "Id",
+      "type": "string"
+     },
+     "name": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Name",
+      "type": "string"
+     },
+     "plan": {
+      "default": "pilot",
+      "maxLength": 40,
+      "title": "Plan",
+      "type": "string"
+     },
+     "residency_mode": {
+      "default": "",
+      "maxLength": 20,
+      "title": "Residency Mode",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id"
+    ],
+    "title": "TenantIn",
+    "type": "object"
+   },
+   "TestIn": {
+    "properties": {
+     "intent": {
+      "default": "any",
+      "maxLength": 20,
+      "title": "Intent",
+      "type": "string"
+     },
+     "is_open": {
+      "default": true,
+      "title": "Is Open",
+      "type": "boolean"
+     },
+     "language": {
+      "default": "de",
+      "maxLength": 5,
+      "title": "Language",
+      "type": "string"
+     },
+     "profile_id": {
+      "default": "default",
+      "maxLength": 40,
+      "title": "Profile Id",
+      "type": "string"
+     },
+     "text": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+     }
+    },
+    "required": [
+     "text"
+    ],
+    "title": "TestIn",
+    "type": "object"
+   },
+   "ThreadAssignIn": {
+    "properties": {
+     "call_sid": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Call Sid",
+      "type": "string"
+     }
+    },
+    "required": [
+     "call_sid"
+    ],
+    "title": "ThreadAssignIn",
+    "type": "object"
+   },
+   "ThreadCallOut": {
+    "properties": {
+     "call_sid": {
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "direction": {
+      "default": "",
+      "title": "Direction",
+      "type": "string"
+     },
+     "ended_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ended At"
+     },
+     "failure_code": {
+      "default": "",
+      "title": "Failure Code",
+      "type": "string"
+     },
+     "outcome": {
+      "default": "",
+      "title": "Outcome",
+      "type": "string"
+     },
+     "purged": {
+      "default": false,
+      "title": "Purged",
+      "type": "boolean"
+     },
+     "sentiment": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sentiment"
+     },
+     "started_at": {
+      "default": "",
+      "title": "Started At",
+      "type": "string"
+     },
+     "task_result": {
+      "default": "",
+      "title": "Task Result",
+      "type": "string"
+     },
+     "thread_attach_kind": {
+      "default": "",
+      "title": "Thread Attach Kind",
+      "type": "string"
+     }
+    },
+    "required": [
+     "call_sid"
+    ],
+    "title": "ThreadCallOut",
+    "type": "object"
+   },
+   "ThreadCreateIn": {
+    "properties": {
+     "contact_name": {
+      "default": "",
+      "maxLength": 200,
+      "title": "Contact Name",
+      "type": "string"
+     },
+     "language": {
+      "default": "",
+      "maxLength": 8,
+      "title": "Language",
+      "type": "string"
+     },
+     "primary_number": {
+      "default": "",
+      "maxLength": 20,
+      "title": "Primary Number",
+      "type": "string"
+     },
+     "subject": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Subject",
+      "type": "string"
+     }
+    },
+    "required": [
+     "subject"
+    ],
+    "title": "ThreadCreateIn",
+    "type": "object"
+   },
+   "ThreadDetail": {
+    "properties": {
+     "call_count": {
+      "default": 0,
+      "title": "Call Count",
+      "type": "integer"
+     },
+     "calls": {
+      "items": {
+       "$ref": "#/components/schemas/ThreadCallOut"
+      },
+      "title": "Calls",
+      "type": "array"
+     },
+     "closed_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Closed At"
+     },
+     "contact_name": {
+      "default": "",
+      "title": "Contact Name",
+      "type": "string"
+     },
+     "created_at": {
+      "default": "",
+      "title": "Created At",
+      "type": "string"
+     },
+     "language": {
+      "default": "",
+      "title": "Language",
+      "type": "string"
+     },
+     "open_commitments": {
+      "items": {
+       "$ref": "#/components/schemas/CommitmentOut"
+      },
+      "title": "Open Commitments",
+      "type": "array"
+     },
+     "origin": {
+      "default": "",
+      "title": "Origin",
+      "type": "string"
+     },
+     "primary_number": {
+      "default": "",
+      "title": "Primary Number",
+      "type": "string"
+     },
+     "resolved_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Resolved At"
+     },
+     "rolling_summary": {
+      "default": "",
+      "title": "Rolling Summary",
+      "type": "string"
+     },
+     "status": {
+      "default": "open",
+      "title": "Status",
+      "type": "string"
+     },
+     "subject": {
+      "default": "",
+      "title": "Subject",
+      "type": "string"
+     },
+     "thread_id": {
+      "title": "Thread Id",
+      "type": "string"
+     },
+     "updated_at": {
+      "default": "",
+      "title": "Updated At",
+      "type": "string"
+     }
+    },
+    "required": [
+     "thread_id"
+    ],
+    "title": "ThreadDetail",
+    "type": "object"
+   },
+   "ThreadMergeIn": {
+    "properties": {
+     "source_thread_id": {
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Source Thread Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "source_thread_id"
+    ],
+    "title": "ThreadMergeIn",
+    "type": "object"
+   },
+   "ThreadOut": {
+    "properties": {
+     "call_count": {
+      "default": 0,
+      "title": "Call Count",
+      "type": "integer"
+     },
+     "closed_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Closed At"
+     },
+     "contact_name": {
+      "default": "",
+      "title": "Contact Name",
+      "type": "string"
+     },
+     "created_at": {
+      "default": "",
+      "title": "Created At",
+      "type": "string"
+     },
+     "language": {
+      "default": "",
+      "title": "Language",
+      "type": "string"
+     },
+     "open_commitments": {
+      "items": {
+       "$ref": "#/components/schemas/CommitmentOut"
+      },
+      "title": "Open Commitments",
+      "type": "array"
+     },
+     "origin": {
+      "default": "",
+      "title": "Origin",
+      "type": "string"
+     },
+     "primary_number": {
+      "default": "",
+      "title": "Primary Number",
+      "type": "string"
+     },
+     "resolved_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Resolved At"
+     },
+     "rolling_summary": {
+      "default": "",
+      "title": "Rolling Summary",
+      "type": "string"
+     },
+     "status": {
+      "default": "open",
+      "title": "Status",
+      "type": "string"
+     },
+     "subject": {
+      "default": "",
+      "title": "Subject",
+      "type": "string"
+     },
+     "thread_id": {
+      "title": "Thread Id",
+      "type": "string"
+     },
+     "updated_at": {
+      "default": "",
+      "title": "Updated At",
+      "type": "string"
+     }
+    },
+    "required": [
+     "thread_id"
+    ],
+    "title": "ThreadOut",
+    "type": "object"
+   },
+   "ThreadPatchIn": {
+    "properties": {
+     "status": {
+      "anyOf": [
+       {
+        "pattern": "^(open|resolved|closed)$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Status"
+     },
+     "subject": {
+      "anyOf": [
+       {
+        "maxLength": 120,
+        "minLength": 1,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Subject"
+     }
+    },
+    "title": "ThreadPatchIn",
+    "type": "object"
+   },
+   "TokenIn": {
+    "properties": {
+     "label": {
+      "default": "",
+      "maxLength": 80,
+      "title": "Label",
+      "type": "string"
+     },
+     "role": {
+      "default": "owner",
+      "pattern": "^(owner|admin|viewer)$",
+      "title": "Role",
+      "type": "string"
+     }
+    },
+    "title": "TokenIn",
+    "type": "object"
+   },
+   "TranscriptLine": {
+    "properties": {
+     "confidence": {
+      "default": 1,
+      "title": "Confidence",
+      "type": "number"
+     },
+     "speaker": {
+      "title": "Speaker",
+      "type": "string"
+     },
+     "state": {
+      "default": "",
+      "title": "State",
+      "type": "string"
+     },
+     "text": {
+      "title": "Text",
+      "type": "string"
+     },
+     "timestamp": {
+      "default": "",
+      "title": "Timestamp",
+      "type": "string"
+     }
+    },
+    "required": [
+     "speaker",
+     "text"
+    ],
+    "title": "TranscriptLine",
+    "type": "object"
+   },
+   "TurnModelChoice": {
+    "properties": {
+     "label": {
+      "title": "Label",
+      "type": "string"
+     },
+     "value": {
+      "title": "Value",
+      "type": "string"
+     }
+    },
+    "required": [
+     "value",
+     "label"
+    ],
+    "title": "TurnModelChoice",
+    "type": "object"
+   },
+   "ValidateIn": {
+    "properties": {
+     "data": {
+      "additionalProperties": true,
+      "title": "Data",
+      "type": "object"
+     },
+     "language": {
+      "default": "de",
+      "maxLength": 5,
+      "title": "Language",
+      "type": "string"
+     }
+    },
+    "required": [
+     "data"
+    ],
+    "title": "ValidateIn",
+    "type": "object"
+   },
+   "ValidationError": {
+    "properties": {
+     "ctx": {
+      "title": "Context",
+      "type": "object"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "title": "Location",
+      "type": "array"
+     },
+     "msg": {
+      "title": "Message",
+      "type": "string"
+     },
+     "type": {
+      "title": "Error Type",
+      "type": "string"
+     }
+    },
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError",
+    "type": "object"
+   },
+   "VoiceApprovalDecision": {
+    "properties": {
+     "approved": {
+      "title": "Approved",
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "approved"
+    ],
+    "title": "VoiceApprovalDecision",
+    "type": "object"
+   },
+   "VoiceApprovalOut": {
+    "properties": {
+     "approval_id": {
+      "title": "Approval Id",
+      "type": "string"
+     },
+     "args_preview": {
+      "additionalProperties": true,
+      "title": "Args Preview",
+      "type": "object"
+     },
+     "call_sid": {
+      "title": "Call Sid",
+      "type": "string"
+     },
+     "created_at": {
+      "default": "",
+      "title": "Created At",
+      "type": "string"
+     },
+     "expires_at": {
+      "default": "",
+      "title": "Expires At",
+      "type": "string"
+     },
+     "final_state": {
+      "default": "",
+      "title": "Final State",
+      "type": "string"
+     },
+     "summary": {
+      "title": "Summary",
+      "type": "string"
+     },
+     "summary_spoken_language": {
+      "default": "",
+      "title": "Summary Spoken Language",
+      "type": "string"
+     },
+     "tool_name": {
+      "title": "Tool Name",
+      "type": "string"
+     }
+    },
+    "required": [
+     "approval_id",
+     "call_sid",
+     "tool_name",
+     "summary"
+    ],
+    "title": "VoiceApprovalOut",
+    "type": "object"
+   },
+   "VoiceConfig": {
+    "properties": {
+     "choices": {
+      "items": {
+       "$ref": "#/components/schemas/TurnModelChoice"
+      },
+      "title": "Choices",
+      "type": "array"
+     },
+     "default_model": {
+      "title": "Default Model",
+      "type": "string"
+     },
+     "voice_turn_model": {
+      "title": "Voice Turn Model",
+      "type": "string"
+     }
+    },
+    "required": [
+     "voice_turn_model",
+     "default_model",
+     "choices"
+    ],
+    "title": "VoiceConfig",
+    "type": "object"
+   },
+   "VoiceConfigUpdate": {
+    "properties": {
+     "voice_turn_model": {
+      "maxLength": 120,
+      "title": "Voice Turn Model",
+      "type": "string"
+     }
+    },
+    "required": [
+     "voice_turn_model"
+    ],
+    "title": "VoiceConfigUpdate",
+    "type": "object"
+   },
+   "VoiceStatus": {
+    "properties": {
+     "active_call_count": {
+      "default": 0,
+      "title": "Active Call Count",
+      "type": "integer"
+     },
+     "consent_mode": {
+      "default": "",
+      "title": "Consent Mode",
+      "type": "string"
+     },
+     "enabled": {
+      "default": false,
+      "title": "Enabled",
+      "type": "boolean"
+     },
+     "engine": {
+      "default": "",
+      "title": "Engine",
+      "type": "string"
+     },
+     "language": {
+      "default": "",
+      "title": "Language",
+      "type": "string"
+     },
+     "listen_in_enabled": {
+      "default": false,
+      "title": "Listen In Enabled",
+      "type": "boolean"
+     },
+     "outbound_enabled": {
+      "default": false,
+      "title": "Outbound Enabled",
+      "type": "boolean"
+     },
+     "voice_configured": {
+      "default": false,
+      "title": "Voice Configured",
+      "type": "boolean"
+     },
+     "webhook_base_configured": {
+      "default": false,
+      "title": "Webhook Base Configured",
+      "type": "boolean"
+     }
+    },
+    "title": "VoiceStatus",
+    "type": "object"
+   }
+  },
+  "securitySchemes": {
+   "BearerAuth": {
+    "scheme": "bearer",
+    "type": "http"
+   }
+  }
+ },
+ "info": {
+  "title": "Pincer API",
+  "version": "0.8.0"
+ },
+ "openapi": "3.1.0",
+ "paths": {
+  "/api/apps/twilio/fallback": {
+   "post": {
+    "description": "Error fallback — plays apology message in the call language, logs error.",
+    "operationId": "voice_fallback_api_apps_twilio_fallback_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Fallback",
+    "tags": [
+     "apps",
+     "twilio"
+    ]
+   }
+  },
+  "/api/apps/twilio/health": {
+   "get": {
+    "description": "Health check for Twilio webhook validation.",
+    "operationId": "voice_health_api_apps_twilio_health_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Voice Health Api Apps Twilio Health Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Health",
+    "tags": [
+     "apps",
+     "twilio"
+    ]
+   }
+  },
+  "/api/apps/twilio/relay-webhook": {
+   "post": {
+    "description": "ConversationRelay text webhook — receives transcribed text, returns agent response.",
+    "operationId": "relay_webhook_api_apps_twilio_relay_webhook_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Relay Webhook",
+    "tags": [
+     "apps",
+     "twilio"
+    ]
+   }
+  },
+  "/api/apps/twilio/status": {
+   "post": {
+    "description": "Call status callbacks (ringing, answered, completed) + AMD results.",
+    "operationId": "voice_status_api_apps_twilio_status_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Status",
+    "tags": [
+     "apps",
+     "twilio"
+    ]
+   }
+  },
+  "/api/apps/twilio/transfer-result": {
+   "post": {
+    "description": "Sprint 12 §8.4: <Dial action> callback after a receptionist transfer.\n\ncompleted → nothing to do (Twilio hangs up after the bridged leg). Anything\nelse (busy / no-answer / failed / canceled) → apology + message-taking:\nthe call is reconnected to the relay with the apology as its greeting and\nthe session already in TAKE_MESSAGE (name question asked).",
+    "operationId": "voice_transfer_result_api_apps_twilio_transfer_result_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Transfer Result",
+    "tags": [
+     "apps",
+     "twilio"
+    ]
+   }
+  },
+  "/api/apps/twilio/webhook": {
+   "post": {
+    "description": "Inbound call handler — returns TwiML to start a stream or ConversationRelay.",
+    "operationId": "voice_webhook_api_apps_twilio_webhook_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Webhook",
+    "tags": [
+     "apps",
+     "twilio"
+    ]
+   }
+  },
+  "/api/audit": {
+   "get": {
+    "description": "List audit log entries with optional filters.",
+    "operationId": "get_audit_api_audit_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 100,
+       "maximum": 500,
+       "minimum": 1,
+       "title": "Limit",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "offset",
+      "required": false,
+      "schema": {
+       "default": 0,
+       "minimum": 0,
+       "title": "Offset",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "action",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Action"
+      }
+     },
+     {
+      "in": "query",
+      "name": "user_id",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "User Id"
+      }
+     },
+     {
+      "in": "query",
+      "name": "since",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Since"
+      }
+     },
+     {
+      "in": "query",
+      "name": "until",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Until"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Audit Api Audit Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Get Audit",
+    "tags": [
+     "audit"
+    ]
+   }
+  },
+  "/api/audit/stats": {
+   "get": {
+    "description": "Get aggregate audit statistics.",
+    "operationId": "get_audit_stats_api_audit_stats_get",
+    "parameters": [
+     {
+      "description": "ISO date for 'today' filter",
+      "in": "query",
+      "name": "since",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "ISO date for 'today' filter",
+       "title": "Since"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Audit Stats Api Audit Stats Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Get Audit Stats",
+    "tags": [
+     "audit"
+    ]
+   }
+  },
+  "/api/chat/approval": {
+   "post": {
+    "operationId": "post_approval_api_chat_approval_post",
+    "parameters": [
+     {
+      "in": "header",
+      "name": "X-Pincer-User",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Pincer-User"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ApprovalIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Post Approval Api Chat Approval Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Post Approval",
+    "tags": [
+     "chat"
+    ]
+   }
+  },
+  "/api/chat/message": {
+   "post": {
+    "operationId": "post_message_api_chat_message_post",
+    "parameters": [
+     {
+      "in": "header",
+      "name": "X-Pincer-User",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Pincer-User"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ChatIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Post Message Api Chat Message Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Post Message",
+    "tags": [
+     "chat"
+    ]
+   }
+  },
+  "/api/chat/stream": {
+   "post": {
+    "operationId": "post_stream_api_chat_stream_post",
+    "parameters": [
+     {
+      "in": "header",
+      "name": "X-Pincer-User",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Pincer-User"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ChatIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Post Stream",
+    "tags": [
+     "chat"
+    ]
+   }
+  },
+  "/api/conversations": {
+   "get": {
+    "description": "List memory records for a user with optional offset pagination.\n\nWhen both *channel* and *channel_user_id* are provided, results are\nnarrowed to the tag ``{PINCER_MEMORY_USER_TAG_PREFIX}{channel}:{channel_user_id}``.",
+    "operationId": "list_conversations_api_conversations_get",
+    "parameters": [
+     {
+      "description": "User ID to filter memories by",
+      "in": "query",
+      "name": "user_id",
+      "required": true,
+      "schema": {
+       "description": "User ID to filter memories by",
+       "title": "User Id",
+       "type": "string"
+      }
+     },
+     {
+      "description": "Channel type (e.g. telegram, whatsapp, discord)",
+      "in": "query",
+      "name": "channel",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Channel type (e.g. telegram, whatsapp, discord)",
+       "title": "Channel"
+      }
+     },
+     {
+      "description": "Channel-specific user or chat ID",
+      "in": "query",
+      "name": "channel_user_id",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Channel-specific user or chat ID",
+       "title": "Channel User Id"
+      }
+     },
+     {
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 20,
+       "maximum": 200,
+       "minimum": 1,
+       "title": "Limit",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "offset",
+      "required": false,
+      "schema": {
+       "default": 0,
+       "minimum": 0,
+       "title": "Offset",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response List Conversations Api Conversations Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "List Conversations",
+    "tags": [
+     "conversations"
+    ]
+   }
+  },
+  "/api/conversations/{conv_id}": {
+   "get": {
+    "description": "Fetch a single memory record and return its content as user + assistant messages.",
+    "operationId": "get_conversation_api_conversations__conv_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "conv_id",
+      "required": true,
+      "schema": {
+       "title": "Conv Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Conversation Api Conversations  Conv Id  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Get Conversation",
+    "tags": [
+     "conversations"
+    ]
+   }
+  },
+  "/api/costs/by-model": {
+   "get": {
+    "operationId": "get_costs_by_model_api_costs_by_model_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "days",
+      "required": false,
+      "schema": {
+       "default": 7,
+       "maximum": 90,
+       "minimum": 1,
+       "title": "Days",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Costs By Model Api Costs By Model Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Get Costs By Model",
+    "tags": [
+     "costs"
+    ]
+   }
+  },
+  "/api/costs/by-tool": {
+   "get": {
+    "operationId": "get_costs_by_tool_api_costs_by_tool_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "days",
+      "required": false,
+      "schema": {
+       "default": 7,
+       "maximum": 90,
+       "minimum": 1,
+       "title": "Days",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Costs By Tool Api Costs By Tool Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Get Costs By Tool",
+    "tags": [
+     "costs"
+    ]
+   }
+  },
+  "/api/costs/history": {
+   "get": {
+    "operationId": "get_cost_history_api_costs_history_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "days",
+      "required": false,
+      "schema": {
+       "default": 30,
+       "maximum": 365,
+       "minimum": 1,
+       "title": "Days",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Cost History Api Costs History Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Get Cost History",
+    "tags": [
+     "costs"
+    ]
+   }
+  },
+  "/api/costs/today": {
+   "get": {
+    "operationId": "get_today_costs_api_costs_today_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Today Costs Api Costs Today Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Get Today Costs",
+    "tags": [
+     "costs"
+    ]
+   }
+  },
+  "/api/doctor": {
+   "get": {
+    "operationId": "run_doctor_api_doctor_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Run Doctor Api Doctor Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Run Doctor"
+   }
+  },
+  "/api/health": {
+   "get": {
+    "operationId": "health_api_health_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "type": "string"
+         },
+         "title": "Response Health Api Health Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Health"
+   }
+  },
+  "/api/identity": {
+   "get": {
+    "description": "Return all identities from the database with their linked channels.",
+    "operationId": "list_identities_api_identity_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 100,
+       "maximum": 1000,
+       "minimum": 1,
+       "title": "Limit",
+       "type": "integer"
+      }
+     },
+     {
+      "description": "Filter by pincer_user_id or channel_user_id",
+      "in": "query",
+      "name": "search",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Filter by pincer_user_id or channel_user_id",
+       "title": "Search"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response List Identities Api Identity Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "List Identities",
+    "tags": [
+     "identity"
+    ]
+   }
+  },
+  "/api/identity/{pincer_user_id}": {
+   "get": {
+    "description": "Return a single identity with all linked channels.",
+    "operationId": "get_identity_api_identity__pincer_user_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "pincer_user_id",
+      "required": true,
+      "schema": {
+       "title": "Pincer User Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Identity Api Identity  Pincer User Id  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Get Identity",
+    "tags": [
+     "identity"
+    ]
+   }
+  },
+  "/api/integrations": {
+   "get": {
+    "description": "List built-in tools, configured integrations (Google Workspace, Slack), and MCP servers.",
+    "operationId": "list_integrations_api_integrations_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "items": {
+           "additionalProperties": true,
+           "type": "object"
+          },
+          "type": "array"
+         },
+         "title": "Response List Integrations Api Integrations Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "List Integrations",
+    "tags": [
+     "integrations"
+    ]
+   }
+  },
+  "/api/integrations/google/calendars": {
+   "get": {
+    "operationId": "google_calendars_api_integrations_google_calendars_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Google Calendars Api Integrations Google Calendars Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Google Calendars",
+    "tags": [
+     "oauth"
+    ]
+   }
+  },
+  "/api/integrations/google/oauth/callback": {
+   "get": {
+    "operationId": "google_oauth_callback_api_integrations_google_oauth_callback_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "code",
+      "required": false,
+      "schema": {
+       "default": "",
+       "title": "Code",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "state",
+      "required": false,
+      "schema": {
+       "default": "",
+       "title": "State",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "error",
+      "required": false,
+      "schema": {
+       "default": "",
+       "title": "Error",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "title": "Response Google Oauth Callback Api Integrations Google Oauth Callback Get"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Google Oauth Callback",
+    "tags": [
+     "oauth"
+    ]
+   }
+  },
+  "/api/integrations/google/oauth/start": {
+   "get": {
+    "operationId": "google_oauth_start_api_integrations_google_oauth_start_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "services",
+      "required": false,
+      "schema": {
+       "default": "calendar",
+       "title": "Services",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "redirect",
+      "required": false,
+      "schema": {
+       "default": 0,
+       "maximum": 1,
+       "minimum": 0,
+       "title": "Redirect",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "title": "Response Google Oauth Start Api Integrations Google Oauth Start Get"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Google Oauth Start",
+    "tags": [
+     "oauth"
+    ]
+   }
+  },
+  "/api/integrations/google/oauth/status": {
+   "get": {
+    "operationId": "google_oauth_status_api_integrations_google_oauth_status_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Google Oauth Status Api Integrations Google Oauth Status Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Google Oauth Status",
+    "tags": [
+     "oauth"
+    ]
+   }
+  },
+  "/api/integrations/ms365/device-code/start": {
+   "post": {
+    "operationId": "ms365_device_code_start_api_integrations_ms365_device_code_start_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DeviceCodeStart"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Ms365 Device Code Start Api Integrations Ms365 Device Code Start Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Ms365 Device Code Start",
+    "tags": [
+     "oauth"
+    ]
+   }
+  },
+  "/api/integrations/ms365/device-code/{flow_id}": {
+   "get": {
+    "operationId": "ms365_device_code_status_api_integrations_ms365_device_code__flow_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "flow_id",
+      "required": true,
+      "schema": {
+       "title": "Flow Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "title": "Response Ms365 Device Code Status Api Integrations Ms365 Device Code  Flow Id  Get"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Ms365 Device Code Status",
+    "tags": [
+     "oauth"
+    ]
+   }
+  },
+  "/api/integrations/{slug}": {
+   "get": {
+    "operationId": "get_integration_api_integrations__slug__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "slug",
+      "required": true,
+      "schema": {
+       "title": "Slug",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Integration Api Integrations  Slug  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Get Integration",
+    "tags": [
+     "integrations"
+    ]
+   }
+  },
+  "/api/ops/alerts": {
+   "get": {
+    "description": "Alerts that would fire right now. Evaluated, not delivered — opening the\ndashboard must never send anyone a notification.",
+    "operationId": "current_alerts_api_ops_alerts_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/AlertOut"
+         },
+         "title": "Response Current Alerts Api Ops Alerts Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Current Alerts",
+    "tags": [
+     "ops"
+    ]
+   }
+  },
+  "/api/ops/canary": {
+   "get": {
+    "operationId": "canary_history_api_ops_canary_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 20,
+       "maximum": 200,
+       "minimum": 1,
+       "title": "Limit",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/CanaryRunOut"
+         },
+         "title": "Response Canary History Api Ops Canary Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Canary History",
+    "tags": [
+     "ops"
+    ]
+   },
+   "post": {
+    "description": "Run the synthetic canary now.\n\nPlaces a real phone call, so it refuses unless the canary is configured —\nan operator clicking a button must not be able to dial an unset number, and\nthe Sprint 8 abuse gate still applies underneath.",
+    "operationId": "trigger_canary_api_ops_canary_post",
+    "responses": {
+     "202": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CanaryTriggerOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Trigger Canary",
+    "tags": [
+     "ops"
+    ]
+   }
+  },
+  "/api/ops/digest": {
+   "get": {
+    "description": "The weekly digest text, rendered on demand (does not send it anywhere).",
+    "operationId": "weekly_digest_api_ops_digest_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "type": "string"
+         },
+         "title": "Response Weekly Digest Api Ops Digest Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Weekly Digest",
+    "tags": [
+     "ops"
+    ]
+   }
+  },
+  "/api/ops/failures": {
+   "get": {
+    "description": "Failure codes over a window, ranked, with their human descriptions.",
+    "operationId": "failure_breakdown_api_ops_failures_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "hours",
+      "required": false,
+      "schema": {
+       "default": 168,
+       "maximum": 8760,
+       "minimum": 1,
+       "title": "Hours",
+       "type": "number"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/FailureBreakdownOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Failure Breakdown",
+    "tags": [
+     "ops"
+    ]
+   }
+  },
+  "/api/ops/ga-gate": {
+   "get": {
+    "description": "The GA exit criteria evaluated against real data.\n\n`ready` is true only when every criterion passes — insufficient data never\ncounts as a pass. Runs `doctor --production`, which probes configured voice\nproviders, so this endpoint is slower than the rest of /api/ops.",
+    "operationId": "ga_gate_api_ops_ga_gate_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "days",
+      "required": false,
+      "schema": {
+       "default": 14,
+       "maximum": 365,
+       "minimum": 1,
+       "title": "Days",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GAGateOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Ga Gate",
+    "tags": [
+     "ops"
+    ]
+   }
+  },
+  "/api/ops/ga-gate/report": {
+   "get": {
+    "description": "The sign-off document, rendered as markdown.",
+    "operationId": "ga_gate_markdown_api_ops_ga_gate_report_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "days",
+      "required": false,
+      "schema": {
+       "default": 14,
+       "maximum": 365,
+       "minimum": 1,
+       "title": "Days",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "type": "string"
+         },
+         "title": "Response Ga Gate Markdown Api Ops Ga Gate Report Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Ga Gate Markdown",
+    "tags": [
+     "ops"
+    ]
+   }
+  },
+  "/api/ops/signals": {
+   "get": {
+    "description": "The five golden signals, each in its configured window.",
+    "operationId": "golden_signals_endpoint_api_ops_signals_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GoldenSignalsOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Golden Signals Endpoint",
+    "tags": [
+     "ops"
+    ]
+   }
+  },
+  "/api/ops/slo": {
+   "get": {
+    "description": "Month-to-date SLO status and error-budget burn.",
+    "operationId": "slo_report_api_ops_slo_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SLOReportOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Slo Report",
+    "tags": [
+     "ops"
+    ]
+   }
+  },
+  "/api/public/demo-call": {
+   "post": {
+    "operationId": "demo_call_api_public_demo_call_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DemoCallIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/DemoCallOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Demo Call",
+    "tags": [
+     "public"
+    ]
+   }
+  },
+  "/api/schedules": {
+   "get": {
+    "description": "List scheduled tasks: recurring + upcoming by default, plus past one-offs on request.",
+    "operationId": "list_scheduled_tasks_api_schedules_get",
+    "parameters": [
+     {
+      "description": "Also include already-fired one-off tasks",
+      "in": "query",
+      "name": "include_past",
+      "required": false,
+      "schema": {
+       "default": false,
+       "description": "Also include already-fired one-off tasks",
+       "title": "Include Past",
+       "type": "boolean"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response List Scheduled Tasks Api Schedules Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "List Scheduled Tasks",
+    "tags": [
+     "schedules"
+    ]
+   }
+  },
+  "/api/skills": {
+   "get": {
+    "description": "List discovered SKILL.md skills (bundled + user).",
+    "operationId": "list_skills_api_skills_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "items": {
+           "additionalProperties": true,
+           "type": "object"
+          },
+          "type": "array"
+         },
+         "title": "Response List Skills Api Skills Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "List Skills",
+    "tags": [
+     "skills"
+    ]
+   }
+  },
+  "/api/skills/{name}": {
+   "get": {
+    "description": "Get a single skill's full SKILL.md body and file manifest, by directory name.",
+    "operationId": "get_skill_api_skills__name__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "name",
+      "required": true,
+      "schema": {
+       "title": "Name",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Get Skill Api Skills  Name  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Get Skill",
+    "tags": [
+     "skills"
+    ]
+   }
+  },
+  "/api/status": {
+   "get": {
+    "operationId": "status_api_status_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Status Api Status Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Status"
+   }
+  },
+  "/api/tenants": {
+   "get": {
+    "operationId": "tenants_list_api_tenants_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Tenants List Api Tenants Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Tenants List",
+    "tags": [
+     "tenants"
+    ]
+   },
+   "post": {
+    "operationId": "tenants_create_api_tenants_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TenantIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Tenants Create Api Tenants Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Create",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}": {
+   "get": {
+    "operationId": "tenants_get_api_tenants__tenant_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Tenants Get Api Tenants  Tenant Id  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Get",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}/doctor": {
+   "get": {
+    "description": "`pincer doctor --tenant <id>` over HTTP: the voice/residency subset with the tenant overlay.",
+    "operationId": "tenants_doctor_api_tenants__tenant_id__doctor_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Tenants Doctor Api Tenants  Tenant Id  Doctor Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Doctor",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}/limits": {
+   "put": {
+    "operationId": "tenants_limits_api_tenants__tenant_id__limits_put",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LimitsIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Tenants Limits Api Tenants  Tenant Id  Limits Put",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Limits",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}/manifest": {
+   "get": {
+    "description": "§3.3: the residency manifest for this tenant's mode + keys (recorded per tenant).",
+    "operationId": "tenants_manifest_api_tenants__tenant_id__manifest_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Tenants Manifest Api Tenants  Tenant Id  Manifest Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Manifest",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}/members": {
+   "post": {
+    "operationId": "tenants_member_add_api_tenants__tenant_id__members_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MemberIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": {
+           "type": "string"
+          },
+          "type": "object"
+         },
+         "title": "Response Tenants Member Add Api Tenants  Tenant Id  Members Post",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Member Add",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}/members/{user_id}": {
+   "delete": {
+    "operationId": "tenants_member_remove_api_tenants__tenant_id__members__user_id__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "path",
+      "name": "user_id",
+      "required": true,
+      "schema": {
+       "title": "User Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Member Remove",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}/numbers": {
+   "post": {
+    "operationId": "tenants_number_assign_api_tenants__tenant_id__numbers_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/NumberAssignIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Tenants Number Assign Api Tenants  Tenant Id  Numbers Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Number Assign",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}/secrets": {
+   "put": {
+    "operationId": "tenants_secret_set_api_tenants__tenant_id__secrets_put",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SecretIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Tenants Secret Set Api Tenants  Tenant Id  Secrets Put",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Secret Set",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}/tokens": {
+   "post": {
+    "description": "Returns the plaintext token once — hand it to the tenant owner.",
+    "operationId": "tenants_token_create_api_tenants__tenant_id__tokens_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TokenIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "type": "string"
+         },
+         "title": "Response Tenants Token Create Api Tenants  Tenant Id  Tokens Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Token Create",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/tenants/{tenant_id}/tokens/{token_id}": {
+   "delete": {
+    "operationId": "tenants_token_revoke_api_tenants__tenant_id__tokens__token_id__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "tenant_id",
+      "required": true,
+      "schema": {
+       "title": "Tenant Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "path",
+      "name": "token_id",
+      "required": true,
+      "schema": {
+       "title": "Token Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tenants Token Revoke",
+    "tags": [
+     "tenants"
+    ]
+   }
+  },
+  "/api/voice/active": {
+   "get": {
+    "operationId": "active_calls_api_voice_active_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ActiveCall"
+         },
+         "title": "Response Active Calls Api Voice Active Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Active Calls",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/approvals": {
+   "get": {
+    "description": "Open in-call approval requests (the dashboard's approval card source).",
+    "operationId": "voice_approvals_pending_api_voice_approvals_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "call_sid",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Call Sid"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/VoiceApprovalOut"
+         },
+         "title": "Response Voice Approvals Pending Api Voice Approvals Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Voice Approvals Pending",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/approvals/{approval_id}": {
+   "post": {
+    "description": "Answer an open in-call approval. 404 when unknown, already answered, or expired.",
+    "operationId": "voice_approval_decide_api_voice_approvals__approval_id__post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "approval_id",
+      "required": true,
+      "schema": {
+       "title": "Approval Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/VoiceApprovalDecision"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/VoiceApprovalOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Voice Approval Decide",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/autoprofile": {
+   "get": {
+    "description": "The pending draft next to what the profile says today — the side-by-side diff (§2.1).",
+    "operationId": "autoprofile_status_api_voice_autoprofile_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Autoprofile Status Api Voice Autoprofile Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Autoprofile Status",
+    "tags": [
+     "voice-rules"
+    ]
+   },
+   "post": {
+    "operationId": "autoprofile_start_api_voice_autoprofile_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AutoProfileIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Autoprofile Start Api Voice Autoprofile Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Autoprofile Start",
+    "tags": [
+     "voice-rules"
+    ]
+   }
+  },
+  "/api/voice/autoprofile/apply": {
+   "post": {
+    "description": "Write the ticked fields into a new profile version. Nothing else is touched.",
+    "operationId": "autoprofile_apply_api_voice_autoprofile_apply_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ApplyIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Autoprofile Apply Api Voice Autoprofile Apply Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Autoprofile Apply",
+    "tags": [
+     "voice-rules"
+    ]
+   }
+  },
+  "/api/voice/byoc/setup": {
+   "post": {
+    "description": "B1 BYOC from the wizard: the plan, and — with apply — the Twilio objects.",
+    "operationId": "byoc_setup_api_voice_byoc_setup_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ByocIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Byoc Setup Api Voice Byoc Setup Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Byoc Setup",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/calls": {
+   "get": {
+    "operationId": "list_calls_api_voice_calls_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 50,
+       "maximum": 200,
+       "minimum": 1,
+       "title": "Limit",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "offset",
+      "required": false,
+      "schema": {
+       "default": 0,
+       "minimum": 0,
+       "title": "Offset",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "direction",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "pattern": "^(inbound|outbound)$",
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Direction"
+      }
+     },
+     {
+      "in": "query",
+      "name": "status",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "pattern": "^(active|completed)$",
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Status"
+      }
+     },
+     {
+      "in": "query",
+      "name": "thread_id",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "maxLength": 32,
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Thread Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/CallSummary"
+         },
+         "title": "Response List Calls Api Voice Calls Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "List Calls",
+    "tags": [
+     "voice"
+    ]
+   },
+   "post": {
+    "operationId": "initiate_call_api_voice_calls_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/InitiateCallIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InitiateCallOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Initiate Call",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/calls/scheduled": {
+   "get": {
+    "description": "Calls waiting to go out, soonest first.",
+    "operationId": "list_scheduled_calls_api_voice_calls_scheduled_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ScheduledCallOut"
+         },
+         "title": "Response List Scheduled Calls Api Voice Calls Scheduled Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "List Scheduled Calls",
+    "tags": [
+     "voice"
+    ]
+   },
+   "post": {
+    "description": "Place this call later. The briefing is validated now, not at fire time.",
+    "operationId": "schedule_call_api_voice_calls_scheduled_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ScheduledCallIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ScheduledCallOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Schedule Call",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/calls/scheduled/{schedule_id}": {
+   "delete": {
+    "description": "Call it off. Only removes schedules this feature created.",
+    "operationId": "cancel_scheduled_call_api_voice_calls_scheduled__schedule_id__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "schedule_id",
+      "required": true,
+      "schema": {
+       "title": "Schedule Id",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Cancel Scheduled Call",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/calls/{call_sid}": {
+   "get": {
+    "operationId": "call_detail_api_voice_calls__call_sid__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "call_sid",
+      "required": true,
+      "schema": {
+       "title": "Call Sid",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CallDetail"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Call Detail",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/calls/{call_sid}/checklist": {
+   "get": {
+    "operationId": "call_checklist_api_voice_calls__call_sid__checklist_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "call_sid",
+      "required": true,
+      "schema": {
+       "title": "Call Sid",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Call Checklist Api Voice Calls  Call Sid  Checklist Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Call Checklist",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/compliance": {
+   "get": {
+    "description": "Sprint A4: the one-pager for the live configuration + manifest (dashboard Datenschutz page).",
+    "operationId": "voice_compliance_api_voice_compliance_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "lang",
+      "required": false,
+      "schema": {
+       "default": "de",
+       "pattern": "^(de|en)$",
+       "title": "Lang",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Voice Compliance Api Voice Compliance Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Voice Compliance",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/config": {
+   "get": {
+    "description": "Current voice turn model + the options the dashboard can offer.",
+    "operationId": "voice_config_api_voice_config_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/VoiceConfig"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Config",
+    "tags": [
+     "voice"
+    ]
+   },
+   "put": {
+    "description": "Switch the voice turn model at runtime (Sprint 5 T5.4 model tiering).\n\nApplied to the live settings immediately — the very next call turn uses\nit — and persisted to data_dir/voice_runtime.json across restarts.",
+    "operationId": "update_voice_config_api_voice_config_put",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/VoiceConfigUpdate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/VoiceConfig"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Update Voice Config",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/contacts": {
+   "get": {
+    "operationId": "contacts_api_voice_contacts_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/Contact"
+         },
+         "title": "Response Contacts Api Voice Contacts Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Contacts",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/do-not-call": {
+   "get": {
+    "operationId": "do_not_call_list_api_voice_do_not_call_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/DoNotCallEntry"
+         },
+         "title": "Response Do Not Call List Api Voice Do Not Call Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Do Not Call List",
+    "tags": [
+     "voice"
+    ]
+   },
+   "post": {
+    "operationId": "do_not_call_add_api_voice_do_not_call_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DoNotCallIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/DoNotCallEntry"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Do Not Call Add",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/do-not-call/{phone_number}": {
+   "delete": {
+    "description": "Remove a number. Only an explicit human action can undo an opt-out.",
+    "operationId": "do_not_call_remove_api_voice_do_not_call__phone_number__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "phone_number",
+      "required": true,
+      "schema": {
+       "title": "Phone Number",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Do Not Call Remove",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/evidence/{call_sid}": {
+   "get": {
+    "description": "Sprint A4: DSB evidence ZIP for one call (manifest at call time, call row, masked transcript, audit).",
+    "operationId": "voice_evidence_api_voice_evidence__call_sid__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "call_sid",
+      "required": true,
+      "schema": {
+       "title": "Call Sid",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "title": "Response Voice Evidence Api Voice Evidence  Call Sid  Get"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Voice Evidence",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/knowledge/faq": {
+   "post": {
+    "description": "The flywheel: an owner answer becomes a knowledge chunk right away (§3.3).",
+    "operationId": "knowledge_add_faq_api_voice_knowledge_faq_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/FaqIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Knowledge Add Faq Api Voice Knowledge Faq Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Knowledge Add Faq",
+    "tags": [
+     "voice-knowledge"
+    ]
+   }
+  },
+  "/api/voice/knowledge/search": {
+   "post": {
+    "description": "Owner test console: what the assistant would retrieve, with the score and the abstention verdict.",
+    "operationId": "knowledge_search_api_voice_knowledge_search_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SearchIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Knowledge Search Api Voice Knowledge Search Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Knowledge Search",
+    "tags": [
+     "voice-knowledge"
+    ]
+   }
+  },
+  "/api/voice/knowledge/sources": {
+   "get": {
+    "operationId": "sources_list_api_voice_knowledge_sources_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Sources List Api Voice Knowledge Sources Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Sources List",
+    "tags": [
+     "voice-knowledge"
+    ]
+   },
+   "post": {
+    "description": "A website is crawled in the background; a file path is ingested immediately.",
+    "operationId": "sources_add_api_voice_knowledge_sources_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SourceIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Sources Add Api Voice Knowledge Sources Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Sources Add",
+    "tags": [
+     "voice-knowledge"
+    ]
+   }
+  },
+  "/api/voice/knowledge/sources/upload": {
+   "post": {
+    "operationId": "sources_upload_api_voice_knowledge_sources_upload_post",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "title",
+      "required": false,
+      "schema": {
+       "default": "",
+       "title": "Title",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_sources_upload_api_voice_knowledge_sources_upload_post"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Sources Upload Api Voice Knowledge Sources Upload Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Sources Upload",
+    "tags": [
+     "voice-knowledge"
+    ]
+   }
+  },
+  "/api/voice/knowledge/sources/{source_id}": {
+   "delete": {
+    "operationId": "sources_delete_api_voice_knowledge_sources__source_id__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "source_id",
+      "required": true,
+      "schema": {
+       "title": "Source Id",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Sources Delete",
+    "tags": [
+     "voice-knowledge"
+    ]
+   }
+  },
+  "/api/voice/knowledge/sources/{source_id}/chunks": {
+   "get": {
+    "operationId": "sources_chunks_api_voice_knowledge_sources__source_id__chunks_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "source_id",
+      "required": true,
+      "schema": {
+       "title": "Source Id",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "q",
+      "required": false,
+      "schema": {
+       "default": "",
+       "title": "Q",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 50,
+       "maximum": 500,
+       "minimum": 1,
+       "title": "Limit",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Sources Chunks Api Voice Knowledge Sources  Source Id  Chunks Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Sources Chunks",
+    "tags": [
+     "voice-knowledge"
+    ]
+   }
+  },
+  "/api/voice/knowledge/sources/{source_id}/recrawl": {
+   "post": {
+    "operationId": "sources_recrawl_api_voice_knowledge_sources__source_id__recrawl_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "source_id",
+      "required": true,
+      "schema": {
+       "title": "Source Id",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Sources Recrawl Api Voice Knowledge Sources  Source Id  Recrawl Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Sources Recrawl",
+    "tags": [
+     "voice-knowledge"
+    ]
+   }
+  },
+  "/api/voice/knowledge/unanswered": {
+   "get": {
+    "operationId": "knowledge_unanswered_api_voice_knowledge_unanswered_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "days",
+      "required": false,
+      "schema": {
+       "default": 7,
+       "maximum": 365,
+       "minimum": 1,
+       "title": "Days",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Knowledge Unanswered Api Voice Knowledge Unanswered Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Knowledge Unanswered",
+    "tags": [
+     "voice-knowledge"
+    ]
+   }
+  },
+  "/api/voice/messages": {
+   "get": {
+    "description": "Messages taken by the receptionist, newest first (PII-masked like every read surface).",
+    "operationId": "inbound_messages_api_voice_messages_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 50,
+       "maximum": 500,
+       "minimum": 1,
+       "title": "Limit",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/InboundMessageOut"
+         },
+         "title": "Response Inbound Messages Api Voice Messages Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Inbound Messages",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/numbers": {
+   "get": {
+    "operationId": "voice_numbers_list_api_voice_numbers_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Voice Numbers List Api Voice Numbers Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Numbers List",
+    "tags": [
+     "voice"
+    ]
+   },
+   "post": {
+    "description": "Sprint B1 §3.5: attach a number (forwarded business number, BYOC trunk number, …) to a profile.",
+    "operationId": "voice_numbers_add_api_voice_numbers_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/NumberIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Voice Numbers Add Api Voice Numbers Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Voice Numbers Add",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/numbers/{number_id}/selftest": {
+   "post": {
+    "description": "Open the caller-ID self-test window; the next inbound call to the number within it is matched.",
+    "operationId": "voice_number_selftest_api_voice_numbers__number_id__selftest_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "number_id",
+      "required": true,
+      "schema": {
+       "title": "Number Id",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Voice Number Selftest Api Voice Numbers  Number Id  Selftest Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Voice Number Selftest",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/numbers/{number_id}/status": {
+   "get": {
+    "operationId": "voice_number_status_api_voice_numbers__number_id__status_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "number_id",
+      "required": true,
+      "schema": {
+       "title": "Number Id",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Voice Number Status Api Voice Numbers  Number Id  Status Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Voice Number Status",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/profiles": {
+   "get": {
+    "operationId": "profiles_list_api_voice_profiles_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Profiles List Api Voice Profiles Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Profiles List",
+    "tags": [
+     "voice-profiles"
+    ]
+   },
+   "post": {
+    "operationId": "profiles_create_api_voice_profiles_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ProfileIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Profiles Create Api Voice Profiles Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Profiles Create",
+    "tags": [
+     "voice-profiles"
+    ]
+   }
+  },
+  "/api/voice/profiles/meta": {
+   "get": {
+    "description": "What the form needs beyond the profile itself (TC1.3): vocabularies, the fixed disclosure per\nlanguage, voices with quality labels, and the read-only consent/residency displays.",
+    "operationId": "profiles_meta_api_voice_profiles_meta_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "language",
+      "required": false,
+      "schema": {
+       "default": "de",
+       "title": "Language",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Profiles Meta Api Voice Profiles Meta Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Profiles Meta",
+    "tags": [
+     "voice-profiles"
+    ]
+   }
+  },
+  "/api/voice/profiles/{profile_id}": {
+   "get": {
+    "operationId": "profiles_get_api_voice_profiles__profile_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "profile_id",
+      "required": true,
+      "schema": {
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Profiles Get Api Voice Profiles  Profile Id  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Profiles Get",
+    "tags": [
+     "voice-profiles"
+    ]
+   },
+   "put": {
+    "operationId": "profiles_update_api_voice_profiles__profile_id__put",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "profile_id",
+      "required": true,
+      "schema": {
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ProfileUpdate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Profiles Update Api Voice Profiles  Profile Id  Put",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Profiles Update",
+    "tags": [
+     "voice-profiles"
+    ]
+   }
+  },
+  "/api/voice/profiles/{profile_id}/activate": {
+   "post": {
+    "operationId": "profiles_activate_api_voice_profiles__profile_id__activate_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "profile_id",
+      "required": true,
+      "schema": {
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ActivateIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Profiles Activate Api Voice Profiles  Profile Id  Activate Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Profiles Activate",
+    "tags": [
+     "voice-profiles"
+    ]
+   }
+  },
+  "/api/voice/profiles/{profile_id}/validate": {
+   "post": {
+    "operationId": "profiles_validate_api_voice_profiles__profile_id__validate_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "profile_id",
+      "required": true,
+      "schema": {
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ValidateIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Profiles Validate Api Voice Profiles  Profile Id  Validate Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Profiles Validate",
+    "tags": [
+     "voice-profiles"
+    ]
+   }
+  },
+  "/api/voice/profiles/{profile_id}/versions": {
+   "get": {
+    "operationId": "profiles_versions_api_voice_profiles__profile_id__versions_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "profile_id",
+      "required": true,
+      "schema": {
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Profiles Versions Api Voice Profiles  Profile Id  Versions Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Profiles Versions",
+    "tags": [
+     "voice-profiles"
+    ]
+   }
+  },
+  "/api/voice/profiles/{profile_id}/versions/{version}": {
+   "get": {
+    "operationId": "profiles_version_api_voice_profiles__profile_id__versions__version__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "profile_id",
+      "required": true,
+      "schema": {
+       "title": "Profile Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "path",
+      "name": "version",
+      "required": true,
+      "schema": {
+       "title": "Version",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Profiles Version Api Voice Profiles  Profile Id  Versions  Version  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Profiles Version",
+    "tags": [
+     "voice-profiles"
+    ]
+   }
+  },
+  "/api/voice/receptionist/stats": {
+   "get": {
+    "description": "Inbound-line stats for the receptionist strip.\n\nSentiment counts only calls that actually got a reading — a call too short\nto assess is not a neutral one, and pooling them would quietly flatter the\ndistribution.",
+    "operationId": "receptionist_stats_api_voice_receptionist_stats_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "days",
+      "required": false,
+      "schema": {
+       "default": 7,
+       "maximum": 90,
+       "minimum": 1,
+       "title": "Days",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ReceptionistStats"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Receptionist Stats",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/regulatory-bundles": {
+   "get": {
+    "operationId": "regulatory_bundles_api_voice_regulatory_bundles_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Regulatory Bundles Api Voice Regulatory Bundles Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Regulatory Bundles",
+    "tags": [
+     "voice-setup"
+    ]
+   },
+   "post": {
+    "description": "§3.1 number purchase: the bundle stays ``in_review``; the forwarding path is recommended meanwhile.",
+    "operationId": "regulatory_bundle_submit_api_voice_regulatory_bundles_post",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/BundleIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Regulatory Bundle Submit Api Voice Regulatory Bundles Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Regulatory Bundle Submit",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/residency": {
+   "get": {
+    "description": "Sprint A2: the residency manifest for the live configuration (dashboard Doctor page).",
+    "operationId": "voice_residency_api_voice_residency_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Voice Residency Api Voice Residency Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Residency",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/rules": {
+   "get": {
+    "operationId": "rules_list_api_voice_rules_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Rules List Api Voice Rules Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Rules List",
+    "tags": [
+     "voice-rules"
+    ]
+   },
+   "post": {
+    "operationId": "rule_save_api_voice_rules_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RuleIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Rule Save Api Voice Rules Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Rule Save",
+    "tags": [
+     "voice-rules"
+    ]
+   }
+  },
+  "/api/voice/rules/packs": {
+   "get": {
+    "operationId": "rules_packs_api_voice_rules_packs_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "language",
+      "required": false,
+      "schema": {
+       "default": "de",
+       "title": "Language",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Rules Packs Api Voice Rules Packs Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Rules Packs",
+    "tags": [
+     "voice-rules"
+    ]
+   }
+  },
+  "/api/voice/rules/packs/{pack_id}": {
+   "post": {
+    "operationId": "rules_install_pack_api_voice_rules_packs__pack_id__post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "pack_id",
+      "required": true,
+      "schema": {
+       "title": "Pack Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Rules Install Pack Api Voice Rules Packs  Pack Id  Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Rules Install Pack",
+    "tags": [
+     "voice-rules"
+    ]
+   }
+  },
+  "/api/voice/rules/reorder": {
+   "post": {
+    "operationId": "rules_reorder_api_voice_rules_reorder_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ReorderIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Rules Reorder Api Voice Rules Reorder Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Rules Reorder",
+    "tags": [
+     "voice-rules"
+    ]
+   }
+  },
+  "/api/voice/rules/test": {
+   "post": {
+    "description": "Dry run: which rules match this sentence, which one wins, what the caller would hear.",
+    "operationId": "rules_test_api_voice_rules_test_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TestIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Rules Test Api Voice Rules Test Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Rules Test",
+    "tags": [
+     "voice-rules"
+    ]
+   }
+  },
+  "/api/voice/rules/{rule_id}": {
+   "delete": {
+    "operationId": "rule_delete_api_voice_rules__rule_id__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "rule_id",
+      "required": true,
+      "schema": {
+       "title": "Rule Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Rule Delete",
+    "tags": [
+     "voice-rules"
+    ]
+   },
+   "patch": {
+    "operationId": "rule_enable_api_voice_rules__rule_id__patch",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "rule_id",
+      "required": true,
+      "schema": {
+       "title": "Rule Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EnableIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Rule Enable Api Voice Rules  Rule Id  Patch",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Rule Enable",
+    "tags": [
+     "voice-rules"
+    ]
+   }
+  },
+  "/api/voice/schedule": {
+   "post": {
+    "description": "Sprint 6: appointment scheduling from the dashboard — same workflow as\nthe schedule_appointment_call chat tool (free/busy → candidates → call →\ncalendar event). Dashboard-token auth stands in for the approval gate.",
+    "operationId": "schedule_appointment_api_voice_schedule_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ScheduleAppointmentIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ScheduleAppointmentOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Schedule Appointment",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/setup/activate": {
+   "post": {
+    "description": "Step 10: blocked while the voice doctor subset has a RED; marks the wizard finished.",
+    "operationId": "setup_activate_api_voice_setup_activate_post",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Setup Activate Api Voice Setup Activate Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Setup Activate",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/setup/advance": {
+   "post": {
+    "operationId": "setup_advance_api_voice_setup_advance_post",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/StepIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Setup Advance Api Voice Setup Advance Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Setup Advance",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/setup/complete": {
+   "post": {
+    "operationId": "setup_complete_api_voice_setup_complete_post",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/StepIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Setup Complete Api Voice Setup Complete Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Setup Complete",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/setup/golive": {
+   "get": {
+    "operationId": "setup_golive_api_voice_setup_golive_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "lang",
+      "required": false,
+      "schema": {
+       "default": "de",
+       "pattern": "^(de|en)$",
+       "title": "Lang",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Setup Golive Api Voice Setup Golive Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Setup Golive",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/setup/skip": {
+   "post": {
+    "operationId": "setup_skip_api_voice_setup_skip_post",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/StepIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Setup Skip Api Voice Setup Skip Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Setup Skip",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/setup/state": {
+   "get": {
+    "operationId": "setup_state_api_voice_setup_state_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Setup State Api Voice Setup State Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Setup State",
+    "tags": [
+     "voice-setup"
+    ]
+   },
+   "put": {
+    "operationId": "setup_state_update_api_voice_setup_state_put",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "profile_id",
+      "required": false,
+      "schema": {
+       "default": "default",
+       "title": "Profile Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/StateUpdate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Setup State Update Api Voice Setup State Put",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Setup State Update",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/sip/accounts": {
+   "post": {
+    "description": "Native SIP from the wizard: append a [[voice.sip.accounts]] entry to pincer.local.toml (password\nstays in the environment variable the entry names) and register the numbers (kind sip).",
+    "operationId": "sip_account_add_api_voice_sip_accounts_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SipAccountIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Sip Account Add Api Voice Sip Accounts Post",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Sip Account Add",
+    "tags": [
+     "voice-setup"
+    ]
+   }
+  },
+  "/api/voice/sip/providers": {
+   "get": {
+    "description": "TB3.7: providers the wizard offers — fields, experimental flag, docs link, transport/SRTP support.",
+    "operationId": "voice_sip_providers_api_voice_sip_providers_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Voice Sip Providers Api Voice Sip Providers Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Sip Providers",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/sip/status": {
+   "get": {
+    "description": "Registration state per account with failover hints (§4) and the current ban list.",
+    "operationId": "voice_sip_status_api_voice_sip_status_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Voice Sip Status Api Voice Sip Status Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Sip Status",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/status": {
+   "get": {
+    "operationId": "voice_status_api_voice_status_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/VoiceStatus"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Status",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/threads": {
+   "get": {
+    "description": "Threads, newest activity first. `q` matches subject, contact, or number.",
+    "operationId": "list_threads_api_voice_threads_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "status",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Status"
+      }
+     },
+     {
+      "in": "query",
+      "name": "q",
+      "required": false,
+      "schema": {
+       "default": "",
+       "maxLength": 200,
+       "title": "Q",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 50,
+       "maximum": 200,
+       "minimum": 1,
+       "title": "Limit",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "offset",
+      "required": false,
+      "schema": {
+       "default": 0,
+       "minimum": 0,
+       "title": "Offset",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "has_expired_commitments",
+      "required": false,
+      "schema": {
+       "default": false,
+       "title": "Has Expired Commitments",
+       "type": "boolean"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ThreadOut"
+         },
+         "title": "Response List Threads Api Voice Threads Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "List Threads",
+    "tags": [
+     "voice"
+    ]
+   },
+   "post": {
+    "description": "Manually open an empty thread (§4.4) — calls are assigned to it after.",
+    "operationId": "create_thread_api_voice_threads_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ThreadCreateIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ThreadOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Create Thread",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/threads/{thread_id}": {
+   "get": {
+    "description": "Thread + its calls in order. Purged calls are listed as stubs (§5).",
+    "operationId": "thread_detail_api_voice_threads__thread_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "thread_id",
+      "required": true,
+      "schema": {
+       "title": "Thread Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ThreadDetail"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Thread Detail",
+    "tags": [
+     "voice"
+    ]
+   },
+   "patch": {
+    "description": "Rename a thread and/or move its status. Transitions are validated by\nthe §5 table — in particular, closed is final.",
+    "operationId": "patch_thread_api_voice_threads__thread_id__patch",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "thread_id",
+      "required": true,
+      "schema": {
+       "title": "Thread Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ThreadPatchIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ThreadOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Patch Thread",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/threads/{thread_id}/assign": {
+   "post": {
+    "description": "Reassign one call to this thread (§4.4). Removes it from its previous\nthread — the only way a call ever leaves one.",
+    "operationId": "assign_call_to_thread_api_voice_threads__thread_id__assign_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "thread_id",
+      "required": true,
+      "schema": {
+       "title": "Thread Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ThreadAssignIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ThreadDetail"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Assign Call To Thread",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/threads/{thread_id}/merge": {
+   "post": {
+    "description": "Merge the source thread into this one: its calls re-attach as `manual`\nand the source is closed with a `merged_into` note in the audit log.",
+    "operationId": "merge_threads_api_voice_threads__thread_id__merge_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "thread_id",
+      "required": true,
+      "schema": {
+       "title": "Thread Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ThreadMergeIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ThreadDetail"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Merge Threads",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/api/voice/tts-preview": {
+   "post": {
+    "operationId": "tts_preview_api_voice_tts_preview_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PreviewIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Tts Preview",
+    "tags": [
+     "voice-profiles"
+    ]
+   }
+  },
+  "/voice/fallback": {
+   "post": {
+    "deprecated": true,
+    "operationId": "voice_fallback_legacy_voice_fallback_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Fallback Legacy",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/voice/health": {
+   "get": {
+    "deprecated": true,
+    "operationId": "voice_health_legacy_voice_health_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Voice Health Legacy Voice Health Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Health Legacy",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/voice/relay-webhook": {
+   "post": {
+    "deprecated": true,
+    "operationId": "relay_webhook_legacy_voice_relay_webhook_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Relay Webhook Legacy",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/voice/status": {
+   "post": {
+    "deprecated": true,
+    "operationId": "voice_status_legacy_voice_status_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Status Legacy",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/voice/webhook": {
+   "post": {
+    "deprecated": true,
+    "operationId": "voice_webhook_legacy_voice_webhook_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Voice Webhook Legacy",
+    "tags": [
+     "voice"
+    ]
+   }
+  },
+  "/{full_path}": {
+   "get": {
+    "operationId": "_spa__full_path__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "full_path",
+      "required": true,
+      "schema": {
+       "title": "Full Path",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": " Spa"
+   }
+  }
+ },
+ "security": [
+  {
+   "BearerAuth": []
+  }
+ ]
+}

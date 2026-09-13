@@ -7,12 +7,10 @@ import NoteEditor from '@/pages/notes/_components/editor/NoteEditor';
 import NotesAiSidebar from '@/pages/notes/_components/ai/NotesAiSidebar';
 import { useNotesStore } from '@/pages/notes/_hooks/use-notes-store';
 import { useNotesUiStore } from '@/pages/notes/_hooks/use-notes-ui-store';
-import { useDocsStore } from '@/pages/docs/_hooks/use-docs-store';
 import { formatShortcut } from '@/pages/notes/_lib/commands';
 
 export default function NotesHome() {
   const load = useNotesStore((s) => s.load);
-  const docsLoad = useDocsStore((s) => s.load);
   const notesMap = useNotesStore((s) => s.notes);
   const loaded = useNotesStore((s) => s.loaded);
   const refreshNote = useNotesStore((s) => s.refreshNote);
@@ -26,8 +24,7 @@ export default function NotesHome() {
 
   useEffect(() => {
     load();
-    docsLoad();
-  }, [load, docsLoad]);
+  }, [load]);
 
   // Resolve the note to show in the editor pane
   useEffect(() => {

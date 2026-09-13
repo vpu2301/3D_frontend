@@ -22,6 +22,7 @@ import {
   useBlocklist,
   useReceptionistProfile,
   useReceptionistStats,
+  type SentimentDistribution,
   useRemoveFromBlocklist,
   E164_HINT,
   E164_RE,
@@ -34,7 +35,16 @@ import {
   isOpenNow,
   todayHoursLabel,
 } from '@/pages/telephony/_lib/voiceMeta';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import {
+  MIN_ASSESSED_FOR_DISTRIBUTION,
+  NOT_ENOUGH_CALLS,
+  SENTIMENT,
+  SENTIMENTS,
+  SENTIMENT_HEADING,
+  t,
+} from '@/components/voice/analytics/sentimentCopy';
 
 // ── Profile ──────────────────────────────────────────────────────────
 
@@ -198,6 +208,11 @@ function StatsStrip() {
               </div>
             </div>
           )}
+
+          {/* How callers sounded (S16 §5). Only with a sample worth reading:
+              "33% negative" out of three calls is a sentence that sounds like
+              a trend and is not one. */}
+          <SentimentDistributionBar distribution={data.sentiment_distribution} days={days} />
 
           {/* Failure signals: only when they happened, and then in amber */}
           {(data.busy_capacity > 0 || data.silent_hangups > 0) && (
@@ -363,6 +378,60 @@ function BlocklistSection() {
 }
 
 // ── Panel ────────────────────────────────────────────────────────────
+
+/** The window's sentiment split, or an honest "ask me again later". */
+function SentimentDistributionBar({
+  distribution,
+  days,
+}: {
+  distribution: SentimentDistribution | undefined;
+  days: number;
+}) {
+  const { i18n } = useTranslation();
+  const lang = i18n.language;
+
+  // An older backend sends no distribution at all: render nothing, not a zero.
+  if (!distribution) return null;
+
+  const assessed = distribution.assessed ?? 0;
+  const heading = `${t(SENTIMENT_HEADING, lang)} (${days}d)`;
+
+  if (assessed < MIN_ASSESSED_FOR_DISTRIBUTION) {
+    return (
+      <div className="mt-5">
+        <p className="plat-eyebrow mb-2">{heading}</p>
+        <p className="text-[11px] text-[var(--text-5)]">{t(NOT_ENOUGH_CALLS, lang)}</p>
+      </div>
+    );
+  }
+
+  const counts = SENTIMENTS.map((key) => ({ key, n: distribution[key] ?? 0 })).filter((s) => s.n > 0);
+
+  return (
+    <div className="mt-5">
+      <p className="plat-eyebrow mb-2">{heading}</p>
+      <div className="flex h-2 overflow-hidden rounded-full bg-[var(--sand-deep)]">
+        {counts.map(({ key, n }) => (
+          <div
+            key={key}
+            className={SENTIMENT[key].barClass}
+            style={{ width: `${(n / assessed) * 100}%`, marginRight: 2 }}
+            title={`${t(SENTIMENT[key].label, lang)}: ${n}`}
+          />
+        ))}
+      </div>
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+        {counts.map(({ key, n }) => (
+          <span key={key} className="flex items-center gap-1.5 text-[11px] text-[var(--text-4)]">
+            <span className={cn('h-2 w-2 rounded-full', SENTIMENT[key].dotClass)} />
+            {t(SENTIMENT[key].label, lang)} <span className="font-mono text-[var(--text-2)]">{n}</span>
+          </span>
+        ))}
+        <span className="text-[11px] text-[var(--text-5)]">· {assessed} assessed</span>
+      </div>
+    </div>
+  );
+}
 
 export default function ReceptionistPanel() {
   const { data, isLoading } = useReceptionistProfile();

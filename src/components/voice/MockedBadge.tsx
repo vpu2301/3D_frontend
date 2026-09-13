@@ -1,4 +1,13 @@
 /**
+ * Kept deliberately, with one badge left on the page (live listen-in).
+ *
+ * S16 took sentiment and talk ratio off this list; what remains needs call
+ * audio in a browser, and there is no endpoint or media proxy that can supply
+ * it. The component stays regardless of the count: the next surface that ships
+ * ahead of its backend needs it, and the inventory test
+ * (src/test/voice/mockInventory.test.ts) is what keeps the count honest.
+ */
+/**
  * De-mock task contract: anything the backend cannot serve yet stays visible
  * but is *unmistakably* labelled as mock, with the reason and (where known)
  * the follow-up that will replace it. Three pieces:
@@ -16,11 +25,14 @@
 import { ReactNode } from 'react';
 import { FlaskConical } from 'lucide-react';
 
-export function MockedBadge() {
+export function MockedBadge({ label, title }: { label?: string; title?: string } = {}) {
   return (
-    <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
-      <FlaskConical className="h-3 w-3" />
-      Mocked
+    <span
+      title={title}
+      className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700"
+    >
+      <FlaskConical className="h-3 w-3" aria-hidden="true" />
+      {label ?? 'Mocked'}
     </span>
   );
 }
@@ -47,12 +59,12 @@ export function MockedSection({
 }
 
 /** Sits above an entire view that still renders demo data. */
-export function MockedRouteBanner({ reason }: { reason: string }) {
+export function MockedRouteBanner({ reason, intro }: { reason: string; intro?: string }) {
   return (
     <div data-mock="true" className="flex items-start gap-2 border-b border-amber-200 bg-amber-50 px-6 py-2.5">
       <MockedBadge />
       <p className="text-xs leading-relaxed text-amber-800">
-        Everything below is demo data — this section is not wired to the backend yet. {reason}
+        {intro ?? 'Everything below is demo data — this section is not wired to the backend yet.'} {reason}
       </p>
     </div>
   );
